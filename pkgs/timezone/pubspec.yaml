@@ -1,0 +1,13 @@
+name: timezone
+version: 0.0.1
+author: Boris Kaul <localvoid@gmail.com>
+description: Library to convert DateTimes between Time Zones.
+homepage: https://github.com/localvoid/timezone
+environment:
+  sdk: '>=1.6.0'
+dependencies:
+  collection: any
+dev_dependencies:
+  glob: any
+  logging: any
+  path: any
