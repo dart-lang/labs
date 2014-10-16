@@ -73,6 +73,18 @@ class _Header {
   }
 }
 
+/// Read NULL-terminated string
+String _readByteString(Uint8List data, int offset) {
+  for (var i = offset; i < data.length; i++) {
+    if (data[i] == 0) {
+      print(i);
+      return ASCII.decode(
+          data.buffer.asUint8List(data.offsetInBytes + i, i - offset));
+    }
+  }
+  return ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + offset));
+}
+
 /// This exception is thrown when Zone Info data is invalid.
 class InvalidZoneInfoDataException implements Exception {
   final String msg;
@@ -177,24 +189,17 @@ class Location {
         }
 
         // function to read from abbrev buffer
+        final abbrsData = data.buffer.asUint8List(
+            data.offsetInBytes + abbrsOffset,
+            header.tzh_charcnt);
         final abbrs = [];
         final abbrsCache = new HashMap<int, int>();
         int readAbbrev(offset) {
           var result = abbrsCache[offset];
           if (result == null) {
-            final start = abbrsOffset + offset;
-            final end = abbrsOffset + header.tzh_charcnt;
-            for (var i = start; i < end; i++) {
-              final c = bdata.getUint8(i);
-              if (c == 0) {
-                result = abbrs.length;
-                final abbr =
-                    ASCII.decode(new Uint8List.view(bdata.buffer, start, i - start));
-                abbrsCache[offset] = result;
-                abbrs.add(abbr);
-                break;
-              }
-            }
+            result = abbrs.length;
+            abbrsCache[offset] = result;
+            abbrs.add(_readByteString(abbrsData, offset));
           }
           return result;
         }
@@ -206,7 +211,7 @@ class Location {
         for (var i = 0; i < header.tzh_typecnt; i++) {
           final tt_gmtoff = bdata.getInt32(offset);
           final tt_isdst = bdata.getInt8(offset + 4);
-          final tt_abbrind = bdata.getUint8(offset + 1);
+          final tt_abbrind = bdata.getUint8(offset + 5);
           offset += 6;
 
           zones.add(
@@ -283,8 +288,8 @@ class Location {
         final transitionZoneOffset =
             transitionAtOffset +
             header2.tzh_timecnt * 9;
-        final abbrevsOffset = transitionZoneOffset + header2.tzh_typecnt * 6;
-        final leapOffset = abbrevsOffset + header2.tzh_charcnt;
+        final abbrsOffset = transitionZoneOffset + header2.tzh_typecnt * 6;
+        final leapOffset = abbrsOffset + header2.tzh_charcnt;
         final stdOrWctOffset = leapOffset + header2.tzh_leapcnt * 12;
         final utcOrGmtOffset = stdOrWctOffset + header2.tzh_ttisstdcnt;
         final lastTransitionOffset = utcOrGmtOffset + header2.tzh_ttisgmtcnt;
@@ -306,24 +311,17 @@ class Location {
         }
 
         // function to read from abbrev buffer
+        final abbrsData = data.buffer.asUint8List(
+            data.offsetInBytes + abbrsOffset,
+            header2.tzh_charcnt);
         final abbrs = [];
         final abbrsCache = new HashMap<int, int>();
         int readAbbrev(offset) {
           var result = abbrsCache[offset];
           if (result == null) {
-            final start = abbrevsOffset + offset;
-            final end = abbrevsOffset + header2.tzh_charcnt;
-            for (var i = start; i < end; i++) {
-              final c = bdata.getUint8(i);
-              if (c == 0) {
-                result = abbrs.length;
-                final abbr =
-                    ASCII.decode(new Uint8List.view(bdata.buffer, start, i - start));
-                abbrsCache[offset] = result;
-                abbrs.add(abbr);
-                break;
-              }
-            }
+            result = abbrs.length;
+            abbrsCache[offset] = result;
+            abbrs.add(_readByteString(abbrsData, offset));
           }
           return result;
         }
@@ -335,7 +333,7 @@ class Location {
         for (var i = 0; i < header2.tzh_typecnt; i++) {
           final tt_gmtoff = bdata.getInt32(offset);
           final tt_isdst = bdata.getInt8(offset + 4);
-          final tt_abbrind = bdata.getUint8(offset + 1);
+          final tt_abbrind = bdata.getUint8(offset + 5);
           offset += 6;
 
           zones.add(
