@@ -7,5 +7,4 @@ IANA Time Zone Database).
 
 ## TODO
 
-- tzinfo to native ZoneInfo compiler
 - transformer to generate data subsets from ZoneInfo db

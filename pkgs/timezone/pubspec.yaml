@@ -6,8 +6,9 @@ homepage: https://github.com/localvoid/timezone
 environment:
   sdk: '>=1.6.0'
 dependencies:
-  collection: ">=1.0.0 <2.0.0"
+  collection: '>=1.0.0 <2.0.0'
 dev_dependencies:
+  args: any
   glob: any
   logging: any
   path: any
