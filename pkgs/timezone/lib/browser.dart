@@ -24,7 +24,6 @@ export 'package:timezone/timezone.dart' show Location, TimeZone, translateTime;
 ///
 /// });
 /// ```
-///
 Future initializeTimeZone([String url =
     '/packages/timezone/data/$dataDefaultFilename']) {
   return HttpRequest.request(

@@ -2,6 +2,7 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
+/// TimeZone library
 library timezone;
 
 import 'dart:convert';
@@ -24,7 +25,23 @@ const String dataDefaultFilename = '$dataLatestVersion.$dataExtension';
 /// Reference to the current [LocationDatabase]
 LocationDatabase timeZones;
 
+/// translate instant in time expressed as milliseconds since
+/// January 1, 1970 00:00:00 UTC.
+///
+/// ```dart
+/// final now = new DateTime.now().millisecondsSinceEpoch;
+/// final nowInDetroit = translateTime(now, 'America/Detroit');
+/// ```
 int translateTime(int millisecondsSinceEpoch, String locationName) {
   final loc = timeZones.get(locationName);
   return loc.translate(millisecondsSinceEpoch);
+}
+
+/// Find [Location] by its name.
+///
+/// ```dart
+/// final detroit = getLocation('America/Detroit');
+/// ```
+Location getLocation(String locationName) {
+  return timeZones.get(locationName);
 }

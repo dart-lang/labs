@@ -13,6 +13,7 @@ import 'dart:typed_data';
 /// Time Zone information file magic header "TZif"
 const int _ziMagic = 1415211366;
 
+/// tzfile header structure
 class _Header {
   /// Header size
   static int size = 6 * 4;
@@ -93,6 +94,7 @@ class InvalidZoneInfoDataException implements Exception {
   String toString() => msg == null ? 'InvalidZoneInfoDataException' : msg;
 }
 
+/// TimeZone data
 class TimeZone {
   /// Number of seconds to be  added  to  UTC.
   final int offset;
@@ -106,6 +108,7 @@ class TimeZone {
   const TimeZone(this.offset, this.isDst, this.abbrIndex);
 }
 
+/// Location data
 class Location {
   /// [Location] name
   final String name;
@@ -139,6 +142,7 @@ class Location {
   Location(this.name, this.transitionAt, this.transitionZone, this.abbrs,
       this.zones, this.leapAt, this.leapDiff, this.isStd, this.isUtc);
 
+  /// Deserialize [Location] from bytes
   factory Location.fromBytes(String name, List<int> rawData) {
     final data =
         rawData is Uint8List ? rawData : new Uint8List.fromList(rawData);
