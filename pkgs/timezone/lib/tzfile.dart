@@ -53,7 +53,8 @@ class _Header {
     final data =
         rawData is Uint8List ? rawData : new Uint8List.fromList(rawData);
 
-    final bdata = new ByteData.view(data.buffer, data.offsetInBytes);
+    final bdata =
+        data.buffer.asByteData(data.offsetInBytes, data.lengthInBytes);
 
     final tzh_ttisgmtcnt = bdata.getInt32(0);
     final tzh_ttisstdcnt = bdata.getInt32(4);
@@ -130,7 +131,9 @@ class Location {
   factory Location.fromBytes(String name, List<int> rawData) {
     final data =
         rawData is Uint8List ? rawData : new Uint8List.fromList(rawData);
-    final bdata = new ByteData.view(data.buffer);
+
+    final bdata =
+        data.buffer.asByteData(data.offsetInBytes, data.lengthInBytes);
 
     final magic1 = bdata.getUint32(0);
     if (magic1 != _ziMagic) {

@@ -82,7 +82,8 @@ class Location {
     final data =
         rawData is Uint8List ? rawData : new Uint8List.fromList(rawData);
 
-    final bdata = new ByteData.view(data.buffer);
+    final bdata =
+        data.buffer.asByteData(data.offsetInBytes, data.lengthInBytes);
 
     // read header
     final nameLength = bdata.getUint32(0);
