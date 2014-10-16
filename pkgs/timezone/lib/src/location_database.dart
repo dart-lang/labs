@@ -48,7 +48,11 @@ class LocationDatabase {
 
   /// Find [Location] by its name.
   Location get(String name) {
-    return _locations[name];
+    final loc = _locations[name];
+    if (loc == null) {
+      throw new LocationNotFoundException('No locations with the name "$name"');
+    }
+    return loc;
   }
 
   /// Serialize [LocationDatabase] in binary format.

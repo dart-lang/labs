@@ -11,3 +11,11 @@ class TimeZoneInitializationException implements Exception {
 
   String toString() => msg == null ? 'TimeZoneInitializationException' : msg;
 }
+
+class LocationNotFoundException implements Exception {
+  final String msg;
+
+  LocationNotFoundException(this.msg);
+
+  String toString() => msg == null ? 'LocationNotFoundException' : msg;
+}
