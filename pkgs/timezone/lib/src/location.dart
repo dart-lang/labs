@@ -46,7 +46,6 @@ const int _omega = 8640000000000000;
 /// Minimum value for time instants.
 const int _alpha = -_omega;
 
-
 /// A [Location] maps time instants to the zone in use at that time.
 /// Typically, the Location represents the collection of time offsets
 /// in use in a geographical area, such as CEST and CET for central Europe.
@@ -72,11 +71,27 @@ class Location {
   // The units for cacheStart and cacheEnd are milliseconds
   // since January 1, 1970 UTC, to match the argument
   // to lookup.
+  static int _cacheNow = new DateTime.now().millisecondsSinceEpoch;
   int _cacheStart = 0;
   int _cacheEnd = 0;
   TimeZone _cacheZone;
 
-  Location(this.name, this._transitionAt, this._transitionZone, this._zones);
+  Location(this.name, this._transitionAt, this._transitionZone, this._zones) {
+    // Fill in the cache with information about right now,
+    // since that will be the most common lookup.
+    for (var i = 0; i < _transitionAt.length; i++) {
+      final tAt = _transitionAt[i];
+      if (tAt <= _cacheNow &&
+          ((i + 1 == _transitionAt.length) || (_cacheNow < _transitionAt[i + 1]))) {
+        _cacheStart = tAt;
+        _cacheEnd = _omega;
+        if (i + 1 < _transitionAt.length) {
+          _cacheEnd = _transitionAt[i + 1];
+        }
+        _cacheZone = _zones[_transitionZone[i]];
+      }
+    }
+  }
 
   factory Location.fromBytes(List<int> rawData) {
     final data =
