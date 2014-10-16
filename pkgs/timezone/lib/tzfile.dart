@@ -77,9 +77,8 @@ class _Header {
 String _readByteString(Uint8List data, int offset) {
   for (var i = offset; i < data.length; i++) {
     if (data[i] == 0) {
-      print(i);
       return ASCII.decode(
-          data.buffer.asUint8List(data.offsetInBytes + i, i - offset));
+          data.buffer.asUint8List(data.offsetInBytes + offset, i - offset));
     }
   }
   return ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + offset));
@@ -104,7 +103,7 @@ class TimeZone {
   /// Index to abbreviation.
   final int abbrIndex;
 
-  TimeZone(this.offset, this.isDst, this.abbrIndex);
+  const TimeZone(this.offset, this.isDst, this.abbrIndex);
 }
 
 class Location {
@@ -189,9 +188,8 @@ class Location {
         }
 
         // function to read from abbrev buffer
-        final abbrsData = data.buffer.asUint8List(
-            data.offsetInBytes + abbrsOffset,
-            header.tzh_charcnt);
+        final abbrsData =
+            data.buffer.asUint8List(data.offsetInBytes + abbrsOffset, header.tzh_charcnt);
         final abbrs = [];
         final abbrsCache = new HashMap<int, int>();
         int readAbbrev(offset) {
@@ -311,9 +309,8 @@ class Location {
         }
 
         // function to read from abbrev buffer
-        final abbrsData = data.buffer.asUint8List(
-            data.offsetInBytes + abbrsOffset,
-            header2.tzh_charcnt);
+        final abbrsData =
+            data.buffer.asUint8List(data.offsetInBytes + abbrsOffset, header2.tzh_charcnt);
         final abbrs = [];
         final abbrsCache = new HashMap<int, int>();
         int readAbbrev(offset) {

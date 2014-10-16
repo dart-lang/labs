@@ -32,7 +32,7 @@ class LocationDatabase {
     var offset = 0;
     while (offset < data.length) {
       final length = bdata.getUint32(offset);
-      final locationBytes = new Uint8List.view(bdata.buffer, offset, length);
+      final locationBytes = data.buffer.asUint8List(data.offsetInBytes + offset + 4, length);
       final location = new Location.fromBytes(locationBytes);
       offset += 4 + length;
       result.add(location);

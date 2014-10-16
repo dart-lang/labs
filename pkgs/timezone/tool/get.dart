@@ -15,6 +15,7 @@ import 'package:glob/glob.dart';
 
 import 'package:timezone/tzfile.dart' as tzfile;
 import 'package:timezone/timezone.dart';
+import 'package:timezone/tools.dart';
 
 final outPath = ospath.join('lib', 'data');
 
@@ -31,30 +32,11 @@ const _zicDataFiles = const [
     'backward'];
 
 
-const int _maxMillisecondsSinceEpoch = 8640000000000000;
-const int _maxSecondsSinceEpoch = 8640000000000;
-
 /// Load [tzfile.Location] from tzfile
 Future<tzfile.Location> loadTzfileLocation(String name, String path) {
   return new File(path).readAsBytes().then((rawData) {
     return new tzfile.Location.fromBytes(name, rawData);
   });
-}
-
-/// Convert [tzfile.Location] to [Location]
-Location tzfileLocationToNativeLocation(tzfile.Location loc) {
-  // convert to milliseconds
-  final transitionAt = loc.transitionAt.map(
-      (i) =>
-          (i < -_maxSecondsSinceEpoch) ? -_maxMillisecondsSinceEpoch : i * 1000).toList();
-
-  final zones = [];
-
-  for (final z in loc.zones) {
-    zones.add(new TimeZone(z.offset, z.isDst, loc.abbrs[z.abbrIndex]));
-  };
-
-  return new Location(loc.name, transitionAt, loc.transitionZone, zones);
 }
 
 /// Download IANA Time Zone database to [dest] directory.
@@ -170,7 +152,7 @@ void main(List<String> arguments) {
         db.add(tzfileLocationToNativeLocation(loc));
       });
     }).then((_) {
-      final out = new File(ospath.join(outPath, 'tz-$source'));
+      final out = new File(ospath.join(outPath, '$source.$dataExtension'));
       log.info('Serializing locations database to "$out"');
       return out.writeAsBytes(db.toBytes(), flush: true);
     }).whenComplete(() {
