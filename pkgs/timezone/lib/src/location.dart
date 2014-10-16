@@ -117,8 +117,7 @@ class Location {
       final zoneIsDst = bdata.getUint8(offset + 4);
       final zoneAbbrIndex = bdata.getUint8(offset + 5);
       offset += 6;
-      zones.add(
-          new TimeZone(zoneOffset, zoneIsDst == 1 ? true : false, abbrs[zoneAbbrIndex]));
+      zones.add(new TimeZone(zoneOffset, zoneIsDst == 1, abbrs[zoneAbbrIndex]));
     }
 
     // read transitions
