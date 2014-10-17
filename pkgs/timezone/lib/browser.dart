@@ -10,7 +10,7 @@ import 'dart:typed_data';
 import 'package:timezone/timezone.dart';
 
 export 'package:timezone/timezone.dart' show LocationDatabase, Location,
-    TimeZone, translateTime;
+    TimeZone, translateTime, getLocation, TZDateTime;
 
 /// Initialize global Time Zone database.
 ///

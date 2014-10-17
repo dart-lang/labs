@@ -167,15 +167,17 @@ class TZDateTime implements DateTime {
   TZDateTime.fromMillisecondsSinceEpoch(Location location,
       int millisecondsSinceEpoch)
       : _location = location,
-        _millisecondsSinceEpoch = millisecondsSinceEpoch,
-        _localDateTime = new DateTime.fromMillisecondsSinceEpoch(
-          millisecondsSinceEpoch,
-          isUtc: true) {
+        _millisecondsSinceEpoch = millisecondsSinceEpoch {
 
     if (isUtc) {
       _timeZone = const TimeZone(0, false, 'UTC');
+      _localDateTime =
+          new DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch, isUtc: true);
     } else {
       _timeZone = _location.timeZone(millisecondsSinceEpoch);
+      _localDateTime = new DateTime.fromMillisecondsSinceEpoch(
+          millisecondsSinceEpoch + _timeZone.offset,
+          isUtc: true);
     }
   }
 

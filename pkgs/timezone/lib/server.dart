@@ -10,16 +10,7 @@ import 'package:path/path.dart' as ospath;
 import 'package:timezone/timezone.dart';
 
 export 'package:timezone/timezone.dart' show LocationDatabase, Location,
-    TimeZone, translateTime;
-
-/// Path to the package root directory
-final _packageRoot = Platform.packageRoot.isEmpty ?
-    ospath.join(ospath.dirname(Platform.script.path), 'packages') :
-    Platform.packageRoot;
-
-/// Path to the TimeZone data file
-final _dataPath =
-    ospath.join(_packageRoot, 'timezone', 'data', dataDefaultFilename);
+    TimeZone, translateTime, getLocation, TZDateTime;
 
 /// Initialize global Time Zone database.
 ///
@@ -35,6 +26,25 @@ final _dataPath =
 /// });
 /// ```
 Future initializeTimeZone() {
+  // Path to the package root directory
+  var _packageRoot;
+
+  // TODO: fix this!
+  if (Platform.packageRoot.isEmpty) {
+    final dir = ospath.dirname(Platform.script.path);
+    if (dir == '/') {
+      _packageRoot = 'packages';
+    } else {
+      _packageRoot = ospath.join(dir, 'packages');
+    }
+  } else {
+    _packageRoot = Platform.packageRoot;
+  }
+
+  // Path to the TimeZone data file
+  final _dataPath =
+      ospath.join(_packageRoot, 'timezone', 'data', dataDefaultFilename);
+
   return new File(_dataPath).readAsBytes().then((rawData) {
     LocationDatabase.initialize(rawData);
   });
