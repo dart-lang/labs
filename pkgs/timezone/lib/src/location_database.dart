@@ -15,10 +15,39 @@ part of timezone;
 /// ```
 ///
 class LocationDatabase {
+  static LocationDatabase _instance;
+
+  static LocationDatabase get instance => _instance;
+
   /// Mapping between [Location] name and [Location].
   final Map<String, Location> _locations = new HashMap<String, Location>();
 
   LocationDatabase();
+
+  /// UTC Location
+  static Location UTC;
+
+  /// Local Location
+  static Location local;
+
+  /// Initialize
+  static void initialize(List<int> rawData) {
+    if (UTC == null) {
+      UTC =
+          new Location('UTC', [_alpha], [0], [const TimeZone(0, false, 'UTC')]);
+    }
+
+    if (local == null) {
+      final now = new DateTime.now();
+      local = new Location(
+          now.timeZoneName,
+          [_alpha],
+          [0],
+          [new TimeZone(now.timeZoneOffset.inMilliseconds, false, now.timeZoneName)]);
+    }
+
+    _instance = new LocationDatabase.fromBytes(rawData);
+  }
 
   factory LocationDatabase.fromBytes(List<int> rawData) {
     final data =
@@ -32,7 +61,8 @@ class LocationDatabase {
     var offset = 0;
     while (offset < data.length) {
       final length = bdata.getUint32(offset);
-      final locationBytes = data.buffer.asUint8List(data.offsetInBytes + offset + 4, length);
+      final locationBytes =
+          data.buffer.asUint8List(data.offsetInBytes + offset + 4, length);
       final location = new Location.fromBytes(locationBytes);
       offset += 4 + length;
       result.add(location);

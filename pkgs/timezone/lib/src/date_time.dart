@@ -1,7 +1,7 @@
 part of timezone;
 
 /// TimeZone aware DateTime
-class TZDateTime implements Comparable<TZDateTime> {
+class TZDateTime implements DateTime {
   // Weekday constants that are returned by [weekday] method:
   static const int MONDAY = 1;
   static const int TUESDAY = 2;
@@ -59,7 +59,16 @@ class TZDateTime implements Comparable<TZDateTime> {
   /// assert(dDay.isUtc);
   /// ```
   ///
-  bool get isUtc => identical(_location, UTC);
+  bool get isUtc => identical(_location, LocationDatabase.UTC);
+
+  /// True if this [TZDateTime] is set to Local time.
+  ///
+  /// ```dart
+  /// final dDay = new TZDateTime.local(1944, 6, 6);
+  /// assert(dDay.isLocal);
+  /// ```
+  ///
+  bool get isLocal => identical(_location, LocationDatabase.local);
 
   /// Constructs a [TZDateTime] instance specified in the [location] time zone.
   ///
@@ -102,7 +111,32 @@ class TZDateTime implements Comparable<TZDateTime> {
   /// ```
   TZDateTime.utc(int year, [int month = 1, int day = 1, int hour = 0, int minute
       = 0, int second = 0, int millisecond = 0])
-      : this(UTC, year, month, day, hour, minute, second, millisecond);
+      : this(
+          LocationDatabase.UTC,
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond);
+
+  /// Constructs a [TZDateTime] instance specified in the local time zone.
+  ///
+  /// ```dart
+  /// final dDay = new TZDateTime.utc(1944, TZDateTime.JUNE, 6);
+  /// ```
+  TZDateTime.local(int year, [int month = 1, int day = 1, int hour = 0,
+      int minute = 0, int second = 0, int millisecond = 0])
+      : this(
+          LocationDatabase.local,
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond);
 
   /// Constructs a [TZDateTime] instance with current date and time in the
   /// [location] time zone.
@@ -130,7 +164,7 @@ class TZDateTime implements Comparable<TZDateTime> {
   /// The constructed [TZDateTime] represents
   /// 1970-01-01T00:00:00Z + [millisecondsSinceEpoch] ms in the given
   /// time zone [location].
-  TZDateTime.fromMillisecondeSinceEpoch(Location location,
+  TZDateTime.fromMillisecondsSinceEpoch(Location location,
       int millisecondsSinceEpoch)
       : _location = location,
         _millisecondsSinceEpoch = millisecondsSinceEpoch,
@@ -143,6 +177,113 @@ class TZDateTime implements Comparable<TZDateTime> {
     } else {
       _timeZone = _location.timeZone(millisecondsSinceEpoch);
     }
+  }
+
+  /// Returns this DateTime value in the UTC time zone.
+  ///
+  /// Returns [this] if it is already in UTC.
+  /// Otherwise this method is equivalent to:
+  TZDateTime toUtc() {
+    if (isUtc) {
+      return this;
+    }
+    return new TZDateTime.fromMillisecondsSinceEpoch(
+        LocationDatabase.UTC,
+        millisecondsSinceEpoch);
+  }
+
+  /// Returns this DateTime value in the local time zone.
+  ///
+  /// Returns [this] if it is already in the local time zone.
+  /// Otherwise this method is equivalent to:
+  TZDateTime toLocal() {
+    if (isLocal) {
+      return this;
+    }
+    return new TZDateTime.fromMillisecondsSinceEpoch(
+        LocationDatabase.local,
+        millisecondsSinceEpoch);
+  }
+
+  static String _fourDigits(int n) {
+    int absN = n.abs();
+    String sign = n < 0 ? "-" : "";
+    if (absN >= 1000) return "$n";
+    if (absN >= 100) return "${sign}0$absN";
+    if (absN >= 10) return "${sign}00$absN";
+    return "${sign}000$absN";
+  }
+
+  static String _threeDigits(int n) {
+    if (n >= 100) return "${n}";
+    if (n >= 10) return "0${n}";
+    return "00${n}";
+  }
+
+  static String _twoDigits(int n) {
+    if (n >= 10) return "${n}";
+    return "0${n}";
+  }
+
+  /// Returns a human-readable string for this instance.
+  ///
+  /// The returned string is constructed for the time zone of this instance.
+  /// The `toString()` method provides a simply formatted string.
+  /// It does not support internationalized strings.
+  /// Use the [intl](http://pub.dartlang.org/packages/intl) package
+  /// at the pub shared packages repo.
+  String toString() {
+    String y = _fourDigits(year);
+    String m = _twoDigits(month);
+    String d = _twoDigits(day);
+    String h = _twoDigits(hour);
+    String min = _twoDigits(minute);
+    String sec = _twoDigits(second);
+    String ms = _threeDigits(millisecond);
+    if (isUtc) {
+      return "$y-$m-$d $h:$min:$sec.${ms}Z";
+    } else {
+      return "$y-$m-$d $h:$min:$sec.$ms";
+    }
+  }
+
+  /// Returns an ISO-8601 full-precision extended format representation.
+  /// The format is "YYYY-MM-DDTHH:mm:ss.sssZ" for UTC time, and
+  /// "YYYY-MM-DDTHH:mm:ss.sss" (no trailing "Z") for non-UTC time.
+  String toIso8601String() {
+    String y = _fourDigits(year);
+    String m = _twoDigits(month);
+    String d = _twoDigits(day);
+    String h = _twoDigits(hour);
+    String min = _twoDigits(minute);
+    String sec = _twoDigits(second);
+    String ms = _threeDigits(millisecond);
+    if (isUtc) {
+      return "$y-$m-${d}T$h:$min:$sec.${ms}Z";
+    } else {
+      return "$y-$m-${d}T$h:$min:$sec.$ms";
+    }
+  }
+
+  /// Returns a new [TZDateTime] instance with [duration] added to [this].
+  TZDateTime add(Duration duration) {
+    return new TZDateTime.fromMillisecondsSinceEpoch(
+        _location,
+        _millisecondsSinceEpoch + duration.inMilliseconds);
+  }
+
+  /// Returns a new [TZDateTime] instance with [duration] subtracted from
+  /// [this].
+  TZDateTime subtract(Duration duration) {
+    return new TZDateTime.fromMillisecondsSinceEpoch(
+        _location,
+        _millisecondsSinceEpoch - duration.inMilliseconds);
+  }
+
+  /// Returns a [Duration] with the difference between [this] and [other].
+  Duration difference(TZDateTime other) {
+    return new Duration(
+        milliseconds: _millisecondsSinceEpoch - other._millisecondsSinceEpoch);
   }
 
   /// Returns true if [other] is a [DateTime] at the same moment and in the
@@ -163,7 +304,7 @@ class TZDateTime implements Comparable<TZDateTime> {
     }
 
     return (millisecondsSinceEpoch == other.millisecondsSinceEpoch &&
-            identical(_location, other._location));
+        _location == other._location);
   }
 
   /// Returns true if [this] occurs before [other].
@@ -217,8 +358,8 @@ class TZDateTime implements Comparable<TZDateTime> {
   /// This function returns a negative integer
   /// if this [TZDateTime] is smaller (earlier) than [other],
   /// or a positive integer if it is greater (later).
-  int compareTo(TZDateTime other)
-      => millisecondsSinceEpoch.compareTo(other.millisecondsSinceEpoch);
+  int compareTo(TZDateTime other) =>
+      millisecondsSinceEpoch.compareTo(other.millisecondsSinceEpoch);
 
   int get hashCode => millisecondsSinceEpoch;
 

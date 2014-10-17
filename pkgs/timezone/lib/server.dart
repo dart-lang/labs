@@ -35,6 +35,6 @@ final _dataPath =
 /// ```
 Future initializeTimeZone() {
   return new File(_dataPath).readAsBytes().then((rawData) {
-    timeZones = new LocationDatabase.fromBytes(rawData);
+    LocationDatabase.initialize(rawData);
   });
 }

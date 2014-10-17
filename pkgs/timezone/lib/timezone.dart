@@ -24,9 +24,6 @@ const String dataExtension = 'tzf';
 /// Default file name for Time Zone data file.
 const String dataDefaultFilename = '$dataLatestVersion.$dataExtension';
 
-/// Reference to the current [LocationDatabase]
-LocationDatabase timeZones;
-
 /// translate instant in time expressed as milliseconds since
 /// January 1, 1970 00:00:00 UTC.
 ///
@@ -35,7 +32,7 @@ LocationDatabase timeZones;
 /// final nowInDetroit = translateTime(now, 'America/Detroit');
 /// ```
 int translateTime(int millisecondsSinceEpoch, String locationName) {
-  final loc = timeZones.get(locationName);
+  final loc = LocationDatabase.instance.get(locationName);
   return loc.translate(millisecondsSinceEpoch);
 }
 
@@ -45,5 +42,5 @@ int translateTime(int millisecondsSinceEpoch, String locationName) {
 /// final detroit = getLocation('America/Detroit');
 /// ```
 Location getLocation(String locationName) {
-  return timeZones.get(locationName);
+  return LocationDatabase.instance.get(locationName);
 }

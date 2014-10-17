@@ -81,7 +81,8 @@ class Location {
     // since that will be the most common lookup.
     for (var i = 0; i < _transitionAt.length; i++) {
       final tAt = _transitionAt[i];
-      if (tAt <= _cacheNow &&
+
+      if ((tAt <= _cacheNow) &&
           ((i + 1 == _transitionAt.length) || (_cacheNow < _transitionAt[i + 1]))) {
         _cacheStart = tAt;
         _cacheEnd = _omega;
@@ -381,6 +382,8 @@ class Location {
 
     return result;
   }
+
+  String toString() => '$name';
 }
 
 /// A [TimeZone] represents a single time zone such as CEST or CET.
@@ -412,5 +415,3 @@ class TimeZone {
 
   String toString() => '[$abbr offset=$offset dst=$isDst]';
 }
-
-var UTC = new Location('UTC', [], [], []);

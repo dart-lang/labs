@@ -31,9 +31,17 @@ Future initializeTimeZone([String url =
       method: 'GET',
       responseType: 'arraybuffer',
       mimeType: 'application/octet-stream').then((req) {
+    if (req.status != 200) {
+      throw new TimeZoneInitializationException('http status code: ${req.status}');
+    }
     final response = req.response;
     if (response is ByteBuffer) {
-      timeZones = new LocationDatabase.fromBytes(response.asUint8List());
+      LocationDatabase.initialize(response.asUint8List());
+    } else {
+      throw new TimeZoneInitializationException('Invalid response type');
     }
+
+  }).catchError((e) {
+    throw new TimeZoneInitializationException('failed to initialize');
   });
 }
