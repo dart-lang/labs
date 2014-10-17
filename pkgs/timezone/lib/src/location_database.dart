@@ -22,6 +22,8 @@ class LocationDatabase {
   /// Mapping between [Location] name and [Location].
   final Map<String, Location> _locations = new HashMap<String, Location>();
 
+  Map<String, Location> get locations => _locations;
+
   LocationDatabase();
 
   /// UTC Location

@@ -9,7 +9,8 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'package:timezone/timezone.dart';
 
-export 'package:timezone/timezone.dart' show Location, TimeZone, translateTime;
+export 'package:timezone/timezone.dart' show LocationDatabase, Location,
+    TimeZone, translateTime;
 
 /// Initialize global Time Zone database.
 ///
@@ -32,7 +33,8 @@ Future initializeTimeZone([String url =
       responseType: 'arraybuffer',
       mimeType: 'application/octet-stream').then((req) {
     if (req.status != 200) {
-      throw new TimeZoneInitializationException('http status code: ${req.status}');
+      throw new TimeZoneInitializationException(
+          'http status code: ${req.status}');
     }
     final response = req.response;
     if (response is ByteBuffer) {

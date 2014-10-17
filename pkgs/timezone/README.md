@@ -20,12 +20,12 @@ Import `package:timezone/browser.dart` library and run async function
 This function has optional argument with the path to the data url.
 
 ```dart
-import 'package:timezone/browser.dart' as tz;
+import 'package:timezone/browser.dart';
 
 tz.initializeTimeZone()
-.then(() {
+.then((_) {
 
-  final detroit = tz.getLocation('America/Detroit');
+  final detroit = getLocation('America/Detroit');
   final now = new TZDateTime.now(detroit);
 
 });
@@ -37,12 +37,12 @@ Import `package:timezone/server.dart` library and run async function
 `initializeTimeZone()`.
 
 ```dart
-import 'package:timezone/server.dart' as tz;
+import 'package:timezone/server.dart';
 
 tz.initializeTimeZone()
-.then(() {
+.then((_) {
 
-  final detroit = tz.getLocation('America/Detroit');
+  final detroit = getLocation('America/Detroit');
   final now = new TZDateTime.now(detroit);
 
 });
@@ -63,8 +63,8 @@ abbreviated form.
 
 ### TimeZone aware DateTime
 
-[TZDateTime] objects implements standard [DateTime] interface and contains
-information about the time zone.
+`TZDateTime` object implements standard `DateTime` interface and
+contains information about the time zone.
 
 ```dart
 final date = new TZDateTime(detroit, 2014, 11, 17);

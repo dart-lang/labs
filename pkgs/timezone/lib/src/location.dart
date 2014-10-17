@@ -54,13 +54,13 @@ class Location {
   final String name;
 
   /// Transition time, in milliseconds since 1970 UTC.
-  final List<int> _transitionAt;
+  final List<int> transitionAt;
 
   /// The index of the zone that goes into effect at that time.
-  final List<int> _transitionZone;
+  final List<int> transitionZone;
 
   /// [TimeZone]s at this [Location].
-  final List<TimeZone> _zones;
+  final List<TimeZone> zones;
 
   // Most lookups will be for the current time.
   // To avoid the binary search through tx, keep a
@@ -76,20 +76,20 @@ class Location {
   int _cacheEnd = 0;
   TimeZone _cacheZone;
 
-  Location(this.name, this._transitionAt, this._transitionZone, this._zones) {
+  Location(this.name, this.transitionAt, this.transitionZone, this.zones) {
     // Fill in the cache with information about right now,
     // since that will be the most common lookup.
-    for (var i = 0; i < _transitionAt.length; i++) {
-      final tAt = _transitionAt[i];
+    for (var i = 0; i < transitionAt.length; i++) {
+      final tAt = transitionAt[i];
 
       if ((tAt <= _cacheNow) &&
-          ((i + 1 == _transitionAt.length) || (_cacheNow < _transitionAt[i + 1]))) {
+          ((i + 1 == transitionAt.length) || (_cacheNow < transitionAt[i + 1]))) {
         _cacheStart = tAt;
         _cacheEnd = _omega;
-        if (i + 1 < _transitionAt.length) {
-          _cacheEnd = _transitionAt[i + 1];
+        if (i + 1 < transitionAt.length) {
+          _cacheEnd = transitionAt[i + 1];
         }
-        _cacheZone = _zones[_transitionZone[i]];
+        _cacheZone = zones[transitionZone[i]];
       }
     }
   }
@@ -187,7 +187,7 @@ class Location {
   /// lookup for [TimeZone] and its boundaries for an instant in time expressed
   /// as milliseconds since January 1, 1970 00:00:00 UTC.
   PersistentTuple3<TimeZone, int, int> _lookupTimeZone(int millisecondsSinceEpoch) {
-    if (_zones.isEmpty) {
+    if (zones.isEmpty) {
       return const PersistentTuple3(const TimeZone(0, false, 'UTC'), _alpha, _omega);
     }
 
@@ -197,21 +197,21 @@ class Location {
       return new PersistentTuple3(_cacheZone, _cacheStart, _cacheEnd);
     }
 
-    if (_transitionAt.isEmpty || millisecondsSinceEpoch < _transitionAt[0]) {
+    if (transitionAt.isEmpty || millisecondsSinceEpoch < transitionAt[0]) {
       final zone = _firstZone();
       final start = _alpha;
-      final end = _transitionAt.isEmpty ? _omega : _transitionAt.first;
+      final end = transitionAt.isEmpty ? _omega : transitionAt.first;
       return new PersistentTuple3(zone, start, end);
     }
 
     // Binary search for entry with largest millisecondsSinceEpoch <= sec.
     var lo = 0;
-    var hi = _transitionAt.length;
+    var hi = transitionAt.length;
     var end = _omega;
 
     while (hi - lo > 1) {
       final m = lo + (hi - lo) ~/ 2;
-      final at = _transitionAt[m];
+      final at = transitionAt[m];
 
       if (millisecondsSinceEpoch < at) {
         end = at;
@@ -221,7 +221,7 @@ class Location {
       }
     }
 
-    return new PersistentTuple3(_zones[_transitionZone[lo]], _transitionAt[lo], end);
+    return new PersistentTuple3(zones[transitionZone[lo]], transitionAt[lo], end);
   }
 
   /// timeZone method returns [TimeZone] in use at an instant in time expressed
@@ -270,13 +270,13 @@ class Location {
   TimeZone _firstZone() {
     // case 1
     if (!_firstZoneIsUsed()) {
-      return _zones.first;
+      return zones.first;
     }
 
     // case 2
-    if (_transitionZone.isNotEmpty && _zones[_transitionZone.first].isDst) {
-      for (var zi = _transitionZone.first - 1; zi >= 0; zi--) {
-        final z = _zones[zi];
+    if (transitionZone.isNotEmpty && zones[transitionZone.first].isDst) {
+      for (var zi = transitionZone.first - 1; zi >= 0; zi--) {
+        final z = zones[zi];
         if (!z.isDst) {
           return z;
         }
@@ -284,20 +284,20 @@ class Location {
     }
 
     // case 3
-    for (final zi in _transitionZone) {
-      final z = _zones[zi];
+    for (final zi in transitionZone) {
+      final z = zones[zi];
       if (!z.isDst) {
         return z;
       }
     }
 
     // case 4
-    return _zones.first;
+    return zones.first;
   }
 
   /// firstZoneUsed returns whether the first zone is used by some transition.
   bool _firstZoneIsUsed() {
-    for (final i in _transitionZone) {
+    for (final i in transitionZone) {
       if (i == 0) {
         return true;
       }
@@ -316,8 +316,8 @@ class Location {
     // number of bytes of all abbrevs
     var abbrsLength = 0;
 
-    for (final zi in _transitionZone) {
-      final zone = _zones[zi];
+    for (final zi in transitionZone) {
+      final zone = zones[zi];
       final ai = abbrsIndex.putIfAbsent(zone.abbr, () {
         final ret = abbrs.length;
         abbrsLength += zone.abbr.length + 1; // abbr + '\0'
@@ -333,8 +333,8 @@ class Location {
     final bufferLength = (_zoneInfoHeaderSize +
         encName.length +
         abbrsLength +
-        (_zones.length * 6) +
-        (_transitionAt.length * 9));
+        (zones.length * 6) +
+        (transitionAt.length * 9));
 
     final result = new Uint8List(bufferLength);
     final buffer = new ByteData.view(result.buffer);
@@ -342,8 +342,8 @@ class Location {
     // write header
     buffer.setUint32(0, encName.length);
     buffer.setUint32(4, abbrsLength);
-    buffer.setUint32(8, _zones.length);
-    buffer.setUint32(12, _transitionAt.length);
+    buffer.setUint32(8, zones.length);
+    buffer.setUint32(12, transitionAt.length);
 
     var offset = 16;
 
@@ -361,8 +361,8 @@ class Location {
     }
 
     // write zones
-    for (var i = 0; i < _zones.length; i++) {
-      final zone = _zones[i];
+    for (var i = 0; i < zones.length; i++) {
+      final zone = zones[i];
       buffer.setInt32(offset, zone.offset ~/ 1000); // convert to sec
       buffer.setUint8(offset + 4, zone.isDst ? 1 : 0);
       buffer.setUint8(offset + 5, zoneAbbrIndexes[i]);
@@ -370,12 +370,12 @@ class Location {
     }
 
     // write transitions
-    for (final tAt in _transitionAt) {
+    for (final tAt in transitionAt) {
       buffer.setInt64(offset, tAt ~/ 1000); // convert to sec
       offset += 8;
     }
 
-    for (final tZone in _transitionZone) {
+    for (final tZone in transitionZone) {
       buffer.setUint8(offset, tZone);
       offset += 1;
     }

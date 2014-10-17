@@ -9,7 +9,8 @@ import 'dart:io';
 import 'package:path/path.dart' as ospath;
 import 'package:timezone/timezone.dart';
 
-export 'package:timezone/timezone.dart' show Location, TimeZone, translateTime;
+export 'package:timezone/timezone.dart' show LocationDatabase, Location,
+    TimeZone, translateTime;
 
 /// Path to the package root directory
 final _packageRoot = Platform.packageRoot.isEmpty ?

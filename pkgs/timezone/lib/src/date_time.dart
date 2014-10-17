@@ -179,6 +179,32 @@ class TZDateTime implements DateTime {
     }
   }
 
+  /// Constructs a new [DateTime] instance based on [formattedString].
+  ///
+  /// Throws a [FormatException] if the input cannot be parsed.
+  ///
+  /// The function parses a subset of ISO 8601
+  /// which includes the subset accepted by RFC 3339.
+  ///
+  /// The result is always in the provided time zone.
+  ///
+  /// Examples of accepted strings:
+  ///
+  /// * `"2012-02-27 13:27:00"`
+  /// * `"2012-02-27 13:27:00.123456z"`
+  /// * `"20120227 13:27:00"`
+  /// * `"20120227T132700"`
+  /// * `"20120227"`
+  /// * `"+20120227"`
+  /// * `"2012-02-27T14Z"`
+  /// * `"2012-02-27T14+00:00"`
+  /// * `"-123450101 00:00:00 Z"`: in the year -12345.
+  /// * `"2002-02-27T14:00:00-0500"`: Same as `"2002-02-27T19:00:00Z"`
+  static TZDateTime parse(Location location, String formattedString) {
+    final t = DateTime.parse(formattedString).millisecondsSinceEpoch;
+    return new TZDateTime.fromMillisecondsSinceEpoch(location, t);
+  }
+
   /// Returns this DateTime value in the UTC time zone.
   ///
   /// Returns [this] if it is already in UTC.
