@@ -161,7 +161,7 @@ class Location {
   }
 
   /// translate instant in time expressed as milliseconds since
-  /// January 1, 1970 00:00:00 UTC to UTC.
+  /// January 1, 1970 00:00:00 to UTC.
   int translateToUtc(int millisecondsSinceEpoch) {
     final t = _lookupTimeZone(millisecondsSinceEpoch);
     final tz = t.i1;
@@ -227,6 +227,27 @@ class Location {
   /// as milliseconds since January 1, 1970 00:00:00 UTC.
   TimeZone timeZone(int millisecondsSinceEpoch) {
     return _lookupTimeZone(millisecondsSinceEpoch).i1;
+  }
+
+  /// timeZoneFromLocal method returns [TimeZone] in use at an instant in time
+  /// expressed as milliseconds since January 1, 1970 00:00:00.
+  TimeZone timeZoneFromLocal(int millisecondsSinceEpoch) {
+    final t = _lookupTimeZone(millisecondsSinceEpoch);
+    var tz = t.i1;
+    final start = t.i2;
+    final end = t.i3;
+
+    if (tz.offset != 0) {
+      final utc = millisecondsSinceEpoch - tz.offset;
+
+      if (utc < start) {
+        tz = _lookupTimeZone(start - 1).i1;
+      } else if (utc >= end) {
+        tz = _lookupTimeZone(end).i1;
+      }
+    }
+
+    return tz;
   }
 
   /// This method returns the [TimeZone] to use for times before the first
