@@ -10,7 +10,8 @@ IANA Time Zone Database).
 TimeZone objects require time zone data, so the first step is to load
 the data.
 
-We are providing two different APIs for browsers and servers.
+We are providing two different APIs for browsers and standalone
+environments.
 
 ### Initialization for browser environment
 
@@ -31,13 +32,13 @@ tz.initializeTimeZone()
 });
 ```
 
-### Initialization for server environment
+### Initialization for standalone environment
 
-Import `package:timezone/server.dart` library and run async function
+Import `package:timezone/standalone.dart` library and run async function
 `initializeTimeZone()`.
 
 ```dart
-import 'package:timezone/server.dart';
+import 'package:timezone/standalone.dart';
 
 tz.initializeTimeZone()
 .then((_) {
@@ -68,6 +69,12 @@ contains information about the time zone.
 
 ```dart
 final date = new TZDateTime(detroit, 2014, 11, 17);
+```
+
+## Generating Time Zone database subsets
+
+```sh
+$ pub run timezone:generate_data_subset --from "2010-1-1" --to "2020-1-1"
 ```
 
 ## Updating Time Zone database
