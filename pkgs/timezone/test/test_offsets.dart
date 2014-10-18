@@ -1,5 +1,5 @@
 import 'package:unittest/unittest.dart';
-import 'package:timezone/server.dart' as tz;
+import 'package:timezone/standalone.dart' as tz;
 
 void main() {
   tz.initializeTimeZone()

@@ -5,7 +5,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:args/args.dart';
 
-import 'package:timezone/server.dart';
+import 'package:timezone/standalone.dart';
 
 int minEpochTime = new DateTime.utc(1890).millisecondsSinceEpoch ~/ 1000;
 int maxEpochTime = new DateTime.utc(2020).millisecondsSinceEpoch ~/ 1000;
