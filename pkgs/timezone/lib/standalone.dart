@@ -13,6 +13,7 @@ export 'package:timezone/timezone.dart' show LocationDatabase, Location,
     TimeZone, translateTime, getLocation, TZDateTime;
 
 /// Load file
+/// TODO: check Platform.packageRoot
 Future<List<int>> loadAsBytes(String path) {
   final script = Platform.script;
   final scheme = Platform.script.scheme;
@@ -23,7 +24,7 @@ Future<List<int>> loadAsBytes(String path) {
             scheme: script.scheme,
             host: script.host,
             port: script.port,
-            path: 'packages/' + path)).then((req) {
+            path: path)).then((req) {
       return req.close();
     }).then((response) {
       return response.fold(
@@ -34,7 +35,7 @@ Future<List<int>> loadAsBytes(String path) {
     });
   } else if (scheme == 'file') {
     return new File(
-        ospath.join(ospath.dirname(script.path), 'packages', path)).readAsBytes();
+        ospath.join(ospath.dirname(script.path), path)).readAsBytes();
   }
 
   // TODO: fix this
@@ -51,8 +52,8 @@ Future<List<int>> loadAsBytes(String path) {
 ///   final eastern = tz.getLocation('US/Eastern');
 /// });
 /// ```
-Future initializeTimeZone() {
-  return loadAsBytes('timezone/data/$dataDefaultFilename').then((rawData) {
+Future initializeTimeZone([String dataPath = 'packages/timezone/data/$dataDefaultFilename']) {
+  return loadAsBytes(dataPath).then((rawData) {
     LocationDatabase.initialize(rawData);
   }).catchError((e) {
     // TODO: fix this
