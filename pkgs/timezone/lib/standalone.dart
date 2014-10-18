@@ -12,40 +12,50 @@ import 'package:timezone/timezone.dart';
 export 'package:timezone/timezone.dart' show LocationDatabase, Location,
     TimeZone, translateTime, getLocation, TZDateTime;
 
-/// Initialize global Time Zone database.
+/// Load file
+Future<List<int>> loadAsBytes(String path) {
+  final script = Platform.script;
+  final scheme = Platform.script.scheme;
+
+  if (scheme.startsWith('http')) {
+    return new HttpClient().getUrl(
+        new Uri(
+            scheme: script.scheme,
+            host: script.host,
+            port: script.port,
+            path: 'packages/' + path)).then((req) {
+      return req.close();
+    }).then((response) {
+      return response.fold(
+          new BytesBuilder(),
+          (b, d) => b..add(d)).then((builder) {
+        return builder.takeBytes();
+      });
+    });
+  } else if (scheme == 'file') {
+    return new File(
+        ospath.join(ospath.dirname(script.path), 'packages', path)).readAsBytes();
+  }
+
+  // TODO: fix this
+  throw new Exception('Error');
+}
+
+/// Initialize Time Zone database.
 ///
 /// ```dart
-/// import 'package:timezone/server.dart' as tz;
+/// import 'package:timezone/standalone.dart' as tz;
 ///
 /// tz.initializeTimeZone()
 /// .then(() {
-///
-///   final now = new DateTime.now().millisecondsSinceEpoch;
-///   final nowEastern = tz.translateTime(now, 'US/Eastern');
-///
+///   final eastern = tz.getLocation('US/Eastern');
 /// });
 /// ```
 Future initializeTimeZone() {
-  // Path to the package root directory
-  var _packageRoot;
-
-  // TODO: fix this!
-  if (Platform.packageRoot.isEmpty) {
-    final dir = ospath.dirname(Platform.script.path);
-    if (dir == '/') {
-      _packageRoot = 'packages';
-    } else {
-      _packageRoot = ospath.join(dir, 'packages');
-    }
-  } else {
-    _packageRoot = Platform.packageRoot;
-  }
-
-  // Path to the TimeZone data file
-  final _dataPath =
-      ospath.join(_packageRoot, 'timezone', 'data', dataDefaultFilename);
-
-  return new File(_dataPath).readAsBytes().then((rawData) {
+  return loadAsBytes('timezone/data/$dataDefaultFilename').then((rawData) {
     LocationDatabase.initialize(rawData);
+  }).catchError((e) {
+    // TODO: fix this
+    throw new TimeZoneInitializationException('failed');
   });
 }
