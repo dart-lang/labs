@@ -4,11 +4,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:args/args.dart';
-
+import 'package:logging/logging.dart';
 import 'package:timezone/standalone.dart';
 
-int minEpochTime = new DateTime.utc(1890).millisecondsSinceEpoch ~/ 1000;
-int maxEpochTime = new DateTime.utc(2020).millisecondsSinceEpoch ~/ 1000;
+final int minEpochTime = new DateTime.utc(1890).millisecondsSinceEpoch ~/ 1000;
+final int maxEpochTime = new DateTime.utc(2020).millisecondsSinceEpoch ~/ 1000;
 
 Future<String> dateCmd(int time, String tz) {
   return Process.run(
@@ -22,20 +22,28 @@ Future<String> dateCmd(int time, String tz) {
 }
 
 void main(List<String> arguments) {
+  // Initialize logger
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+  final Logger log = new Logger('main');
+
   // Parse CLI arguments
-  final parser =
-      new ArgParser()..addOption('iterations', abbr: 'i', defaultsTo: '1000');
+  final parser = new ArgParser()
+  ..addOption('iterations', abbr: 'i', defaultsTo: '1000')
+  ..addOption('seed', abbr: 's', defaultsTo: '0');
+
   final argResults = parser.parse(arguments);
 
-  final mr = maxEpochTime - minEpochTime;
-  final min = minEpochTime;
+  final randomRange = maxEpochTime - minEpochTime;
 
-  var seed = 0;
-  var r = new Random(seed);
+  final seed = int.parse(argResults['seed']);
   var i = int.parse(argResults['iterations']);
+  var r = new Random(seed);
 
-  print('Seed: $seed');
-  print('Iterations: $i');
+  log.info('Seed: $seed');
+  log.info('Iterations: $i');
 
   initializeTimeZone().then((_) {
     final zoneNames =
@@ -43,7 +51,7 @@ void main(List<String> arguments) {
     final zoneCount = zoneNames.length;
 
     Future.doWhile(() {
-      final time = r.nextInt(mr) + min;
+      final time = r.nextInt(randomRange) + minEpochTime;
       final tz = zoneNames[r.nextInt(zoneCount)];
 
       return dateCmd(time, tz).then((v) {
@@ -52,7 +60,7 @@ void main(List<String> arguments) {
         v = v.trim();
 
         if (v != x.toString().substring(0, 19)) {
-          print('Error: $tz $time $x != $v');
+          log.severe('$tz $time $x != $v');
         }
 
         i--;
