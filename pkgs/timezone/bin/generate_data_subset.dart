@@ -3,7 +3,9 @@
 // by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+import 'package:args/args.dart';
 import 'package:timezone/standalone.dart';
+import 'package:timezone/timezone.dart';
 
 /// Maximum value for time instants.
 const int _omega = 8640000000000000;
@@ -54,22 +56,59 @@ LocationDatabase filterTimeZoneData(LocationDatabase db, {int dateFrom: _alpha,
   return result;
 }
 
-void main() {
-  initializeTimeZone().then((_) {
-    final newLocationDatabase = filterTimeZoneData(LocationDatabase.instance,
-        dateFrom: new DateTime.utc(2010, 1, 1).millisecondsSinceEpoch,
-        dateTo: new DateTime.utc(2020, 1, 1).millisecondsSinceEpoch);
-    /*
-    for (final l in newLocationDatabase.locations.values) {
-      print(l.name);
-      for (final i in l.transitionAt) {
-        print('- $i');
-      }
+void main(List<String> arguments) {
+  // Parse CLI arguments
+  final parser = new ArgParser()
+  ..addOption('source', abbr: 's', defaultsTo: 'packages/timezone/data/$dataDefaultFilename')
+  ..addOption('output', abbr: 'o')
+  ..addOption('from', abbr: 'f')
+  ..addOption('to', abbr: 't');
+
+  final argResults = parser.parse(arguments);
+
+  final String source = argResults['source'];
+  final String output = argResults['output'];
+
+  if (source.isEmpty || output == null || output.isEmpty) {
+    print(parser.getUsage());
+    exit(64);
+  }
+
+  int from = _alpha;
+  int to = _omega;
+
+  final String argFrom = argResults['from'];
+  final String argTo = argResults['to'];
+
+  if (argResults['from'] != null) {
+    try {
+      from = DateTime.parse(argFrom).millisecondsSinceEpoch;
+    } catch (e) {
+      print(e.toString());
+      exit(66);
     }
-     */
-    final out = new File('out.tzf');
-    out.writeAsBytes(newLocationDatabase.toBytes()).then((_) {
+  }
+  if (argResults['to'] != null) {
+    try {
+      to = DateTime.parse(argTo).millisecondsSinceEpoch;
+    } catch (e) {
+      print(e.toString());
+      exit(66);
+    }
+  }
+
+  initializeTimeZone(source).then((_) {
+    final newLocationDatabase = filterTimeZoneData(LocationDatabase.instance,
+        dateFrom: from,
+        dateTo: to);
+
+    return new File(output).writeAsBytes(newLocationDatabase.toBytes()).then((_) {
       print('Finished');
+      exit(0);
     });
+
+  }).catchError((e) {
+    print(e);
+    exit(1);
   });
 }
