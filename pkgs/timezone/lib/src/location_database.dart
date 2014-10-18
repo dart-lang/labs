@@ -20,7 +20,7 @@ class LocationDatabase {
   static LocationDatabase get instance => _instance;
 
   /// Mapping between [Location] name and [Location].
-  final Map<String, Location> _locations = new HashMap<String, Location>();
+  final Map<String, Location> _locations = new Map<String, Location>();
 
   Map<String, Location> get locations => _locations;
 
