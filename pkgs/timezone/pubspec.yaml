@@ -1,7 +1,7 @@
 name: timezone
-version: 0.1.0
+version: 0.1.1
 author: Boris Kaul <localvoid@gmail.com>
-description: Library to convert DateTimes between Time Zones.
+description: Time zone database and time zone aware DateTime.
 homepage: https://github.com/localvoid/timezone
 environment:
   sdk: '>=1.6.0'
