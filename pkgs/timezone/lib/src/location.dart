@@ -316,12 +316,11 @@ class Location {
     // number of bytes of all abbrevs
     var abbrsLength = 0;
 
-    for (final zi in transitionZone) {
-      final zone = zones[zi];
-      final ai = abbrsIndex.putIfAbsent(zone.abbr, () {
+    for (final z in zones) {
+      final ai = abbrsIndex.putIfAbsent(z.abbr, () {
         final ret = abbrs.length;
-        abbrsLength += zone.abbr.length + 1; // abbr + '\0'
-        abbrs.add(zone.abbr);
+        abbrsLength += z.abbr.length + 1; // abbr + '\0'
+        abbrs.add(z.abbr);
         return ret;
       });
 
