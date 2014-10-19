@@ -62,6 +62,10 @@ class Location {
   /// [TimeZone]s at this [Location].
   final List<TimeZone> zones;
 
+  /// [TimeZone] for the current time.
+  TimeZone get currentTimeZone =>
+      timeZone(new DateTime.now().millisecondsSinceEpoch);
+
   // Most lookups will be for the current time.
   // To avoid the binary search through tx, keep a
   // static one-element cache that gives the correct
