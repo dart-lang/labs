@@ -34,6 +34,8 @@ class LocationDatabase {
 
   /// Initialize
   static void initialize(List<int> rawData) {
+    _instance = new LocationDatabase.fromBytes(rawData);
+
     if (UTC == null) {
       UTC =
           new Location('UTC', [_alpha], [0], [const TimeZone(0, false, 'UTC')]);
@@ -42,8 +44,6 @@ class LocationDatabase {
     if (local == null) {
       detectLocalLocation();
     }
-
-    _instance = new LocationDatabase.fromBytes(rawData);
   }
 
   factory LocationDatabase.fromBytes(List<int> rawData) {

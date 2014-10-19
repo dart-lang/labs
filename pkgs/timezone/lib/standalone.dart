@@ -57,6 +57,6 @@ Future initializeTimeZone([String dataPath = 'packages/timezone/data/$dataDefaul
     LocationDatabase.initialize(rawData);
   }).catchError((e) {
     // TODO: fix this
-    throw new TimeZoneInitializationException('failed');
+    throw new TimeZoneInitializationException(e.toString());
   });
 }
