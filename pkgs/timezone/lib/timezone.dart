@@ -45,3 +45,12 @@ int translateTime(int millisecondsSinceEpoch, String locationName) {
 Location getLocation(String locationName) {
   return LocationDatabase.instance.get(locationName);
 }
+
+/// Set local [Location]
+///
+/// ```dart
+/// setLocalLocation('America/Detroit');
+/// ```
+void setLocation(String locationName) {
+  LocationDatabase.local = getLocation(locationName);
+}
