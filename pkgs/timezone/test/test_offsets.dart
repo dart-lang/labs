@@ -5,56 +5,51 @@ void main() {
   tz.initializeTimeZone()
   .then((_) {
     group('UTC to America/Detroit', () {
+      final detroit = tz.getLocation('America/Detroit');
+
       group('Simple translations', () {
-        final o = new DateTime.utc(1975, 01, 01, 5);
+        final u1 = new DateTime.utc(1975, 01, 01, 5);
+        final x1 = new tz.TZDateTime.from(detroit, u1);
 
-        test('1975-01-01 05:00', () {
-          final r = tz.translateTime(o.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(157766400000));
+        test('$u1 => 1975-01-01 00:00:00.000-0500', () {
+          expect(x1.toString(), equals('1975-01-01 00:00:00.000-0500'));
         });
 
-        test('1975-01-01 05:00 minus 1 ms', () {
-          final t = o.subtract(const Duration(milliseconds: 1));
-          final r = tz.translateTime(t.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(157766399999));
+        final u2 = u1.subtract(const Duration(milliseconds: 1));
+        final x2 = new tz.TZDateTime.from(detroit, u2);
+
+        test('$u2 => 1974-12-31 23:59:59.999-0500', () {
+          expect(x2.toString(), equals('1974-12-31 23:59:59.999-0500'));
         });
 
-        test('1975-01-01 05:00 plus 1 ms', () {
-          final t = o.add(const Duration(milliseconds: 1));
-          final r = tz.translateTime(t.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(157766400001));
+        final u3 = u1.add(const Duration(milliseconds: 1));
+        final x3 = new tz.TZDateTime.from(detroit, u3);
+
+        test('$u3 => 1975-01-01 00:00:00.001-0500', () {
+          expect(x3.toString(), equals('1975-01-01 00:00:00.001-0500'));
         });
       });
+
       group('EWT/EPT boundaries', () {
-        final o1 = new DateTime.utc(1945, 09, 30, 2);
-        final o2 = new DateTime.utc(1945, 09, 30, 6);
+        final u1 = new DateTime.utc(1945, 09, 30, 6);
+        final x1 = new tz.TZDateTime.from(detroit, u1);
 
-        test('1945-09-30 01:59', () {
-          final t = o1.subtract(const Duration(seconds: 1));
-          final r = tz.translateTime(t.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(-765424801000));
+        test('$u1 => 1945-09-30 01:00:00.000-0500', () {
+          expect(x1.toString(), '1945-09-30 01:00:00.000-0500');
         });
 
-        test('1945-09-30 02:00', () {
-          final r = tz.translateTime(o1.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(-765424800000));
+        final u2 = u1.subtract(const Duration(milliseconds: 1));
+        final x2 = new tz.TZDateTime.from(detroit, u2);
+
+        test('$u2 => 1945-09-30 01:59:59.999-0400', () {
+          expect(x2.toString(), equals('1945-09-30 01:59:59.999-0400'));
         });
 
-        test('1945-09-30 06:00', () {
-          final r = tz.translateTime(o2.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(-765414000000));
-        });
+        final u3 = u1.add(const Duration(milliseconds: 1));
+        final x3 = new tz.TZDateTime.from(detroit, u3);
 
-        test('1945-09-30 06:00 minus 1 ms', () {
-          final t = o2.subtract(const Duration(milliseconds: 1));
-          final r = tz.translateTime(t.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(-765410400001));
-        });
-
-        test('1945-09-30 06:00 plus 1 ms', () {
-          final t = o2.add(const Duration(milliseconds: 1));
-          final r = tz.translateTime(t.millisecondsSinceEpoch, 'America/Detroit');
-          expect(r, equals(-765413999999));
+        test('$u3 => 1945-09-30 01:00:00.001-0500', () {
+          expect(x3.toString(), equals('1945-09-30 01:00:00.001-0500'));
         });
       });
     });

@@ -25,18 +25,6 @@ const String dataExtension = 'tzf';
 /// Default file name for Time Zone data file.
 const String dataDefaultFilename = '$dataLatestVersion.$dataExtension';
 
-/// translate instant in time expressed as milliseconds since
-/// January 1, 1970 00:00:00 UTC.
-///
-/// ```dart
-/// final now = new DateTime.now().millisecondsSinceEpoch;
-/// final nowInDetroit = translateTime(now, 'America/Detroit');
-/// ```
-int translateTime(int millisecondsSinceEpoch, String locationName) {
-  final loc = LocationDatabase.instance.get(locationName);
-  return loc.translate(millisecondsSinceEpoch);
-}
-
 /// Find [Location] by its name.
 ///
 /// ```dart
