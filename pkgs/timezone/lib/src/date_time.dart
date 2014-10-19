@@ -54,7 +54,7 @@ class TZDateTime implements DateTime {
   /// This value is at most
   /// 8,640,000,000,000,000ms (100,000,000 days) from the Unix epoch.
   /// In other words: [:millisecondsSinceEpoch.abs() <= 8640000000000000:].
-  int get millisecondsSinceEpoch => millisecondsSinceEpoch;
+  int get millisecondsSinceEpoch => _millisecondsSinceEpoch;
 
   /// [Location]
   Location get location => _location;
