@@ -42,7 +42,7 @@ class LocationDatabase {
     }
 
     if (local == null) {
-      detectLocalLocation();
+      local = detectLocalLocation();
     }
   }
 

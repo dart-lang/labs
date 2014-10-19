@@ -83,7 +83,14 @@ void main() {
         test('$x4 => 1945-09-30 06:00:00.000Z', () {
           expect(u4.toString(), equals('1945-09-30 06:00:00.000Z'));
         });
-      });
+
+        final x5 = x2.add(const Duration(hours: 1));
+        final u5 = new DateTime.fromMillisecondsSinceEpoch(x5.millisecondsSinceEpoch, isUtc: true);
+
+        test('$x5 => 1945-09-30 05:59:59.999Z', () {
+          expect(u5.toString(), equals('1945-09-30 05:59:59.999Z'));
+        });
+});
     });
   });
 }

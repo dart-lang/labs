@@ -106,7 +106,7 @@ contains information about location and time zone.
 final date = new TZDateTime(detroit, 2014, 11, 17);
 ```
 
-## Time Zone databases
+## <a name="databases"></a> Time Zone databases
 
 We are using [IANA Time Zone Database](http://www.iana.org/time-zones)
 to build our databases.
@@ -118,8 +118,8 @@ We are currently building three different database variants:
 - all (contains all data from the
   [IANA Time Zone Database](http://www.iana.org/time-zones)). 370kb/100kb
   gzip
-- 2010-2020 (contains historical data from 2010 till 2020
-  years). 71kb/16kb gzip
+- 2010-2020 (default database that contains historical data from 2010
+  until 2020). 71kb/16kb gzip
 
 ### Generating Time Zone database subsets
 

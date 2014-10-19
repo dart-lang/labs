@@ -39,6 +39,6 @@ Location getLocation(String locationName) {
 /// ```dart
 /// setLocalLocation('America/Detroit');
 /// ```
-void setLocation(String locationName) {
+void setLocalLocation(String locationName) {
   LocationDatabase.local = getLocation(locationName);
 }
