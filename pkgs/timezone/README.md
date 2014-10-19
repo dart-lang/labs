@@ -3,13 +3,10 @@
 This package provides time zone database and time zone aware DateTime
 object.
 
-The time zone database is build from
-[the IANA Time Zone Database](http://www.iana.org/time-zones).
-
 ## Initialization
 
 TimeZone objects require time zone data, so the first step is to load
-the time zone database.
+one of our [time zone databases](#databases).
 
 We are providing two different APIs for browsers and standalone
 environments.
@@ -17,7 +14,7 @@ environments.
 ### Initialization for browser environment
 
 Import `package:timezone/browser.dart` library and run async function
-`Future initializeTimeZone([String url])`.
+`Future initializeTimeZone([String path])`.
 
 ```dart
 import 'package:timezone/browser.dart';
@@ -31,7 +28,7 @@ initializeTimeZone().then((_) {
 ### Initialization for standalone environment
 
 Import `package:timezone/standalone.dart` library and run async function
-`Future initializeTimeZone([String dataPath])`.
+`Future initializeTimeZone([String path])`.
 
 ```dart
 import 'package:timezone/standalone.dart';
@@ -73,7 +70,7 @@ initializeTimeZone().then((_) {
 >
 > [The tz database](http://www.twinsun.com/tz/tz-link.htm)
 
-#### Get location by Olson timezone ID
+#### Get location by Olsen timezone ID
 
 ```dart
 final detroit = getLocation('America/Detroit');
@@ -92,8 +89,8 @@ abbreviations because of the ambiguities.
 
 ### TimeZone
 
-TimeZone object represents time zone and contains offset and name in
-abbreviated form.
+TimeZone object represents time zone and contains offset, dst flag,
+and name in the abbreviated form.
 
 ```dart
 final timeInUtc = new DateTime.utc(1995, 1, 1);
@@ -109,20 +106,31 @@ contains information about location and time zone.
 final date = new TZDateTime(detroit, 2014, 11, 17);
 ```
 
-## Generating Time Zone database subsets
+## Time Zone databases
 
-When there is no need to download the whole history of time zone
-transitions, it is possible to generate database subset with the data
-your application needs.
+We are using [IANA Time Zone Database](http://www.iana.org/time-zones)
+to build our databases.
+
+We are currently building three different database variants:
+
+- default (doesn't contain deprecated and historical zones with some
+  exceptions like US/Eastern). 308kb/72kb gzip
+- all (contains all data from the
+  [IANA Time Zone Database](http://www.iana.org/time-zones)). 370kb/100kb
+  gzip
+- 2010-2020 (contains historical data from 2010 till 2020
+  years). 71kb/16kb gzip
+
+### Generating Time Zone database subsets
+
+If you want to build custom database subset, you can use our tool and
+build your own database.
 
 ```sh
 $ pub run timezone:generate_data_subset -f "2010-01-01 00:00:00z" -t "2020-01-01 00:00:00z" -o 2014h-2010-2020.tzf
 ```
 
-Latest version of our database is ~370kb without compression and
-~100kb with gzip.
-
-## Time Zone database format
+### Time Zone database format
 
 The database contains list of locations and each location contains
 list of time zones with transition times to this time zones.
@@ -152,7 +160,7 @@ Location {
 } locations[];
 ```
 
-## Updating Time Zone database
+### Updating Time Zone databases
 
 Script for updating Time Zone database, it will automatically download
 [the IANA Time Zone Database](http://www.iana.org/time-zones) and
