@@ -4,73 +4,10 @@
 
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:tuple/tuple.dart';
 import 'package:timezone/standalone.dart';
 import 'package:timezone/timezone.dart';
+import 'package:timezone/tools.dart';
 
-class Report {
-  int originalLocationsCount = 0;
-  int originalTransitionsCount = 0;
-  int newLocationsCount = 0;
-  int newTransitionsCount = 0;
-}
-
-/// Maximum value for time instants.
-const int _omega = 8640000000000000;
-
-/// Minimum value for time instants.
-const int _alpha = -_omega;
-
-Tuple2<LocationDatabase, Report> filterTimeZoneData(LocationDatabase db,
-    {int dateFrom: _alpha, int dateTo: _omega}) {
-  final report = new Report();
-  final result = new LocationDatabase();
-
-  report.originalLocationsCount = db.locations.length;
-
-  for (final l in db.locations.values) {
-    final transitionsCount = l.transitionAt.length;
-    report.originalTransitionsCount += transitionsCount;
-
-    final newTransitionAt = [];
-    final newTransitionZone = [];
-
-    if (transitionsCount == 0) {
-      result.add(
-          new Location(l.name, newTransitionAt, newTransitionZone, l.zones));
-      continue;
-    }
-
-    var i = 0;
-
-    while (i < transitionsCount && dateFrom > l.transitionAt[i]) {
-      i++;
-    }
-
-    if (i < transitionsCount) {
-      newTransitionAt.add(_alpha);
-      newTransitionZone.add(l.transitionZone[i]);
-      i++;
-      report.newTransitionsCount++;
-
-      while (i < transitionsCount && l.transitionAt[i] <= dateTo) {
-        newTransitionAt.add(l.transitionAt[i]);
-        newTransitionZone.add(l.transitionZone[i]);
-        i++;
-        report.newTransitionsCount++;
-      }
-    } else {
-      newTransitionAt.add(_alpha);
-      newTransitionZone.add(l.transitionZone[i - 1]);
-    }
-
-    result.add(
-        new Location(l.name, newTransitionAt, newTransitionZone, l.zones));
-    report.newLocationsCount++;
-  }
-
-  return new Tuple2(result, report);
-}
 
 void main(List<String> arguments) {
   // Parse CLI arguments
@@ -90,8 +27,8 @@ void main(List<String> arguments) {
     exit(64);
   }
 
-  int from = _alpha;
-  int to = _omega;
+  int from = TZDateTime.minMillisecondsSinceEpoch;
+  int to = TZDateTime.maxMillisecondsSinceEpoch;;
 
   final String argFrom = argResults['from'];
   final String argTo = argResults['to'];

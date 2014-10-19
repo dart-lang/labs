@@ -31,7 +31,6 @@ const _zicDataFiles = const [
     'pacificnew',
     'backward'];
 
-
 /// Load [tzfile.Location] from tzfile
 Future<tzfile.Location> loadTzfileLocation(String name, String path) {
   return new File(path).readAsBytes().then((rawData) {
@@ -106,7 +105,6 @@ void main(List<String> arguments) {
   final source = argResults['source'];
 
 
-  final db = new LocationDatabase();
   final tzfileLocations = [];
 
   log.info('Creating temp directory');
@@ -146,19 +144,52 @@ void main(List<String> arguments) {
           });
         });
       });
+    }).whenComplete(() {
+      log.info('Cleaning up temporary directories');
+      return dir.delete(recursive: true);
     }).then((_) {
       log.info('Converting tzfile Locations to native Locations');
-      return Future.forEach(tzfileLocations, (loc) {
-        db.add(tzfileLocationToNativeLocation(loc));
+      return new Future.sync(() {
+        final db = new LocationDatabase();
+
+        for (final loc in tzfileLocations) {
+          db.add(tzfileLocationToNativeLocation(loc));
+        }
+
+        logReport(r) {
+          log.info('  + locations: ${r.originalLocationsCount} => ${r.newLocationsCount}');
+          log.info('  + transitions: ${r.originalTransitionsCount} => ${r.newTransitionsCount}');
+        }
+
+        log.info('Building location databases:');
+
+        log.info('- all locations');
+        final allDb = filterTimeZoneData(db, locations: allLocations);
+        logReport(allDb.i2);
+
+        log.info('- common locations from all locations');
+        final commonDb = filterTimeZoneData(allDb.i1, locations: commonLocations);
+        logReport(commonDb.i2);
+
+        log.info('- [2010 - 2020 years] from common locations');
+        final common_2010_2020_Db = filterTimeZoneData(commonDb.i1,
+            dateFrom: new DateTime.utc(2010, 1, 1).millisecondsSinceEpoch,
+            dateTo: new DateTime.utc(2020, 1, 1).millisecondsSinceEpoch,
+            locations: commonLocations);
+        logReport(common_2010_2020_Db.i2);
+
+        log.info('Serializing location databases');
+        final allOut = new File(ospath.join(outPath, '${source}_all.$dataExtension'));
+        final commonOut = new File(ospath.join(outPath, '${source}.$dataExtension'));
+        final common_2010_2020_Out = new File(ospath.join(outPath, '${source}_2010-2020.$dataExtension'));
+        return allOut.writeAsBytes(allDb.i1.toBytes(), flush: true).then((_) {
+          return commonOut.writeAsBytes(commonDb.i1.toBytes(), flush: true);
+        }).then((_) {
+          return common_2010_2020_Out.writeAsBytes(common_2010_2020_Db.i1.toBytes(), flush: true);
+        });
       });
     }).then((_) {
-      final out = new File(ospath.join(outPath, '$source.$dataExtension'));
-      log.info('Serializing locations database to "$out"');
-      return out.writeAsBytes(db.toBytes(), flush: true);
-    }).whenComplete(() {
-      log.info('Cleaning up');
-      return dir.delete(recursive: true);
+      exit(0);
     });
   });
-
 }

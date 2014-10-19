@@ -6,6 +6,12 @@ part of timezone;
 
 /// TimeZone aware DateTime
 class TZDateTime implements DateTime {
+  /// Maximum value for time instants.
+  static const int maxMillisecondsSinceEpoch = 8640000000000000;
+
+  /// Minimum value for time instants.
+  static const int minMillisecondsSinceEpoch = -maxMillisecondsSinceEpoch;
+
   // Weekday constants that are returned by [weekday] method:
   static const int MONDAY = 1;
   static const int TUESDAY = 2;
