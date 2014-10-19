@@ -185,7 +185,16 @@ class TZDateTime implements DateTime {
     }
   }
 
-  /// Constructs a new [DateTime] instance based on [formattedString].
+  /// Constructs a new [TZDateTime] instance from the given [DateTime]
+  ///
+  /// ```dart
+  /// final laTime = new TZDateTime(la, 2010, 1, 1);
+  /// final detroitTime = new TZDateTime.from(detroit, laTime);
+  /// ```
+  TZDateTime.from(Location location, DateTime other)
+      : this.fromMillisecondsSinceEpoch(location, other.millisecondsSinceEpoch);
+
+  /// Constructs a new [TZDateTime] instance based on [formattedString].
   ///
   /// Throws a [FormatException] if the input cannot be parsed.
   ///
