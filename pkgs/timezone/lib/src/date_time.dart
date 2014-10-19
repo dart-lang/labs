@@ -280,6 +280,8 @@ class TZDateTime implements DateTime {
   /// Use the [intl](http://pub.dartlang.org/packages/intl) package
   /// at the pub shared packages repo.
   String toString() {
+    var offset = _timeZone.offset;
+
     String y = _fourDigits(year);
     String m = _twoDigits(month);
     String d = _twoDigits(day);
@@ -287,10 +289,16 @@ class TZDateTime implements DateTime {
     String min = _twoDigits(minute);
     String sec = _twoDigits(second);
     String ms = _threeDigits(millisecond);
-    if (isUtc) {
+
+    if (isUtc || offset == 0) {
       return "$y-$m-$d $h:$min:$sec.${ms}Z";
     } else {
-      return "$y-$m-$d $h:$min:$sec.$ms";
+      String offSign = offset.sign > 0 ? '+' : '-';
+      offset = offset.abs() ~/ 1000;
+      String offH = _twoDigits(offset ~/ 3600);
+      String offM = _twoDigits(offset % 60);
+
+      return "$y-$m-$d $h:$min:$sec.$ms$offSign$offH$offM";
     }
   }
 
@@ -298,6 +306,8 @@ class TZDateTime implements DateTime {
   /// The format is "YYYY-MM-DDTHH:mm:ss.sssZ" for UTC time, and
   /// "YYYY-MM-DDTHH:mm:ss.sss" (no trailing "Z") for non-UTC time.
   String toIso8601String() {
+    var offset = _timeZone.offset;
+
     String y = _fourDigits(year);
     String m = _twoDigits(month);
     String d = _twoDigits(day);
@@ -308,7 +318,12 @@ class TZDateTime implements DateTime {
     if (isUtc) {
       return "$y-$m-${d}T$h:$min:$sec.${ms}Z";
     } else {
-      return "$y-$m-${d}T$h:$min:$sec.$ms";
+      String offSign = offset.sign > 0 ? '+' : '-';
+      offset = offset.abs() ~/ 1000;
+      String offH = _twoDigits(offset ~/ 3600);
+      String offM = _twoDigits(offset % 60);
+
+      return "$y-$m-${d}T$h:$min:$sec.$ms$offSign$offH$offM";
     }
   }
 
