@@ -14,6 +14,7 @@ part 'package:timezone/src/location.dart';
 part 'package:timezone/src/location_database.dart';
 part 'package:timezone/src/exceptions.dart';
 part 'package:timezone/src/date_time.dart';
+part 'package:timezone/src/detect_local.dart';
 
 /// Latest version of the Time Zone database.
 const String dataLatestVersion = '2014h';
