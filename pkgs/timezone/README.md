@@ -3,8 +3,8 @@
 This package provides time zone database and time zone aware DateTime
 object.
 
-The time zone database is build from 
-[http://www.iana.org/time-zones](the IANA Time Zone Database).
+The time zone database is build from
+[the IANA Time Zone Database](http://www.iana.org/time-zones).
 
 ## Initialization
 
@@ -17,34 +17,41 @@ environments.
 ### Initialization for browser environment
 
 Import `package:timezone/browser.dart` library and run async function
-`initializeTimeZone([String url])`.
+`Future initializeTimeZone([String url])`.
 
 ```dart
 import 'package:timezone/browser.dart';
 
-initializeTimeZone()
-.then((_) {
-
+initializeTimeZone().then((_) {
   final detroit = getLocation('America/Detroit');
   final now = new TZDateTime.now(detroit);
-
 });
 ```
 
 ### Initialization for standalone environment
 
 Import `package:timezone/standalone.dart` library and run async function
-`initializeTimeZone([String dataPath])`.
+`Future initializeTimeZone([String dataPath])`.
 
 ```dart
 import 'package:timezone/standalone.dart';
 
-initializeTimeZone()
-.then((_) {
-
+initializeTimeZone().then((_) {
   final detroit = getLocation('America/Detroit');
   final now = new TZDateTime.now(detroit);
+});
+```
 
+### Local Location
+
+After loading database, we are trying to detect local location.
+
+To overwrite local location you can use `setLocalLocation(String
+locationId)` function.
+
+```dart
+initializeTimeZone().then((_) {
+  setLocalLocation('America/Detroit');
 });
 ```
 
@@ -52,13 +59,36 @@ initializeTimeZone()
 
 ### Location
 
-Locations contain information about the history of local time zones.
+> Each location in the database represents a national region where all
+> clocks keeping local time have agreed since 1970. Locations are
+> identified by continent or ocean and then by the name of the
+> location, which is typically the largest city within the region. For
+> example, America/New_York represents most of the US eastern time
+> zone; America/Phoenix represents most of Arizona, which uses
+> mountain time without daylight saving time (DST); America/Detroit
+> represents most of Michigan, which uses eastern time but with
+> different DST rules in 1975; and other entries represent smaller
+> regions like Starke County, Indiana, which switched from central to
+> eastern time in 1991 and switched back in 2006.
+>
+> [The tz database](http://www.twinsun.com/tz/tz-link.htm)
 
 #### Get location by Olson timezone ID
 
 ```dart
 final detroit = getLocation('America/Detroit');
 ```
+
+We don't provide any functions to get locations by timezone
+abbreviations because of the ambiguities.
+
+> Alphabetic time zone abbreviations should not be used as unique
+> identifiers for UTC offsets as they are ambiguous in practice. For
+> example, "EST" denotes 5 hours behind UTC in English-speaking North
+> America, but it denotes 10 or 11 hours ahead of UTC in Australia;
+> and French-speaking North Americans prefer "HNE" to "EST".
+>
+> [The tz database](http://www.twinsun.com/tz/tz-link.htm)
 
 ### TimeZone
 
@@ -125,7 +155,7 @@ Location {
 ## Updating Time Zone database
 
 Script for updating Time Zone database, it will automatically download
-[http://www.iana.org/time-zones](the IANA Time Zone Database) and
+[the IANA Time Zone Database](http://www.iana.org/time-zones) and
 compile into our native format.
 
 ```sh
