@@ -106,6 +106,21 @@ contains information about location and time zone.
 final date = new TZDateTime(detroit, 2014, 11, 17);
 ```
 
+#### Convert DateTimes between Time Zones
+
+To convert between time zones, just create a new `TZDateTime` object
+using `from` constructor and pass `Location` and `DateTime` to the
+constructor.
+
+```dart
+final localTime = new DateTime(2010, 1, 1);
+final detroitTime = new TZDateTime.from(detroit, time);
+```
+
+This constructor supports any objects that implements `DateTime`
+interface, so you can pass native `DateTime` object or ours
+`TZDateTime`.
+
 ## <a name="databases"></a> Time Zone databases
 
 We are using [IANA Time Zone Database](http://www.iana.org/time-zones)
