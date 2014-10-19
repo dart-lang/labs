@@ -40,12 +40,7 @@ class LocationDatabase {
     }
 
     if (local == null) {
-      final now = new DateTime.now();
-      local = new Location(
-          now.timeZoneName,
-          [_alpha],
-          [0],
-          [new TimeZone(now.timeZoneOffset.inMilliseconds, false, now.timeZoneName)]);
+      detectLocalLocation();
     }
 
     _instance = new LocationDatabase.fromBytes(rawData);
