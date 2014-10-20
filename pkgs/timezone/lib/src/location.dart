@@ -29,7 +29,7 @@
 ///       u8 abbrIndex;
 ///     } zones[];
 ///
-///     i64 transitionAt[]; // in seconds
+///     f64 transitionAt[]; // in seconds
 ///     u8 transitionZone[];
 ///   }
 /// }
@@ -112,8 +112,7 @@ class Location {
     final transitionsLength = bdata.getUint32(12);
 
     // read name
-    final name =
-        ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + 16, nameLength));
+    final name = ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + 16, nameLength));
 
     // read abbreviations
     final abbrs = [];
@@ -147,7 +146,7 @@ class Location {
     final transitionZone = [];
 
     for (var i = 0; i < transitionsLength; i++) {
-      transitionAt.add(bdata.getInt64(offset) * 1000); // convert to ms
+      transitionAt.add(bdata.getFloat64(offset).toInt() * 1000); // convert to ms
       offset += 8;
     }
 
@@ -374,7 +373,8 @@ class Location {
 
     // write transitions
     for (final tAt in transitionAt) {
-      buffer.setInt64(offset, tAt ~/ 1000); // convert to sec
+      final t = tAt ~/ 1000;
+      buffer.setFloat64(offset, t.toDouble()); // convert to sec
       offset += 8;
     }
 

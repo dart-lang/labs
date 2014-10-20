@@ -172,7 +172,7 @@ Location {
         u8 isDst;     // daylight savings time
         u8 abbrIndex; // position in abbrs[]
       }
-      i64 transitionAt[];  // time when transition is occured
+      f64 transitionAt[];  // time when transition is occured in seconds
       u8 transitionZone[]; // transition time zone
     }
   }
