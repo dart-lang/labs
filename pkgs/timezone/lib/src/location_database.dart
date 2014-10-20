@@ -13,38 +13,13 @@ part of timezone;
 /// LocationDatabase db = new LocationDatabase.fromBytes(data);
 /// Location loc = db.get('US/Eastern');
 /// ```
-///
 class LocationDatabase {
-  static LocationDatabase _instance;
-
-  static LocationDatabase get instance => _instance;
-
   /// Mapping between [Location] name and [Location].
   final Map<String, Location> _locations = new Map<String, Location>();
 
   Map<String, Location> get locations => _locations;
 
   LocationDatabase();
-
-  /// UTC Location
-  static Location UTC;
-
-  /// Local Location
-  static Location local;
-
-  /// Initialize
-  static void initialize(List<int> rawData) {
-    _instance = new LocationDatabase.fromBytes(rawData);
-
-    if (UTC == null) {
-      UTC =
-          new Location('UTC', [_alpha], [0], [const TimeZone(0, false, 'UTC')]);
-    }
-
-    if (local == null) {
-      local = detectLocalLocation();
-    }
-  }
 
   factory LocationDatabase.fromBytes(List<int> rawData) {
     final data =
@@ -77,7 +52,7 @@ class LocationDatabase {
   Location get(String name) {
     final loc = _locations[name];
     if (loc == null) {
-      throw new LocationNotFoundException('No locations with the name "$name"');
+      throw new LocationNotFoundException('Location with the name "$name" doesn\'t exist');
     }
     return loc;
   }

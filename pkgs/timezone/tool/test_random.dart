@@ -46,8 +46,7 @@ void main(List<String> arguments) {
   log.info('Iterations: $i');
 
   initializeTimeZone().then((_) {
-    final zoneNames =
-        LocationDatabase.instance.locations.keys.map((k) => k).toList();
+    final zoneNames = timeZoneDatabase.locations.keys.map((k) => k).toList();
     final zoneCount = zoneNames.length;
 
     Future.doWhile(() {

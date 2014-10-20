@@ -2,7 +2,9 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
-/// TimeZone library
+/// # TimeZone library
+///
+/// Time zone database and time zone aware DateTime.
 library timezone;
 
 import 'dart:convert';
@@ -17,13 +19,29 @@ part 'package:timezone/src/date_time.dart';
 part 'package:timezone/src/detect_local.dart';
 
 /// Latest version of the Time Zone database.
-const String dataLatestVersion = '2014h';
+const String tzDataLatestVersion = '2014h';
 
-/// Time Zone data file extension.
-const String dataExtension = 'tzf';
+/// Time Zone database file extension.
+const String tzDataExtension = 'tzf';
 
-/// Default file name for Time Zone data file.
-const String dataDefaultFilename = '$dataLatestVersion.$dataExtension';
+/// File name of the Time Zone default database.
+const String tzDataDefaultFilename = '$tzDataLatestVersion.$tzDataExtension';
+
+/// Path to the Time Zone default database.
+const String tzDataDefaultPath = 'packages/timezone/data/$tzDataDefaultFilename';
+
+LocationDatabase _database;
+Location _UTC;
+Location _local;
+
+/// Global TimeZone database
+LocationDatabase get timeZoneDatabase => _database;
+
+/// UTC Location
+Location get UTC => _UTC;
+
+/// Local Location
+Location get local => _local;
 
 /// Find [Location] by its name.
 ///
@@ -31,14 +49,28 @@ const String dataDefaultFilename = '$dataLatestVersion.$dataExtension';
 /// final detroit = getLocation('America/Detroit');
 /// ```
 Location getLocation(String locationName) {
-  return LocationDatabase.instance.get(locationName);
+  return _database.get(locationName);
 }
 
 /// Set local [Location]
 ///
 /// ```dart
-/// setLocalLocation('America/Detroit');
+/// final detroit = getLocation('America/Detroit')
+/// setLocalLocation(detroit);
 /// ```
-void setLocalLocation(String locationName) {
-  LocationDatabase.local = getLocation(locationName);
+void setLocalLocation(Location location) {
+  _local = location;
+}
+
+/// Initialize Time zone database.
+void initializeDatabase(List<int> rawData) {
+  _database = new LocationDatabase.fromBytes(rawData);
+
+  if (_UTC == null) {
+    _UTC = new Location('UTC', [_alpha], [0], [const TimeZone(0, false, 'UTC')]);
+  }
+
+  if (_local == null) {
+    _local = detectLocalLocation();
+  }
 }

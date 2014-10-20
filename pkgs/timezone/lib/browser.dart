@@ -2,6 +2,15 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
+/// TimeZone initialization for browser environments.
+///
+/// ```dart
+/// import 'package:timezone/browser.dart';
+///
+/// initializeTimeZone().then((_) {
+///  final detroit = getLocation('America/Detroit');
+///  final now = new TZDateTime.now(detroit);
+/// });
 library timezone.browser;
 
 import 'dart:async';
@@ -9,41 +18,37 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'package:timezone/timezone.dart';
 
-export 'package:timezone/timezone.dart' show LocationDatabase, Location,
-    TimeZone, translateTime, getLocation, TZDateTime;
+export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
+    TZDateTime, timeZoneDatabase;
 
-/// Initialize global Time Zone database.
+/// Initialize Time Zone database.
+///
+/// Throws [TimeZoneInitException] when something is worng.
 ///
 /// ```dart
-/// import 'package:timezone/browser.dart' as tz;
+/// import 'package:timezone/browser.dart';
 ///
-/// tz.initializeTimeZone()
-/// .then(() {
-///
-///   final now = new DateTime.now().millisecondsSinceEpoch;
-///   final nowEastern = tz.translateTime(now, 'US/Eastern');
-///
+/// initializeTimeZone().then(() {
+///   final detroit = getLocation('America/Detroit');
+///   final detroitNow = new TZDateTime.now(detroit);
 /// });
 /// ```
-Future initializeTimeZone([String url =
-    '/packages/timezone/data/$dataDefaultFilename']) {
+Future initializeTimeZone([String path = tzDataDefaultPath]) {
   return HttpRequest.request(
-      url,
+      path,
       method: 'GET',
       responseType: 'arraybuffer',
       mimeType: 'application/octet-stream').then((req) {
-    if (req.status != 200) {
-      throw new TimeZoneInitializationException(
-          'http status code: ${req.status}');
-    }
+
     final response = req.response;
-    if (response is ByteBuffer) {
-      LocationDatabase.initialize(response.asUint8List());
-    } else {
-      throw new TimeZoneInitializationException('Invalid response type');
+
+    if (response is! ByteBuffer) {
+      throw new TimeZoneInitException('Invalid response type: ${response.runtimeType}');
     }
 
+    initializeDatabase(response.asUint8List());
+
   }).catchError((e) {
-    throw new TimeZoneInitializationException('failed to initialize');
-  });
+    throw new TimeZoneInitException(e.toString());
+  }, test: (e) => e is! TimeZoneInitException);
 }

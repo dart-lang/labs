@@ -12,7 +12,7 @@ import 'package:timezone/tools.dart';
 void main(List<String> arguments) {
   // Parse CLI arguments
   final parser = new ArgParser()
-  ..addOption('source', abbr: 's', defaultsTo: 'packages/timezone/data/$dataDefaultFilename')
+  ..addOption('source', abbr: 's', defaultsTo: tzDataDefaultPath)
   ..addOption('output', abbr: 'o')
   ..addOption('from', abbr: 'f')
   ..addOption('to', abbr: 't');
@@ -51,7 +51,7 @@ void main(List<String> arguments) {
   }
 
   initializeTimeZone(source).then((_) {
-    final result = filterTimeZoneData(LocationDatabase.instance,
+    final result = filterTimeZoneData(timeZoneDatabase,
         dateFrom: from,
         dateTo: to);
 

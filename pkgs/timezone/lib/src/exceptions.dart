@@ -4,12 +4,12 @@
 
 part of timezone;
 
-class TimeZoneInitializationException implements Exception {
+class TimeZoneInitException implements Exception {
   final String msg;
 
-  TimeZoneInitializationException(this.msg);
+  TimeZoneInitException(this.msg);
 
-  String toString() => msg == null ? 'TimeZoneInitializationException' : msg;
+  String toString() => msg == null ? 'TimeZoneInitException' : msg;
 }
 
 class LocationNotFoundException implements Exception {

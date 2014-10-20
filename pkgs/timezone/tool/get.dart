@@ -179,9 +179,9 @@ void main(List<String> arguments) {
         logReport(common_2010_2020_Db.i2);
 
         log.info('Serializing location databases');
-        final allOut = new File(ospath.join(outPath, '${source}_all.$dataExtension'));
-        final commonOut = new File(ospath.join(outPath, '${source}.$dataExtension'));
-        final common_2010_2020_Out = new File(ospath.join(outPath, '${source}_2010-2020.$dataExtension'));
+        final allOut = new File(ospath.join(outPath, '${source}_all.$tzDataExtension'));
+        final commonOut = new File(ospath.join(outPath, '${source}.$tzDataExtension'));
+        final common_2010_2020_Out = new File(ospath.join(outPath, '${source}_2010-2020.$tzDataExtension'));
         return allOut.writeAsBytes(allDb.i1.toBytes(), flush: true).then((_) {
           return commonOut.writeAsBytes(commonDb.i1.toBytes(), flush: true);
         }).then((_) {

@@ -2,6 +2,15 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
+/// TimeZone initialization for standalone environments.
+///
+/// ```dart
+/// import 'package:timezone/standalone.dart';
+///
+/// initializeTimeZone().then((_) {
+///  final detroit = getLocation('America/Detroit');
+///  final now = new TZDateTime.now(detroit);
+/// });
 library timezone.standalone;
 
 import 'dart:async';
@@ -9,12 +18,13 @@ import 'dart:io';
 import 'package:path/path.dart' as ospath;
 import 'package:timezone/timezone.dart';
 
-export 'package:timezone/timezone.dart' show LocationDatabase, Location,
-    TimeZone, translateTime, getLocation, TZDateTime;
+export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
+    TZDateTime, timeZoneDatabase;
+
+const _packagesPrefix = 'packages/';
 
 /// Load file
-/// TODO: check Platform.packageRoot
-Future<List<int>> loadAsBytes(String path) {
+Future<List<int>> _loadAsBytes(String path) {
   final script = Platform.script;
   final scheme = Platform.script.scheme;
 
@@ -27,36 +37,44 @@ Future<List<int>> loadAsBytes(String path) {
             path: path)).then((req) {
       return req.close();
     }).then((response) {
+      // join byte buffers
       return response.fold(
           new BytesBuilder(),
           (b, d) => b..add(d)).then((builder) {
         return builder.takeBytes();
       });
     });
+
   } else if (scheme == 'file') {
-    return new File(
-        ospath.join(ospath.dirname(script.path), path)).readAsBytes();
+    final packageRoot = Platform.packageRoot;
+    if (packageRoot.isNotEmpty && path.startsWith(_packagesPrefix)) {
+      final p = ospath.join(packageRoot, path.substring(_packagesPrefix.length));
+      return new File(p).readAsBytes();
+    }
+
+    final p = ospath.join(ospath.dirname(script.path), path);
+    return new File(p).readAsBytes();
   }
 
-  // TODO: fix this
-  throw new Exception('Error');
+  return new Future.error(new UnimplementedError('Unknown script scheme: $scheme'));
 }
 
 /// Initialize Time Zone database.
 ///
-/// ```dart
-/// import 'package:timezone/standalone.dart' as tz;
+/// Throws [TimeZoneInitException] when something is worng.
 ///
-/// tz.initializeTimeZone()
-/// .then(() {
-///   final eastern = tz.getLocation('US/Eastern');
+/// ```dart
+/// import 'package:timezone/standalone.dart';
+///
+/// initializeTimeZone().then(() {
+///   final detroit = getLocation('America/Detroit');
+///   final detroitNow = new TZDateTime.now(detroit);
 /// });
 /// ```
-Future initializeTimeZone([String dataPath = 'packages/timezone/data/$dataDefaultFilename']) {
-  return loadAsBytes(dataPath).then((rawData) {
-    LocationDatabase.initialize(rawData);
+Future initializeTimeZone([String path = tzDataDefaultPath]) {
+  return _loadAsBytes(path).then((rawData) {
+    initializeDatabase(rawData);
   }).catchError((e) {
-    // TODO: fix this
-    throw new TimeZoneInitializationException(e.toString());
+    throw new TimeZoneInitException(e.toString());
   });
 }

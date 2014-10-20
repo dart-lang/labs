@@ -3,6 +3,9 @@
 This package provides time zone database and time zone aware DateTime
 object.
 
+Current Time Zone database version:
+[2014h](http://www.iana.org/time-zones/repository/releases/tzcode2014h.tar.gz)
+
 ## Initialization
 
 TimeZone objects require time zone data, so the first step is to load
@@ -48,7 +51,8 @@ locationId)` function.
 
 ```dart
 initializeTimeZone().then((_) {
-  setLocalLocation('America/Detroit');
+  final detroit = getLocation('America/Detroit');
+  setLocalLocation(detroit);
 });
 ```
 

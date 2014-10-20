@@ -7,7 +7,7 @@ import 'package:timezone/timezone.dart';
 void main(List<String> arguments) {
   // Parse CLI arguments
   final parser = new ArgParser()
-  ..addOption('source', abbr: 'd', defaultsTo: 'packages/timezone/data/$dataDefaultFilename')
+  ..addOption('source', abbr: 'd', defaultsTo: tzDataDefaultPath)
   ..addOption('location', abbr: 'l');
 
   final argResults = parser.parse(arguments);

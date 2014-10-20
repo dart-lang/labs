@@ -17,7 +17,7 @@ part of timezone;
 /// * by abbreviation
 Location detectLocalLocation() {
   var locations = [];
-  for (final loc in LocationDatabase.instance.locations.values) {
+  for (final loc in _database.locations.values) {
     locations.add(new Tuple2(loc, loc.currentTimeZone));
   }
 
@@ -40,9 +40,9 @@ Location detectLocalLocation() {
     locations.retainWhere(filters[i++]);
   }
 
-  // TODO: fix this with something better.
   if (locations.isEmpty) {
-    return null;
+    return new Location('Unidentified', [TZDateTime.minMillisecondsSinceEpoch],
+        [0], [new TimeZone(timeZoneOffset, false, timeZoneName)]);
   }
 
   return locations.first.i1;

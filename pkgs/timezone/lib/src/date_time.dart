@@ -69,7 +69,7 @@ class TZDateTime implements DateTime {
   /// assert(dDay.isUtc);
   /// ```
   ///
-  bool get isUtc => identical(_location, LocationDatabase.UTC);
+  bool get isUtc => identical(_location, UTC);
 
   /// True if this [TZDateTime] is set to Local time.
   ///
@@ -78,7 +78,7 @@ class TZDateTime implements DateTime {
   /// assert(dDay.isLocal);
   /// ```
   ///
-  bool get isLocal => identical(_location, LocationDatabase.local);
+  bool get isLocal => identical(_location, local);
 
   /// Constructs a [TZDateTime] instance specified in the [location] time zone.
   ///
@@ -122,7 +122,7 @@ class TZDateTime implements DateTime {
   TZDateTime.utc(int year, [int month = 1, int day = 1, int hour = 0, int minute
       = 0, int second = 0, int millisecond = 0])
       : this(
-          LocationDatabase.UTC,
+          UTC,
           year,
           month,
           day,
@@ -139,7 +139,7 @@ class TZDateTime implements DateTime {
   TZDateTime.local(int year, [int month = 1, int day = 1, int hour = 0,
       int minute = 0, int second = 0, int millisecond = 0])
       : this(
-          LocationDatabase.local,
+          local,
           year,
           month,
           day,
@@ -234,9 +234,7 @@ class TZDateTime implements DateTime {
     if (isUtc) {
       return this;
     }
-    return new TZDateTime.fromMillisecondsSinceEpoch(
-        LocationDatabase.UTC,
-        millisecondsSinceEpoch);
+    return new TZDateTime.fromMillisecondsSinceEpoch(UTC, millisecondsSinceEpoch);
   }
 
   /// Returns this DateTime value in the local time zone.
@@ -247,9 +245,7 @@ class TZDateTime implements DateTime {
     if (isLocal) {
       return this;
     }
-    return new TZDateTime.fromMillisecondsSinceEpoch(
-        LocationDatabase.local,
-        millisecondsSinceEpoch);
+    return new TZDateTime.fromMillisecondsSinceEpoch(local, millisecondsSinceEpoch);
   }
 
   static String _fourDigits(int n) {
