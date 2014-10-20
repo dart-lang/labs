@@ -46,8 +46,8 @@ initializeTimeZone().then((_) {
 
 After loading database, we are trying to detect local location.
 
-To overwrite local location you can use `setLocalLocation(String
-locationId)` function.
+To overwrite local location you can use `setLocalLocation(Location
+location)` function.
 
 ```dart
 initializeTimeZone().then((_) {
@@ -110,7 +110,7 @@ contains information about location and time zone.
 final date = new TZDateTime(detroit, 2014, 11, 17);
 ```
 
-#### Convert DateTimes between Time Zones
+#### Converting DateTimes between Time Zones
 
 To convert between time zones, just create a new `TZDateTime` object
 using `from` constructor and pass `Location` and `DateTime` to the
@@ -118,7 +118,7 @@ constructor.
 
 ```dart
 final localTime = new DateTime(2010, 1, 1);
-final detroitTime = new TZDateTime.from(detroit, time);
+final detroitTime = new TZDateTime.from(time, detroit);
 ```
 
 This constructor supports any objects that implements `DateTime`

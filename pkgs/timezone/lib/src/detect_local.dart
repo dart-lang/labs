@@ -2,6 +2,7 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
+/// TODO: Implement a better way to detect local location.
 /// Look at https://bitbucket.org/pellepim/jstimezonedetect and
 /// https://github.com/google/closure-library/blob/03b4b6894b304c9a6e1abac8725d95a02e3bb635/closure/goog/locale/timezonedetection.js
 /// for the possible better solution.

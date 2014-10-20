@@ -12,31 +12,6 @@ class TZDateTime implements DateTime {
   /// Minimum value for time instants.
   static const int minMillisecondsSinceEpoch = -maxMillisecondsSinceEpoch;
 
-  // Weekday constants that are returned by [weekday] method:
-  static const int MONDAY = 1;
-  static const int TUESDAY = 2;
-  static const int WEDNESDAY = 3;
-  static const int THURSDAY = 4;
-  static const int FRIDAY = 5;
-  static const int SATURDAY = 6;
-  static const int SUNDAY = 7;
-  static const int DAYS_PER_WEEK = 7;
-
-  // Month constants that are returned by the [month] getter.
-  static const int JANUARY = 1;
-  static const int FEBRUARY = 2;
-  static const int MARCH = 3;
-  static const int APRIL = 4;
-  static const int MAY = 5;
-  static const int JUNE = 6;
-  static const int JULY = 7;
-  static const int AUGUST = 8;
-  static const int SEPTEMBER = 9;
-  static const int OCTOBER = 10;
-  static const int NOVEMBER = 11;
-  static const int DECEMBER = 12;
-  static const int MONTHS_PER_YEAR = 12;
-
   Location _location;
 
   TimeZone _timeZone;
@@ -80,16 +55,17 @@ class TZDateTime implements DateTime {
   ///
   bool get isLocal => identical(_location, local);
 
-  /// Constructs a [TZDateTime] instance specified in the [location] time zone.
+  /// Constructs a [TZDateTime] instance specified at [location] time zone.
   ///
   /// For example,
-  /// to create a new DateTime object representing April 29, 2014, 6:04am:
+  /// to create a new TZDateTime object representing April 29, 2014, 6:04am
+  /// in America/Detroit:
   ///
   /// ```dart
   /// final detroit = getLocation('America/Detroit');
   ///
   /// final annularEclipse = new TZDateTime(location,
-  ///     2014, TZDateTime.APRIL, 29, 6, 4);
+  ///     2014, DateTime.APRIL, 29, 6, 4);
   /// ```
   TZDateTime(Location location, int year, [int month = 1, int day = 1, int hour
       = 0, int minute = 0, int second = 0, int millisecond = 0])
@@ -164,8 +140,7 @@ class TZDateTime implements DateTime {
     } else {
       _timeZone = _location.timeZone(_millisecondsSinceEpoch);
     }
-    _localDateTime =
-        new DateTime.fromMillisecondsSinceEpoch(_millisecondsSinceEpoch, isUtc: true);
+    _localDateTime = new DateTime.fromMillisecondsSinceEpoch(_millisecondsSinceEpoch + _timeZone.offset, isUtc: true);
   }
 
   /// Constructs a new [TZDateTime] instance with the given
@@ -192,12 +167,13 @@ class TZDateTime implements DateTime {
   }
 
   /// Constructs a new [TZDateTime] instance from the given [DateTime]
+  /// in the specified [location].
   ///
   /// ```dart
   /// final laTime = new TZDateTime(la, 2010, 1, 1);
   /// final detroitTime = new TZDateTime.from(detroit, laTime);
   /// ```
-  TZDateTime.from(Location location, DateTime other)
+  TZDateTime.from(DateTime other, Location location)
       : this.fromMillisecondsSinceEpoch(location, other.millisecondsSinceEpoch);
 
   /// Constructs a new [TZDateTime] instance based on [formattedString].
@@ -456,7 +432,7 @@ class TZDateTime implements DateTime {
   /// The millisecond [0...999].
   int get millisecond => _localDateTime.millisecond;
 
-  /// The day of the week [MONDAY]..[SUNDAY].
+  /// The day of the week.
   ///
   /// In accordance with ISO 8601
   /// a week starts with Monday, which has the value 1.
