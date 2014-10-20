@@ -9,6 +9,7 @@ dependencies:
   collection: '>=1.0.0 <2.0.0'
   tuple: '>=0.1.0 <=1.0.0'
 dev_dependencies:
+  browser: any
   args: any
   glob: any
   logging: any
