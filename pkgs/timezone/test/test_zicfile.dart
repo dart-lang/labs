@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:unittest/unittest.dart';
-import 'package:timezone/tzfile.dart' as tzfile;
+import 'package:timezone/tzdata.dart' as tzdata;
 
-tzfile.TimeZone z(int offset, bool isDst, int abbrevIndex) {
-  return new tzfile.TimeZone(offset, isDst, abbrevIndex);
+tzdata.TimeZone z(int offset, bool isDst, int abbrevIndex) {
+  return new tzdata.TimeZone(offset, isDst, abbrevIndex);
 }
 
 void main() {
   test('Read US/Eastern 2014h tzfile', () {
     new File('data/US/Eastern').readAsBytes().then((rawData) {
-      final loc = new tzfile.Location.fromBytes('US/Eastern', rawData);
+      final loc = new tzdata.Location.fromBytes('US/Eastern', rawData);
 
       expect(loc.name, equals('US/Eastern'));
       expect(loc.abbrs, equals(['LMT', 'EDT', 'EST', 'EWT', 'EPT']));

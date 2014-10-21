@@ -6,7 +6,7 @@ library timezone.tools;
 
 import 'dart:collection';
 import 'package:tuple/tuple.dart';
-import 'package:timezone/tzfile.dart' as tzfile;
+import 'package:timezone/tzdata.dart' as tzfile;
 import 'package:timezone/timezone.dart';
 
 const allLocations = const [

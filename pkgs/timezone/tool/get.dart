@@ -13,7 +13,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as ospath;
 import 'package:glob/glob.dart';
 
-import 'package:timezone/tzfile.dart' as tzfile;
+import 'package:timezone/tzdata.dart' as tzfile;
 import 'package:timezone/timezone.dart';
 import 'package:timezone/tools.dart';
 
