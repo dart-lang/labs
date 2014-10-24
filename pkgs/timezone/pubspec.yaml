@@ -1,12 +1,11 @@
 name: timezone
-version: 0.2.0
+version: 0.2.1
 author: Boris Kaul <localvoid@gmail.com>
 description: Time zone database and time zone aware DateTime.
 homepage: https://github.com/localvoid/timezone
 environment:
   sdk: '>=1.6.0'
 dependencies:
-  collection: '>=1.0.0 <2.0.0'
   tuple: '>=0.1.0 <=1.0.0'
 dev_dependencies:
   browser: any
