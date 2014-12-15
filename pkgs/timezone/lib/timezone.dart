@@ -19,7 +19,7 @@ part 'package:timezone/src/date_time.dart';
 part 'package:timezone/src/detect_local.dart';
 
 /// Latest version of the Time Zone database.
-const String tzDataLatestVersion = '2014h';
+const String tzDataLatestVersion = '2014j';
 
 /// Time Zone database file extension.
 const String tzDataExtension = 'tzf';
