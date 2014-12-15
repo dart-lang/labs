@@ -21,6 +21,9 @@ import 'package:timezone/timezone.dart';
 export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
     TZDateTime, timeZoneDatabase;
 
+/// Path to the Time Zone default database.
+const String tzDataDefaultPath = 'packages/timezone/data/$tzDataDefaultFilename';
+
 /// Initialize Time Zone database.
 ///
 /// Throws [TimeZoneInitException] when something is worng.

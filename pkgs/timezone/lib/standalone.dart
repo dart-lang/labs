@@ -21,7 +21,10 @@ import 'package:timezone/timezone.dart';
 export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
     TZDateTime, timeZoneDatabase;
 
-const _packagesPrefix = 'packages/';
+final _packagesPrefix = 'packages${ospath.separator}';
+
+final String tzDataDefaultPath = ospath.join('packages',
+    'timezone', 'data', tzDataDefaultFilename);
 
 /// Load file
 Future<List<int>> _loadAsBytes(String path) {
@@ -52,11 +55,25 @@ Future<List<int>> _loadAsBytes(String path) {
       return new File(p).readAsBytes();
     }
 
-    final p = ospath.join(ospath.dirname(script.path), path);
+    final p = ospath.join(ospath.dirname(ospath.fromUri(script)), path);
     return new File(p).readAsBytes();
   }
 
   return new Future.error(new UnimplementedError('Unknown script scheme: $scheme'));
+}
+
+List<int> _loadAsBytesSync(String path) {
+  assert(!Platform.script.scheme.startsWith('http'));
+
+  final script = Platform.script;
+  final packageRoot = Platform.packageRoot;
+  if (packageRoot.isNotEmpty && path.startsWith(_packagesPrefix)) {
+    final p = ospath.join(packageRoot, path.substring(_packagesPrefix.length));
+    return new File(p).readAsBytesSync();
+  }
+
+  final p = ospath.join(ospath.dirname(ospath.fromUri(script)), path);
+  return new File(p).readAsBytesSync();
 }
 
 /// Initialize Time Zone database.
@@ -71,10 +88,36 @@ Future<List<int>> _loadAsBytes(String path) {
 ///   final detroitNow = new TZDateTime.now(detroit);
 /// });
 /// ```
-Future initializeTimeZone([String path = tzDataDefaultPath]) {
+Future initializeTimeZone([String path]) {
+  if (path == null) {
+    path = tzDataDefaultPath;
+  }
   return _loadAsBytes(path).then((rawData) {
     initializeDatabase(rawData);
   }).catchError((e) {
     throw new TimeZoneInitException(e.toString());
   });
+}
+
+/// Initialize Time Zone database (Sync).
+///
+/// Throws [TimeZoneInitException] when something is worng.
+///
+/// ```dart
+/// import 'package:timezone/standalone.dart';
+///
+/// initializeTimeZoneSync();
+/// final detroit = getLocation('America/Detroit');
+/// final detroitNow = new TZDateTime.now(detroit);
+/// ```
+void initializeTimeZoneSync([String path]) {
+  if (path == null) {
+    path = tzDataDefaultPath;
+  }
+  try {
+    final rawData = _loadAsBytesSync(path);
+    initializeDatabase(rawData);
+  } catch (e) {
+    throw new TimeZoneInitException(e.toString());
+  }
 }

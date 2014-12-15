@@ -27,9 +27,6 @@ const String tzDataExtension = 'tzf';
 /// File name of the Time Zone default database.
 const String tzDataDefaultFilename = '$tzDataLatestVersion.$tzDataExtension';
 
-/// Path to the Time Zone default database.
-const String tzDataDefaultPath = 'packages/timezone/data/$tzDataDefaultFilename';
-
 LocationDatabase _database;
 Location _UTC;
 Location _local;

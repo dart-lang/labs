@@ -1,3 +1,8 @@
+# 0.2.3
+
+- Added `initializeTimeZoneSync` function for standalone environments.
+- Fixed bug with script path on Windows.
+
 # 0.2.2
 
 - TimeZone database updated to "2014j".
