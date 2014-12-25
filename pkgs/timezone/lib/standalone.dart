@@ -19,7 +19,7 @@ import 'package:path/path.dart' as ospath;
 import 'package:timezone/timezone.dart';
 
 export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
-    TZDateTime, timeZoneDatabase;
+    TZDateTime, Location, TimeZone, timeZoneDatabase;
 
 final _packagesPrefix = 'packages${ospath.separator}';
 
