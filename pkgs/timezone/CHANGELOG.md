@@ -1,3 +1,7 @@
+# 0.2.4
+
+- Fixed bug with Calendar-type constructor.
+
 # 0.2.3
 
 - Added `initializeTimeZoneSync` function for standalone environments.
