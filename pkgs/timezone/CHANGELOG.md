@@ -1,3 +1,7 @@
+# 0.2.5
+
+- Fixed bug with String formatting (invalid offsets for minutes).
+
 # 0.2.4
 
 - Fixed bug with Calendar-type constructor.

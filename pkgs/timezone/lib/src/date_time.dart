@@ -279,7 +279,7 @@ class TZDateTime implements DateTime {
       String offSign = offset.sign > 0 ? '+' : '-';
       offset = offset.abs() ~/ 1000;
       String offH = _twoDigits(offset ~/ 3600);
-      String offM = _twoDigits(offset % 60);
+      String offM = _twoDigits((offset % 3600) ~/ 60);
 
       return "$y-$m-$d $h:$min:$sec.$ms$offSign$offH$offM";
     }
@@ -304,7 +304,7 @@ class TZDateTime implements DateTime {
       String offSign = offset.sign > 0 ? '+' : '-';
       offset = offset.abs() ~/ 1000;
       String offH = _twoDigits(offset ~/ 3600);
-      String offM = _twoDigits(offset % 60);
+      String offM = _twoDigits((offset % 3600) ~/ 60);
 
       return "$y-$m-${d}T$h:$min:$sec.$ms$offSign$offH$offM";
     }
