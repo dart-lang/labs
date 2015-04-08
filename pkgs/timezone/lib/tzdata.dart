@@ -6,11 +6,9 @@
 ///
 /// - Zic compiled zone files
 /// - zone.tab
+///
+/// TODO: move to separate package
 library timezone.tzdata;
 
-import 'dart:convert';
-import 'dart:collection';
-import 'dart:typed_data';
-
-part 'package:timezone/src/tzdata/zicfile.dart';
-part 'package:timezone/src/tzdata/zone_tab.dart';
+export 'src/tzdata/zicfile.dart';
+export 'src/tzdata/zone_tab.dart';

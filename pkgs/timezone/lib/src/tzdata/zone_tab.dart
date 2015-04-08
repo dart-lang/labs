@@ -3,7 +3,7 @@
 // by a BSD-style license that can be found in the LICENSE file.
 
 /// zone1970.tab file parser
-part of timezone.tzdata;
+library timezone.src.tzdata.zone_tab;
 
 /// Latitude and longitude of the zone's principal location
 /// in ISO 6709 sign-degrees-minutes-seconds format,

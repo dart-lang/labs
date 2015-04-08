@@ -1,10 +1,10 @@
 # TimeZone
 
-This package provides time zone database and time zone aware DateTime
+This package provides time zone database and time zone aware `DateTime`
 object.
 
 Current Time Zone database version:
-[2014h](http://www.iana.org/time-zones/repository/releases/tzcode2014h.tar.gz)
+[2015b](http://www.iana.org/time-zones/repository/releases/tzcode2015b.tar.gz)
 
 ## Initialization
 
@@ -44,7 +44,7 @@ initializeTimeZone().then((_) {
 
 ### Local Location
 
-After loading database, we are trying to detect local location.
+By default, when library is initialized, local location will be `UTC`.
 
 To overwrite local location you can use `setLocalLocation(Location
 location)` function.
@@ -147,36 +147,6 @@ build your own database.
 
 ```sh
 $ pub run timezone:generate_data_subset -f "2010-01-01 00:00:00z" -t "2020-01-01 00:00:00z" -o 2014h-2010-2020.tzf
-```
-
-### Time Zone database format
-
-The database contains list of locations and each location contains
-list of time zones with transition times to this time zones.
-
-```
-Location {
-  u32 infoLength; // bytes count
-  LocationInfo {
-    Header {
-      u32 nameLength;        // bytes count
-      u32 abbrsLength;       // bytes count
-      u32 zonesLength;       // zones count
-      u32 transitionsLength; // transitions count
-    }
-    Data {
-      u8 name[];  // name in ASCII
-      u8 abbrs[]; // list of \0 terminated strings, abbreviations in ASCII
-      TimeZone {
-        i32 offset;   // offset in seconds
-        u8 isDst;     // daylight savings time
-        u8 abbrIndex; // position in abbrs[]
-      }
-      f64 transitionAt[];  // time when transition is occured in seconds
-      u8 transitionZone[]; // transition time zone
-    }
-  }
-} locations[];
 ```
 
 ### Updating Time Zone databases

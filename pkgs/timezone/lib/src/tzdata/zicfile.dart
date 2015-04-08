@@ -2,7 +2,11 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
-part of timezone.tzdata;
+library timezone.src.tzdata.zicfile;
+
+import 'dart:collection';
+import 'dart:convert';
+import 'dart:typed_data';
 
 /// Time Zone information file magic header "TZif"
 const int _ziMagic = 1415211366;

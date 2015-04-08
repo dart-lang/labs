@@ -3,48 +3,23 @@
 // by a BSD-style license that can be found in the LICENSE file.
 
 ///
-/// Zone Info.
+/// TimeZone Location Info.
 ///
 /// Most of this code were taken from the go standard library
 /// [http://golang.org/src/pkg/time/zoneinfo.go](time/zoneinfo.go)
 /// and ported to Dart.
-///
-/// Zone Info binary format:
-///
-/// ```
-/// Location {
-///   Header {
-///     u32 nameLength;
-///     u32 abbrsLength;
-///     u32 zonesLength;
-///     u32 transitionsLength;
-///   }
-///   Data {
-///     u8 name[];
-///     u8 abbrs[];
-///
-///     TimeZone {
-///       i32 offset; // in seconds
-///       u8 isDst;
-///       u8 abbrIndex;
-///     } zones[];
-///
-///     f64 transitionAt[]; // in seconds
-///     u8 transitionZone[];
-///   }
-/// }
-/// ```
-///
-part of timezone;
+library timezone.src.location;
+
+import 'package:tuple/tuple.dart';
 
 /// Zone Info header size.
 const int _zoneInfoHeaderSize = 16;
 
 /// Maximum value for time instants.
-const int _omega = 8640000000000000;
+const int maxTime = 8640000000000000;
 
 /// Minimum value for time instants.
-const int _alpha = -_omega;
+const int minTime = -maxTime;
 
 /// A [Location] maps time instants to the zone in use at that time.
 /// Typically, the Location represents the collection of time offsets
@@ -89,73 +64,13 @@ class Location {
       if ((tAt <= _cacheNow) &&
           ((i + 1 == transitionAt.length) || (_cacheNow < transitionAt[i + 1]))) {
         _cacheStart = tAt;
-        _cacheEnd = _omega;
+        _cacheEnd = maxTime;
         if (i + 1 < transitionAt.length) {
           _cacheEnd = transitionAt[i + 1];
         }
         _cacheZone = zones[transitionZone[i]];
       }
     }
-  }
-
-  factory Location.fromBytes(List<int> rawData) {
-    final data =
-        rawData is Uint8List ? rawData : new Uint8List.fromList(rawData);
-
-    final bdata =
-        data.buffer.asByteData(data.offsetInBytes, data.lengthInBytes);
-
-    // read header
-    final nameLength = bdata.getUint32(0);
-    final abbrsLength = bdata.getUint32(4);
-    final zonesLength = bdata.getUint32(8);
-    final transitionsLength = bdata.getUint32(12);
-
-    // read name
-    final name = ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + 16, nameLength));
-
-    // read abbreviations
-    final abbrs = [];
-
-    final abbrsStart = 16 + nameLength;
-    final abbrsEnd = abbrsStart + abbrsLength;
-    var start = abbrsStart;
-    for (var i = abbrsStart; i < abbrsEnd; i++) {
-      if (data[i] == 0) {
-        final abbr =
-            ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + start, i - start));
-        abbrs.add(abbr);
-        start = i + 1;
-      }
-    }
-
-    // read zones
-    final zones = [];
-
-    var offset = abbrsEnd;
-    for (var i = 0; i < zonesLength; i++) {
-      final zoneOffset = bdata.getInt32(offset) * 1000; // convert to ms
-      final zoneIsDst = bdata.getUint8(offset + 4);
-      final zoneAbbrIndex = bdata.getUint8(offset + 5);
-      offset += 6;
-      zones.add(new TimeZone(zoneOffset, zoneIsDst == 1, abbrs[zoneAbbrIndex]));
-    }
-
-    // read transitions
-    final transitionAt = [];
-    final transitionZone = [];
-
-    for (var i = 0; i < transitionsLength; i++) {
-      transitionAt.add(bdata.getFloat64(offset).toInt() * 1000); // convert to ms
-      offset += 8;
-    }
-
-    for (var i = 0; i < transitionsLength; i++) {
-      transitionZone.add(bdata.getUint8(offset));
-      offset += 1;
-    }
-
-    return new Location(name, transitionAt, transitionZone, zones);
   }
 
   /// translate instant in time expressed as milliseconds since
@@ -167,7 +82,7 @@ class Location {
   /// translate instant in time expressed as milliseconds since
   /// January 1, 1970 00:00:00 to UTC.
   int translateToUtc(int millisecondsSinceEpoch) {
-    final t = _lookupTimeZone(millisecondsSinceEpoch);
+    final t = lookupTimeZone(millisecondsSinceEpoch);
     final tz = t.i1;
     final start = t.i2;
     final end = t.i3;
@@ -178,9 +93,9 @@ class Location {
       utc -= tz.offset;
 
       if (utc < start) {
-        utc = millisecondsSinceEpoch - _lookupTimeZone(start - 1).i1.offset;
+        utc = millisecondsSinceEpoch - lookupTimeZone(start - 1).i1.offset;
       } else if (utc >= end) {
-        utc = millisecondsSinceEpoch - _lookupTimeZone(end).i1.offset;
+        utc = millisecondsSinceEpoch - lookupTimeZone(end).i1.offset;
       }
     }
 
@@ -189,9 +104,9 @@ class Location {
 
   /// lookup for [TimeZone] and its boundaries for an instant in time expressed
   /// as milliseconds since January 1, 1970 00:00:00 UTC.
-  PersistentTuple3<TimeZone, int, int> _lookupTimeZone(int millisecondsSinceEpoch) {
+  PersistentTuple3<TimeZone, int, int> lookupTimeZone(int millisecondsSinceEpoch) {
     if (zones.isEmpty) {
-      return const PersistentTuple3(const TimeZone(0, false, 'UTC'), _alpha, _omega);
+      return const PersistentTuple3(const TimeZone(0, false, 'UTC'), minTime, maxTime);
     }
 
     if (_cacheZone != null &&
@@ -202,15 +117,15 @@ class Location {
 
     if (transitionAt.isEmpty || millisecondsSinceEpoch < transitionAt[0]) {
       final zone = _firstZone();
-      final start = _alpha;
-      final end = transitionAt.isEmpty ? _omega : transitionAt.first;
+      final start = minTime;
+      final end = transitionAt.isEmpty ? maxTime : transitionAt.first;
       return new PersistentTuple3(zone, start, end);
     }
 
     // Binary search for entry with largest millisecondsSinceEpoch <= sec.
     var lo = 0;
     var hi = transitionAt.length;
-    var end = _omega;
+    var end = maxTime;
 
     while (hi - lo > 1) {
       final m = lo + (hi - lo) ~/ 2;
@@ -230,13 +145,13 @@ class Location {
   /// timeZone method returns [TimeZone] in use at an instant in time expressed
   /// as milliseconds since January 1, 1970 00:00:00 UTC.
   TimeZone timeZone(int millisecondsSinceEpoch) {
-    return _lookupTimeZone(millisecondsSinceEpoch).i1;
+    return lookupTimeZone(millisecondsSinceEpoch).i1;
   }
 
   /// timeZoneFromLocal method returns [TimeZone] in use at an instant in time
   /// expressed as milliseconds since January 1, 1970 00:00:00.
   TimeZone timeZoneFromLocal(int millisecondsSinceEpoch) {
-    final t = _lookupTimeZone(millisecondsSinceEpoch);
+    final t = lookupTimeZone(millisecondsSinceEpoch);
     var tz = t.i1;
     final start = t.i2;
     final end = t.i3;
@@ -245,9 +160,9 @@ class Location {
       final utc = millisecondsSinceEpoch - tz.offset;
 
       if (utc < start) {
-        tz = _lookupTimeZone(start - 1).i1;
+        tz = lookupTimeZone(start - 1).i1;
       } else if (utc >= end) {
-        tz = _lookupTimeZone(end).i1;
+        tz = lookupTimeZone(end).i1;
       }
     }
 
@@ -307,83 +222,6 @@ class Location {
     }
 
     return false;
-  }
-
-  /// Serialize [Location] in binary format.
-  List<int> toBytes() {
-    final abbrs = [];
-    final abbrsIndex = new HashMap<String, int>();
-
-    final zoneAbbrIndexes = [];
-
-    // number of bytes of all abbrevs
-    var abbrsLength = 0;
-
-    for (final z in zones) {
-      final ai = abbrsIndex.putIfAbsent(z.abbr, () {
-        final ret = abbrs.length;
-        abbrsLength += z.abbr.length + 1; // abbr + '\0'
-        abbrs.add(z.abbr);
-        return ret;
-      });
-
-      zoneAbbrIndexes.add(ai);
-    }
-
-    final encName = ASCII.encode(name);
-
-    final bufferLength = (_zoneInfoHeaderSize +
-        encName.length +
-        abbrsLength +
-        (zones.length * 6) +
-        (transitionAt.length * 9));
-
-    final result = new Uint8List(bufferLength);
-    final buffer = new ByteData.view(result.buffer);
-
-    // write header
-    buffer.setUint32(0, encName.length);
-    buffer.setUint32(4, abbrsLength);
-    buffer.setUint32(8, zones.length);
-    buffer.setUint32(12, transitionAt.length);
-
-    var offset = 16;
-
-    // write name
-    for (final c in encName) {
-      buffer.setUint8(offset++, c);
-    }
-
-    // write abbrevs
-    for (final a in abbrs) {
-      for (final c in a.codeUnits) {
-        buffer.setUint8(offset++, c);
-      }
-      buffer.setUint8(offset++, 0);
-    }
-
-    // write zones
-    for (var i = 0; i < zones.length; i++) {
-      final zone = zones[i];
-      buffer.setInt32(offset, zone.offset ~/ 1000); // convert to sec
-      buffer.setUint8(offset + 4, zone.isDst ? 1 : 0);
-      buffer.setUint8(offset + 5, zoneAbbrIndexes[i]);
-      offset += 6;
-    }
-
-    // write transitions
-    for (final tAt in transitionAt) {
-      final t = tAt ~/ 1000;
-      buffer.setFloat64(offset, t.toDouble()); // convert to sec
-      offset += 8;
-    }
-
-    for (final tZone in transitionZone) {
-      buffer.setUint8(offset, tZone);
-      offset += 1;
-    }
-
-    return result;
   }
 
   String toString() => '$name';

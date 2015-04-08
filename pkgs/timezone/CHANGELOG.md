@@ -1,3 +1,11 @@
+# 0.3.0
+
+- TimeZone database updated to 2015b.
+- Removed local location detection heuristics (didn't worked properly).
+  Local location is initialized with UTC location by default, use
+  `setLocalLocation` to change local location.
+- TimeZone database format is changed, data is aligned.
+
 # 0.2.5
 
 - Fixed bug with String formatting (invalid offsets for minutes).

@@ -2,7 +2,10 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
-part of timezone;
+library timezone.src.date_time;
+
+import 'location.dart';
+import 'env.dart';
 
 /// TimeZone aware DateTime
 class TZDateTime implements DateTime {
@@ -84,13 +87,13 @@ class TZDateTime implements DateTime {
       _millisecondsSinceEpoch = _localDateTime.millisecondsSinceEpoch;
     } else {
       var unix = _localDateTime.millisecondsSinceEpoch;
-      var tzData = _location._lookupTimeZone(unix);
+      var tzData = _location.lookupTimeZone(unix);
       if (tzData.i1.offset != 0) {
         final utc = unix - tzData.i1.offset;
         if (utc < tzData.i2) {
-          tzData = _location._lookupTimeZone(tzData.i2 - 1);
+          tzData = _location.lookupTimeZone(tzData.i2 - 1);
         } else if (utc >= tzData.i3) {
-          tzData = _location._lookupTimeZone(tzData.i3);
+          tzData = _location.lookupTimeZone(tzData.i3);
         }
         unix -= tzData.i1.offset;
       }
