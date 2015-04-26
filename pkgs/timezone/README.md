@@ -140,15 +140,6 @@ We are currently building three different database variants:
 - 2010-2020 (default database that contains historical data from 2010
   until 2020). 71kb/16kb gzip
 
-### Generating Time Zone database subsets
-
-If you want to build custom database subset, you can use our tool and
-build your own database.
-
-```sh
-$ pub run timezone:generate_data_subset -f "2010-01-01 00:00:00z" -t "2020-01-01 00:00:00z" -o 2014h-2010-2020.tzf
-```
-
 ### Updating Time Zone databases
 
 Script for updating Time Zone database, it will automatically download

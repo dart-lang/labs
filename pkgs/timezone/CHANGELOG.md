@@ -1,3 +1,8 @@
+# 0.3.1
+
+- `generate_data_subset` script is removed. It will be available as a
+  separate package.
+
 # 0.3.0
 
 - TimeZone database updated to 2015b.
