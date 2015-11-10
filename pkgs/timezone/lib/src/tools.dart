@@ -5,7 +5,6 @@
 library timezone.src.tools;
 
 import 'dart:collection';
-import 'package:tuple/tuple.dart';
 import 'package:timezone/tzdata.dart' as tzfile;
 import 'package:timezone/timezone.dart';
 
@@ -1035,7 +1034,14 @@ class FilterReport {
   int newTransitionsCount = 0;
 }
 
-Tuple2<LocationDatabase, FilterReport> filterTimeZoneData(
+class FilteredLocationDatabase {
+  final LocationDatabase db;
+  final FilterReport report;
+
+  FilteredLocationDatabase(this.db, this.report);
+}
+
+FilteredLocationDatabase filterTimeZoneData(
     LocationDatabase db,
     {int dateFrom: TZDateTime.minMillisecondsSinceEpoch,
      int dateTo: TZDateTime.maxMillisecondsSinceEpoch,
@@ -1093,7 +1099,7 @@ Tuple2<LocationDatabase, FilterReport> filterTimeZoneData(
     report.newLocationsCount++;
   }
 
-  return new Tuple2(result, report);
+  return new FilteredLocationDatabase(result, report);
 }
 
 /// Convert [tzfile.Location] to [Location]
