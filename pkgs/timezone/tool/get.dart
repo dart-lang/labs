@@ -145,26 +145,26 @@ Future main(List<String> arguments) async {
 
   log.info('- all locations');
   final allDb = filterTimeZoneData(db, locations: allLocations);
-  logReport(allDb.i2);
+  logReport(allDb.report);
 
   log.info('- common locations from all locations');
-  final commonDb = filterTimeZoneData(allDb.i1, locations: commonLocations);
-  logReport(commonDb.i2);
+  final commonDb = filterTimeZoneData(allDb.db, locations: commonLocations);
+  logReport(commonDb.report);
 
   log.info('- [2010 - 2020 years] from common locations');
-  final common_2010_2020_Db = filterTimeZoneData(commonDb.i1,
+  final common_2010_2020_Db = filterTimeZoneData(commonDb.db,
   dateFrom: new DateTime.utc(2010, 1, 1).millisecondsSinceEpoch,
   dateTo: new DateTime.utc(2020, 1, 1).millisecondsSinceEpoch,
   locations: commonLocations);
-  logReport(common_2010_2020_Db.i2);
+  logReport(common_2010_2020_Db.report);
 
   log.info('Serializing location databases');
   final allOut = new File(ospath.join(outPath, '${source}_all.$tzDataExtension'));
   final commonOut = new File(ospath.join(outPath, '${source}.$tzDataExtension'));
   final common_2010_2020_Out = new File(ospath.join(outPath, '${source}_2010-2020.$tzDataExtension'));
-  await allOut.writeAsBytes(tzdbSerialize(allDb.i1), flush: true);
-  await commonOut.writeAsBytes(tzdbSerialize(commonDb.i1), flush: true);
-  await common_2010_2020_Out.writeAsBytes(tzdbSerialize(common_2010_2020_Db.i1), flush: true);
+  await allOut.writeAsBytes(tzdbSerialize(allDb.db), flush: true);
+  await commonOut.writeAsBytes(tzdbSerialize(commonDb.db), flush: true);
+  await common_2010_2020_Out.writeAsBytes(tzdbSerialize(common_2010_2020_Db.db), flush: true);
 
   exit(0);
 }
