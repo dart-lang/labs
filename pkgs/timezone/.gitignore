@@ -4,6 +4,8 @@ pubspec.lock
 
 build/
 packages
+.packages
+.pub
 
 .buildlog
 *.js_
