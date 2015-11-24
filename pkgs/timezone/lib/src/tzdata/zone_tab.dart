@@ -9,7 +9,8 @@ library timezone.src.tzdata.zone_tab;
 /// in ISO 6709 sign-degrees-minutes-seconds format,
 /// either +-DDMM+-DDDMM or +-DDMMSS+-DDDMMSS,
 /// first latitude (+ is north), then longitude (+ is east).
-final _geoLocationRe = new RegExp(r'^([+\-])(\d{2,3})(\d{2})(\d{2})?([+\-])(\d{2,3})(\d{2})(\d{2})?$');
+final _geoLocationRe =
+    new RegExp(r'^([+\-])(\d{2,3})(\d{2})(\d{2})?([+\-])(\d{2,3})(\d{2})(\d{2})?$');
 
 class LocationDescription {
   final String name;
@@ -18,8 +19,7 @@ class LocationDescription {
   final double longitude;
   final String comments;
 
-  LocationDescription(this.name, this.countryCodes, this.latitude, this.longitude,
-      this.comments);
+  LocationDescription(this.name, this.countryCodes, this.latitude, this.longitude, this.comments);
 
   factory LocationDescription.fromString(String line) {
     final parts = line.split('\t');
@@ -41,8 +41,7 @@ class LocationDescription {
     final latitude = latSign * (latDeg + (latMinutes + (latSeconds / 60)) / 60);
     final longitude = longSign * (longDeg + (longMinutes + (longSeconds / 60)) / 60);
 
-    return new LocationDescription(name, countryCodes, latitude, longitude,
-        comments);
+    return new LocationDescription(name, countryCodes, latitude, longitude, comments);
   }
 }
 
@@ -63,5 +62,4 @@ class LocationDescriptionDatabase {
 
     return new LocationDescriptionDatabase(locations);
   }
-
 }

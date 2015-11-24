@@ -36,8 +36,7 @@ class Location {
   final List<TimeZone> zones;
 
   /// [TimeZone] for the current time.
-  TimeZone get currentTimeZone =>
-      timeZone(new DateTime.now().millisecondsSinceEpoch);
+  TimeZone get currentTimeZone => timeZone(new DateTime.now().millisecondsSinceEpoch);
 
   // Most lookups will be for the current time.
   // To avoid the binary search through tx, keep a
@@ -239,9 +238,7 @@ class TimeZone {
   const TimeZone(this.offset, this.isDst, this.abbr);
 
   bool operator ==(TimeZone other) {
-    return (offset == other.offset &&
-        isDst == other.isDst &&
-        abbr == other.abbr);
+    return (offset == other.offset && isDst == other.isDst && abbr == other.abbr);
   }
 
   int get hashCode {

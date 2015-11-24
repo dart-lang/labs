@@ -36,23 +36,21 @@ class _Header {
   /// file.
   final int tzh_charcnt;
 
-  _Header(this.tzh_ttisgmtcnt, this.tzh_ttisstdcnt, this.tzh_leapcnt,
-      this.tzh_timecnt, this.tzh_typecnt, this.tzh_charcnt);
+  _Header(this.tzh_ttisgmtcnt, this.tzh_ttisstdcnt, this.tzh_leapcnt, this.tzh_timecnt,
+      this.tzh_typecnt, this.tzh_charcnt);
 
   int dataLength(int longSize) {
     final leapBytes = tzh_leapcnt * (longSize + 4);
     final timeBytes = tzh_timecnt * (longSize + 1);
     final typeBytes = tzh_typecnt * 6;
 
-    return tzh_ttisgmtcnt + tzh_ttisstdcnt + leapBytes +
-        timeBytes + typeBytes + tzh_charcnt;
+    return tzh_ttisgmtcnt + tzh_ttisstdcnt + leapBytes + timeBytes + typeBytes + tzh_charcnt;
   }
 
   factory _Header.fromBytes(List<int> rawData) {
     final data = rawData is Uint8List ? rawData : new Uint8List.fromList(rawData);
 
-    final bdata = data.buffer.asByteData(data.offsetInBytes,
-        data.lengthInBytes);
+    final bdata = data.buffer.asByteData(data.offsetInBytes, data.lengthInBytes);
 
     final tzh_ttisgmtcnt = bdata.getInt32(0);
     final tzh_ttisstdcnt = bdata.getInt32(4);
@@ -61,8 +59,8 @@ class _Header {
     final tzh_typecnt = bdata.getInt32(16);
     final tzh_charcnt = bdata.getInt32(20);
 
-    return new _Header(tzh_ttisgmtcnt, tzh_ttisstdcnt, tzh_leapcnt,
-        tzh_timecnt, tzh_typecnt, tzh_charcnt);
+    return new _Header(
+        tzh_ttisgmtcnt, tzh_ttisstdcnt, tzh_leapcnt, tzh_timecnt, tzh_typecnt, tzh_charcnt);
   }
 }
 
@@ -70,8 +68,7 @@ class _Header {
 String _readByteString(Uint8List data, int offset) {
   for (var i = offset; i < data.length; i++) {
     if (data[i] == 0) {
-      return ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + offset,
-                                                  i - offset));
+      return ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + offset, i - offset));
     }
   }
   return ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + offset));
@@ -131,8 +128,8 @@ class Location {
   /// UTC or local time.
   final List<int> isUtc;
 
-  Location(this.name, this.transitionAt, this.transitionZone, this.abbrs,
-      this.zones, this.leapAt, this.leapDiff, this.isStd, this.isUtc);
+  Location(this.name, this.transitionAt, this.transitionZone, this.abbrs, this.zones, this.leapAt,
+      this.leapDiff, this.isStd, this.isUtc);
 
   /// Deserialize [Location] from bytes
   factory Location.fromBytes(String name, List<int> rawData) {
@@ -150,8 +147,8 @@ class Location {
 
     switch (version1) {
       case 0:
-        final header = new _Header.fromBytes(new Uint8List.view(bdata.buffer,
-            offset, _Header.size));
+        final header =
+            new _Header.fromBytes(new Uint8List.view(bdata.buffer, offset, _Header.size));
 
         // calculating data offsets
         final dataOffset = offset + _Header.size;
@@ -180,8 +177,8 @@ class Location {
         }
 
         // function to read from abbrev buffer
-        final abbrsData = data.buffer.asUint8List(data.offsetInBytes + abbrsOffset,
-            header.tzh_charcnt);
+        final abbrsData =
+            data.buffer.asUint8List(data.offsetInBytes + abbrsOffset, header.tzh_charcnt);
         final abbrs = [];
         final abbrsCache = new HashMap<int, int>();
         int readAbbrev(offset) {
@@ -236,14 +233,14 @@ class Location {
           offset += 1;
         }
 
-        return new Location(name, transitionAt, transitionZone, abbrs, zones,
-            leapAt, leapDiff, isStd, isUtc);
+        return new Location(
+            name, transitionAt, transitionZone, abbrs, zones, leapAt, leapDiff, isStd, isUtc);
 
       case 50:
       case 51:
         // skip old version header/data
-        final header1 = new _Header.fromBytes(new Uint8List.view(bdata.buffer,
-            offset, _Header.size));
+        final header1 =
+            new _Header.fromBytes(new Uint8List.view(bdata.buffer, offset, _Header.size));
         offset += _Header.size + header1.dataLength(4);
 
         final magic2 = bdata.getUint32(offset);
@@ -253,13 +250,14 @@ class Location {
 
         final version2 = bdata.getUint8(offset + 4);
         if (version2 != version1) {
-          throw new InvalidZoneInfoDataException('Second version "$version2" doesn\'t match first version "$version1"');
+          throw new InvalidZoneInfoDataException(
+              'Second version "$version2" doesn\'t match first version "$version1"');
         }
 
         offset += 20;
 
-        final header2 = new _Header.fromBytes(new Uint8List.view(bdata.buffer,
-            offset, _Header.size));
+        final header2 =
+            new _Header.fromBytes(new Uint8List.view(bdata.buffer, offset, _Header.size));
 
         // calculating data offsets
         final dataOffset = offset + _Header.size;
@@ -288,8 +286,8 @@ class Location {
         }
 
         // function to read from abbrev buffer
-        final abbrsData = data.buffer.asUint8List(data.offsetInBytes + abbrsOffset,
-            header2.tzh_charcnt);
+        final abbrsData =
+            data.buffer.asUint8List(data.offsetInBytes + abbrsOffset, header2.tzh_charcnt);
         final abbrs = [];
         final abbrsCache = new HashMap<int, int>();
         int readAbbrev(offset) {
@@ -312,8 +310,7 @@ class Location {
           final tt_abbrind = bdata.getUint8(offset + 5);
           offset += 6;
 
-          zones.add(new TimeZone(tt_gmtoff, tt_isdst == 1,
-              readAbbrev(tt_abbrind)));
+          zones.add(new TimeZone(tt_gmtoff, tt_isdst == 1, readAbbrev(tt_abbrind)));
         }
 
         // read leap seconds
@@ -348,8 +345,8 @@ class Location {
         // read transition rule in posix timezone format
         // ASCII.decode(new Uint8List.view(data.buffer, lastTransitionOffset));
 
-        return new Location(name, transitionAt, transitionZone, abbrs, zones,
-            leapAt, leapDiff, isStd, isUtc);
+        return new Location(
+            name, transitionAt, transitionZone, abbrs, zones, leapAt, leapDiff, isStd, isUtc);
 
       default:
         throw new InvalidZoneInfoDataException('Unknown version: $version1');

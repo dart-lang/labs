@@ -166,7 +166,8 @@ Location _deserializeLocation(Uint8List data) {
   final int transitionsOffset = bdata.getUint32(24);
   final int transitionsLength = bdata.getUint32(28);
 
-  final String name = ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + nameOffset, nameLength));
+  final String name =
+      ASCII.decode(data.buffer.asUint8List(data.offsetInBytes + nameOffset, nameLength));
   final List<String> abbrs = <String>[];
   final List<TimeZone> zones = <TimeZone>[];
   final List<int> transitionAt = <int>[];

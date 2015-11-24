@@ -19,13 +19,12 @@ import 'dart:mirrors';
 import 'package:path/path.dart' as ospath;
 import 'package:timezone/timezone.dart';
 
-export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
-    TZDateTime, Location, TimeZone, timeZoneDatabase;
+export 'package:timezone/timezone.dart'
+    show getLocation, setLocalLocation, TZDateTime, Location, TimeZone, timeZoneDatabase;
 
 final _packagesPrefix = 'packages${ospath.separator}';
 
-final String tzDataDefaultPath = ospath.join('packages',
-    'timezone', 'data', tzDataDefaultFilename);
+final String tzDataDefaultPath = ospath.join('packages', 'timezone', 'data', tzDataDefaultFilename);
 
 /// Load file
 Future<List<int>> _loadAsBytes(String path) {
@@ -33,22 +32,16 @@ Future<List<int>> _loadAsBytes(String path) {
   final scheme = Platform.script.scheme;
 
   if (scheme.startsWith('http')) {
-    return new HttpClient().getUrl(
-        new Uri(
-            scheme: script.scheme,
-            host: script.host,
-            port: script.port,
-            path: path)).then((req) {
+    return new HttpClient()
+        .getUrl(new Uri(scheme: script.scheme, host: script.host, port: script.port, path: path))
+        .then((req) {
       return req.close();
     }).then((response) {
       // join byte buffers
-      return response.fold(
-          new BytesBuilder(),
-          (b, d) => b..add(d)).then((builder) {
+      return response.fold(new BytesBuilder(), (b, d) => b..add(d)).then((builder) {
         return builder.takeBytes();
       });
     });
-
   } else if (scheme == 'file') {
     final packageRoot = Platform.packageRoot;
     if (packageRoot.isNotEmpty && path.startsWith(_packagesPrefix)) {

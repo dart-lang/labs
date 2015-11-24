@@ -18,8 +18,8 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'package:timezone/timezone.dart';
 
-export 'package:timezone/timezone.dart' show getLocation, setLocalLocation,
-    TZDateTime, Location, TimeZone, timeZoneDatabase;
+export 'package:timezone/timezone.dart'
+    show getLocation, setLocalLocation, TZDateTime, Location, TimeZone, timeZoneDatabase;
 
 /// Path to the Time Zone default database.
 const String tzDataDefaultPath = 'packages/timezone/data/$tzDataDefaultFilename';
@@ -37,12 +37,10 @@ const String tzDataDefaultPath = 'packages/timezone/data/$tzDataDefaultFilename'
 /// });
 /// ```
 Future initializeTimeZone([String path = tzDataDefaultPath]) {
-  return HttpRequest.request(
-      path,
-      method: 'GET',
-      responseType: 'arraybuffer',
-      mimeType: 'application/octet-stream').then((req) {
-
+  return HttpRequest
+      .request(path,
+          method: 'GET', responseType: 'arraybuffer', mimeType: 'application/octet-stream')
+      .then((req) {
     final response = req.response;
 
     if (response is! ByteBuffer) {
@@ -50,7 +48,6 @@ Future initializeTimeZone([String path = tzDataDefaultPath]) {
     }
 
     initializeDatabase(response.asUint8List());
-
   }).catchError((e) {
     throw new TimeZoneInitException(e.toString());
   }, test: (e) => e is! TimeZoneInitException);

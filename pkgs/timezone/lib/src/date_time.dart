@@ -70,18 +70,15 @@ class TZDateTime implements DateTime {
   /// final annularEclipse = new TZDateTime(location,
   ///     2014, DateTime.APRIL, 29, 6, 4);
   /// ```
-  TZDateTime(Location location, int year, [int month = 1, int day = 1, int hour
-      = 0, int minute = 0, int second = 0, int millisecond = 0])
+  TZDateTime(Location location, int year,
+      [int month = 1,
+      int day = 1,
+      int hour = 0,
+      int minute = 0,
+      int second = 0,
+      int millisecond = 0])
       : _location = location,
-        _localDateTime = new DateTime.utc(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond) {
-
+        _localDateTime = new DateTime.utc(year, month, day, hour, minute, second, millisecond) {
     if (isUtc) {
       _timeZone = const TimeZone(0, false, 'UTC');
       _millisecondsSinceEpoch = _localDateTime.millisecondsSinceEpoch;
@@ -100,7 +97,8 @@ class TZDateTime implements DateTime {
       _millisecondsSinceEpoch = unix;
 
       _timeZone = _location.timeZone(unix);
-      _localDateTime = new DateTime.fromMillisecondsSinceEpoch(unix + _timeZone.offset, isUtc: true);
+      _localDateTime =
+          new DateTime.fromMillisecondsSinceEpoch(unix + _timeZone.offset, isUtc: true);
     }
   }
 
@@ -109,34 +107,28 @@ class TZDateTime implements DateTime {
   /// ```dart
   /// final dDay = new TZDateTime.utc(1944, TZDateTime.JUNE, 6);
   /// ```
-  TZDateTime.utc(int year, [int month = 1, int day = 1, int hour = 0, int minute
-      = 0, int second = 0, int millisecond = 0])
-      : this(
-          UTC,
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond);
+  TZDateTime.utc(int year,
+      [int month = 1,
+      int day = 1,
+      int hour = 0,
+      int minute = 0,
+      int second = 0,
+      int millisecond = 0])
+      : this(UTC, year, month, day, hour, minute, second, millisecond);
 
   /// Constructs a [TZDateTime] instance specified in the local time zone.
   ///
   /// ```dart
   /// final dDay = new TZDateTime.utc(1944, TZDateTime.JUNE, 6);
   /// ```
-  TZDateTime.local(int year, [int month = 1, int day = 1, int hour = 0,
-      int minute = 0, int second = 0, int millisecond = 0])
-      : this(
-          local,
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond);
+  TZDateTime.local(int year,
+      [int month = 1,
+      int day = 1,
+      int hour = 0,
+      int minute = 0,
+      int second = 0,
+      int millisecond = 0])
+      : this(local, year, month, day, hour, minute, second, millisecond);
 
   /// Constructs a [TZDateTime] instance with current date and time in the
   /// [location] time zone.
@@ -154,7 +146,9 @@ class TZDateTime implements DateTime {
     } else {
       _timeZone = _location.timeZone(_millisecondsSinceEpoch);
     }
-    _localDateTime = new DateTime.fromMillisecondsSinceEpoch(_millisecondsSinceEpoch + _timeZone.offset, isUtc: true);
+    _localDateTime = new DateTime.fromMillisecondsSinceEpoch(
+        _millisecondsSinceEpoch + _timeZone.offset,
+        isUtc: true);
   }
 
   /// Constructs a new [TZDateTime] instance with the given
@@ -163,15 +157,12 @@ class TZDateTime implements DateTime {
   /// The constructed [TZDateTime] represents
   /// 1970-01-01T00:00:00Z + [millisecondsSinceEpoch] ms in the given
   /// time zone [location].
-  TZDateTime.fromMillisecondsSinceEpoch(Location location,
-      int millisecondsSinceEpoch)
+  TZDateTime.fromMillisecondsSinceEpoch(Location location, int millisecondsSinceEpoch)
       : _location = location,
         _millisecondsSinceEpoch = millisecondsSinceEpoch {
-
     if (isUtc) {
       _timeZone = const TimeZone(0, false, 'UTC');
-      _localDateTime =
-          new DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch, isUtc: true);
+      _localDateTime = new DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch, isUtc: true);
     } else {
       _timeZone = _location.timeZone(millisecondsSinceEpoch);
       _localDateTime = new DateTime.fromMillisecondsSinceEpoch(
@@ -316,22 +307,19 @@ class TZDateTime implements DateTime {
   /// Returns a new [TZDateTime] instance with [duration] added to [this].
   TZDateTime add(Duration duration) {
     return new TZDateTime.fromMillisecondsSinceEpoch(
-        _location,
-        _millisecondsSinceEpoch + duration.inMilliseconds);
+        _location, _millisecondsSinceEpoch + duration.inMilliseconds);
   }
 
   /// Returns a new [TZDateTime] instance with [duration] subtracted from
   /// [this].
   TZDateTime subtract(Duration duration) {
     return new TZDateTime.fromMillisecondsSinceEpoch(
-        _location,
-        _millisecondsSinceEpoch - duration.inMilliseconds);
+        _location, _millisecondsSinceEpoch - duration.inMilliseconds);
   }
 
   /// Returns a [Duration] with the difference between [this] and [other].
   Duration difference(TZDateTime other) {
-    return new Duration(
-        milliseconds: _millisecondsSinceEpoch - other._millisecondsSinceEpoch);
+    return new Duration(milliseconds: _millisecondsSinceEpoch - other._millisecondsSinceEpoch);
   }
 
   /// Returns true if [other] is a [DateTime] at the same moment and in the
@@ -351,8 +339,7 @@ class TZDateTime implements DateTime {
       return false;
     }
 
-    return (millisecondsSinceEpoch == other.millisecondsSinceEpoch &&
-        _location == other._location);
+    return (millisecondsSinceEpoch == other.millisecondsSinceEpoch && _location == other._location);
   }
 
   /// Returns true if [this] occurs before [other].
@@ -406,8 +393,7 @@ class TZDateTime implements DateTime {
   /// This function returns a negative integer
   /// if this [TZDateTime] is smaller (earlier) than [other],
   /// or a positive integer if it is greater (later).
-  int compareTo(TZDateTime other) =>
-      millisecondsSinceEpoch.compareTo(other.millisecondsSinceEpoch);
+  int compareTo(TZDateTime other) => millisecondsSinceEpoch.compareTo(other.millisecondsSinceEpoch);
 
   int get hashCode => millisecondsSinceEpoch;
 
