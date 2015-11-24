@@ -1,8 +1,9 @@
-# 0.4.0-dev
+# 0.4.0
 
-- Remove usaeg of tuple package.
+- Remove usage of tuple package.
 - Upgrade unittest package to test.
-- Fixed database URL for "latest" database.
+- Fix database URL for "latest" database.
+- Add tool/dartfmt for formatting source.
 
 # 0.3.1
 

@@ -1,8 +1,10 @@
 name: timezone
-version: 0.4.0-dev
-author: Boris Kaul <localvoid@gmail.com>
+version: 0.4.0
+authors:
+- Boris Kaul <localvoid@gmail.com>
+- Sam Rawlins <sam.rawlins@gmail.com>
 description: Time zone database and time zone aware DateTime.
-homepage: https://github.com/localvoid/timezone
+homepage: https://github.com/srawlins/timezone
 environment:
   sdk: '>=1.9.0'
 dependencies:
