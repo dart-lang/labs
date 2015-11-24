@@ -15,6 +15,7 @@ library timezone.standalone;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:mirrors';
 import 'package:path/path.dart' as ospath;
 import 'package:timezone/timezone.dart';
 
@@ -56,6 +57,11 @@ Future<List<int>> _loadAsBytes(String path) {
     }
 
     final p = ospath.join(ospath.dirname(ospath.fromUri(script)), path);
+    return new File(p).readAsBytes();
+  } else if (scheme == 'data') {
+    var libraryPath = currentMirrorSystem().findLibrary(#timezone.standalone).uri.path;
+    var prefix = ospath.join(_packagesPrefix, ospath.dirname(libraryPath));
+    var p = ospath.join(prefix, path.substring(prefix.length + 1));
     return new File(p).readAsBytes();
   }
 
