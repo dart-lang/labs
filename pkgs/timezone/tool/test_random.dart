@@ -11,12 +11,8 @@ final int minEpochTime = new DateTime.utc(1890).millisecondsSinceEpoch ~/ 1000;
 final int maxEpochTime = new DateTime.utc(2020).millisecondsSinceEpoch ~/ 1000;
 
 Future<String> dateCmd(int time, String tz) {
-  return Process.run(
-      'date',
-      ['-d', '@$time', '+%Y-%m-%d %H:%M:%S'],
-      environment: {
-    'TZ': tz
-  }).then((r) {
+  return Process.run('date', ['-d', '@$time', '+%Y-%m-%d %H:%M:%S'], environment: {'TZ': tz})
+      .then((r) {
     return r.stdout;
   });
 }
@@ -31,8 +27,8 @@ void main(List<String> arguments) {
 
   // Parse CLI arguments
   final parser = new ArgParser()
-  ..addOption('iterations', abbr: 'i', defaultsTo: '1000')
-  ..addOption('seed', abbr: 's', defaultsTo: '0');
+    ..addOption('iterations', abbr: 'i', defaultsTo: '1000')
+    ..addOption('seed', abbr: 's', defaultsTo: '0');
 
   final argResults = parser.parse(arguments);
 
@@ -54,8 +50,7 @@ void main(List<String> arguments) {
       final tz = zoneNames[r.nextInt(zoneCount)];
 
       return dateCmd(time, tz).then((v) {
-        final x =
-            new TZDateTime.fromMillisecondsSinceEpoch(getLocation(tz), time * 1000);
+        final x = new TZDateTime.fromMillisecondsSinceEpoch(getLocation(tz), time * 1000);
         v = v.trim();
 
         if (v != x.toString().substring(0, 19)) {
@@ -65,7 +60,6 @@ void main(List<String> arguments) {
         i--;
         return i == 0 ? false : true;
       });
-
     });
   });
 }
