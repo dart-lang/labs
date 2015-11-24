@@ -1,3 +1,8 @@
+# 0.4.0-dev
+
+- Remove usaeg of tuple package.
+- Upgrade unittest package to test.
+
 # 0.3.1
 
 - `generate_data_subset` script is removed. It will be available as a
