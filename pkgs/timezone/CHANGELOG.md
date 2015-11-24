@@ -2,6 +2,7 @@
 
 - Remove usaeg of tuple package.
 - Upgrade unittest package to test.
+- Fixed database URL for "latest" database.
 
 # 0.3.1
 
