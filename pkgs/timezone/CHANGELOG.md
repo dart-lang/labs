@@ -1,3 +1,7 @@
+# 0.4.1
+
+- Fix Dart 1.14 incompatibility with packageRoot returning null.
+
 # 0.4.0
 
 - Remove usage of tuple package.
