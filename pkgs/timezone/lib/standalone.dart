@@ -46,7 +46,7 @@ Future<List<int>> _loadAsBytes(String p) {
   } else if (scheme == 'file') {
     final packageRoot = Platform.packageRoot;
     if (packageRoot.isNotEmpty && p.startsWith(_packagesPrefix)) {
-      p = path.join(packageRoot, p.substring(_packagesPrefix.length));
+      p = path.join(path.fromUri(packageRoot), p.substring(_packagesPrefix.length));
       return new File(p).readAsBytes();
     }
 
@@ -68,7 +68,7 @@ List<int> _loadAsBytesSync(String p) {
   final script = Platform.script;
   final packageRoot = Platform.packageRoot;
   if (packageRoot.isNotEmpty && p.startsWith(_packagesPrefix)) {
-    p = path.join(packageRoot, p.substring(_packagesPrefix.length));
+    p = path.join(path.fromUri(packageRoot), p.substring(_packagesPrefix.length));
     return new File(p).readAsBytesSync();
   }
 
