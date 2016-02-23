@@ -1,3 +1,11 @@
+# 0.4.3
+
+- Fix Dart 1.14 incompatibility further.
+
+# 0.4.2
+
+- Bad pub publish. Ignore.
+
 # 0.4.1
 
 - Fix Dart 1.14 incompatibility with packageRoot returning null.
