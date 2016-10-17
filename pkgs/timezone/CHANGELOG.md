@@ -4,6 +4,11 @@
   compatible with `pub get --no-packages-dir`.
 - **Breaking:** Remove initializeTimeZoneSync method; it is incompatible with
   the async method for resolving package URIs.
+- Fix all strong mode _errors_ (thanks @har79).
+- Add microsecond support (thanks @har79).
+- Improve interaction between TZDateTime and native DateTime (thanks @har79).
+- Fix TimeZone's `==` (thanks @har79).
+- Many new dartdoc comments (thanks @har79).
 
 # 0.4.3
 

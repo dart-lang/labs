@@ -1,8 +1,0 @@
-#!/bin/bash
-
-dartfmt -w -l 100 \
-    lib/*.dart \
-    lib/src/{d,e,l,tz}*.dart \
-    lib/src/tzdata/*.dart \
-    tool/*.dart \
-    test/*.dart
