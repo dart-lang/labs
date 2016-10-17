@@ -2,7 +2,6 @@
 // file for details. All rights reserved. Use of this source code is governed
 // by a BSD-style license that can be found in the LICENSE file.
 
-///
 /// TimeZone Location Info.
 ///
 /// Most of this code were taken from the go standard library
@@ -36,7 +35,8 @@ class Location {
   final List<TimeZone> zones;
 
   /// [TimeZone] for the current time.
-  TimeZone get currentTimeZone => timeZone(new DateTime.now().millisecondsSinceEpoch);
+  TimeZone get currentTimeZone =>
+      timeZone(new DateTime.now().millisecondsSinceEpoch);
 
   // Most lookups will be for the current time.
   // To avoid the binary search through tx, keep a
@@ -59,7 +59,8 @@ class Location {
       final tAt = transitionAt[i];
 
       if ((tAt <= _cacheNow) &&
-          ((i + 1 == transitionAt.length) || (_cacheNow < transitionAt[i + 1]))) {
+          ((i + 1 == transitionAt.length) ||
+              (_cacheNow < transitionAt[i + 1]))) {
         _cacheStart = tAt;
         _cacheEnd = maxTime;
         if (i + 1 < transitionAt.length) {
@@ -90,7 +91,8 @@ class Location {
       utc -= tz.offset;
 
       if (utc < start) {
-        utc = millisecondsSinceEpoch - lookupTimeZone(start - 1).timeZone.offset;
+        utc =
+            millisecondsSinceEpoch - lookupTimeZone(start - 1).timeZone.offset;
       } else if (utc >= end) {
         utc = millisecondsSinceEpoch - lookupTimeZone(end).timeZone.offset;
       }
@@ -103,7 +105,7 @@ class Location {
   /// as milliseconds since January 1, 1970 00:00:00 UTC.
   TzInstant lookupTimeZone(int millisecondsSinceEpoch) {
     if (zones.isEmpty) {
-      return const TzInstant(const TimeZone(0, false, 'UTC'), minTime, maxTime);
+      return const TzInstant(TimeZone.UTC, minTime, maxTime);
     }
 
     if (_cacheZone != null &&
@@ -226,6 +228,8 @@ class Location {
 
 /// A [TimeZone] represents a single time zone such as CEST or CET.
 class TimeZone {
+  static const TimeZone UTC = const TimeZone(0, false, 'UTC');
+
   /// Milliseconds east of UTC.
   final int offset;
 
@@ -237,8 +241,12 @@ class TimeZone {
 
   const TimeZone(this.offset, this.isDst, this.abbr);
 
-  bool operator ==(TimeZone other) {
-    return (offset == other.offset && isDst == other.isDst && abbr == other.abbr);
+  bool operator ==(other) {
+    return identical(this, other) ||
+        other is TimeZone &&
+            offset == other.offset &&
+            isDst == other.isDst &&
+            abbr == other.abbr;
   }
 
   int get hashCode {
