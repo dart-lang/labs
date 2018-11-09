@@ -1,4 +1,4 @@
-# 0.5.0-dev
+# 0.5.0
 
 - Support a package-directory-free environment. In Dart 1.19, timezone is now
   compatible with `pub get --no-packages-dir`.
@@ -9,6 +9,9 @@
 - Improve interaction between TZDateTime and native DateTime (thanks @har79).
 - Fix TimeZone's `==` (thanks @har79).
 - Many new dartdoc comments (thanks @har79).
+- Fix for calling `new TZDateTime.from()` with a non-UTC DateTime object
+  (thanks @tomaine2002).
+- Support Dart 2.
 - Time zone database updated to 2018c. For your convenience here are the
   announcements for [2015c], [2015d], [2015e], [2015f], [2015g], [2016a],
   [2016b], [2016c], [2016d], [2016e], [2016f], [2016g], [2016h], [2016i],
