@@ -2,9 +2,9 @@
 library timezone.test.zicfile_test;
 
 import 'dart:io';
-import 'dart:mirrors';
+import 'dart:isolate';
 
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:timezone/tzdata.dart' as tzdata;
 
@@ -14,11 +14,12 @@ tzdata.TimeZone z(int offset, bool isDst, int abbrevIndex) {
 
 main() {
   test('Read US/Eastern 2014h tzfile', () async {
-    var location =
-        currentMirrorSystem().findLibrary(#timezone.test.zicfile_test).uri.path;
-    var locationDir = path.dirname(location);
+    var packageUri = Uri(scheme: 'package', path: 'timezone/timezone.dart');
+    var packagePath = p
+        .dirname(p.dirname((await Isolate.resolvePackageUri(packageUri)).path));
+    var locationDir = p.join(packagePath, 'test');
     var rawData =
-        await File(path.join(locationDir, 'data/US/Eastern')).readAsBytes();
+        await File(p.join(locationDir, 'data/US/Eastern')).readAsBytes();
     final loc = tzdata.Location.fromBytes('US/Eastern', rawData);
 
     expect(loc.name, equals('US/Eastern'));
