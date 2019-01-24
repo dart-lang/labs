@@ -1,3 +1,11 @@
+# 0.5.2
+
+- Time zone database updated to 2018i. For your convenience here are the
+  announcements for [2018h] and [2018i].
+
+[2018h]: http://mm.icann.org/pipermail/tz-announce/2018-December/000053.html
+[2018i]: http://mm.icann.org/pipermail/tz-announce/2018-December/000054.html
+
 # 0.5.1
 
 - Time zone database updated to 2018g. For your convenience here are the
