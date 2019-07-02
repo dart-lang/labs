@@ -3,7 +3,7 @@
 This package provides the [IANA time zone database] and time zone aware
 `DateTime` class, [`TZDateTime`].
 
-The current Time Zone database version is [2018g]. See [the announcement] for
+The current Time Zone database version is [2019a]. See [the announcement] for
 details.
 
 
@@ -56,6 +56,46 @@ Future<Null> setup() async {
   await initializeTimeZone();
   final detroit = getLocation('America/Detroit');
   setLocalLocation(detroit);
+}
+```
+
+### Initialization for Flutter Apps
+
+Flutter apps need to be initialized slightly differently, as the timezone
+database file needs to be bundled with your application assets.
+
+### Add the database to your pubspec.yaml
+
+Under the `assets` section of your application's `pubspec.yaml`, add
+a reference to the timezone database file:
+
+```yaml
+assets:
+  - packages/timezone/data/2019a.tzf
+```
+
+If you don't want to have to change the bundled filename when this
+library updates, you can have flutter bundle the directory instead:
+
+```yaml
+assets:
+  - packages/timezone/data/
+```
+
+### Initialize the library in your application startup
+
+The database needs to be loaded before using the library. A good place
+to do this is in your app's main function before running the Flutter app.
+Here we load the database file from assets, and initialize the library.
+
+```dart
+import 'package:timezone/timezone.dart';
+
+void main() async {
+  var byteData = await rootBundle
+      .load('packages/timezone/data/${tzDataDefaultFilename}');
+  initializeDatabase(byteData.buffer.asUint8List());
+  runApp(MyApp());
 }
 ```
 
@@ -150,8 +190,8 @@ $ pub run tool/get -s 2014h
 
 The argument `-s` is for specifying source version.
 
-[2018g]: http://www.iana.org/time-zones/repository/releases/tzcode2018g.tar.gz
+[2019a]: http://www.iana.org/time-zones/repository/releases/tzcode2019a.tar.gz
 [IANA time zone database]: https://www.iana.org/time-zones
 [`TZDateTime`]: https://pub.dartlang.org/documentation/timezone/latest/timezone.standalone/TZDateTime-class.html
 [`TimeZone`]: https://pub.dartlang.org/documentation/timezone/latest/timezone.standalone/TimeZone-class.html
-[the announcement]: http://mm.icann.org/pipermail/tz-announce/2018-October/000052.html
+[the announcement]: http://mm.icann.org/pipermail/tz-announce/2019-March/000055.html
