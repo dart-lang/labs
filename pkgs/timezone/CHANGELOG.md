@@ -1,3 +1,14 @@
+# 0.5.5
+
+- Time zone database updated to 2019b. For your convenience here is the
+  announcement for [2019b].
+- Convenience database symlinks added for convenience at
+  - `lib/data/latest.tzf`
+  - `lib/data/latest_2015-2025.tzf`
+  - `lib/data/latest_all.tzf`
+
+[2019b]: http://mm.icann.org/pipermail/tz-announce/2019-July/000056.html
+
 # 0.5.4
 
 - TZDateTime.utc is accessible before time zone database is initialized (thanks
