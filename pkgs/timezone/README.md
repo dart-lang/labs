@@ -175,10 +175,10 @@ to build our databases.
 We are currently building three different database variants:
 
 - default (doesn't contain deprecated and historical zones with some exceptions
-  like US/Eastern). 351kb
-- all (contains all data from the [IANA time zone database]). 433kb
-- 2010-2020 (default database that contains historical data from 2010 until
-  2020). 86kb
+  like US/Eastern). 361kb
+- all (contains all data from the [IANA time zone database]). 443kb
+- 2015-2025 (default database that contains historical data from 2015 until
+  2025). 85kb
 
 ### Updating Time Zone databases
 
