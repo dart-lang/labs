@@ -51,17 +51,13 @@ void setLocalLocation(Location location) {
 
 /// Initialize Time zone database.
 void initializeDatabase(List<int> rawData) {
-  if (_database == null) {
-    _database = LocationDatabase();
-  }
+  _database ??= LocationDatabase();
 
-  for (final Location l in tzdbDeserialize(rawData)) {
+  for (final l in tzdbDeserialize(rawData)) {
     _database.add(l);
   }
 
-  if (_local == null) {
-    _local = _UTC;
-  }
+  _local ??= _UTC;
 }
 
 /// Initialize Time Zone database from [encodedDatabase].
@@ -73,7 +69,9 @@ void initializeTimeZonesFromBase64(String encodedDatabase) {
   try {
     var rawData = base64Decode(encodedDatabase);
     initializeDatabase(rawData);
-  } catch (e) {
+  }
+// ignore: avoid_catches_without_on_clauses
+  catch (e) {
     throw TimeZoneInitException(e.toString());
   }
 }

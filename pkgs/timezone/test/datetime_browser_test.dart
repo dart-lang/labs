@@ -2,7 +2,7 @@
 import 'package:test/test.dart';
 import 'package:timezone/browser.dart';
 
-main() async {
+Future<void> main() async {
   await initializeTimeZone();
   final detroit = getLocation('America/Detroit');
   final la = getLocation('America/Los_Angeles');
@@ -31,7 +31,8 @@ main() async {
       expect(t.toString(), equals('2010-01-02 06:04:05.006-0500'));
     });
 
-    // This started failing, because Chrome is temporarily disallowing microsecond timestamps?
+    // This started failing, because Chrome is temporarily disallowing
+    // microsecond timestamps?
     test('fromMicroseconds', () {
       final t =
           TZDateTime.fromMicrosecondsSinceEpoch(newYork, 1262430245006007);

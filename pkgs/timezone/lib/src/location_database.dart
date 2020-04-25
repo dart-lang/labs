@@ -5,8 +5,8 @@
 /// Locations database
 library timezone.src.location_database;
 
-import 'location.dart';
 import 'exceptions.dart';
+import 'location.dart';
 
 /// LocationDatabase provides interface to find [Location]s by their name.
 ///
@@ -17,7 +17,7 @@ import 'exceptions.dart';
 ///
 class LocationDatabase {
   /// Mapping between [Location] name and [Location].
-  final Map<String, Location> _locations = Map<String, Location>();
+  final _locations = <String, Location>{};
 
   Map<String, Location> get locations => _locations;
 
