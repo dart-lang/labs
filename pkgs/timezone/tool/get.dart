@@ -38,7 +38,6 @@ const _zicDataFiles = [
   'europe',
   'northamerica',
   'southamerica',
-  'pacificnew',
   'backward'
 ];
 

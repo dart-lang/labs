@@ -1,3 +1,10 @@
+# 0.5.8
+
+- Time zone database updated to 2020b. For your convenience here is the
+  announcement for [2020b].
+
+[2020b]: https://mm.icann.org/pipermail/tz-announce/2020-October/000059.html
+
 # 0.5.7
 
 - Time zone database updated to 2020a. For your convenience here is the
