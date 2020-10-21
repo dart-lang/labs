@@ -5,14 +5,14 @@
 /// ```sh
 /// pub run tool/get -s 2020a
 /// pushd lib/data
-/// rm -rf lib/data/latest*
+/// rm -rf latest*
 /// ln -s {2020a,latest}.tzf
 /// ln -s {2020a,latest}_all.tzf
 /// ln -s {2020a,latest}_2015-2025.tzf
 /// popd
-/// pub run tool/encode lib/data/2020a.tzf lib/data/latest.dart
-/// pub run tool/encode lib/data/2020a_all.tzf lib/data/latest_all.dart
-/// pub run tool/encode lib/data/2020a_2015-2025.tzf lib/data/latest_2015-2025.dart
+/// pub run tool/encode lib/data/latest.{tzf,dart}
+/// pub run tool/encode lib/data/latest_all.{tzf,dart}
+/// pub run tool/encode lib/data/latest_2015-2025.{tzf,dart}
 /// ```
 
 import 'dart:async';
