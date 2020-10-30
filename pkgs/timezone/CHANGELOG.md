@@ -1,3 +1,19 @@
+# 0.6.1
+
+- Updated the `get` script (now `encode_tzf`) to work with a `zoneinfo`
+  directory (as created by the `zic` tool) as input. Fetching and compiling this
+  directory is now done by a bash script (`refresh.sh`) using standard tools.
+
+  This allows pointing the tool at a custom `zoneinfo` directory.
+
+# 0.6.0
+
+- Stopping internal versioning of time zone data. Only the latest data will be
+  included, as there is no use case for using an outdated version.
+- Renaming the `_2015_2025` database to `_10y` for it to have a stable name.
+  In the past `latest_2010-2020.tzf` had to be renamed to
+  `latest_2015-2025.tzf`.
+
 # 0.5.9
 
 - Time zone database updated to 2020d. For your convenience here is the
