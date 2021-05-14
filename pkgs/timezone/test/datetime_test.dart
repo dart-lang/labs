@@ -1,7 +1,7 @@
 @TestOn('vm')
 import 'package:test/test.dart';
-import 'package:timezone/timezone.dart';
 import 'package:timezone/data/latest.dart';
+import 'package:timezone/timezone.dart';
 
 Future<void> main() async {
   initializeTimeZones();
@@ -154,12 +154,12 @@ Future<void> main() async {
         });
       });
     });
-  });  
-  
+  });
+
   group('Timezones', () {
     test(
-        'getLocation throws $LocationNotFoundException for unrecognized timezone',
-        () {
+        'getLocation throws $LocationNotFoundException for unrecognized '
+        'timezone', () {
       expect(() => getLocation('non-existent-location'),
           throwsA(TypeMatcher<LocationNotFoundException>()));
     });
