@@ -1,6 +1,6 @@
 name: native_synchronization
 description: Low level synchronization primitives built on dart:ffi.
-version: 0.1.0-wip
+version: 0.1.0
 repository: https://github.com/dart-lang/native_synchronization
 
 environment:

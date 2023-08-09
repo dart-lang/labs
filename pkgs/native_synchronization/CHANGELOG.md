@@ -1,4 +1,4 @@
-## 0.1.0-wip
+## 0.1.0
 
 - Initial version.
 - Expose `Mutex` and `ConditionVariable`
