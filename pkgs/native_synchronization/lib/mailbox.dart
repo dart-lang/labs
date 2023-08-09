@@ -103,11 +103,22 @@ class Mailbox {
   static final _emptyResponse = Uint8List(0);
 
   static Uint8List _toList(Pointer<Uint8> buffer, int length) {
-    return length == 0
-        ? _emptyResponse
-        // We have to ignore sdk_version_since warning due to dartbug.com/53142.
-        // ignore: sdk_version_since
-        : buffer.asTypedList(length, finalizer: malloc.nativeFree);
+    if (length == 0) {
+      return _emptyResponse;
+    }
+
+    // TODO: remove feature detection once 3.1 becomes stable.
+    // ignore: omit_local_variable_types
+    final Uint8List Function(int) asTypedList = buffer.asTypedList;
+    if (asTypedList is Uint8List Function(int,
+        {Pointer<NativeFinalizerFunction> finalizer})) {
+      return asTypedList(length, finalizer: malloc.nativeFree);
+    }
+
+    final result = Uint8List(length);
+    result.setRange(0, length, buffer.asTypedList(length));
+    malloc.free(buffer);
+    return result;
   }
 
   static Pointer<Uint8> _toBuffer(Uint8List list) {

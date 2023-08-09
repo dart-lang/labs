@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Lower SDK lower bound to 3.0.0.
+
 ## 0.1.0
 
 - Initial version.

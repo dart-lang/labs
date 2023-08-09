@@ -14,7 +14,11 @@ permissions: read-all
 
 jobs:
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        sdk: [dev, stable]
 
     steps:
       # These are the latest versions of the github actions; dependabot will
@@ -22,7 +26,7 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
-          sdk: dev
+          sdk: ${{ matrix.sdk }}
 
       - name: Install dependencies
         run: dart pub get
@@ -39,7 +43,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        sdk: [dev]
+        sdk: [dev, stable]
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
