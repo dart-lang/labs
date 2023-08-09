@@ -34,6 +34,7 @@ jobs:
         run: dart analyze --fatal-infos
 
   test:
+    needs: analyze
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

@@ -4,10 +4,10 @@ version: 0.1.0-wip
 repository: https://github.com/dart-lang/native_synchronization
 
 environment:
-  sdk: ^3.0.0
+  sdk: ">=3.1.0-348.0.dev <4.0.0"
 
 dependencies:
-  # lib_name: ^1.2.0
+  ffi: ^2.1.0
 
 dev_dependencies:
   dart_flutter_team_lints: ^1.0.0
