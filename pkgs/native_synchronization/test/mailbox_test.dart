@@ -29,4 +29,25 @@ void main() {
     expect(value[41], equals(42));
     expect(await helperResult, equals('success'));
   });
+
+  Future<String> startHelperIsolateClose(Sendable<Mailbox> sendableMailbox) {
+    return Isolate.run(() {
+      sleep(const Duration(milliseconds: 500));
+      final mailbox = sendableMailbox.materialize();
+      try {
+        mailbox.take();
+      } catch (_) {
+        return 'success';
+      }
+      return 'failed';
+    });
+  }
+
+  test('mailbox close', () async {
+    final mailbox = Mailbox();
+    mailbox.put(Uint8List(42)..[41] = 42);
+    mailbox.close();
+    final helperResult = startHelperIsolateClose(mailbox.asSendable);
+    expect(await helperResult, equals('success'));
+  });
 }

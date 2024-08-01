@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Add a closed state to `Mailbox`.
+
 ## 0.2.0
 
 - Lower SDK lower bound to 3.0.0.
