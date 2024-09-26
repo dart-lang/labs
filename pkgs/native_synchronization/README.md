@@ -1,4 +1,4 @@
-[![Dart](https://github.com/dart-lang/native_synchronization/actions/workflows/dart.yaml/badge.svg)](https://github.com/dart-lang/native_synchronization/actions/workflows/dart.yaml)
+[![package:native_synchronization](https://github.com/dart-lang/labs/actions/workflows/native_synchronization.yml/badge.svg)](https://github.com/dart-lang/labs/actions/workflows/native_synchronization.yml)
 [![pub package](https://img.shields.io/pub/v/native_synchronization.svg)](https://pub.dev/packages/native_synchronization)
 [![package publisher](https://img.shields.io/pub/publisher/native_synchronization.svg)](https://pub.dev/packages/native_synchronization/publisher)
 
