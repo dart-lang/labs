@@ -20,10 +20,10 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
-import 'package:native_synchronization/sendable.dart';
 
-import 'package:native_synchronization/src/bindings/pthread.dart';
-import 'package:native_synchronization/src/bindings/winapi.dart';
+import 'sendable.dart';
+import 'src/bindings/pthread.dart';
+import 'src/bindings/winapi.dart';
 
 part 'posix.dart';
 part 'windows.dart';

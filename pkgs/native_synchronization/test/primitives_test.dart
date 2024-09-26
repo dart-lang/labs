@@ -25,13 +25,13 @@ void main() {
         final mutex = sendableMutex.materialize();
 
         while (true) {
-          sleep(Duration(milliseconds: 10));
+          sleep(const Duration(milliseconds: 10));
           if (mutex.runLocked(() {
             if (ptr.value == 2) {
               return true;
             }
             ptr.value = 0;
-            sleep(Duration(milliseconds: 500));
+            sleep(const Duration(milliseconds: 500));
             ptr.value = 1;
             return false;
           })) {
@@ -61,7 +61,7 @@ void main() {
           })) {
             break;
           }
-          await Future.delayed(const Duration(milliseconds: 10));
+          await Future<void>.delayed(const Duration(milliseconds: 10));
         }
         expect(await helperResult, equals('success'));
       });
@@ -109,7 +109,7 @@ void main() {
           if (success) {
             break;
           }
-          await Future.delayed(const Duration(milliseconds: 20));
+          await Future<void>.delayed(const Duration(milliseconds: 20));
         }
 
         expect(await helperResult, equals('success'));
