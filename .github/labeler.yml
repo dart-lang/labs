@@ -1,0 +1,9 @@
+# Configuration for .github/workflows/pull_request_label.yml.
+
+'type-infra':
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+'package:native_synchronization':
+  - changed-files:
+      - any-glob-to-any-file: 'pkgs/native_synchronization/**'
