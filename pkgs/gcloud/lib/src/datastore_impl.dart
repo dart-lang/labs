@@ -99,7 +99,9 @@ class DatastoreImpl implements datastore.Datastore {
     for (var i = 0; i < a.path!.length; i++) {
       if (a.path![i].id != b.path![i].id ||
           a.path![i].name != b.path![i].name ||
-          a.path![i].kind != b.path![i].kind) return false;
+          a.path![i].kind != b.path![i].kind) {
+        return false;
+      }
     }
     return true;
   }

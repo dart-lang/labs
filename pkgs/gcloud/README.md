@@ -1,4 +1,4 @@
-[![Dart CI](https://github.com/dart-lang/gcloud/actions/workflows/test-package.yml/badge.svg)](https://github.com/dart-lang/gcloud/actions/workflows/test-package.yml)
+[![package:gcloud](https://github.com/dart-lang/labs/actions/workflows/gcloud.yml/badge.svg)](https://github.com/dart-lang/labs/actions/workflows/gcloud.yml)
 [![pub package](https://img.shields.io/pub/v/gcloud.svg)](https://pub.dev/packages/gcloud)
 [![package publisher](https://img.shields.io/pub/publisher/gcloud.svg)](https://pub.dev/packages/gcloud/publisher)
 
@@ -26,7 +26,7 @@ much higher expected rate of API and breaking changes.
 
 Your feedback is valuable and will help us evolve this package. For general
 feedback, suggestions, and comments, please file an issue in the 
-[bug tracker](https://github.com/dart-lang/gcloud/issues).
+[bug tracker](https://github.com/dart-lang/labs/issues).
 
 ## API details
 

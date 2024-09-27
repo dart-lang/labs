@@ -258,6 +258,7 @@ class FilterRelation {
   ///
   /// @nodoc
   @Deprecated('Use FilterRelation.GreaterThan instead')
+  // ignore: constant_identifier_names
   static const FilterRelation GreatherThan = GreaterThan;
   // ignore: constant_identifier_names
   static const FilterRelation GreaterThanOrEqual = FilterRelation._('>=');
@@ -266,6 +267,7 @@ class FilterRelation {
   ///
   /// @nodoc
   @Deprecated('Use FilterRelation.GreaterThanOrEqual instead')
+  // ignore: constant_identifier_names
   static const FilterRelation GreatherThanOrEqual = GreaterThanOrEqual;
   // ignore: constant_identifier_names
   static const FilterRelation Equal = FilterRelation._('==');
@@ -307,6 +309,7 @@ class OrderDirection {
   ///
   /// @nodoc
   @Deprecated('Use OrderDirection.Descending instead')
+  // ignore: constant_identifier_names
   static const OrderDirection Decending = Descending;
 
   final String name;
