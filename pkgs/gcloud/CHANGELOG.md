@@ -1,13 +1,21 @@
+## 0.8.15
+
+- Update the pubspec repository field to reflect the repo move.
+
 ## 0.8.14
+
 - Support override metadata properties in `copyObject`.
 
 ## 0.8.13
+
 - Support the latest version `^13.0.0` of the `googleapis` package.
 
 ## 0.8.12
+
 - Support the latest version 12.0.0 of the `googleapis` package.
 
 ## 0.8.11
+
 - After the first `Page` created by `Datastore.withRetry()` retries were not
   happening. This is now fixed, ensuring that `Page.next()` will always retry
   when `Datastore` is wrapped with `Datastore.withRetry()`.
