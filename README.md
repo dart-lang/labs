@@ -7,6 +7,7 @@ This repository is home to various Dart packages under the
 
 | Package | Description | Version |
 |---|---|---|
+| [native_synchronization](pkgs/native_synchronization/) | Low level synchronization primitives built on dart:ffi. | [![pub package](https://img.shields.io/pub/v/native_synchronization.svg)](https://pub.dev/packages/native_synchronization) |
 
 ## Publishing automation
 

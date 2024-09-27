@@ -7,8 +7,8 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
-import 'package:native_synchronization/primitives.dart';
-import 'package:native_synchronization/sendable.dart';
+import 'primitives.dart';
+import 'sendable.dart';
 
 final class _MailboxRepr extends Struct {
   external Pointer<Uint8> buffer;

@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Update the pubspec repository field to reflect the repo move.
+
 ## 0.3.0
 
 - Add a closed state to `Mailbox`.
