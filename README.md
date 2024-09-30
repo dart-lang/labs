@@ -7,6 +7,7 @@ This repository is home to various Dart packages under the
 
 | Package | Description | Version |
 |---|---|---|
+| [gcloud](pkgs/gcloud/) | High level idiomatic Dart API for Google Cloud Storage, Pub-Sub and Datastore. | [![pub package](https://img.shields.io/pub/v/gcloud.svg)](https://pub.dev/packages/gcloud) |
 | [native_synchronization](pkgs/native_synchronization/) | Low level synchronization primitives built on dart:ffi. | [![pub package](https://img.shields.io/pub/v/native_synchronization.svg)](https://pub.dev/packages/native_synchronization) |
 
 ## Publishing automation
