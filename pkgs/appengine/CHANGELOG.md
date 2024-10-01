@@ -1,8 +1,14 @@
+## 0.13.9-wip
+
+* Update the pubspec repository field to reflect the new repo location.
+
 ## 0.13.8
- * Require `package:protobuf` ^3.1.0.
+
+* Require `package:protobuf` ^3.1.0.
 
 ## 0.13.7
- * Widen dependency constraint on `package:http`.
+
+* Widen dependency constraint on `package:http`.
 
 ## 0.13.6
 

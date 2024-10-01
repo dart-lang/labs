@@ -769,6 +769,7 @@ runTests(Datastore datastore, String namespace) {
       }
 
       var filters = [
+        // ignore: deprecated_member_use
         Filter(FilterRelation.GreatherThan, QUERY_KEY, QUERY_LOWER_BOUND),
         Filter(FilterRelation.LessThan, QUERY_KEY, QUERY_UPPER_BOUND),
       ];
@@ -784,6 +785,7 @@ runTests(Datastore datastore, String namespace) {
         Filter(FilterRelation.Equal, TEST_UNINDEXED_PROPERTY, QUERY_INDEX_VALUE)
       ];
 
+      // ignore: deprecated_member_use
       var orders = [Order(OrderDirection.Decending, QUERY_KEY)];
 
       test('query', () {

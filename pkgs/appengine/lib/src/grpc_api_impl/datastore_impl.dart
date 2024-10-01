@@ -423,7 +423,9 @@ class _Codec {
     raw.FilterRelation.LessThanOrEqual:
         PropertyFilter_Operator.LESS_THAN_OR_EQUAL,
     raw.FilterRelation.Equal: PropertyFilter_Operator.EQUAL,
+    // ignore: deprecated_member_use
     raw.FilterRelation.GreatherThan: PropertyFilter_Operator.GREATER_THAN,
+    // ignore: deprecated_member_use
     raw.FilterRelation.GreatherThanOrEqual:
         PropertyFilter_Operator.GREATER_THAN_OR_EQUAL,
   };
