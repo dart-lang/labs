@@ -1,17 +1,26 @@
-name: Build
+name: package:appengine
+permissions: read-all
 
 on:
-  schedule:
-    # “At 00:00 (UTC) on Sunday.”
-    - cron: '0 0 * * 0'
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+    paths:
+      - '.github/workflows/appengine.yml'
+      - 'pkgs/appengine/**'
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/appengine.yml'
+      - 'pkgs/appengine/**'
+  schedule:
+    - cron: '0 0 * * 0' # weekly
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pkgs/appengine
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
