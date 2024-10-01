@@ -18,6 +18,13 @@ main() async {
   final endpoint = 'datastore.googleapis.com';
 
   final String nsPrefix = Platform.operatingSystem;
+
+  // Early exit if trying to run this integration test on the bot.
+
+  if (onBot()) {
+    return;
+  }
+
   await withAuthenticator(OAuth2Scopes,
       (String project, grpc.HttpBasedAuthenticator authenticator) async {
     test.group('grpc datastore', () {
