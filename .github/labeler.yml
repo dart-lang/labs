@@ -4,6 +4,14 @@
   - changed-files:
       - any-glob-to-any-file: '.github/**'
 
+'package:appengine':
+  - changed-files:
+      - any-glob-to-any-file: 'pkgs/appengine/**'
+
+'package:gcloud':
+  - changed-files:
+      - any-glob-to-any-file: 'pkgs/gcloud/**'
+
 'package:native_synchronization':
   - changed-files:
       - any-glob-to-any-file: 'pkgs/native_synchronization/**'
