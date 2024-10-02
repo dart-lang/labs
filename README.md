@@ -7,6 +7,7 @@ This repository is home to various Dart packages under the
 
 | Package | Description | Version |
 |---|---|---|
+| [appengine](pkgs/appengine/) | Support for using Dart as a custom runtime on Google App Engine Flexible Environment. | [![pub package](https://img.shields.io/pub/v/appengine.svg)](https://pub.dev/packages/appengine) |
 | [gcloud](pkgs/gcloud/) | High level idiomatic Dart API for Google Cloud Storage, Pub-Sub and Datastore. | [![pub package](https://img.shields.io/pub/v/gcloud.svg)](https://pub.dev/packages/gcloud) |
 | [native_synchronization](pkgs/native_synchronization/) | Low level synchronization primitives built on dart:ffi. | [![pub package](https://img.shields.io/pub/v/native_synchronization.svg)](https://pub.dev/packages/native_synchronization) |
 
