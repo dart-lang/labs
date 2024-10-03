@@ -1,4 +1,4 @@
-## 0.13.9-wip
+## 0.13.9
 
 * Update the pubspec repository field to reflect the new repo location.
 
