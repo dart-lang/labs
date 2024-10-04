@@ -1,6 +1,6 @@
 version: 1
 transforms:
-  - title: 'Rename to Descending'
+  - title: 'Change to `Descending`'
     date: 2024-09-11
     element:
       uris: ['datastore.dart']
@@ -9,7 +9,7 @@ transforms:
     changes:
       - kind: 'rename'
         newName: 'Descending'
-  - title: 'Rename to GreaterThan'
+  - title: 'Change to `GreaterThan`'
     date: 2024-09-11
     element:
       uris: ['datastore.dart']
@@ -18,7 +18,7 @@ transforms:
     changes:
       - kind: 'rename'
         newName: 'GreaterThan'
-  - title: 'Rename to GreaterThanOrEqual'
+  - title: 'Change to `GreaterThanOrEqual`'
     date: 2024-09-11
     element:
       uris: ['datastore.dart']
