@@ -243,7 +243,7 @@ await pubsub.createSubscription(
     endpoint: Uri.parse('https://server.example.com/push'));
 ```
 
-With this subscription all messages will be send to the URL provided in the
+With this subscription all messages will be sent to the URL provided in the
 `endpoint` argument. The server needs to acknowledge the reception of the
 message with a `200 OK` reply.
 
