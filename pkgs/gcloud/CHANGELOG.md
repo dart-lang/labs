@@ -1,5 +1,16 @@
 ## 0.8.16-wip
 
+ - **Breaking** `BucketEntry` is now `sealed` anyone implementing or subclassing
+   will experience breakage.
+ - Feature `BucketEntry` objects returns from `Bucket.list` are now instances
+   of:
+    * `BucketDirectoryEntry`, or,
+    * `BucketObjectEntry`, which implements `ObjectInfo` exposing metadata.
+
+   This means that anyone using `Bucket.list` to find objects, does not need
+   to use `Bucket.info` to fetch metadata for an object.
+ - Minimum Dart SDK constraint bumped to `^3.0.0`.
+
 ## 0.8.15
 
 - Update the pubspec repository field to reflect the repo move.

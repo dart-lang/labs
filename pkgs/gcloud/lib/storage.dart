@@ -668,22 +668,37 @@ abstract class ObjectMetadata {
 /// Listing operate like a directory listing, despite the object
 /// namespace being flat.
 ///
+/// Instances of [BucketEntry] are either instances of [BucketDirectoryEntry]
+/// or [BucketObjectEntry]. Casting to [BucketObjectEntry] will give access to
+/// object metadata.
+///
 /// See [Bucket.list] for information on how the hierarchical structure
 /// is determined.
-class BucketEntry {
+sealed class BucketEntry {
   /// Whether this is information on an object.
-  final bool isObject;
+  bool get isObject;
 
   /// Name of object or directory.
-  final String name;
-
-  BucketEntry._object(this.name) : isObject = true;
-
-  BucketEntry._directory(this.name) : isObject = false;
+  String get name;
 
   /// Whether this is a prefix.
   bool get isDirectory => !isObject;
 }
+
+/// Entry in [Bucket.list] representing a directory given the `delimiter`
+/// passed.
+class BucketDirectoryEntry extends BucketEntry {
+  @override
+  final String name;
+
+  BucketDirectoryEntry._(this.name);
+
+  @override
+  bool get isObject => false;
+}
+
+/// Entry in [Bucket.list] representing an object.
+abstract class BucketObjectEntry implements BucketEntry, ObjectInfo {}
 
 /// Access to operations on a specific cloud storage bucket.
 abstract class Bucket {

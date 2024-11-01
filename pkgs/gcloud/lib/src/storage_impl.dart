@@ -349,9 +349,9 @@ class _ObjectPageImpl implements Page<BucketEntry> {
       storage_api.Objects response)
       : items = [
           for (final item in response.prefixes ?? const <String>[])
-            BucketEntry._directory(item),
+            BucketDirectoryEntry._(item),
           for (final item in response.items ?? const <storage_api.Object>[])
-            BucketEntry._object(item.name!)
+            _BucketObjectEntry(item)
         ],
         _nextPageToken = response.nextPageToken;
 
@@ -428,6 +428,16 @@ class _ObjectInfoImpl implements ObjectInfo {
   /// Additional metadata.
   @override
   ObjectMetadata get metadata => _metadata;
+}
+
+class _BucketObjectEntry extends _ObjectInfoImpl implements BucketObjectEntry {
+  _BucketObjectEntry(storage_api.Object object) : super(object);
+
+  @override
+  bool get isDirectory => false;
+
+  @override
+  bool get isObject => true;
 }
 
 class _ObjectMetadata implements ObjectMetadata {
