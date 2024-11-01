@@ -1,7 +1,7 @@
-## 0.8.16-wip
+## 0.8.16
 
- - **Breaking** `BucketEntry` is now `sealed` anyone implementing or subclassing
-   will experience breakage.
+ - `BucketEntry` is now `sealed` this may cause **breakage** for anyone
+   implementing `BucketEntry`.
  - Feature `BucketEntry` objects returns from `Bucket.list` are now instances
    of:
     * `BucketDirectoryEntry`, or,
