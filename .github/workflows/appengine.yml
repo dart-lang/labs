@@ -1,13 +1,15 @@
 name: package:appengine
+
 permissions: read-all
 
 on:
-  pull_request:
+  # Run CI on pushes to the main branch, and on PRs against main.
+  push:
     branches: [ main ]
     paths:
       - '.github/workflows/appengine.yml'
       - 'pkgs/appengine/**'
-  push:
+  pull_request:
     branches: [ main ]
     paths:
       - '.github/workflows/appengine.yml'
@@ -15,26 +17,29 @@ on:
   schedule:
     - cron: '0 0 * * 0' # weekly
 
+defaults:
+  run:
+    working-directory: pkgs/appengine
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: pkgs/appengine
-
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [stable, dev]
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: ${{ matrix.sdk }}
 
-      - name: Install dependencies
-        run: dart pub get
-  
+      - run: dart pub get
+
+      - run: dart analyze --fatal-infos
+
       # Disabled - this would format ~492 files.
-      # - name: Verify formatting
-      #   run: dart format --output=none --set-exit-if-changed .
+      # - run: dart format --output=none --set-exit-if-changed .
+      #   if: ${{ matrix.sdk == 'stable' }}
 
-      - name: Analyze project source
-        run: dart analyze --fatal-infos
-
-      - name: Run tests
-        run: dart test
+      - run: dart test

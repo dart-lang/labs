@@ -2,6 +2,7 @@ name: native_synchronization
 description: Low level synchronization primitives built on dart:ffi.
 version: 0.3.1
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/native_synchronization
+issue_tracker: https://github.com/dart-lang/labs/issues?q=is%3Aissue+is%3Aopen+label%3Apackage%3Anative_synchronization
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
