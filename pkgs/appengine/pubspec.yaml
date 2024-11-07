@@ -4,6 +4,7 @@ description: >-
   Support for using Dart as a custom runtime on Google App Engine Flexible
   Environment.
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/appengine
+issue_tracker: https://github.com/dart-lang/labs/issues?q=is%3Aissue+is%3Aopen+label%3Apackage%3Aappengine
 
 topics:
   - cloud
