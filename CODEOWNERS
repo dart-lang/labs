@@ -3,6 +3,6 @@
 # These are suggestions; it is fine to have your changes reviewed by someone
 # else.
 
-/pkgs/appengine/               @dart-lang/dart-pub-dev-team
-/pkgs/gcloud/                  @dart-lang/dart-pub-dev-team
+/pkgs/appengine/               @dart-lang/dart-pub-team
+/pkgs/gcloud/                  @dart-lang/dart-pub-team
 /pkgs/native_synchronization/  @mraleph
