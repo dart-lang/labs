@@ -1,3 +1,7 @@
+## 0.8.17
+ - Fix bug in `ObjectMetadata.replace` where  `contentEncoding` overwrote
+   `contentDisposition` and `contentLanguage`.
+
 ## 0.8.16
 
  - `BucketEntry` is now `sealed` this may cause **breakage** for anyone

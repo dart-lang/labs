@@ -514,8 +514,8 @@ class _ObjectMetadata implements ObjectMetadata {
         contentType: contentType ?? this.contentType,
         contentEncoding: contentEncoding ?? this.contentEncoding,
         cacheControl: cacheControl ?? this.cacheControl,
-        contentDisposition: contentDisposition ?? this.contentEncoding,
-        contentLanguage: contentLanguage ?? this.contentEncoding,
+        contentDisposition: contentDisposition ?? this.contentDisposition,
+        contentLanguage: contentLanguage ?? this.contentLanguage,
         custom: custom != null ? Map.from(custom) : this.custom);
   }
 }
