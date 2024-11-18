@@ -341,5 +341,31 @@ void main() {
         ], (Function f) => f().then(expectAsync1((_) {})));
       });
     });
+
+    test('update-metadata', () {
+      return withTestBucket((Bucket bucket) async {
+        await bucket.writeBytes(
+          'test-m',
+          metadata: ObjectMetadata(
+            contentType: 'application/test-1',
+          ),
+          [1, 2, 3],
+        );
+
+        final info = await bucket.info('test-m');
+        expect(info.metadata.contentType, 'application/test-1');
+
+        await bucket.updateMetadata(
+            'test-m',
+            ObjectMetadata(
+              contentType: 'application/test-2',
+            ));
+
+        final info2 = await bucket.info('test-m');
+        expect(info2.metadata.contentType, 'application/test-2');
+
+        await bucket.delete('test-m');
+      });
+    });
   });
 }

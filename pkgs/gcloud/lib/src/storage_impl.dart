@@ -286,13 +286,13 @@ class _BucketImpl implements Bucket {
     // TODO: support other ObjectMetadata implementations?
     var md = metadata as _ObjectMetadata;
     var object = md._object;
-    if (md._object.acl == null && _defaultObjectAcl == null) {
-      throw ArgumentError('ACL is required for update');
-    }
     if (md.contentType == null) {
       throw ArgumentError('Content-Type is required for update');
     }
-    md._object.acl ??= _defaultObjectAcl!._toObjectAccessControlList();
+    // If no ACL is passed use the default (if any).
+    if (object.acl == null && _defaultObjectAcl != null) {
+      object.acl = _defaultObjectAcl!._toObjectAccessControlList();
+    }
     return _api.objects.update(object, bucketName, objectName);
   }
 
