@@ -1,3 +1,7 @@
+## 0.13.10
+
+* Upgrade `package:grpc` to `^4.0.1`.
+
 ## 0.13.9
 
 * Update the pubspec repository field to reflect the new repo location.
