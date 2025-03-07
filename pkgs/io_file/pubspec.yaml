@@ -2,6 +2,7 @@ name: io_file
 description: A starting point for Dart libraries or applications.
 version: 0.1.0-wip
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/io_file
+publish_to: none
 
 environment:
   sdk: ^3.7.0
