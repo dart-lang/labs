@@ -5,4 +5,5 @@
 
 /pkgs/appengine/               @dart-lang/dart-pub-team
 /pkgs/gcloud/                  @dart-lang/dart-pub-team
+/pkgs/io_file                  @brianquinlan
 /pkgs/native_synchronization/  @mraleph
