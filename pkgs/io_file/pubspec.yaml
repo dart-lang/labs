@@ -1,0 +1,11 @@
+name: io_file
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.7.0
+
+dev_dependencies:
+  dart_flutter_team_lints: ^3.4.0
+  test: ^1.24.0

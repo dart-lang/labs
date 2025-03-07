@@ -1,0 +1,421 @@
+# Created with package:mono_repo v6.6.2
+name: Dart CI
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 0"
+defaults:
+  run:
+    shell: bash
+env:
+  PUB_ENVIRONMENT: bot.github
+permissions: read-all
+
+jobs:
+  job_001:
+    name: mono_repo self validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: stable
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - name: mono_repo self validate
+        run: dart pub global activate mono_repo 6.6.2
+      - name: mono_repo self validate
+        run: dart pub global run mono_repo generate --validate
+  job_002:
+    name: "analyze_and_format; linux; Dart 3.7.0; `dart analyze --fatal-infos`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file;commands:analyze"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: "3.7.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart analyze --fatal-infos"
+        run: dart analyze --fatal-infos
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+  job_003:
+    name: "analyze_and_format; linux; Dart dev; `dart analyze --fatal-infos`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file;commands:analyze"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart analyze --fatal-infos"
+        run: dart analyze --fatal-infos
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+  job_004:
+    name: "unit_test; linux; Dart 3.7.0; `dart test --test-randomize-ordering-seed=random --platform chrome -c dart2wasm`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file;commands:test_2"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: "3.7.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform chrome -c dart2wasm"
+        run: "dart test --test-randomize-ordering-seed=random --platform chrome -c dart2wasm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_005:
+    name: "unit_test; linux; Dart 3.7.0; `dart test --test-randomize-ordering-seed=random --platform chrome`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file;commands:test_1"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: "3.7.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform chrome"
+        run: "dart test --test-randomize-ordering-seed=random --platform chrome"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_006:
+    name: "unit_test; linux; Dart 3.7.0; `dart test --test-randomize-ordering-seed=random --platform vm`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file;commands:test_0"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:3.7.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: "3.7.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform vm"
+        run: "dart test --test-randomize-ordering-seed=random --platform vm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_007:
+    name: "unit_test; linux; Dart dev; `dart test --test-randomize-ordering-seed=random --platform chrome -c dart2wasm`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file;commands:test_2"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform chrome -c dart2wasm"
+        run: "dart test --test-randomize-ordering-seed=random --platform chrome -c dart2wasm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_008:
+    name: "unit_test; linux; Dart dev; `dart test --test-randomize-ordering-seed=random --platform chrome`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file;commands:test_1"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform chrome"
+        run: "dart test --test-randomize-ordering-seed=random --platform chrome"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_009:
+    name: "unit_test; linux; Dart dev; `dart test --test-randomize-ordering-seed=random --platform vm`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file;commands:test_0"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file
+            os:ubuntu-latest;pub-cache-hosted;sdk:dev
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform vm"
+        run: "dart test --test-randomize-ordering-seed=random --platform vm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_010:
+    name: "unit_test; macos; Dart 3.7.0; `dart test --test-randomize-ordering-seed=random --platform vm`"
+    runs-on: macos-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:macos-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file;commands:test_0"
+          restore-keys: |
+            os:macos-latest;pub-cache-hosted;sdk:3.7.0;packages:pkgs/io_file
+            os:macos-latest;pub-cache-hosted;sdk:3.7.0
+            os:macos-latest;pub-cache-hosted
+            os:macos-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: "3.7.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform vm"
+        run: "dart test --test-randomize-ordering-seed=random --platform vm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_011:
+    name: "unit_test; macos; Dart dev; `dart test --test-randomize-ordering-seed=random --platform vm`"
+    runs-on: macos-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:macos-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file;commands:test_0"
+          restore-keys: |
+            os:macos-latest;pub-cache-hosted;sdk:dev;packages:pkgs/io_file
+            os:macos-latest;pub-cache-hosted;sdk:dev
+            os:macos-latest;pub-cache-hosted
+            os:macos-latest
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform vm"
+        run: "dart test --test-randomize-ordering-seed=random --platform vm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_012:
+    name: "unit_test; windows; Dart 3.7.0; `dart test --test-randomize-ordering-seed=random --platform vm`"
+    runs-on: windows-latest
+    steps:
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: "3.7.0"
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform vm"
+        run: "dart test --test-randomize-ordering-seed=random --platform vm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
+  job_013:
+    name: "unit_test; windows; Dart dev; `dart test --test-randomize-ordering-seed=random --platform vm`"
+    runs-on: windows-latest
+    steps:
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: dev
+      - id: checkout
+        name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - id: pkgs_io_file_pub_upgrade
+        name: pkgs/io_file; dart pub upgrade
+        run: dart pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: pkgs/io_file
+      - name: "pkgs/io_file; dart test --test-randomize-ordering-seed=random --platform vm"
+        run: "dart test --test-randomize-ordering-seed=random --platform vm"
+        if: "always() && steps.pkgs_io_file_pub_upgrade.conclusion == 'success'"
+        working-directory: pkgs/io_file
+    needs:
+      - job_001
+      - job_002
+      - job_003
