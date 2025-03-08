@@ -12,6 +12,10 @@
   - changed-files:
     - any-glob-to-any-file: 'pkgs/gcloud/**'
 
+'package:io_file':
+  - changed-files:
+    - any-glob-to-any-file: 'pkgs/io_file/**'
+
 'package:native_synchronization':
   - changed-files:
     - any-glob-to-any-file: 'pkgs/native_synchronization/**'
