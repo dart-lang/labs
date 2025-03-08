@@ -11,7 +11,7 @@ dependencies:
   stdlibc:
     git:
       # Change this to a released version.
-      url: git@github.com:canonical/stdlibc.dart.git
+      url: https://github.com:canonical/stdlibc.dart.git
   win32: ^5.11.0
 
 dev_dependencies:
