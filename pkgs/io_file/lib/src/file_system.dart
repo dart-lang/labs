@@ -2,11 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
-import 'package:win32/win32.dart' as win32;
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
-
 /// An abstract representation of a file system.
 base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
