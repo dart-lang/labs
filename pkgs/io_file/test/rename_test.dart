@@ -6,7 +6,7 @@
 library;
 
 import 'dart:io';
-import 'package:io_file/io_file.dart';
+import 'package:io_file/posix_file_system.dart';
 import 'package:test/test.dart';
 
 void main() {
