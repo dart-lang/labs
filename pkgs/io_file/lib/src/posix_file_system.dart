@@ -9,7 +9,7 @@ import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'file_system.dart';
 
 Exception _getError(int errno, String message, String path) {
-  // TODO: In the long-term, do we need to avoid exceptions that are part of
+  //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that are part of
   // `dart:io`? Can we move those exceptions into a different namespace?
   final osError = io.OSError(stdlibc.strerror(errno) ?? '', errno);
 

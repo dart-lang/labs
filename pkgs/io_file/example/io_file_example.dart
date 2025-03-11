@@ -5,6 +5,6 @@
 import 'package:io_file/posix_file_system.dart';
 
 void main() {
-  // TODO: Create a better example.
+  // TODO(brianquinlan): Create a better example.
   PosixFileSystem().rename('foo.txt', 'bar.txt');
 }

@@ -11,7 +11,7 @@ base class FileSystem {
   /// but keeping it the original directory, requires creating a new complete
   /// path with the new name at the end.
   ///
-  /// TODO: add an example here.
+  ///TODO(brianquinlan): add an example here.
   ///
   /// On some platforms, a rename operation cannot move a file between
   /// different file systems. If that is the case, instead copy the file to the

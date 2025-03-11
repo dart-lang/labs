@@ -6,6 +6,7 @@
 library;
 
 import 'dart:io';
+
 import 'package:io_file/posix_file_system.dart';
 import 'package:test/test.dart';
 
@@ -19,7 +20,7 @@ void main() {
 
     tearDown(() => Directory(tmp).deleteSync(recursive: true));
 
-    // TODO: test with a very long path.
+    //TODO(brianquinlan): test with a very long path.
 
     test('move file absolute path', () {
       final path1 = '$tmp/file1';
