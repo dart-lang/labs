@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:io_file/io_file.dart';
+import 'package:io_file/posix_file_system.dart';
 
 void main() {
-  var awesome = Awesome();
-  print('awesome: ${awesome.isAwesome}');
+  // TODO(brianquinlan): Create a better example.
+  PosixFileSystem().rename('foo.txt', 'bar.txt');
 }

@@ -27,7 +27,7 @@ See
 |  read file (bytes)    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
 |  read file (lines)    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
 |  read file (string)   |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  rename               |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
+|  rename               |   [ ]   |  [X]  |  [ ]  |  [X]  |   [ ]   |
 |  set permissions      |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
 |  write file (bytes)   |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
 |  write file (string)  |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
