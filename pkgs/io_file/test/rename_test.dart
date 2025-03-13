@@ -88,7 +88,7 @@ void main() {
                 'errorCode',
                 Platform.isWindows
                     ? 5 // ERROR_ACCESS_DENIED
-                    : 31, // EISDIR
+                    : 21, // EISDIR
               ),
         ),
       );
