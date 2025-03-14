@@ -2,23 +2,23 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('posix')
+@TestOn('vm')
 library;
 
 import 'dart:io';
 
-import 'package:io_file/posix_file_system.dart';
+import 'package:io_file/io_file.dart';
 import 'package:test/test.dart';
+
+import 'test_utils.dart';
 
 void main() {
   group('move', () {
     late String tmp;
 
-    setUp(
-      () => tmp = Directory.systemTemp.createTempSync('move').absolute.path,
-    );
+    setUp(() => tmp = createTemp('move'));
 
-    tearDown(() => Directory(tmp).deleteSync(recursive: true));
+    tearDown(() => deleteTemp(tmp));
 
     //TODO(brianquinlan): test with a very long path.
 
@@ -27,7 +27,7 @@ void main() {
       final path2 = '$tmp/file2';
 
       File(path1).writeAsStringSync('Hello World');
-      PosixFileSystem().rename(path1, path2);
+      fileSystem.rename(path1, path2);
       expect(File(path1).existsSync(), isFalse);
       expect(File(path2).existsSync(), isTrue);
     });
@@ -38,7 +38,7 @@ void main() {
 
       File(path1).writeAsStringSync('Hello World #1');
       File(path2).writeAsStringSync('Hello World #2');
-      PosixFileSystem().rename(path1, path2);
+      fileSystem.rename(path1, path2);
       expect(File(path1).existsSync(), isFalse);
       expect(File(path2).readAsStringSync(), 'Hello World #1');
     });
@@ -48,7 +48,7 @@ void main() {
       final path2 = '$tmp/dir2';
 
       Directory(path1).createSync(recursive: true);
-      PosixFileSystem().rename(path1, path2);
+      fileSystem.rename(path1, path2);
       expect(Directory(path1).existsSync(), isFalse);
       expect(Directory(path2).existsSync(), isTrue);
     });
@@ -58,14 +58,14 @@ void main() {
       final path2 = '$tmp/file2';
 
       expect(
-        () => PosixFileSystem().rename(path1, path2),
+        () => fileSystem.rename(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.message, 'message', 'rename failed')
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                2, // ENOENT
+                2, // ENOENT, ERROR_FILE_NOT_FOUND
               ),
         ),
       );
@@ -79,14 +79,16 @@ void main() {
       Directory(path2).createSync(recursive: true);
 
       expect(
-        () => PosixFileSystem().rename(path1, path2),
+        () => fileSystem.rename(path1, path2),
         throwsA(
           isA<FileSystemException>()
               .having((e) => e.message, 'message', 'rename failed')
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                21, // EISDIR
+                Platform.isWindows
+                    ? 5 // ERROR_ACCESS_DENIED
+                    : 21, // EISDIR
               ),
         ),
       );
