@@ -10,15 +10,15 @@ import 'dart:io';
 import 'package:io_file/io_file.dart';
 import 'package:test/test.dart';
 
+import 'test_utils.dart';
+
 void main() {
   group('move', () {
     late String tmp;
 
-    setUp(
-      () => tmp = Directory.systemTemp.createTempSync('move').absolute.path,
-    );
+    setUp(() => tmp = createTemp('move'));
 
-    tearDown(() => Directory(tmp).deleteSync(recursive: true));
+    tearDown(() => deleteTemp(tmp));
 
     //TODO(brianquinlan): test with a very long path.
 
