@@ -2,11 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
-import '../posix_file_system.dart';
-import '../windows_file_system.dart';
-
 /// An abstract representation of a file system.
 base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
@@ -27,13 +22,5 @@ base class FileSystem {
   // fails and raises [PathExistsException].
   void rename(String oldPath, String newPath) {
     throw UnsupportedError('rename');
-  }
-}
-
-FileSystem get fileSystem {
-  if (Platform.isWindows) {
-    return WindowsFileSystem();
-  } else {
-    return PosixFileSystem();
   }
 }

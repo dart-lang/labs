@@ -68,16 +68,18 @@ base class WindowsFileSystem extends FileSystem {
     // Calling `GetLastError` for the first time causes the `GetLastError`
     // symbol to be loaded, which resets `GetLastError`. So make a harmless
     // call before the value is needed.
-    win32.GetLastError();
-
+    //    win32.GetLastError();
+    print('Premove');
     if (win32.MoveFileEx(
           oldPath.toNativeUtf16(),
           newPath.toNativeUtf16(),
           win32.MOVEFILE_WRITE_THROUGH | win32.MOVEFILE_REPLACE_EXISTING,
         ) ==
         win32.FALSE) {
+      print('GetLastError - in');
       final errorCode = win32.GetLastError();
-
+      print('Errorcode: $errorCode');
+      print('GetLastError - out');
       throw _getError(errorCode, 'rename failed', oldPath);
     }
   }
