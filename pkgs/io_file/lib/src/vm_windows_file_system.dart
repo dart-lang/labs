@@ -10,6 +10,11 @@ import 'package:win32/win32.dart' as win32;
 
 import 'file_system.dart';
 
+DateTime fileTimeToDateTime(int t) {
+  final microseconds = t ~/ 10;
+  return DateTime.utc(1601, 1, 1).add(Duration(microseconds: microseconds));
+}
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {
@@ -62,6 +67,47 @@ Exception _getError(int errorCode, String message, String path) {
   }
 }
 
+final class WindowsMetadata extends Metadata {
+  final bool isReadOnly;
+  final bool isHidden;
+  final bool isSystem;
+  final bool isArchive;
+  final bool isTemporary;
+  final bool isSparse;
+  final bool isCompressed;
+  final bool isOffline;
+
+  final int size;
+  final int creationTime100Nanos;
+  final int lastAccessTime100Nanos;
+  final int lastWriteTime100Nanos;
+
+  DateTime get creationTime => fileTimeToDateTime(creationTime100Nanos);
+  DateTime get lastAccessTime => fileTimeToDateTime(lastAccessTime100Nanos);
+  DateTime get lastModificationTime =>
+      fileTimeToDateTime(lastWriteTime100Nanos);
+
+  WindowsMetadata({
+    super.isDirectory = false,
+    super.isFile = false,
+    super.isLink = false,
+
+    this.isReadOnly = false,
+    this.isHidden = false,
+    this.isSystem = false,
+    this.isArchive = false,
+    this.isTemporary = false,
+    this.isSparse = false,
+    this.isCompressed = false,
+    this.isOffline = false,
+
+    this.size = 0,
+    this.creationTime100Nanos = 0,
+    this.lastAccessTime100Nanos = 0,
+    this.lastWriteTime100Nanos = 0,
+  });
+}
+
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
   @override
@@ -80,4 +126,49 @@ base class WindowsFileSystem extends FileSystem {
       throw _getError(errorCode, 'rename failed', oldPath);
     }
   }
+
+  @override
+  Metadata metadata(String path) => using((arena) {
+    final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
+    if (win32.GetFileAttributesEx(
+          path.toNativeUtf16(),
+          win32.GetFileExInfoStandard,
+          fileInfo,
+        ) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'metadata failed', path);
+    }
+    final info = fileInfo.ref;
+    final attributes = info.dwFileAttributes;
+
+    final isDirectory = attributes & win32.FILE_ATTRIBUTE_DIRECTORY > 0;
+    final isLink = attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT > 0;
+    final isFile = !(isDirectory || isLink);
+
+    return WindowsMetadata(
+      isReadOnly: attributes & win32.FILE_ATTRIBUTE_READONLY > 0,
+      isHidden: attributes & win32.FILE_ATTRIBUTE_HIDDEN > 0,
+      isSystem: attributes & win32.FILE_ATTRIBUTE_SYSTEM > 0,
+      isDirectory: isDirectory,
+      isArchive: attributes & win32.FILE_ATTRIBUTE_ARCHIVE > 0,
+      isTemporary: attributes & win32.FILE_ATTRIBUTE_TEMPORARY > 0,
+      isSparse: attributes & win32.FILE_ATTRIBUTE_SPARSE_FILE > 0,
+      isLink: isLink,
+      isFile: isFile,
+      isCompressed: attributes & win32.FILE_ATTRIBUTE_COMPRESSED > 0,
+      isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE > 0,
+
+      size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
+      creationTime100Nanos:
+          info.ftCreationTime.dwHighDateTime << 32 |
+          info.ftCreationTime.dwLowDateTime,
+      lastAccessTime100Nanos:
+          info.ftLastAccessTime.dwHighDateTime << 32 |
+          info.ftLastAccessTime.dwLowDateTime,
+      lastWriteTime100Nanos:
+          info.ftLastWriteTime.dwHighDateTime << 32 |
+          info.ftLastWriteTime.dwLowDateTime,
+    );
+  });
 }

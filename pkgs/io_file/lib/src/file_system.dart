@@ -2,6 +2,29 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+base class Metadata {
+  final bool isFile;
+  final bool isDirectory;
+  final bool isLink;
+
+  Metadata({
+    this.isDirectory = false,
+    this.isFile = false,
+    this.isLink = false,
+  }) {
+    final count = (isDirectory ? 1 : 0) + (isFile ? 1 : 0) + (isLink ? 1 : 0);
+    if (count > 1) {
+      // TODO(brianquinlan): Decide whether a path must be a a file, directory
+      // or link and whether it can be more than one of these at once.
+      // Rust requires that at most one of these is true. Python has no such
+      // restriction.
+      throw ArgumentError(
+        'only one of isDirectory, isFile, or isLink must be true',
+      );
+    }
+  }
+}
+
 /// An abstract representation of a file system.
 base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
@@ -22,5 +45,9 @@ base class FileSystem {
   // fails and raises [PathExistsException].
   void rename(String oldPath, String newPath) {
     throw UnsupportedError('rename');
+  }
+
+  Metadata metadata(String path) {
+    throw UnsupportedError('metadata');
   }
 }

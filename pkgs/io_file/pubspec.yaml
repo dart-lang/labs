@@ -11,9 +11,13 @@ dependencies:
   ffi: ^2.1.4
   stdlibc:
     git:
-      # Change this to a released version.
+      # TODO(brianquinlan): Change this to a released version.
       url: https://github.com/canonical/stdlibc.dart.git
-  win32: ^5.11.0
+  win32:
+    git:
+      # TODO(brianquinlan): Change this to a released version.
+      url: https://github.com/halildurmus/win32.git
+      path: packages/win32
 
 dev_dependencies:
   dart_flutter_team_lints: ^3.4.0
