@@ -23,8 +23,18 @@ void main() {
     //TODO(brianquinlan): test with a very long path.
 
     test('path does not exist', () {
-      final data = fileSystem.metadata('$tmp/file1');
-      expect(data.isFile, isFalse);
+      expect(
+        () => fileSystem.metadata('$tmp/file1'),
+        throwsA(
+          isA<PathNotFoundException>()
+              .having((e) => e.message, 'message', 'metadata failed')
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                2, // ENOENT, ERROR_FILE_NOT_FOUND
+              ),
+        ),
+      );
     });
 
     group('isDirectory/isFile/isLink', () {
