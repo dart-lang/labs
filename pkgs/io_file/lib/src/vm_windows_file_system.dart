@@ -148,7 +148,7 @@ base class WindowsFileSystem extends FileSystem {
       return;
     }
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
-    final nativePath = path.toNativeUtf16();
+    final nativePath = path.toNativeUtf16(allocator: arena);
     if (win32.GetFileAttributesEx(
           nativePath,
           win32.GetFileExInfoStandard,
@@ -161,17 +161,11 @@ base class WindowsFileSystem extends FileSystem {
 
     var attributes = fileInfo.ref.dwFileAttributes;
 
-    int setBit(int base, int value, bool? x) {
-      if (x == null) {
-        return base;
-      }
-      if (x) {
-        return base | value;
-      } else if (base | value != 0) {
-        return base - value;
-      }
-      return base;
-    }
+    int setBit(int base, int value, bool? bit) => switch (bit) {
+      null => base,
+      true => base | value,
+      false => base & ~value,
+    };
 
     attributes = setBit(attributes, win32.FILE_ATTRIBUTE_READONLY, isReadOnly);
     attributes = setBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);

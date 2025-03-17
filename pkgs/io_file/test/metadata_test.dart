@@ -8,7 +8,6 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
-import 'package:io_file/src/vm_windows_file_system.dart';
 import 'package:test/test.dart';
 
 import 'test_utils.dart';
@@ -23,14 +22,32 @@ void main() {
 
     //TODO(brianquinlan): test with a very long path.
 
-    test('move file absolute path', () {
-      final path = '$tmp/file1';
+    group('isDirectory/isFile/isLink', () {
+      test('directory', () {
+        final data = fileSystem.metadata(tmp);
+        expect(data.isDirectory, isTrue);
+        expect(data.isFile, isFalse);
+        expect(data.isLink, isFalse);
+      });
+      test('file', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
 
-      File(path).writeAsStringSync('Hello World');
+        final data = fileSystem.metadata(path);
+        expect(data.isDirectory, isFalse);
+        expect(data.isFile, isTrue);
+        expect(data.isLink, isFalse);
+      });
+      test('link', () {
+        File('$tmp/file1').writeAsStringSync('Hello World');
+        final path = '$tmp/link';
+        Link(path).createSync('$tmp/file1');
 
-      final data = fileSystem.metadata(path) as WindowsMetadata;
-      expect(data.isFile, isTrue);
-      expect(data.lastAccessTime, DateTime.now().toUtc());
+        final data = fileSystem.metadata(path);
+        expect(data.isDirectory, isFalse);
+        expect(data.isFile, isFalse);
+        expect(data.isLink, isTrue);
+      });
     });
   });
 }
