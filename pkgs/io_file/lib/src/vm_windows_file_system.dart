@@ -73,12 +73,9 @@ final class WindowsMetadata extends Metadata {
   final bool isSystem;
   final bool isArchive;
   final bool isTemporary;
-  final bool isSparse;
-  final bool isCompressed;
   final bool isOffline;
   final bool isContentNotIndexed;
 
-  final int size;
   final int creationTime100Nanos;
   final int lastAccessTime100Nanos;
   final int lastWriteTime100Nanos;
@@ -93,17 +90,16 @@ final class WindowsMetadata extends Metadata {
     super.isFile = false,
     super.isLink = false,
 
+    super.size = 0,
+
     this.isReadOnly = false,
     this.isHidden = false,
     this.isSystem = false,
     this.isArchive = false,
     this.isTemporary = false,
-    this.isSparse = false,
-    this.isCompressed = false,
     this.isOffline = false,
     this.isContentNotIndexed = false,
 
-    this.size = 0,
     this.creationTime100Nanos = 0,
     this.lastAccessTime100Nanos = 0,
     this.lastWriteTime100Nanos = 0,
@@ -221,10 +217,8 @@ base class WindowsFileSystem extends FileSystem {
       isDirectory: isDirectory,
       isArchive: attributes & win32.FILE_ATTRIBUTE_ARCHIVE > 0,
       isTemporary: attributes & win32.FILE_ATTRIBUTE_TEMPORARY > 0,
-      isSparse: attributes & win32.FILE_ATTRIBUTE_SPARSE_FILE > 0,
       isLink: isLink,
       isFile: isFile,
-      isCompressed: attributes & win32.FILE_ATTRIBUTE_COMPRESSED > 0,
       isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE > 0,
       isContentNotIndexed:
           attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED > 0,

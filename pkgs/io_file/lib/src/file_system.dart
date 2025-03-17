@@ -6,11 +6,13 @@ base class Metadata {
   final bool isFile;
   final bool isDirectory;
   final bool isLink;
+  final int size;
 
   Metadata({
     this.isDirectory = false,
     this.isFile = false,
     this.isLink = false,
+    this.size = 0,
   }) {
     final count = (isDirectory ? 1 : 0) + (isFile ? 1 : 0) + (isLink ? 1 : 0);
     if (count > 1) {

@@ -49,5 +49,34 @@ void main() {
         expect(data.isLink, isTrue);
       });
     });
+
+    group('size', () {
+      test('directory', () {
+        final data = fileSystem.metadata(tmp);
+        expect(data.size, 0);
+      });
+      test('empty file', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('');
+
+        final data = fileSystem.metadata(path);
+        expect(data.size, 0);
+      });
+      test('non-empty file', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World!');
+
+        final data = fileSystem.metadata(path);
+        expect(data.size, 12);
+      });
+      test('link', () {
+        File('$tmp/file1').writeAsStringSync('Hello World');
+        final path = '$tmp/link';
+        Link(path).createSync('$tmp/file1');
+
+        final data = fileSystem.metadata(path);
+        expect(data.size, 0);
+      });
+    });
   });
 }
