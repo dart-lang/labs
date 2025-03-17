@@ -111,14 +111,14 @@ final class WindowsMetadata extends Metadata {
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
   @override
-  void rename(String oldPath, String newPath) {
+  void rename(String oldPath, String newPath) => using((arena) {
     // Calling `GetLastError` for the first time causes the `GetLastError`
     // symbol to be loaded, which resets `GetLastError`. So make a harmless
     // call before the value is needed.
     win32.GetLastError();
     if (win32.MoveFileEx(
-          oldPath.toNativeUtf16(),
-          newPath.toNativeUtf16(),
+          oldPath.toNativeUtf16(allocator: arena),
+          newPath.toNativeUtf16(allocator: arena),
           win32.MOVEFILE_WRITE_THROUGH | win32.MOVEFILE_REPLACE_EXISTING,
         ) ==
         win32.FALSE) {
