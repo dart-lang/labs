@@ -82,6 +82,7 @@ void main() {
       test('false', () {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isArchive: false);
 
         final data = windowsFileSystem.metadata(path);
         expect(data.isArchive, isFalse);
