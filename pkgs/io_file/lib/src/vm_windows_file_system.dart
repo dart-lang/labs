@@ -189,7 +189,7 @@ base class WindowsFileSystem extends FileSystem {
   });
 
   @override
-  Metadata metadata(String path) => using((arena) {
+  WindowsMetadata metadata(String path) => using((arena) {
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
           path.toNativeUtf16(),
