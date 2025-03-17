@@ -125,7 +125,7 @@ base class WindowsFileSystem extends FileSystem {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'rename failed', oldPath);
     }
-  }
+  });
 
   void setMetadata(
     String path, {
