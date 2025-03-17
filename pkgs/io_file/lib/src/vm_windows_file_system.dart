@@ -127,6 +127,68 @@ base class WindowsFileSystem extends FileSystem {
     }
   }
 
+  void setMetadata(
+    String path, {
+    bool? isReadOnly,
+    bool? isHidden,
+    bool? isSystem,
+    bool? isArchive,
+    bool? isTemporary,
+    bool? isContentNotIndexed,
+    bool? isOffline,
+  }) => using((arena) {
+    if ((isReadOnly ??
+            isHidden ??
+            isSystem ??
+            isArchive ??
+            isTemporary ??
+            isContentNotIndexed ??
+            isOffline) ==
+        null) {
+      return;
+    }
+    final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
+    final nativePath = path.toNativeUtf16();
+    if (win32.GetFileAttributesEx(
+          nativePath,
+          win32.GetFileExInfoStandard,
+          fileInfo,
+        ) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'metadata failed', path);
+    }
+
+    var attributes = fileInfo.ref.dwFileAttributes;
+
+    int setBit(int base, int value, bool? x) {
+      if (x == null) {
+        return base;
+      }
+      if (x) {
+        return base | value;
+      } else {
+        return base;
+      }
+    }
+
+    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_READONLY, isReadOnly);
+    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);
+    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_SYSTEM, isSystem);
+    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_ARCHIVE, isArchive);
+    attributes = setBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_TEMPORARY,
+      isTemporary,
+    );
+    attributes = setBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED,
+      isContentNotIndexed,
+    );
+    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
+  });
+
   @override
   Metadata metadata(String path) => using((arena) {
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();

@@ -17,7 +17,7 @@ void main() {
   group('metadata', () {
     late String tmp;
 
-    setUp(() => tmp = createTemp('move'));
+    setUp(() => tmp = createTemp('metadata'));
 
     tearDown(() => deleteTemp(tmp));
 
