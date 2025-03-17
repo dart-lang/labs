@@ -156,7 +156,7 @@ base class WindowsFileSystem extends FileSystem {
         ) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'metadata failed', path);
+      throw _getError(errorCode, 'set metadata failed', path);
     }
 
     var attributes = fileInfo.ref.dwFileAttributes;
@@ -167,9 +167,10 @@ base class WindowsFileSystem extends FileSystem {
       }
       if (x) {
         return base | value;
-      } else {
-        return base;
+      } else if (base | value != 0) {
+        return base - value;
       }
+      return base;
     }
 
     attributes = setBit(attributes, win32.FILE_ATTRIBUTE_READONLY, isReadOnly);
@@ -187,6 +188,10 @@ base class WindowsFileSystem extends FileSystem {
       isContentNotIndexed,
     );
     attributes = setBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
+    if (win32.SetFileAttributes(nativePath, attributes) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'set metadata failed', path);
+    }
   });
 
   @override
