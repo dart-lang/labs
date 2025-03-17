@@ -56,7 +56,7 @@ void main() {
         windowsFileSystem.setMetadata(path, isHidden: true);
 
         final data = windowsFileSystem.metadata(path);
-        expect(data.isHidden, isFalse);
+        expect(data.isHidden, isTrue);
       });
     });
 
@@ -74,7 +74,7 @@ void main() {
         windowsFileSystem.setMetadata(path, isSystem: true);
 
         final data = windowsFileSystem.metadata(path);
-        expect(data.isSystem, isFalse);
+        expect(data.isSystem, isTrue);
       });
     });
 
@@ -92,7 +92,7 @@ void main() {
         windowsFileSystem.setMetadata(path, isArchive: true);
 
         final data = windowsFileSystem.metadata(path);
-        expect(data.isArchive, isFalse);
+        expect(data.isArchive, isTrue);
       });
     });
 
@@ -110,7 +110,7 @@ void main() {
         windowsFileSystem.setMetadata(path, isTemporary: true);
 
         final data = windowsFileSystem.metadata(path);
-        expect(data.isTemporary, isFalse);
+        expect(data.isTemporary, isTrue);
       });
     });
 
@@ -128,7 +128,7 @@ void main() {
         windowsFileSystem.setMetadata(path, isContentNotIndexed: true);
 
         final data = windowsFileSystem.metadata(path);
-        expect(data.isContentNotIndexed, isFalse);
+        expect(data.isContentNotIndexed, isTrue);
       });
     });
 
@@ -146,7 +146,7 @@ void main() {
         windowsFileSystem.setMetadata(path, isOffline: true);
 
         final data = windowsFileSystem.metadata(path);
-        expect(data.isOffline, isFalse);
+        expect(data.isOffline, isTrue);
       });
     });
   });

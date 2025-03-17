@@ -163,6 +163,10 @@ base class WindowsFileSystem extends FileSystem {
 
     var attributes = fileInfo.ref.dwFileAttributes;
     print('Initial bits: $attributes');
+    if (attributes == win32.FILE_ATTRIBUTE_NORMAL) {
+      attributes = 0;
+    }
+
     int setBit(int base, int value, bool? bit) => switch (bit) {
       null => base,
       true => base | value,
