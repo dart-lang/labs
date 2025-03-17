@@ -103,6 +103,37 @@ final class WindowsMetadata extends Metadata {
     this.lastAccessTime100Nanos = 0,
     this.lastWriteTime100Nanos = 0,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      other is WindowsMetadata &&
+      super == other &&
+      isReadOnly == other.isReadOnly &&
+      isHidden == other.isHidden &&
+      isSystem == other.isSystem &&
+      isArchive == other.isArchive &&
+      isTemporary == other.isTemporary &&
+      isOffline == other.isOffline &&
+      isContentNotIndexed == other.isContentNotIndexed &&
+      creationTime100Nanos == other.creationTime100Nanos &&
+      lastAccessTime100Nanos == other.lastAccessTime100Nanos &&
+      lastWriteTime100Nanos == other.lastWriteTime100Nanos;
+
+  @override
+  int get hashCode =>
+      (
+        super.hashCode,
+        isReadOnly,
+        isHidden,
+        isSystem,
+        isArchive,
+        isTemporary,
+        isOffline,
+        isContentNotIndexed,
+        creationTime100Nanos,
+        lastAccessTime100Nanos,
+        lastWriteTime100Nanos,
+      ).hashCode;
 }
 
 /// A [FileSystem] implementation for Windows systems.

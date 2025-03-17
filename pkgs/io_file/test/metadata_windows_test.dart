@@ -15,7 +15,126 @@ import 'test_utils.dart';
 void main() {
   final windowsFileSystem = WindowsFileSystem();
 
-  group('metadata', () {
+  group('set metadata', () {
+    late String tmp;
+
+    setUp(() => tmp = createTemp('metadata'));
+
+    tearDown(() => deleteTemp(tmp));
+
+    group('start with all file attributes set', () {
+      late String path;
+      late WindowsMetadata initialMetadata;
+
+      setUp(() {
+        path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(
+          path,
+          isReadOnly: true,
+          isHidden: true,
+          isSystem: true,
+          isArchive: true,
+          isTemporary: true,
+          isContentNotIndexed: true,
+          isOffline: true,
+        );
+        initialMetadata = windowsFileSystem.metadata(path);
+      });
+
+      test('set none', () {
+        windowsFileSystem.setMetadata(path);
+        expect(windowsFileSystem.metadata(path), initialMetadata);
+      });
+      test('unset isReadOnly', () {
+        windowsFileSystem.setMetadata(path, isReadOnly: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isFalse);
+        expect(data.isHidden, isTrue);
+        expect(data.isSystem, isTrue);
+        expect(data.isArchive, isTrue);
+        expect(data.isTemporary, isTrue);
+        expect(data.isContentNotIndexed, isTrue);
+        expect(data.isOffline, isTrue);
+      });
+
+      test('unset isHidden', () {
+        windowsFileSystem.setMetadata(path, isHidden: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+        expect(data.isHidden, isFalse);
+        expect(data.isSystem, isTrue);
+        expect(data.isArchive, isTrue);
+        expect(data.isTemporary, isTrue);
+        expect(data.isContentNotIndexed, isTrue);
+        expect(data.isOffline, isTrue);
+      });
+      test('unset isSystem', () {
+        windowsFileSystem.setMetadata(path, isSystem: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+        expect(data.isHidden, isTrue);
+        expect(data.isSystem, isFalse);
+        expect(data.isArchive, isTrue);
+        expect(data.isTemporary, isTrue);
+        expect(data.isContentNotIndexed, isTrue);
+        expect(data.isOffline, isTrue);
+      });
+      test('unset isArchive', () {
+        windowsFileSystem.setMetadata(path, isArchive: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+        expect(data.isHidden, isTrue);
+        expect(data.isSystem, isTrue);
+        expect(data.isArchive, isFalse);
+        expect(data.isTemporary, isTrue);
+        expect(data.isContentNotIndexed, isTrue);
+        expect(data.isOffline, isTrue);
+      });
+      test('unset isTemporary', () {
+        windowsFileSystem.setMetadata(path, isTemporary: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+        expect(data.isHidden, isTrue);
+        expect(data.isSystem, isTrue);
+        expect(data.isArchive, isTrue);
+        expect(data.isTemporary, isFalse);
+        expect(data.isContentNotIndexed, isTrue);
+        expect(data.isOffline, isTrue);
+      });
+      test('unset isContentNotIndexed', () {
+        windowsFileSystem.setMetadata(path, isContentNotIndexed: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+        expect(data.isHidden, isTrue);
+        expect(data.isSystem, isTrue);
+        expect(data.isArchive, isTrue);
+        expect(data.isTemporary, isTrue);
+        expect(data.isContentNotIndexed, isFalse);
+        expect(data.isOffline, isTrue);
+      });
+      test('unset isOffline', () {
+        windowsFileSystem.setMetadata(path, isOffline: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+        expect(data.isHidden, isTrue);
+        expect(data.isSystem, isTrue);
+        expect(data.isArchive, isTrue);
+        expect(data.isTemporary, isTrue);
+        expect(data.isContentNotIndexed, isTrue);
+        expect(data.isOffline, isFalse);
+      });
+    });
+  });
+
+  group('windows metadata', () {
     late String tmp;
 
     setUp(() => tmp = createTemp('metadata'));

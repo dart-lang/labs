@@ -26,6 +26,17 @@ base class Metadata {
       );
     }
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Metadata &&
+      isDirectory == other.isDirectory &&
+      isFile == other.isFile &&
+      isLink == other.isLink &&
+      size == other.size;
+
+  @override
+  int get hashCode => (isDirectory, isFile, isLink, size).hashCode;
 }
 
 /// An abstract representation of a file system.
