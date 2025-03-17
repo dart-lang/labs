@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Information about a directory, link, etc. stored in the [FileSystem].
 base class Metadata {
   final bool isFile;
   final bool isDirectory;
@@ -49,6 +50,10 @@ base class FileSystem {
     throw UnsupportedError('rename');
   }
 
+  /// Returns metadata for the given path.
+  ///
+  /// If `path` represents a symbolic link then metadata for the link is
+  /// returned.
   Metadata metadata(String path) {
     throw UnsupportedError('metadata');
   }

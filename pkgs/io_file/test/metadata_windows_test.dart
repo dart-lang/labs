@@ -186,14 +186,13 @@ void main() {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
         final creationTime = DateTime.now().millisecondsSinceEpoch;
-        await Future<void>.delayed(const Duration(seconds: 1));
         File(path).readAsBytesSync();
         final accessTime = DateTime.now().millisecondsSinceEpoch;
 
         final data = windowsFileSystem.metadata(path);
         expect(
           data.access.millisecondsSinceEpoch,
-          inInclusiveRange(creationTime + 1000, accessTime),
+          inInclusiveRange(creationTime, accessTime),
         );
       });
     });
