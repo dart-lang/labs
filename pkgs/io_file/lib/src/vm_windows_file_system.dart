@@ -80,10 +80,9 @@ final class WindowsMetadata extends Metadata {
   final int lastAccessTime100Nanos;
   final int lastWriteTime100Nanos;
 
-  DateTime get creationTime => fileTimeToDateTime(creationTime100Nanos);
-  DateTime get lastAccessTime => fileTimeToDateTime(lastAccessTime100Nanos);
-  DateTime get lastModificationTime =>
-      fileTimeToDateTime(lastWriteTime100Nanos);
+  DateTime get creation => fileTimeToDateTime(creationTime100Nanos);
+  DateTime get access => fileTimeToDateTime(lastAccessTime100Nanos);
+  DateTime get modification => fileTimeToDateTime(lastWriteTime100Nanos);
 
   WindowsMetadata({
     super.isDirectory = false,

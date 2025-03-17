@@ -149,7 +149,7 @@ void main() {
       });
     });
 
-    group('creation time', () {
+    group('creation', () {
       test('new file', () {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
@@ -157,9 +157,43 @@ void main() {
 
         final data = windowsFileSystem.metadata(path);
         expect(
-          data.creationTime.millisecondsSinceEpoch,
+          data.creation.millisecondsSinceEpoch,
           // Creation time within 2 seconds.
           inInclusiveRange(creationTime - 2000, creationTime),
+        );
+      });
+    });
+
+    group('modificiation', () {
+      test('new file', () async {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        final creationTime = DateTime.now().millisecondsSinceEpoch;
+        await Future<void>.delayed(const Duration(seconds: 1));
+        File(path).writeAsStringSync('How are you?');
+        final modificationTime = DateTime.now().millisecondsSinceEpoch;
+
+        final data = windowsFileSystem.metadata(path);
+        expect(
+          data.modification.millisecondsSinceEpoch,
+          inInclusiveRange(creationTime + 1000, modificationTime),
+        );
+      });
+    });
+
+    group('access', () {
+      test('new file', () async {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        final creationTime = DateTime.now().millisecondsSinceEpoch;
+        await Future<void>.delayed(const Duration(seconds: 1));
+        File(path).readAsBytesSync();
+        final accessTime = DateTime.now().millisecondsSinceEpoch;
+
+        final data = windowsFileSystem.metadata(path);
+        expect(
+          data.access.millisecondsSinceEpoch,
+          inInclusiveRange(creationTime + 1000, accessTime),
         );
       });
     });
