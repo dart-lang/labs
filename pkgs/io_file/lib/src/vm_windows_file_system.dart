@@ -162,7 +162,7 @@ base class WindowsFileSystem extends FileSystem {
     }
 
     var attributes = fileInfo.ref.dwFileAttributes;
-
+    print('Initial bits: $attributes');
     int setBit(int base, int value, bool? bit) => switch (bit) {
       null => base,
       true => base | value,
@@ -184,6 +184,7 @@ base class WindowsFileSystem extends FileSystem {
       isContentNotIndexed,
     );
     attributes = setBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
+    print('Final bits: $attributes');
     if (win32.SetFileAttributes(nativePath, attributes) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'set metadata failed', path);
