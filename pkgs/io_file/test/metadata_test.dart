@@ -22,6 +22,11 @@ void main() {
 
     //TODO(brianquinlan): test with a very long path.
 
+    test('path does not exist', () {
+      final data = fileSystem.metadata('$tmp/file1');
+      expect(data.isFile, isFalse);
+    });
+
     group('isDirectory/isFile/isLink', () {
       test('directory', () {
         final data = fileSystem.metadata(tmp);

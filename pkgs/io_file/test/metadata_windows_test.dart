@@ -157,7 +157,7 @@ void main() {
 
         final data = windowsFileSystem.metadata(path);
         expect(
-          data.creationTime.microsecondsSinceEpoch,
+          data.creationTime.millisecondsSinceEpoch,
           // Creation time within 2 seconds.
           inInclusiveRange(creationTime - 2000, creationTime),
         );
