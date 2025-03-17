@@ -76,6 +76,7 @@ final class WindowsMetadata extends Metadata {
   final bool isSparse;
   final bool isCompressed;
   final bool isOffline;
+  final bool isContentNotIndexed;
 
   final int size;
   final int creationTime100Nanos;
@@ -100,6 +101,7 @@ final class WindowsMetadata extends Metadata {
     this.isSparse = false,
     this.isCompressed = false,
     this.isOffline = false,
+    this.isContentNotIndexed = false,
 
     this.size = 0,
     this.creationTime100Nanos = 0,
@@ -219,6 +221,8 @@ base class WindowsFileSystem extends FileSystem {
       isFile: isFile,
       isCompressed: attributes & win32.FILE_ATTRIBUTE_COMPRESSED > 0,
       isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE > 0,
+      isContentNotIndexed:
+          attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED > 0,
 
       size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
       creationTime100Nanos:

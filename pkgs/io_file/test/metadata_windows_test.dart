@@ -7,7 +7,6 @@ library;
 
 import 'dart:io';
 
-import 'package:io_file/io_file.dart';
 import 'package:io_file/src/vm_windows_file_system.dart';
 import 'package:test/test.dart';
 
@@ -40,6 +39,114 @@ void main() {
 
         final data = windowsFileSystem.metadata(path);
         expect(data.isReadOnly, isTrue);
+      });
+    });
+
+    group('isHidden', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isHidden, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isHidden: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isHidden, isFalse);
+      });
+    });
+
+    group('isSystem', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isSystem, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isSystem: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isSystem, isFalse);
+      });
+    });
+
+    group('isArchive', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isArchive, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isArchive: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isArchive, isFalse);
+      });
+    });
+
+    group('isTemporary', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isTemporary, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isTemporary: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isTemporary, isFalse);
+      });
+    });
+
+    group('isContentNotIndexed', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isContentNotIndexed, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isContentNotIndexed: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isContentNotIndexed, isFalse);
+      });
+    });
+
+    group('isOffline', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isOffline, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isOffline: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isOffline, isFalse);
       });
     });
   });
