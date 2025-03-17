@@ -4,6 +4,7 @@
 
 /// Information about a directory, link, etc. stored in the [FileSystem].
 base class Metadata {
+  // TODO(brianquinlan): Document all public fields.
   final bool isFile;
   final bool isDirectory;
   final bool isLink;

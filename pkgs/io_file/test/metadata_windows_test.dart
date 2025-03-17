@@ -153,13 +153,13 @@ void main() {
       test('new file', () {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
-        final creationTime = DateTime.now().millisecondsSinceEpoch;
+        final maxCreationTime = DateTime.now().millisecondsSinceEpoch;
 
         final data = windowsFileSystem.metadata(path);
         expect(
           data.creation.millisecondsSinceEpoch,
-          // Creation time within 2 seconds.
-          inInclusiveRange(creationTime - 2000, creationTime),
+          // Creation time within 1 second.
+          inInclusiveRange(maxCreationTime - 1000, maxCreationTime),
         );
       });
     });
@@ -168,15 +168,17 @@ void main() {
       test('new file', () async {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
-        final creationTime = DateTime.now().millisecondsSinceEpoch;
         await Future<void>.delayed(const Duration(seconds: 1));
         File(path).writeAsStringSync('How are you?');
-        final modificationTime = DateTime.now().millisecondsSinceEpoch;
+        final maxModificationTime = DateTime.now().millisecondsSinceEpoch;
 
         final data = windowsFileSystem.metadata(path);
         expect(
           data.modification.millisecondsSinceEpoch,
-          inInclusiveRange(creationTime + 1000, modificationTime),
+          inInclusiveRange(
+            data.creation.millisecondsSinceEpoch + 1000,
+            maxModificationTime,
+          ),
         );
       });
     });
@@ -185,14 +187,13 @@ void main() {
       test('new file', () async {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
-        final creationTime = DateTime.now().millisecondsSinceEpoch;
         File(path).readAsBytesSync();
-        final accessTime = DateTime.now().millisecondsSinceEpoch;
+        final maxAccessTime = DateTime.now().millisecondsSinceEpoch;
 
         final data = windowsFileSystem.metadata(path);
         expect(
           data.access.millisecondsSinceEpoch,
-          inInclusiveRange(creationTime, accessTime),
+          inInclusiveRange(data.creation.millisecondsSinceEpoch, maxAccessTime),
         );
       });
     });

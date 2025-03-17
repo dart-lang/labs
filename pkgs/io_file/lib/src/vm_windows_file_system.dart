@@ -68,6 +68,8 @@ Exception _getError(int errorCode, String message, String path) {
 }
 
 final class WindowsMetadata extends Metadata {
+  // TODO(brianquinlan): Document the public fields.
+
   final bool isReadOnly;
   final bool isHidden;
   final bool isSystem;
@@ -84,6 +86,7 @@ final class WindowsMetadata extends Metadata {
   DateTime get access => fileTimeToDateTime(lastAccessTime100Nanos);
   DateTime get modification => fileTimeToDateTime(lastWriteTime100Nanos);
 
+  /// TODO(bquinlan): Document this constructor.
   WindowsMetadata({
     super.isDirectory = false,
     super.isFile = false,
@@ -155,6 +158,9 @@ base class WindowsFileSystem extends FileSystem {
     }
   });
 
+  /// Sets metadata for the file system entity.
+  ///
+  /// TODO(brianquinlan): Document the arguments.
   void setMetadata(
     String path, {
     bool? isReadOnly,
