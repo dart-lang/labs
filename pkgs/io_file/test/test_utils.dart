@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-export 'src/file_system.dart';
-export 'src/vm_file_system_property.dart'
-    if (dart.library.html) 'src/web_file_system_property.dart';
+import 'dart:io';
+
+String createTemp(String testName) =>
+    Directory.systemTemp.createTempSync('move').absolute.path;
+void deleteTemp(String path) => Directory(path).deleteSync(recursive: true);
