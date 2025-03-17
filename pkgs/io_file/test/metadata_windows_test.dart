@@ -22,8 +22,6 @@ void main() {
 
     tearDown(() => deleteTemp(tmp));
 
-    //TODO(brianquinlan): test with a very long path.
-
     group('isReadOnly', () {
       test('false', () {
         final path = '$tmp/file1';
@@ -148,6 +146,21 @@ void main() {
 
         final data = windowsFileSystem.metadata(path);
         expect(data.isOffline, isTrue);
+      });
+    });
+
+    group('creation time', () {
+      test('new file', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        final creationTime = DateTime.now().millisecondsSinceEpoch;
+
+        final data = windowsFileSystem.metadata(path);
+        expect(
+          data.creationTime.microsecondsSinceEpoch,
+          // Creation time within 2 seconds.
+          inInclusiveRange(creationTime - 2000, creationTime),
+        );
       });
     });
   });
