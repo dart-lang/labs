@@ -135,6 +135,11 @@ base class WindowsFileSystem extends FileSystem {
     bool? isContentNotIndexed,
     bool? isOffline,
   }) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
     if ((isReadOnly ??
             isHidden ??
             isSystem ??
@@ -193,6 +198,11 @@ base class WindowsFileSystem extends FileSystem {
 
   @override
   WindowsMetadata metadata(String path) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
           path.toNativeUtf16(),
