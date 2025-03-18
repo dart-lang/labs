@@ -144,12 +144,17 @@ final class WindowsMetadata extends Metadata {
 
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
-  @override
-  void rename(String oldPath, String newPath) => using((arena) {
+  WindowsFileSystem() {
     // Calling `GetLastError` for the first time causes the `GetLastError`
     // symbol to be loaded, which resets `GetLastError`. So make a harmless
     // call before the value is needed.
+    //
+    // TODO(brianquinlan): Remove this after it is fixed in the Dart SDK.
     win32.GetLastError();
+  }
+
+  @override
+  void rename(String oldPath, String newPath) => using((arena) {
     if (win32.MoveFileEx(
           oldPath.toNativeUtf16(allocator: arena),
           newPath.toNativeUtf16(allocator: arena),
@@ -174,11 +179,6 @@ base class WindowsFileSystem extends FileSystem {
     bool? isContentNotIndexed,
     bool? isOffline,
   }) => using((arena) {
-    // Calling `GetLastError` for the first time causes the `GetLastError`
-    // symbol to be loaded, which resets `GetLastError`. So make a harmless
-    // call before the value is needed.
-    win32.GetLastError();
-
     if ((isReadOnly ??
             isHidden ??
             isSystem ??
@@ -203,6 +203,8 @@ base class WindowsFileSystem extends FileSystem {
 
     var attributes = fileInfo.ref.dwFileAttributes;
     if (attributes == win32.FILE_ATTRIBUTE_NORMAL) {
+      // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
+      // is valid only when used alone.
       attributes = 0;
     }
 
@@ -235,14 +237,9 @@ base class WindowsFileSystem extends FileSystem {
 
   @override
   WindowsMetadata metadata(String path) => using((arena) {
-    // Calling `GetLastError` for the first time causes the `GetLastError`
-    // symbol to be loaded, which resets `GetLastError`. So make a harmless
-    // call before the value is needed.
-    win32.GetLastError();
-
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
-          path.toNativeUtf16(),
+          path.toNativeUtf16(allocator: arena),
           win32.GetFileExInfoStandard,
           fileInfo,
         ) ==
