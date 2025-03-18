@@ -10,7 +10,7 @@ import 'package:win32/win32.dart' as win32;
 
 import 'file_system.dart';
 
-DateTime fileTimeToDateTime(int t) {
+DateTime _fileTimeToDateTime(int t) {
   final microseconds = t ~/ 10;
   return DateTime.utc(1601, 1, 1).add(Duration(microseconds: microseconds));
 }
@@ -82,9 +82,9 @@ final class WindowsMetadata extends Metadata {
   final int lastAccessTime100Nanos;
   final int lastWriteTime100Nanos;
 
-  DateTime get creation => fileTimeToDateTime(creationTime100Nanos);
-  DateTime get access => fileTimeToDateTime(lastAccessTime100Nanos);
-  DateTime get modification => fileTimeToDateTime(lastWriteTime100Nanos);
+  DateTime get creation => _fileTimeToDateTime(creationTime100Nanos);
+  DateTime get access => _fileTimeToDateTime(lastAccessTime100Nanos);
+  DateTime get modification => _fileTimeToDateTime(lastWriteTime100Nanos);
 
   /// TODO(bquinlan): Document this constructor.
   WindowsMetadata({
