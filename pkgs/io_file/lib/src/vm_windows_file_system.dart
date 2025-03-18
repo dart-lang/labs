@@ -67,7 +67,10 @@ Exception _getError(int errorCode, String message, String path) {
   }
 }
 
+/// File system entity data available on Windows.
 final class WindowsMetadata extends Metadata {
+  // TODO(brianquinlan): Reoganize fields when the POSIX `metadata` is
+  // available.
   // TODO(brianquinlan): Document the public fields.
 
   final bool isReadOnly;
