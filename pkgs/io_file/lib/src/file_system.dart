@@ -2,6 +2,47 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Information about a directory, link, etc. stored in the [FileSystem].
+base class Metadata {
+  // TODO(brianquinlan): Document all public fields.
+
+  final bool isFile;
+  final bool isDirectory;
+  final bool isLink;
+  final int size;
+
+  Metadata({
+    this.isDirectory = false,
+    this.isFile = false,
+    this.isLink = false,
+    this.size = 0,
+  }) {
+    final count = (isDirectory ? 1 : 0) + (isFile ? 1 : 0) + (isLink ? 1 : 0);
+    if (count > 1) {
+      // TODO(brianquinlan): Decide whether a path must be a a file, directory
+      // or link and whether it can be more than one of these at once.
+      // Rust requires that at most one of these is true. Python has no such
+      // restriction.
+
+      // TODO(bquinlan): if we keep this logic, use `ArgumentError.value`.
+      throw ArgumentError(
+        'only one of isDirectory, isFile, or isLink must be true',
+      );
+    }
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Metadata &&
+      isDirectory == other.isDirectory &&
+      isFile == other.isFile &&
+      isLink == other.isLink &&
+      size == other.size;
+
+  @override
+  int get hashCode => Object.hash(isDirectory, isFile, isLink, size).hashCode;
+}
+
 /// An abstract representation of a file system.
 base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
@@ -22,5 +63,13 @@ base class FileSystem {
   // fails and raises [PathExistsException].
   void rename(String oldPath, String newPath) {
     throw UnsupportedError('rename');
+  }
+
+  /// Metadata for the file system object at [path].
+  ///
+  /// If `path` represents a symbolic link then metadata for the link is
+  /// returned.
+  Metadata metadata(String path) {
+    throw UnsupportedError('metadata');
   }
 }
