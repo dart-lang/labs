@@ -11,9 +11,9 @@ bool isHidden(String path) {
   if (fileSystem case final WindowsFileSystem fs) {
     return fs.metadata(path).isHidden;
   } else {
-    // On POSIX, convention is that files starting with a period are hidden
-    // (except for the special files representing the current working directory
-    // and parent directory).
+    // On POSIX, convention is that files and directories starting with a period
+    // are hidden (except for the special files representing the current working
+    // directory and parent directory).
     final name = p.basename(path);
     return name.startsWith('.') && name != '.' && name != '..';
   }

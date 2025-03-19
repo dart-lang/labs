@@ -5,6 +5,7 @@
 /// Information about a directory, link, etc. stored in the [FileSystem].
 base class Metadata {
   // TODO(brianquinlan): Document all public fields.
+
   final bool isFile;
   final bool isDirectory;
   final bool isLink;
@@ -22,6 +23,8 @@ base class Metadata {
       // or link and whether it can be more than one of these at once.
       // Rust requires that at most one of these is true. Python has no such
       // restriction.
+
+      // TODO(bquinlan): if we keep this logic, use `ArgumentError.value`.
       throw ArgumentError(
         'only one of isDirectory, isFile, or isLink must be true',
       );
@@ -37,7 +40,7 @@ base class Metadata {
       size == other.size;
 
   @override
-  int get hashCode => (isDirectory, isFile, isLink, size).hashCode;
+  int get hashCode => Object.hash(isDirectory, isFile, isLink, size).hashCode;
 }
 
 /// An abstract representation of a file system.
@@ -62,7 +65,7 @@ base class FileSystem {
     throw UnsupportedError('rename');
   }
 
-  /// Returns metadata for the given path.
+  /// Metadata for the file system object at [path].
   ///
   /// If `path` represents a symbolic link then metadata for the link is
   /// returned.

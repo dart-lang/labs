@@ -126,20 +126,19 @@ final class WindowsMetadata extends Metadata {
       lastWriteTime100Nanos == other.lastWriteTime100Nanos;
 
   @override
-  int get hashCode =>
-      (
-        super.hashCode,
-        isReadOnly,
-        isHidden,
-        isSystem,
-        isArchive,
-        isTemporary,
-        isOffline,
-        isContentNotIndexed,
-        creationTime100Nanos,
-        lastAccessTime100Nanos,
-        lastWriteTime100Nanos,
-      ).hashCode;
+  int get hashCode => Object.hash(
+    super.hashCode,
+    isReadOnly,
+    isHidden,
+    isSystem,
+    isArchive,
+    isTemporary,
+    isOffline,
+    isContentNotIndexed,
+    creationTime100Nanos,
+    lastAccessTime100Nanos,
+    lastWriteTime100Nanos,
+  );
 }
 
 /// A [FileSystem] implementation for Windows systems.
@@ -208,27 +207,36 @@ base class WindowsFileSystem extends FileSystem {
       attributes = 0;
     }
 
-    int setBit(int base, int value, bool? bit) => switch (bit) {
+    int updateBit(int base, int value, bool? bit) => switch (bit) {
       null => base,
       true => base | value,
       false => base & ~value,
     };
 
-    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_READONLY, isReadOnly);
-    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);
-    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_SYSTEM, isSystem);
-    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_ARCHIVE, isArchive);
-    attributes = setBit(
+    attributes = updateBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_READONLY,
+      isReadOnly,
+    );
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_SYSTEM, isSystem);
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_ARCHIVE, isArchive);
+    attributes = updateBit(
       attributes,
       win32.FILE_ATTRIBUTE_TEMPORARY,
       isTemporary,
     );
-    attributes = setBit(
+    attributes = updateBit(
       attributes,
       win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED,
       isContentNotIndexed,
     );
-    attributes = setBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
+    if (attributes == 0) {
+      // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
+      // is valid only when used alone.
+      attributes = win32.FILE_ATTRIBUTE_NORMAL;
+    }
     if (win32.SetFileAttributes(nativePath, attributes) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'set metadata failed', path);
