@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:typed_data';
+
 /// An abstract representation of a file system.
 base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
@@ -22,5 +24,10 @@ base class FileSystem {
   // fails and raises [PathExistsException].
   void rename(String oldPath, String newPath) {
     throw UnsupportedError('rename');
+  }
+
+  /// Reads the entire file contents as a list of bytes.
+  Uint8List readAsBytes(String path) {
+    throw UnsupportedError('readAsBytes');
   }
 }
