@@ -17,7 +17,10 @@ import 'package:test/test.dart';
 
 import 'test_utils.dart';
 
-// Writes data to a FIFO in a seperate isolate.
+/// Writes data to a FIFO.
+///
+/// The data is written in a seperate [Isolate] to prevent deadlock during
+/// read operations.
 class FifoWriter {
   final SendPort _sendChannel;
 
