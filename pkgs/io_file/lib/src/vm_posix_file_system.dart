@@ -8,10 +8,31 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:meta/meta.dart';
+import 'package:stdlibc/stdlibc.dart' as stdlibc;
 
 import 'file_system.dart';
+
+// The maximum number of bytes to read in a single call to `read`.
+//
+// On macOS, it is an error to call
+// `read/_read(fildes, buf, nbyte)` with `nbyte >= INT_MAX`.
+//
+// The POSIX specification states that the behavior of `read` is
+// implementation-defined if `nbyte > SSIZE_MAX`. On Linux, the `read` will
+// transfer at most 0x7ffff000 bytes and return the number of bytes actually.
+// transfered.
+//
+// A smaller value has the advantage of making vm-service clients
+// (e.g. debugger) more responsive.
+//
+// A bigger value reduces the number of system calls.
+@visibleForTesting
+const int maxReadSize = 16 * 1024 * 1024; // 16MB.
+
+// If the size of a file is unknown, read in blocks of this size.
+@visibleForTesting
+const int blockSize = 64 * 1024;
 
 Exception _getError(int errno, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
@@ -37,27 +58,6 @@ int _tempFailureRetry(int Function() f) {
   } while (result == -1 && stdlibc.errno == stdlibc.EINTR);
   return result;
 }
-
-// The maximum number of bytes to read in a single call to `read`.
-//
-// On macOS, it is an error to call
-// `read/_read(fildes, buf, nbyte)` with `nbyte >= INT_MAX`.
-//
-// The POSIX specification states that the behavior of `read` is
-// implementation-defined if `nbyte > SSIZE_MAX`. On Linux, the `read` will
-// transfer at most 0x7ffff000 bytes and return the number of bytes actually.
-// transfered.
-//
-// A smaller value has the advantage of making vm-service clients
-// (e.g. debugger) more responsive.
-//
-// A bigger value reduces the number of system calls.
-@visibleForTesting
-const int maxReadSize = 16 * 1024 * 1024; // 16MB.
-
-// If the size of a file is unknown, read in blocks of this size.
-@visibleForTesting
-const int blockSize = 64 * 1024;
 
 /// The POSIX `read` function.
 ///

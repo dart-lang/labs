@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   ffi: ^2.1.4
+  meta: ^1.16.0
   stdlibc:
     git:
       # Change this to a released version.
