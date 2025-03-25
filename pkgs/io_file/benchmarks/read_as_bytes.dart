@@ -49,11 +49,11 @@ class DartIOReadAsBytesBenchmark extends ReadAsBytesBenchmark {
 
   @override
   void run() {
-    File(path).readAsBytes();
+    File(path).readAsBytesSync();
   }
 }
 
 void main() {
-  DartIOReadAsBytesBenchmark.main();
   IOFilesReadAsBytesBenchmark.main();
+  DartIOReadAsBytesBenchmark.main();
 }
