@@ -11,14 +11,15 @@ import 'package:io_file/io_file.dart';
 class ReadAsBytesBenchmark extends BenchmarkBase {
   late Directory dir;
   late String path;
+  final int size;
 
-  ReadAsBytesBenchmark(super.name);
+  ReadAsBytesBenchmark(super.name, this.size);
 
   @override
   void setup() {
     dir = Directory.systemTemp.createTempSync('bench');
     path = '${dir.path}/file';
-    File(path).writeAsBytesSync(Uint8List(10 * 1024 * 1024));
+    File(path).writeAsBytesSync(Uint8List(size));
   }
 
   @override
@@ -28,10 +29,11 @@ class ReadAsBytesBenchmark extends BenchmarkBase {
 }
 
 class IOFilesReadAsBytesBenchmark extends ReadAsBytesBenchmark {
-  IOFilesReadAsBytesBenchmark() : super('IOFilesReadAsBytesBenchmark');
+  IOFilesReadAsBytesBenchmark(int size)
+    : super('IOFilesReadAsBytesBenchmark($size)', size);
 
-  static void main() {
-    IOFilesReadAsBytesBenchmark().report();
+  static void main(int size) {
+    IOFilesReadAsBytesBenchmark(size).report();
   }
 
   @override
@@ -41,10 +43,11 @@ class IOFilesReadAsBytesBenchmark extends ReadAsBytesBenchmark {
 }
 
 class DartIOReadAsBytesBenchmark extends ReadAsBytesBenchmark {
-  DartIOReadAsBytesBenchmark() : super('DartIOReadAsBytesBenchmark');
+  DartIOReadAsBytesBenchmark(int size)
+    : super('DartIOReadAsBytesBenchmark($size)', size);
 
-  static void main() {
-    DartIOReadAsBytesBenchmark().report();
+  static void main(int size) {
+    DartIOReadAsBytesBenchmark(size).report();
   }
 
   @override
@@ -54,6 +57,8 @@ class DartIOReadAsBytesBenchmark extends ReadAsBytesBenchmark {
 }
 
 void main() {
-  IOFilesReadAsBytesBenchmark.main();
-  DartIOReadAsBytesBenchmark.main();
+  for (var size in [0, 1024, 64 * 1024, 1024 * 1024, 64 * 1024 * 1024]) {
+    DartIOReadAsBytesBenchmark.main(size);
+    IOFilesReadAsBytesBenchmark.main(size);
+  }
 }
