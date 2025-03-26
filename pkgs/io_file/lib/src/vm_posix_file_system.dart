@@ -51,6 +51,7 @@ Exception _getError(int errno, String message, String path) {
   }
 }
 
+/// Return the given function until the result is not `EINTR`.
 int _tempFailureRetry(int Function() f) {
   int result;
   do {
@@ -93,16 +94,16 @@ base class PosixFileSystem extends FileSystem {
       }
       final length = stat?.st_size ?? 0;
       if (length == 0) {
-        return _readNoLength(path, fd);
+        return _readUnknownLength(path, fd);
       } else {
-        return _readLength(path, fd, length);
+        return _readKnownLength(path, fd, length);
       }
     } finally {
       stdlibc.close(fd);
     }
   }
 
-  Uint8List _readNoLength(String path, int fd) => ffi.using((arena) {
+  Uint8List _readUnknownLength(String path, int fd) => ffi.using((arena) {
     final buf = ffi.malloc<Uint8>(blockSize);
     final builder = BytesBuilder(copy: true);
 
@@ -121,26 +122,32 @@ base class PosixFileSystem extends FileSystem {
     }
   });
 
-  Uint8List _readLength(String path, int fd, int length) {
-    final buf = ffi.malloc<Uint8>(length);
-    var offset = 0;
+  Uint8List _readKnownLength(String path, int fd, int length) {
+    final buffer = ffi.malloc<Uint8>(length);
+    var bufferOffset = 0;
 
-    while (offset < length) {
+    while (bufferOffset < length) {
       final r = _tempFailureRetry(
-        () =>
-            read(fd, (buf + offset).cast(), min(length - offset, maxReadSize)),
+        () => read(
+          fd,
+          (buffer + bufferOffset).cast(),
+          min(length - bufferOffset, maxReadSize),
+        ),
       );
       switch (r) {
         case -1:
           final errno = stdlibc.errno;
-          ffi.calloc.free(buf);
+          ffi.calloc.free(buffer);
           throw _getError(errno, 'read failed', path);
         case 0:
-          return buf.asTypedList(offset, finalizer: ffi.calloc.nativeFree);
+          return buffer.asTypedList(
+            bufferOffset,
+            finalizer: ffi.calloc.nativeFree,
+          );
         default:
-          offset += r;
+          bufferOffset += r;
       }
     }
-    return buf.asTypedList(length, finalizer: ffi.calloc.nativeFree);
+    return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
   }
 }

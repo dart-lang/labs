@@ -200,20 +200,20 @@ void main() {
       for (var i = 0; i <= 1024; ++i) {
         test('Read small file: $i bytes', () {
           final data = randomUint8List(i);
-          final path1 = '$tmp/file1';
+          final path = '$tmp/file';
 
-          File(path1).writeAsBytesSync(data);
-          expect(fileSystem.readAsBytes(path1), data);
+          File(path).writeAsBytesSync(data);
+          expect(fileSystem.readAsBytes(path), data);
         });
       }
 
       for (var i = maxReadSize - 2; i <= maxReadSize + 2; ++i) {
         test('Read close to `maxReadSize`: $i bytes', () {
           final data = randomUint8List(i);
-          final path1 = '$tmp/file1';
+          final path = '$tmp/file1';
 
-          File(path1).writeAsBytesSync(data);
-          expect(fileSystem.readAsBytes(path1), data);
+          File(path).writeAsBytesSync(data);
+          expect(fileSystem.readAsBytes(path), data);
         });
       }
 
