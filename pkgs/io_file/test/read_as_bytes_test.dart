@@ -106,11 +106,7 @@ void main() {
         throwsA(
           isA<FileSystemException>()
               .having((e) => e.message, 'message', 'read failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                21, // EISDIR
-              )
+              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.EISDIR)
               .having((e) => e.path, 'path', tmp),
         ),
       );
@@ -141,11 +137,7 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.message, 'message', 'open failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                2, // ENOENT
-              )
+              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT)
               .having((e) => e.path, 'path', path2),
         ),
       );
@@ -156,7 +148,7 @@ void main() {
         test('Read small file: $i bytes', () async {
           final data = randomUint8List(i);
           final path = '$tmp/file';
-          stdlibc.mkfifo(path, 438); // 0666
+          stdlibc.mkfifo(path, 438); // 0436 => permissions: -rw-rw-rw-
 
           (await FifoWriter.create(path))
             ..write(data)
@@ -168,7 +160,7 @@ void main() {
 
       test('many single byte reads', () async {
         final path = '$tmp/file';
-        stdlibc.mkfifo(path, 438); // 0666
+        stdlibc.mkfifo(path, 438); // 0436 => permissions: -rw-rw-rw-
 
         final writer = await FifoWriter.create(path);
         final data = randomUint8List(20);
@@ -186,7 +178,7 @@ void main() {
         test('Read close to `blockSize`: $i bytes', () async {
           final data = randomUint8List(i);
           final path = '$tmp/file1';
-          stdlibc.mkfifo(path, 438); // 0666
+          stdlibc.mkfifo(path, 438); // 0436 => permissions: -rw-rw-rw-
 
           (await FifoWriter.create(path))
             ..write(data)
@@ -218,7 +210,9 @@ void main() {
       }
 
       test('very large file', () {
-        final data = randomUint8List(1 << 31 + 1);
+        // >INT_MAX on macOS, >SSIZE_MAX on Linux.
+        // See documentation for `maxReadSize`.
+        final data = randomUint8List(1 << 31);
         final path = '$tmp/file';
 
         File(path).writeAsBytesSync(data);
