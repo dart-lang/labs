@@ -5,44 +5,13 @@
 import 'dart:typed_data';
 
 /// Information about a directory, link, etc. stored in the [FileSystem].
-base class Metadata {
+abstract interface class Metadata {
   // TODO(brianquinlan): Document all public fields.
 
-  final bool isFile;
-  final bool isDirectory;
-  final bool isLink;
-  final int size;
-
-  Metadata({
-    this.isDirectory = false,
-    this.isFile = false,
-    this.isLink = false,
-    this.size = 0,
-  }) {
-    final count = (isDirectory ? 1 : 0) + (isFile ? 1 : 0) + (isLink ? 1 : 0);
-    if (count > 1) {
-      // TODO(brianquinlan): Decide whether a path must be a a file, directory
-      // or link and whether it can be more than one of these at once.
-      // Rust requires that at most one of these is true. Python has no such
-      // restriction.
-
-      // TODO(bquinlan): if we keep this logic, use `ArgumentError.value`.
-      throw ArgumentError(
-        'only one of isDirectory, isFile, or isLink must be true',
-      );
-    }
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      other is Metadata &&
-      isDirectory == other.isDirectory &&
-      isFile == other.isFile &&
-      isLink == other.isLink &&
-      size == other.size;
-
-  @override
-  int get hashCode => Object.hash(isDirectory, isFile, isLink, size).hashCode;
+  bool get isFile;
+  bool get isDirectory;
+  bool get isLink;
+  int get size;
 }
 
 /// An abstract representation of a file system.

@@ -14,6 +14,8 @@ bool isHidden(String path) {
     // On POSIX, convention is that files and directories starting with a period
     // are hidden (except for the special files representing the current working
     // directory and parent directory).
+    //
+    // In addition, macOS has the UF_HIDDEN flag.
     final name = p.basename(path);
     return name.startsWith('.') && name != '.' && name != '..';
   }

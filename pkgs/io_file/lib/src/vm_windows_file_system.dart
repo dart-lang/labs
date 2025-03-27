@@ -10,9 +10,11 @@ import 'package:win32/win32.dart' as win32;
 
 import 'file_system.dart';
 
+const _hundredsOfNanosecondsPerMicrosecond = 10;
+
 DateTime _fileTimeToDateTime(int t) {
-  final microseconds = t ~/ 10;
-  return DateTime.utc(1601, 1, 1).add(Duration(microseconds: microseconds));
+  final microseconds = t ~/ _hundredsOfNanosecondsPerMicrosecond;
+  return DateTime.utc(1601, 1, 1, 0, 0, 0, 0, microseconds);
 }
 
 String _formatMessage(int errorCode) {
@@ -68,10 +70,22 @@ Exception _getError(int errorCode, String message, String path) {
 }
 
 /// File system entity data available on Windows.
-final class WindowsMetadata extends Metadata {
+final class WindowsMetadata implements Metadata {
   // TODO(brianquinlan): Reoganize fields when the POSIX `metadata` is
   // available.
   // TODO(brianquinlan): Document the public fields.
+
+  @override
+  final bool isDirectory;
+
+  @override
+  final bool isFile;
+
+  @override
+  final bool isLink;
+
+  @override
+  final int size;
 
   final bool isReadOnly;
   final bool isHidden;
@@ -91,11 +105,11 @@ final class WindowsMetadata extends Metadata {
 
   /// TODO(bquinlan): Document this constructor.
   WindowsMetadata({
-    super.isDirectory = false,
-    super.isFile = false,
-    super.isLink = false,
+    this.isDirectory = false,
+    this.isFile = false,
+    this.isLink = false,
 
-    super.size = 0,
+    this.size = 0,
 
     this.isReadOnly = false,
     this.isHidden = false,
@@ -113,7 +127,10 @@ final class WindowsMetadata extends Metadata {
   @override
   bool operator ==(Object other) =>
       other is WindowsMetadata &&
-      super == other &&
+      isDirectory == other.isDirectory &&
+      isFile == other.isFile &&
+      isLink == other.isLink &&
+      size == other.size &&
       isReadOnly == other.isReadOnly &&
       isHidden == other.isHidden &&
       isSystem == other.isSystem &&
@@ -127,7 +144,10 @@ final class WindowsMetadata extends Metadata {
 
   @override
   int get hashCode => Object.hash(
-    super.hashCode,
+    isDirectory,
+    isFile,
+    isLink,
+    size,
     isReadOnly,
     isHidden,
     isSystem,
@@ -263,17 +283,17 @@ base class WindowsFileSystem extends FileSystem {
     final isFile = !(isDirectory || isLink);
 
     return WindowsMetadata(
-      isReadOnly: attributes & win32.FILE_ATTRIBUTE_READONLY > 0,
-      isHidden: attributes & win32.FILE_ATTRIBUTE_HIDDEN > 0,
-      isSystem: attributes & win32.FILE_ATTRIBUTE_SYSTEM > 0,
+      isReadOnly: attributes & win32.FILE_ATTRIBUTE_READONLY != 0,
+      isHidden: attributes & win32.FILE_ATTRIBUTE_HIDDEN != 0,
+      isSystem: attributes & win32.FILE_ATTRIBUTE_SYSTEM != 0,
       isDirectory: isDirectory,
-      isArchive: attributes & win32.FILE_ATTRIBUTE_ARCHIVE > 0,
-      isTemporary: attributes & win32.FILE_ATTRIBUTE_TEMPORARY > 0,
+      isArchive: attributes & win32.FILE_ATTRIBUTE_ARCHIVE != 0,
+      isTemporary: attributes & win32.FILE_ATTRIBUTE_TEMPORARY != 0,
       isLink: isLink,
       isFile: isFile,
-      isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE > 0,
+      isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE != 0,
       isContentNotIndexed:
-          attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED > 0,
+          attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED != 0,
 
       size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
       creationTime100Nanos:
