@@ -3,6 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Information about a directory, link, etc. stored in the [FileSystem].
+
+import 'dart:typed_data';
+
 base class Metadata {
   // TODO(brianquinlan): Document all public fields.
 
@@ -71,5 +74,10 @@ base class FileSystem {
   /// returned.
   Metadata metadata(String path) {
     throw UnsupportedError('metadata');
+  }
+
+  /// Reads the entire file contents as a list of bytes.
+  Uint8List readAsBytes(String path) {
+    throw UnsupportedError('readAsBytes');
   }
 }
