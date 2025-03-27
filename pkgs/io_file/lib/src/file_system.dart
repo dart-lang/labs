@@ -4,8 +4,18 @@
 
 import 'dart:typed_data';
 
+/// Information about a directory, link, etc. stored in the [FileSystem].
+abstract interface class Metadata {
+  // TODO(brianquinlan): Document all public fields.
+
+  bool get isFile;
+  bool get isDirectory;
+  bool get isLink;
+  int get size;
+}
+
 /// An abstract representation of a file system.
-base class FileSystem {
+abstract base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
   ///
   /// If `newPath` is a relative path, it is resolved against the current
@@ -24,6 +34,14 @@ base class FileSystem {
   // fails and raises [PathExistsException].
   void rename(String oldPath, String newPath) {
     throw UnsupportedError('rename');
+  }
+
+  /// Metadata for the file system object at [path].
+  ///
+  /// If `path` represents a symbolic link then metadata for the link is
+  /// returned.
+  Metadata metadata(String path) {
+    throw UnsupportedError('metadata');
   }
 
   /// Reads the entire file contents as a list of bytes.

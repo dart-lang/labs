@@ -12,12 +12,17 @@ dependencies:
   meta: ^1.16.0
   stdlibc:
     git:
-      # Change this to a released version.
+      # TODO(brianquinlan): Change this to a released version.
       url: https://github.com/canonical/stdlibc.dart.git
-  win32: ^5.11.0
+  win32:
+    git:
+      # TODO(brianquinlan): Change this to a released version.
+      url: https://github.com/halildurmus/win32.git
+      path: packages/win32
 
 dev_dependencies:
   args: ^2.7.0
   benchmark_harness: ^2.3.1
   dart_flutter_team_lints: ^3.4.0
+  path: ^1.9.1
   test: ^1.24.0
