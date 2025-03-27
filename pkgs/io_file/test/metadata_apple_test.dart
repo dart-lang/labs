@@ -5,12 +5,18 @@
 @TestOn('ios || mac-os')
 library;
 
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:ffi/ffi.dart';
 import 'package:io_file/src/vm_posix_file_system.dart';
+import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 
 import 'test_utils.dart';
+
+@Native<Int Function(Pointer<Utf8>, Uint32)>(isLeaf: false)
+external int chflags(Pointer<Utf8> buf, int count);
 
 void main() {
   final posixFileSystem = PosixFileSystem();
@@ -22,18 +28,23 @@ void main() {
 
     tearDown(() => deleteTemp(tmp));
 
-    group('isReadOnly', () {
+    group('isHidden', () {
       test('false', () {
-        final path = '$tmp/file1';
+        final path = '$tmp/file';
         File(path).writeAsStringSync('Hello World');
 
         final data = posixFileSystem.metadata(path);
+        expect(data.isHidden, isFalse);
       });
       test('false', () {
-        final path = '$tmp/file1';
+        final path = '$tmp/file';
         File(path).writeAsStringSync('Hello World');
+        using((arena) {
+          chflags(path.toNativeUtf8(), stdlibc.UF_HIDDEN);
+        });
 
-        final data = posixFileSystem.metadata('/Users/bquinlan/Library');
+        final data = posixFileSystem.metadata(path);
+        expect(data.isHidden, isTrue);
       });
     });
   });

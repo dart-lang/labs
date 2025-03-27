@@ -178,26 +178,32 @@ base class PosixFileSystem extends FileSystem {
     return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
   }
 
-  Object metadata(String path) {
+  PosixMetadata metadata(String path) {
     final stat = stdlibc.stat(path);
     if (stat == null) {
       final errno = stdlibc.errno;
       throw _getError(errno, 'stat failed', path);
     }
 
+    final bool isHidden;
     if (io.Platform.isIOS || io.Platform.isMacOS) {
       final flags = stat.st_flags!;
-      if (flags & stdlibc.UF_HIDDEN != 0) {
-        print('Hidden');
-      } else {
-        print('Not hidden');
-      }
+      isHidden = flags & stdlibc.UF_HIDDEN != 0;
+    } else {
+      isHidden = false;
     }
-    
-    stat.st_mode;
-    return PosixMetadata(isDirectory: stat.st_mode & stdlibc.S_IFDIR != 0,
-    isFile: ,
-    isLink: stat.st_mode & stdlibc.S_IFLNK != 0,
-    size: stat.st_size);
+
+    final isDirectory = stat.st_mode & stdlibc.S_IFDIR != 0;
+    final isLink = stat.st_mode & stdlibc.S_IFLNK != 0;
+    final isFile = !(isDirectory || isLink);
+
+    // st_birthtimespec;
+    return PosixMetadata(
+      isDirectory: isDirectory,
+      isFile: isFile,
+      isLink: isLink,
+      size: stat.st_size,
+      isHidden: isHidden,
+    );
   }
 }
