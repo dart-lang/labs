@@ -2,12 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Information about a directory, link, etc. stored in the [FileSystem].
-
-library;
-
 import 'dart:typed_data';
 
+/// Information about a directory, link, etc. stored in the [FileSystem].
 base class Metadata {
   // TODO(brianquinlan): Document all public fields.
 
