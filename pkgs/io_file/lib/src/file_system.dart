@@ -4,6 +4,8 @@
 
 /// Information about a directory, link, etc. stored in the [FileSystem].
 
+library;
+
 import 'dart:typed_data';
 
 base class Metadata {
