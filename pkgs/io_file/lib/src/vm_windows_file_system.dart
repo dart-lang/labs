@@ -278,8 +278,8 @@ base class WindowsFileSystem extends FileSystem {
     final info = fileInfo.ref;
     final attributes = info.dwFileAttributes;
 
-    final isDirectory = attributes & win32.FILE_ATTRIBUTE_DIRECTORY > 0;
-    final isLink = attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT > 0;
+    final isDirectory = attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0;
+    final isLink = attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT != 0;
     final isFile = !(isDirectory || isLink);
 
     return WindowsMetadata(
