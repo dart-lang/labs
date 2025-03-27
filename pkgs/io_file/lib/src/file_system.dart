@@ -15,7 +15,7 @@ abstract interface class Metadata {
 }
 
 /// An abstract representation of a file system.
-base class FileSystem {
+abstract base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
   ///
   /// If `newPath` is a relative path, it is resolved against the current
