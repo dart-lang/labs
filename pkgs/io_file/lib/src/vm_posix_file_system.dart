@@ -8,7 +8,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:meta/meta.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 
 import 'file_system.dart';
