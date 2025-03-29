@@ -9,7 +9,6 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:meta/meta.dart';
 import 'package:win32/win32.dart' as win32;
 
 import 'file_system.dart';
