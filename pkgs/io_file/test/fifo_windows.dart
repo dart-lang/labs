@@ -55,7 +55,12 @@ class FifoWindows implements Fifo {
 
       if (win32.ConnectNamedPipe(f, nullptr) == win32.FALSE) {
         final error = win32.GetLastError();
-        throw AssertionError('error waiting for client connection: $error');
+        if (error !=
+            // The client connected in the time between the pipe's creation and
+            // the call to `ConnectNamedPipe`.
+            win32.ERROR_PIPE_CONNECTED) {
+          throw AssertionError('error waiting for client connection: $error');
+        }
       }
 
       late final StreamSubscription<dynamic> subscription;
