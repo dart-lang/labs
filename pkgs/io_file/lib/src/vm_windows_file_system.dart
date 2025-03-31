@@ -179,13 +179,12 @@ base class WindowsFileSystem extends FileSystem {
             throw _getError(errorCode, 'read failed', path);
           }
 
+          bufferOffset += bytesRead.value;
           if (bytesRead.value == 0) {
             return buffer.asTypedList(
               bufferOffset,
               finalizer: ffi.calloc.nativeFree,
             );
-          } else {
-            bufferOffset += bytesRead.value;
           }
         }
         return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);

@@ -35,8 +35,8 @@ class FifoWindows implements Fifo {
           win32.PIPE_WAIT |
           win32.PIPE_REJECT_REMOTE_CLIENTS,
       win32.PIPE_UNLIMITED_INSTANCES,
-      512, // outBufferSize,
-      512, // inBufferSize
+      512, // outBufferSize in bytes,
+      512, // inBufferSize in bytes
       0, // timeout in milliseconds
       nullptr,
     );
