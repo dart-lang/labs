@@ -159,9 +159,12 @@ base class WindowsFileSystem extends FileSystem {
     }
   });
 
-  Uint8List _readKnownLength(String path, int file, int length) =>
-      ffi.using((arena) {
-        final buffer = ffi.malloc<Uint8>(length);
+  Uint8List _readKnownLength(String path, int file, int length) {
+    // In the happy path, `buffer` will be returned to the caller as a
+    // `Uint8List`. If there in an exception, free it and rethrow the exception.
+    final buffer = ffi.malloc<Uint8>(length);
+    try {
+      return ffi.using((arena) {
         final bytesRead = arena<win32.DWORD>();
         var bufferOffset = 0;
 
@@ -174,19 +177,22 @@ base class WindowsFileSystem extends FileSystem {
                 nullptr,
               ) ==
               win32.FALSE) {
-            ffi.malloc.free(buffer);
             final errorCode = win32.GetLastError();
             throw _getError(errorCode, 'read failed', path);
           }
-
-          bufferOffset += bytesRead.value;
-          if (bytesRead.value == 0) {
-            return buffer.asTypedList(
-              bufferOffset,
-              finalizer: ffi.calloc.nativeFree,
-            );
-          }
         }
-        return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
+
+        bufferOffset += bytesRead.value;
+        if (bytesRead.value == 0) {
+          return buffer.asTypedList(
+            bufferOffset,
+            finalizer: ffi.malloc.nativeFree,
+          );
+        }
       });
+    } on Exception {
+      ffi.malloc.free(buffer);
+      rethrow;
+    }
+  }
 }

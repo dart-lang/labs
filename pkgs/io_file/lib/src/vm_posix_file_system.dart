@@ -101,31 +101,37 @@ base class PosixFileSystem extends FileSystem {
   });
 
   Uint8List _readKnownLength(String path, int fd, int length) {
+    // In the happy path, `buffer` will be returned to the caller as a
+    // `Uint8List`. If there in an exception, free it and rethrow the exception.
     final buffer = ffi.malloc<Uint8>(length);
-    var bufferOffset = 0;
+    try {
+      var bufferOffset = 0;
 
-    while (bufferOffset < length) {
-      final r = _tempFailureRetry(
-        () => read(
-          fd,
-          (buffer + bufferOffset).cast(),
-          min(length - bufferOffset, maxReadSize),
-        ),
-      );
-      switch (r) {
-        case -1:
-          final errno = stdlibc.errno;
-          ffi.malloc.free(buffer);
-          throw _getError(errno, 'read failed', path);
-        case 0:
-          return buffer.asTypedList(
-            bufferOffset,
-            finalizer: ffi.calloc.nativeFree,
-          );
-        default:
-          bufferOffset += r;
+      while (bufferOffset < length) {
+        final r = _tempFailureRetry(
+          () => read(
+            fd,
+            (buffer + bufferOffset).cast(),
+            min(length - bufferOffset, maxReadSize),
+          ),
+        );
+        switch (r) {
+          case -1:
+            final errno = stdlibc.errno;
+            throw _getError(errno, 'read failed', path);
+          case 0:
+            return buffer.asTypedList(
+              bufferOffset,
+              finalizer: ffi.calloc.nativeFree,
+            );
+          default:
+            bufferOffset += r;
+        }
       }
+      return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
+    } on Exception {
+      ffi.malloc.free(buffer);
+      rethrow;
     }
-    return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
   }
 }
