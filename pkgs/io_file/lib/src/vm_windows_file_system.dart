@@ -180,15 +180,15 @@ base class WindowsFileSystem extends FileSystem {
             final errorCode = win32.GetLastError();
             throw _getError(errorCode, 'read failed', path);
           }
+          bufferOffset += bytesRead.value;
+          if (bytesRead.value == 0) {
+            break;
+          }
         }
-
-        bufferOffset += bytesRead.value;
-        if (bytesRead.value == 0) {
-          return buffer.asTypedList(
-            bufferOffset,
-            finalizer: ffi.malloc.nativeFree,
-          );
-        }
+        return buffer.asTypedList(
+          bufferOffset,
+          finalizer: ffi.malloc.nativeFree,
+        );
       });
     } on Exception {
       ffi.malloc.free(buffer);
