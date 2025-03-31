@@ -2,77 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('posix')
+@TestOn('vm')
 library;
 
-import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
-import 'package:io_file/posix_file_system.dart' show blockSize, maxReadSize;
+import 'package:io_file/src/internal_constants.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
+import 'package:win32/win32.dart' as win32;
 
+import 'fifo.dart';
 import 'test_utils.dart';
-
-/// Writes data to a FIFO.
-///
-/// The data is written in a seperate [Isolate] to prevent deadlock during
-/// read operations.
-class FifoWriter {
-  final SendPort _sendChannel;
-
-  FifoWriter._(this._sendChannel);
-
-  static Future<FifoWriter> create(String path) async {
-    final p = ReceivePort();
-    await Isolate.spawn<SendPort>((port) {
-      final receivePort = ReceivePort();
-      port.send(receivePort.sendPort);
-
-      final fd = stdlibc.open(
-        path,
-        flags: stdlibc.O_WRONLY | stdlibc.O_CLOEXEC,
-      );
-
-      if (fd == -1) {
-        throw AssertionError('could not open fifo: ${stdlibc.errno}');
-      }
-      late final StreamSubscription<dynamic> subscription;
-      Future<void> pause(Duration d) async {
-        subscription.pause();
-        await Future<void>.delayed(d);
-        subscription.resume();
-      }
-
-      subscription = receivePort.listen(
-        (message) => switch (message) {
-          Uint8List data => stdlibc.write(fd, data),
-
-          Duration d => pause(d),
-          null => stdlibc.close(fd),
-
-          final other => throw UnsupportedError('unexpected message: $other'),
-        },
-      );
-    }, p.sendPort);
-    return FifoWriter._((await p.first) as SendPort);
-  }
-
-  void write(Uint8List data) {
-    _sendChannel.send(data);
-  }
-
-  void delay(Duration d) {
-    _sendChannel.send(d);
-  }
-
-  void close() {
-    _sendChannel.send(null);
-  }
-}
 
 void main() {
   //TODO(brianquinlan): test with a very long path.
@@ -93,7 +36,9 @@ void main() {
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                2, // ENOENT
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
               )
               .having((e) => e.path, 'path', 'doesnotexist'),
         ),
@@ -105,8 +50,16 @@ void main() {
         () => fileSystem.readAsBytes(tmp),
         throwsA(
           isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'read failed')
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.EISDIR)
+              .having(
+                (e) => e.message,
+                'message',
+                Platform.isWindows ? 'open failed' : 'read failed',
+              )
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : stdlibc.EISDIR,
+              )
               .having((e) => e.path, 'path', tmp),
         ),
       );
@@ -147,47 +100,43 @@ void main() {
       for (var i = 0; i <= 1024; ++i) {
         test('Read small file: $i bytes', () async {
           final data = randomUint8List(i);
-          final path = '$tmp/file';
-          stdlibc.mkfifo(path, 438); // 0436 => permissions: -rw-rw-rw-
 
-          (await FifoWriter.create(path))
-            ..write(data)
-            ..close();
+          final fifo =
+              (await Fifo.create('$tmp/file'))
+                ..write(data)
+                ..close();
 
-          expect(fileSystem.readAsBytes(path), data);
+          expect(fileSystem.readAsBytes(fifo.path), data);
         });
       }
 
       test('many single byte reads', () async {
-        final path = '$tmp/file';
-        stdlibc.mkfifo(path, 438); // 0436 => permissions: -rw-rw-rw-
-
-        final writer = await FifoWriter.create(path);
         final data = randomUint8List(20);
 
+        final fifo = await Fifo.create('$tmp/file');
         for (var byte in data) {
-          writer
+          fifo
             ..write(Uint8List(1)..[0] = byte)
             ..delay(const Duration(milliseconds: 10));
         }
-        writer.close();
-        expect(fileSystem.readAsBytes(path), data);
+        fifo.close();
+
+        expect(fileSystem.readAsBytes(fifo.path), data);
       });
 
       for (var i = blockSize - 2; i <= blockSize + 2; ++i) {
         test('Read close to `blockSize`: $i bytes', () async {
           final data = randomUint8List(i);
-          final path = '$tmp/file1';
-          stdlibc.mkfifo(path, 438); // 0436 => permissions: -rw-rw-rw-
 
-          (await FifoWriter.create(path))
-            ..write(data)
-            ..close();
-          expect(fileSystem.readAsBytes(path), data);
+          final fifo =
+              (await Fifo.create('$tmp/file'))
+                ..write(data)
+                ..close();
+
+          expect(fileSystem.readAsBytes(fifo.path), data);
         });
       }
     });
-
     group('regular files', () {
       for (var i = 0; i <= 1024; ++i) {
         test('Read small file: $i bytes', () {
