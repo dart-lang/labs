@@ -166,7 +166,7 @@ void main() {
 
         File(path).writeAsBytesSync(data);
         expect(fileSystem.readAsBytes(path), data);
-      }, skip: 'very slow');
+      });
     });
   });
 }
