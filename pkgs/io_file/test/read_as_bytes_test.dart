@@ -25,10 +25,7 @@ void main() {
 
     setUp(() => tmp = createTemp('readAsBytes'));
 
-    tearDown(() {
-      deleteTemp(tmp);
-      s.cancel();
-    });
+    tearDown(() => deleteTemp(tmp));
 
     test('non-existant file', () {
       expect(

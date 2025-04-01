@@ -33,14 +33,9 @@ Exception _getError(int errno, String message, String path) {
 /// Return the given function until the result is not `EINTR`.
 int _tempFailureRetry(int Function() f) {
   int result;
-  int errno;
   do {
     result = f();
-    errno = stdlibc.errno;
-    if (errno == stdlibc.EINTR) {
-      print('Interrupted: $errno');
-    }
-  } while (result == -1 && errno == stdlibc.EINTR);
+  } while (result == -1 && stdlibc.errno == stdlibc.EINTR);
   return result;
 }
 
@@ -113,13 +108,13 @@ base class PosixFileSystem extends FileSystem {
       var bufferOffset = 0;
 
       while (bufferOffset < length) {
-        int requestedReadSize = min(length - bufferOffset, maxReadSize);
         final r = _tempFailureRetry(
-          () => read(fd, (buffer + bufferOffset).cast(), requestedReadSize),
+          () => read(
+            fd,
+            (buffer + bufferOffset).cast(),
+            min(length - bufferOffset, maxReadSize),
+          ),
         );
-        if (r != requestedReadSize) {
-          print('Read returned: $r');
-        }
         switch (r) {
           case -1:
             final errno = stdlibc.errno;
