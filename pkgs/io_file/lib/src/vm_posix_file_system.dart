@@ -13,6 +13,11 @@ import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'file_system.dart';
 import 'internal_constants.dart';
 
+const _maxInt32 = 2147483647;
+
+/// The default `mode` to use with `open` calls that may create a file.
+const _defaultMode = 438; // => 0666 => rw-rw-rw-
+
 Exception _getError(int errno, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
@@ -45,6 +50,12 @@ int _tempFailureRetry(int Function() f) {
 @Native<Int Function(Int, Pointer<Uint8>, Int)>(isLeaf: false)
 external int read(int fd, Pointer<Uint8> buf, int count);
 
+/// The POSIX `write` function.
+///
+/// See https://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html
+@Native<Int Function(Int, Pointer<Uint8>, Int)>(isLeaf: false)
+external int write(int fd, Pointer<Uint8> buf, int count);
+
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
 base class PosixFileSystem extends FileSystem {
@@ -59,7 +70,9 @@ base class PosixFileSystem extends FileSystem {
 
   @override
   Uint8List readAsBytes(String path) {
-    final fd = stdlibc.open(path, flags: stdlibc.O_RDONLY | stdlibc.O_CLOEXEC);
+    final fd = _tempFailureRetry(
+      () => stdlibc.open(path, flags: stdlibc.O_RDONLY | stdlibc.O_CLOEXEC),
+    );
     if (fd == -1) {
       final errno = stdlibc.errno;
       throw _getError(errno, 'open failed', path);
@@ -132,6 +145,60 @@ base class PosixFileSystem extends FileSystem {
     } on Exception {
       ffi.malloc.free(buffer);
       rethrow;
+    }
+  }
+
+  @override
+  void writeAsBytes(
+    String path,
+    Uint8List data, [
+    WriteMode mode = WriteMode.failExisting,
+  ]) {
+    var flags = stdlibc.O_WRONLY | stdlibc.O_CLOEXEC;
+
+    flags |= switch (mode) {
+      WriteMode.appendExisting => stdlibc.O_CREAT | stdlibc.O_APPEND,
+      WriteMode.failExisting => stdlibc.O_CREAT | stdlibc.O_EXCL,
+      WriteMode.truncateExisting => stdlibc.O_CREAT | stdlibc.O_TRUNC,
+      _ => throw ArgumentError.value(mode, 'invalid write mode'),
+    };
+
+    final fd = _tempFailureRetry(
+      () => stdlibc.open(path, flags: flags, mode: _defaultMode),
+    );
+    try {
+      if (fd == -1) {
+        final errno = stdlibc.errno;
+        throw _getError(errno, 'open failed', path);
+      }
+
+      ffi.using((arena) {
+        // TODO(brianquinlan): Remove this copy when typed data pointers are
+        // available for non-leaf calls.
+        var buffer = arena<Uint8>(data.length);
+        buffer.asTypedList(data.length).setAll(0, data);
+        var remaining = data.length;
+
+        // `write` on FreeBSD returns `EINVAL` if nbytes is greater than
+        // `INT_MAX`.
+        // See https://man.freebsd.org/cgi/man.cgi?write(2)
+        final maxWriteSize =
+            (io.Platform.isIOS || io.Platform.isMacOS) ? _maxInt32 : remaining;
+
+        while (remaining > 0) {
+          final w = _tempFailureRetry(
+            () => write(fd, buffer, min(remaining, maxWriteSize)),
+          );
+          if (w == -1) {
+            final errno = stdlibc.errno;
+            throw _getError(errno, 'write failed', path);
+          }
+          remaining -= w;
+          buffer += w;
+        }
+      });
+    } finally {
+      stdlibc.close(fd);
     }
   }
 }
