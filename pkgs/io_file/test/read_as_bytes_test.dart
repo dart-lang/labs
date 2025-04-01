@@ -18,6 +18,7 @@ import 'fifo.dart';
 import 'test_utils.dart';
 
 void main() {
+  final s = ProcessSignal.sigprof.watch().listen(print);
   //TODO(brianquinlan): test with a very long path.
 
   group('readAsBytes', () {
@@ -25,7 +26,10 @@ void main() {
 
     setUp(() => tmp = createTemp('readAsBytes'));
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      deleteTemp(tmp);
+      s.cancel();
+    });
 
     test('non-existant file', () {
       expect(
