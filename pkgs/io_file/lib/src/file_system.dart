@@ -4,9 +4,18 @@
 
 import 'dart:typed_data';
 
+/// The modes in which a File can be written.
 class WriteMode {
+  /// Open the file for writing such that data can only be appended to the end
+  /// of it. The file is created if it does not already exist.
   static const appendExisting = WriteMode._(1);
+
+  /// Open the file for writing and discard any existing data in the file.
+  /// The file is created if it does not already exist.
   static const truncateExisting = WriteMode._(2);
+
+  /// Open the file for writing and file with a `PathExistsException` if the
+  /// file already exists.
   static const failExisting = WriteMode._(3);
 
   final int _mode;
