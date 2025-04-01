@@ -38,7 +38,7 @@ int _tempFailureRetry(int Function() f) {
     result = f();
     errno = stdlibc.errno;
     if (errno == stdlibc.EINTR) {
-      print(errno);
+      print('Interrupted: $errno');
     }
   } while (result == -1 && errno == stdlibc.EINTR);
   return result;
@@ -113,13 +113,13 @@ base class PosixFileSystem extends FileSystem {
       var bufferOffset = 0;
 
       while (bufferOffset < length) {
+        int requestedReadSize = min(length - bufferOffset, maxReadSize);
         final r = _tempFailureRetry(
-          () => read(
-            fd,
-            (buffer + bufferOffset).cast(),
-            min(length - bufferOffset, maxReadSize),
-          ),
+          () => read(fd, (buffer + bufferOffset).cast(), requestedReadSize),
         );
+        if (r != requestedReadSize) {
+          print('Read returned: $r');
+        }
         switch (r) {
           case -1:
             final errno = stdlibc.errno;
