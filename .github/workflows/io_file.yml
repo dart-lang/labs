@@ -55,7 +55,7 @@ jobs:
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
           sdk: stable
-      - run: dart --profiler test --test-randomize-ordering-seed=random --platform vm
+      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
 
   desktop-vm-benchmark:
     strategy:
