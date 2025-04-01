@@ -4,6 +4,21 @@
 
 import 'dart:typed_data';
 
+class WriteMode {
+  static const appendExisting = WriteMode._(1);
+  static const truncateExisting = WriteMode._(2);
+  static const failExisting = WriteMode._(3);
+
+  final int _mode;
+  const WriteMode._(this._mode);
+
+  @override
+  bool operator ==(Object other) => other is WriteMode && _mode == other._mode;
+
+  @override
+  int get hashCode => _mode.hashCode;
+}
+
 /// An abstract representation of a file system.
 base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
@@ -29,5 +44,14 @@ base class FileSystem {
   /// Reads the entire file contents as a list of bytes.
   Uint8List readAsBytes(String path) {
     throw UnsupportedError('readAsBytes');
+  }
+
+  /// Write the given bytes to a file.
+  void writeAsBytes(
+    String path,
+    Uint8List data, [
+    WriteMode mode = WriteMode.failExisting,
+  ]) {
+    throw UnsupportedError('writeAsBytes');
   }
 }
