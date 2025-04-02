@@ -79,8 +79,8 @@ jobs:
         with:
           os: iOS
           os_version: '>=13.0'
-      - name: Run tests
-        run: |
+
+      - run: |
           flutter pub get
           flutter test integration_test --test-randomize-ordering-seed=random
 
