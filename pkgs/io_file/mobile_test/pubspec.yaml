@@ -45,6 +45,17 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  integration_test:
+    sdk: flutter
+  io_file:
+    path: ../
+  stdlibc:
+    git:
+      # Change this to a released version.
+      url: https://github.com/canonical/stdlibc.dart.git
+  test: ^1.24.0
+  uuid: ^4.5.1
+  win32: ^5.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
