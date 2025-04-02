@@ -5,6 +5,8 @@ analyzer:
     strict-casts: true
     strict-raw-types: true
     strict-inference: true
+  exclude:
+    - mobile_test/**
 
 linter:
   rules:
