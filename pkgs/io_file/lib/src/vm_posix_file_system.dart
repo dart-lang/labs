@@ -42,7 +42,7 @@ int _tempFailureRetry(int Function() f) {
   do {
     result = f();
     errno = stdlibc.errno;
-    if (errno != 0) {
+    if (result == -1 && errno != 0) {
       print('unexpected errno: $errno');
     }
   } while (result == -1 && errno == stdlibc.EINTR);
