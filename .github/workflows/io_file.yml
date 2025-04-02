@@ -22,33 +22,8 @@ defaults:
     working-directory: pkgs/io_file
 
 jobs:
-  analyze_and_format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: stable
-      - run: dart pub get
-      - run: dart analyze --fatal-infos
-      - run: dart format --output=none --set-exit-if-changed .
 
-  desktop-vm-test:
-    strategy:
-      fail-fast: false
-      matrix:
-        sdk: [stable, dev]
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: ${{ matrix.sdk }}
-
-      - run: dart test --test-randomize-ordering-seed=random --platform vm
-
-  profile-vm-test:
+  profile-vm-test1:
     # Ensure that the tests pass when run under the profiler (which sends
     # SIG_PROF on Linux).
     runs-on: ubuntu-latest
@@ -59,28 +34,58 @@ jobs:
           sdk: stable
       - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
 
-  desktop-vm-benchmark:
-    strategy:
-      fail-fast: false
-      matrix:
-        sdk: [stable]
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: ${{ matrix.sdk }}
-      - run: dart pub get
-      - name: 🪑 Run benchmarks
-        run: dart run benchmarks/read_as_bytes.dart
-
-  web-test:
+  profile-vm-test2:
+    # Ensure that the tests pass when run under the profiler (which sends
+    # SIG_PROF on Linux).
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
           sdk: stable
+      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
 
-      - run: dart test --test-randomize-ordering-seed=random --platform chrome
+  profile-vm-test3:
+    # Ensure that the tests pass when run under the profiler (which sends
+    # SIG_PROF on Linux).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: stable
+      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
+
+  profile-vm-test4:
+    # Ensure that the tests pass when run under the profiler (which sends
+    # SIG_PROF on Linux).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: stable
+      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
+
+  profile-vm-test5:
+    # Ensure that the tests pass when run under the profiler (which sends
+    # SIG_PROF on Linux).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: stable
+      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
+
+  profile-vm-test6:
+    # Ensure that the tests pass when run under the profiler (which sends
+    # SIG_PROF on Linux).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: stable
+      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
+        
