@@ -6,7 +6,7 @@ analyzer:
     strict-raw-types: true
     strict-inference: true
   exclude:
-    - mobile_test/**
+    - mobile_test/**  # Flutter application
 
 linter:
   rules:
