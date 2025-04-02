@@ -38,9 +38,14 @@ Exception _getError(int errno, String message, String path) {
 /// Return the given function until the result is not `EINTR`.
 int _tempFailureRetry(int Function() f) {
   int result;
+  var errno = 0;
   do {
     result = f();
-  } while (result == -1 && stdlibc.errno == stdlibc.EINTR);
+    errno = stdlibc.errno;
+    if (errno != 0) {
+      print('unexpected errno: $errno');
+    }
+  } while (result == -1 && errno == stdlibc.EINTR);
   return result;
 }
 
