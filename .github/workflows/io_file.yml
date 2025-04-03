@@ -75,6 +75,26 @@ jobs:
       - name: 🪑 Run benchmarks
         run: dart run benchmarks/read_as_bytes.dart
 
+  ios-vm-test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: pkgs/io_file/mobile_test
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          flutter-version: any
+          channel: 'stable'
+      - uses: futureware-tech/simulator-action@dab10d813144ef59b48d401cd95da151222ef8cd
+        with:
+          os: iOS
+          os_version: '>=13.0'
+
+      - run: |
+          flutter pub get
+          flutter test integration_test --test-randomize-ordering-seed=random
+
   web-test:
     runs-on: ubuntu-latest
     steps:

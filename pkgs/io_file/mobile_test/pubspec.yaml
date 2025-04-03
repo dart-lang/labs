@@ -1,0 +1,32 @@
+name: mobile_test
+description: "Used to execute package:io_file tests on Android and iOS"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  integration_test:
+    sdk: flutter
+  io_file:
+    path: ../
+  # Dependencies required by io_file/test:
+  stdlibc:
+    git:
+      # Change this to a released version.
+      url: https://github.com/canonical/stdlibc.dart.git
+  test: ^1.24.0
+  uuid: ^4.5.1
+  win32: ^5.11.0
