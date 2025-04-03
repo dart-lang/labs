@@ -44,6 +44,33 @@ int _tempFailureRetry(int Function() f) {
   return result;
 }
 
+final class PosixMetadata {
+  @override
+  final bool isDirectory;
+
+  @override
+  final bool isFile;
+
+  @override
+  final bool isLink;
+
+  @override
+  final int size;
+
+  @override
+  final bool isHidden;
+
+  PosixMetadata({
+    this.isDirectory = false,
+    this.isFile = false,
+    this.isLink = false,
+
+    this.size = 0,
+
+    this.isHidden = false,
+  });
+}
+
 /// The POSIX `read` function.
 ///
 /// See https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html
@@ -200,5 +227,34 @@ base class PosixFileSystem extends FileSystem {
     } finally {
       stdlibc.close(fd);
     }
+  }
+
+  PosixMetadata metadata(String path) {
+    final stat = stdlibc.stat(path);
+    if (stat == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'stat failed', path);
+    }
+
+    final bool isHidden;
+    if (io.Platform.isIOS || io.Platform.isMacOS) {
+      final flags = stat.st_flags!;
+      isHidden = flags & stdlibc.UF_HIDDEN != 0;
+    } else {
+      isHidden = false;
+    }
+
+    final isDirectory = stat.st_mode & stdlibc.S_IFDIR != 0;
+    final isLink = stat.st_mode & stdlibc.S_IFLNK != 0;
+    final isFile = !(isDirectory || isLink);
+
+    // st_birthtimespec;
+    return PosixMetadata(
+      isDirectory: isDirectory,
+      isFile: isFile,
+      isLink: isLink,
+      size: stat.st_size,
+      isHidden: isHidden,
+    );
   }
 }
