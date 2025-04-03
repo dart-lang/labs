@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   ffi: ^2.1.4
-  meta: ^1.16.0
   stdlibc:
     git:
       # TODO(brianquinlan): Change this to a released version.
@@ -26,3 +25,4 @@ dev_dependencies:
   dart_flutter_team_lints: ^3.4.0
   path: ^1.9.1
   test: ^1.24.0
+  uuid: ^4.5.1

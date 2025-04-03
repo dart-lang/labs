@@ -8,31 +8,15 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:meta/meta.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 
 import 'file_system.dart';
+import 'internal_constants.dart';
 
-// The maximum number of bytes to read in a single call to `read`.
-//
-// On macOS, it is an error to call
-// `read/_read(fildes, buf, nbyte)` with `nbyte >= INT_MAX`.
-//
-// The POSIX specification states that the behavior of `read` is
-// implementation-defined if `nbyte > SSIZE_MAX`. On Linux, the `read` will
-// transfer at most 0x7ffff000 bytes and return the number of bytes actually.
-// transfered.
-//
-// A smaller value has the advantage of making vm-service clients
-// (e.g. debugger) more responsive.
-//
-// A bigger value reduces the number of system calls.
-@visibleForTesting
-const int maxReadSize = 16 * 1024 * 1024; // 16MB.
+const _maxInt32 = 2147483647;
 
-// If the size of a file is unknown, read in blocks of this size.
-@visibleForTesting
-const int blockSize = 64 * 1024;
+/// The default `mode` to use with `open` calls that may create a file.
+const _defaultMode = 438; // => 0666 => rw-rw-rw-
 
 Exception _getError(int errno, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
@@ -66,6 +50,12 @@ int _tempFailureRetry(int Function() f) {
 @Native<Int Function(Int, Pointer<Uint8>, Int)>(isLeaf: false)
 external int read(int fd, Pointer<Uint8> buf, int count);
 
+/// The POSIX `write` function.
+///
+/// See https://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html
+@Native<Int Function(Int, Pointer<Uint8>, Int)>(isLeaf: false)
+external int write(int fd, Pointer<Uint8> buf, int count);
+
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
 base class PosixFileSystem extends FileSystem {
@@ -80,35 +70,36 @@ base class PosixFileSystem extends FileSystem {
 
   @override
   Uint8List readAsBytes(String path) {
-    final fd = stdlibc.open(path, flags: stdlibc.O_RDONLY | stdlibc.O_CLOEXEC);
+    final fd = _tempFailureRetry(
+      () => stdlibc.open(path, flags: stdlibc.O_RDONLY | stdlibc.O_CLOEXEC),
+    );
     if (fd == -1) {
       final errno = stdlibc.errno;
       throw _getError(errno, 'open failed', path);
     }
     try {
       final stat = stdlibc.fstat(fd);
-      if (stat != null &&
-          stat.st_size == 0 &&
-          stat.st_mode & stdlibc.S_IFREG != 0) {
-        return Uint8List(0);
+      // The POSIX specification only defines the meaning of `st_size` for
+      // regular files and symbolic links.
+      if (stat != null && stat.st_mode & stdlibc.S_IFREG != 0) {
+        if (stat.st_size == 0) {
+          return Uint8List(0);
+        } else {
+          return _readKnownLength(path, fd, stat.st_size);
+        }
       }
-      final length = stat?.st_size ?? 0;
-      if (length == 0) {
-        return _readUnknownLength(path, fd);
-      } else {
-        return _readKnownLength(path, fd, length);
-      }
+      return _readUnknownLength(path, fd);
     } finally {
       stdlibc.close(fd);
     }
   }
 
   Uint8List _readUnknownLength(String path, int fd) => ffi.using((arena) {
-    final buf = ffi.malloc<Uint8>(blockSize);
+    final buffer = arena<Uint8>(blockSize);
     final builder = BytesBuilder(copy: true);
 
     while (true) {
-      final r = _tempFailureRetry(() => read(fd, buf, blockSize));
+      final r = _tempFailureRetry(() => read(fd, buffer, blockSize));
       switch (r) {
         case -1:
           final errno = stdlibc.errno;
@@ -116,38 +107,98 @@ base class PosixFileSystem extends FileSystem {
         case 0:
           return builder.takeBytes();
         default:
-          final typed = buf.asTypedList(r);
+          final typed = buffer.asTypedList(r);
           builder.add(typed);
       }
     }
   });
 
   Uint8List _readKnownLength(String path, int fd, int length) {
+    // In the happy path, `buffer` will be returned to the caller as a
+    // `Uint8List`. If there in an exception, free it and rethrow the exception.
     final buffer = ffi.malloc<Uint8>(length);
-    var bufferOffset = 0;
+    try {
+      var bufferOffset = 0;
 
-    while (bufferOffset < length) {
-      final r = _tempFailureRetry(
-        () => read(
-          fd,
-          (buffer + bufferOffset).cast(),
-          min(length - bufferOffset, maxReadSize),
-        ),
-      );
-      switch (r) {
-        case -1:
-          final errno = stdlibc.errno;
-          ffi.calloc.free(buffer);
-          throw _getError(errno, 'read failed', path);
-        case 0:
-          return buffer.asTypedList(
-            bufferOffset,
-            finalizer: ffi.calloc.nativeFree,
-          );
-        default:
-          bufferOffset += r;
+      while (bufferOffset < length) {
+        final r = _tempFailureRetry(
+          () => read(
+            fd,
+            (buffer + bufferOffset).cast(),
+            min(length - bufferOffset, maxReadSize),
+          ),
+        );
+        switch (r) {
+          case -1:
+            final errno = stdlibc.errno;
+            throw _getError(errno, 'read failed', path);
+          case 0:
+            return buffer.asTypedList(
+              bufferOffset,
+              finalizer: ffi.calloc.nativeFree,
+            );
+          default:
+            bufferOffset += r;
+        }
       }
+      return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
+    } on Exception {
+      ffi.malloc.free(buffer);
+      rethrow;
     }
-    return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
+  }
+
+  @override
+  void writeAsBytes(
+    String path,
+    Uint8List data, [
+    WriteMode mode = WriteMode.failExisting,
+  ]) {
+    var flags = stdlibc.O_WRONLY | stdlibc.O_CLOEXEC;
+
+    flags |= switch (mode) {
+      WriteMode.appendExisting => stdlibc.O_CREAT | stdlibc.O_APPEND,
+      WriteMode.failExisting => stdlibc.O_CREAT | stdlibc.O_EXCL,
+      WriteMode.truncateExisting => stdlibc.O_CREAT | stdlibc.O_TRUNC,
+      _ => throw ArgumentError.value(mode, 'invalid write mode'),
+    };
+
+    final fd = _tempFailureRetry(
+      () => stdlibc.open(path, flags: flags, mode: _defaultMode),
+    );
+    try {
+      if (fd == -1) {
+        final errno = stdlibc.errno;
+        throw _getError(errno, 'open failed', path);
+      }
+
+      ffi.using((arena) {
+        // TODO(brianquinlan): Remove this copy when typed data pointers are
+        // available for non-leaf calls.
+        var buffer = arena<Uint8>(data.length);
+        buffer.asTypedList(data.length).setAll(0, data);
+        var remaining = data.length;
+
+        // `write` on FreeBSD returns `EINVAL` if nbytes is greater than
+        // `INT_MAX`.
+        // See https://man.freebsd.org/cgi/man.cgi?write(2)
+        final maxWriteSize =
+            (io.Platform.isIOS || io.Platform.isMacOS) ? _maxInt32 : remaining;
+
+        while (remaining > 0) {
+          final w = _tempFailureRetry(
+            () => write(fd, buffer, min(remaining, maxWriteSize)),
+          );
+          if (w == -1) {
+            final errno = stdlibc.errno;
+            throw _getError(errno, 'write failed', path);
+          }
+          remaining -= w;
+          buffer += w;
+        }
+      });
+    } finally {
+      stdlibc.close(fd);
+    }
   }
 }

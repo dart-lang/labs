@@ -14,6 +14,30 @@ abstract interface class Metadata {
   int get size;
 }
 
+/// The modes in which a File can be written.
+class WriteMode {
+  /// Open the file for writing such that data can only be appended to the end
+  /// of it. The file is created if it does not already exist.
+  static const appendExisting = WriteMode._(1);
+
+  /// Open the file for writing and discard any existing data in the file.
+  /// The file is created if it does not already exist.
+  static const truncateExisting = WriteMode._(2);
+
+  /// Open the file for writing and file with a `PathExistsException` if the
+  /// file already exists.
+  static const failExisting = WriteMode._(3);
+
+  final int _mode;
+  const WriteMode._(this._mode);
+
+  @override
+  bool operator ==(Object other) => other is WriteMode && _mode == other._mode;
+
+  @override
+  int get hashCode => _mode.hashCode;
+}
+
 /// An abstract representation of a file system.
 abstract base class FileSystem {
   /// Renames, and possibly moves a file system object from one path to another.
@@ -47,5 +71,14 @@ abstract base class FileSystem {
   /// Reads the entire file contents as a list of bytes.
   Uint8List readAsBytes(String path) {
     throw UnsupportedError('readAsBytes');
+  }
+
+  /// Write the given bytes to a file.
+  void writeAsBytes(
+    String path,
+    Uint8List data, [
+    WriteMode mode = WriteMode.failExisting,
+  ]) {
+    throw UnsupportedError('writeAsBytes');
   }
 }
