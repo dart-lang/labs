@@ -78,26 +78,28 @@ final class WindowsMetadata implements Metadata {
   // TODO(brianquinlan): Reoganize fields when the POSIX `metadata` is
   // available.
   // TODO(brianquinlan): Document the public fields.
+  int _attributes;
 
   @override
-  final bool isDirectory;
+  bool get isDirectory => _attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0;
 
   @override
-  final bool isFile;
+  bool get isFile => !isDirectory && !isLink;
 
   @override
-  final bool isLink;
+  bool get isLink => _attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT != 0;
 
   @override
   final int size;
 
-  final bool isReadOnly;
-  final bool isHidden;
-  final bool isSystem;
-  final bool isArchive;
-  final bool isTemporary;
-  final bool isOffline;
-  final bool isContentNotIndexed;
+  bool get isReadOnly => _attributes & win32.FILE_ATTRIBUTE_READONLY != 0;
+  bool get isHidden => _attributes & win32.FILE_ATTRIBUTE_HIDDEN != 0;
+  bool get isSystem => _attributes & win32.FILE_ATTRIBUTE_SYSTEM != 0;
+  bool get isArchive => _attributes & win32.FILE_ATTRIBUTE_ARCHIVE != 0;
+  bool get isTemporary => _attributes & win32.FILE_ATTRIBUTE_TEMPORARY != 0;
+  bool get isOffline => _attributes & win32.FILE_ATTRIBUTE_OFFLINE != 0;
+  bool get isContentNotIndexed =>
+      _attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED != 0;
 
   final int creationTime100Nanos;
   final int lastAccessTime100Nanos;
@@ -107,57 +109,61 @@ final class WindowsMetadata implements Metadata {
   DateTime get access => _fileTimeToDateTime(lastAccessTime100Nanos);
   DateTime get modification => _fileTimeToDateTime(lastWriteTime100Nanos);
 
+  WindowsMetadata._(
+    this._attributes,
+    this.size,
+    this.creationTime100Nanos,
+    this.lastAccessTime100Nanos,
+    this.lastWriteTime100Nanos,
+  );
+
   /// TODO(bquinlan): Document this constructor.
-  WindowsMetadata({
-    this.isDirectory = false,
-    this.isFile = false,
-    this.isLink = false,
+  factory WindowsMetadata.fromProperties({
+    bool isDirectory = false,
+    bool isLink = false,
 
-    this.size = 0,
+    int size = 0,
 
-    this.isReadOnly = false,
-    this.isHidden = false,
-    this.isSystem = false,
-    this.isArchive = false,
-    this.isTemporary = false,
-    this.isOffline = false,
-    this.isContentNotIndexed = false,
+    bool isReadOnly = false,
+    bool isHidden = false,
+    bool isSystem = false,
+    bool isArchive = false,
+    bool isTemporary = false,
+    bool isOffline = false,
+    bool isContentNotIndexed = false,
 
-    this.creationTime100Nanos = 0,
-    this.lastAccessTime100Nanos = 0,
-    this.lastWriteTime100Nanos = 0,
-  });
+    int creationTime100Nanos = 0,
+    int lastAccessTime100Nanos = 0,
+    int lastWriteTime100Nanos = 0,
+  }) => WindowsMetadata._(
+    (isDirectory ? win32.FILE_ATTRIBUTE_DIRECTORY : 0) |
+        (isLink ? win32.FILE_ATTRIBUTE_REPARSE_POINT : 0) |
+        (isReadOnly ? win32.FILE_ATTRIBUTE_READONLY : 0) |
+        (isHidden ? win32.FILE_ATTRIBUTE_HIDDEN : 0) |
+        (isSystem ? win32.FILE_ATTRIBUTE_SYSTEM : 0) |
+        (isArchive ? win32.FILE_ATTRIBUTE_ARCHIVE : 0) |
+        (isTemporary ? win32.FILE_ATTRIBUTE_TEMPORARY : 0) |
+        (isOffline ? win32.FILE_ATTRIBUTE_OFFLINE : 0) |
+        (isContentNotIndexed ? win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED : 0),
+    size,
+    creationTime100Nanos,
+    lastAccessTime100Nanos,
+    lastWriteTime100Nanos,
+  );
 
   @override
   bool operator ==(Object other) =>
       other is WindowsMetadata &&
-      isDirectory == other.isDirectory &&
-      isFile == other.isFile &&
-      isLink == other.isLink &&
+      _attributes == other._attributes &&
       size == other.size &&
-      isReadOnly == other.isReadOnly &&
-      isHidden == other.isHidden &&
-      isSystem == other.isSystem &&
-      isArchive == other.isArchive &&
-      isTemporary == other.isTemporary &&
-      isOffline == other.isOffline &&
-      isContentNotIndexed == other.isContentNotIndexed &&
       creationTime100Nanos == other.creationTime100Nanos &&
       lastAccessTime100Nanos == other.lastAccessTime100Nanos &&
       lastWriteTime100Nanos == other.lastWriteTime100Nanos;
 
   @override
   int get hashCode => Object.hash(
-    isDirectory,
-    isFile,
-    isLink,
+    _attributes,
     size,
-    isReadOnly,
-    isHidden,
-    isSystem,
-    isArchive,
-    isTemporary,
-    isOffline,
     isContentNotIndexed,
     creationTime100Nanos,
     lastAccessTime100Nanos,
@@ -192,6 +198,9 @@ base class WindowsFileSystem extends FileSystem {
   /// Sets metadata for the file system entity.
   ///
   /// TODO(brianquinlan): Document the arguments.
+  /// Make sure to document that [original] should come from a call to
+  /// `metadata`. Creating your own `WindowsMetadata` will result in unsupported
+  /// fields being cleared.
   void setMetadata(
     String path, {
     bool? isReadOnly,
@@ -201,6 +210,7 @@ base class WindowsFileSystem extends FileSystem {
     bool? isTemporary,
     bool? isContentNotIndexed,
     bool? isOffline,
+    WindowsMetadata? original,
   }) => using((arena) {
     if ((isReadOnly ??
             isHidden ??
@@ -214,17 +224,22 @@ base class WindowsFileSystem extends FileSystem {
     }
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     final nativePath = path.toNativeUtf16(allocator: arena);
-    if (win32.GetFileAttributesEx(
-          nativePath,
-          win32.GetFileExInfoStandard,
-          fileInfo,
-        ) ==
-        win32.FALSE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'set metadata failed', path);
+    int attributes;
+    if (original == null) {
+      if (win32.GetFileAttributesEx(
+            nativePath,
+            win32.GetFileExInfoStandard,
+            fileInfo,
+          ) ==
+          win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'set metadata failed', path);
+      }
+      attributes = fileInfo.ref.dwFileAttributes;
+    } else {
+      attributes = original._attributes;
     }
 
-    var attributes = fileInfo.ref.dwFileAttributes;
     if (attributes == win32.FILE_ATTRIBUTE_NORMAL) {
       // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
       // is valid only when used alone.
@@ -284,9 +299,8 @@ base class WindowsFileSystem extends FileSystem {
 
     final isDirectory = attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0;
     final isLink = attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT != 0;
-    final isFile = !(isDirectory || isLink);
 
-    return WindowsMetadata(
+    return WindowsMetadata.fromProperties(
       isReadOnly: attributes & win32.FILE_ATTRIBUTE_READONLY != 0,
       isHidden: attributes & win32.FILE_ATTRIBUTE_HIDDEN != 0,
       isSystem: attributes & win32.FILE_ATTRIBUTE_SYSTEM != 0,
@@ -294,7 +308,6 @@ base class WindowsFileSystem extends FileSystem {
       isArchive: attributes & win32.FILE_ATTRIBUTE_ARCHIVE != 0,
       isTemporary: attributes & win32.FILE_ATTRIBUTE_TEMPORARY != 0,
       isLink: isLink,
-      isFile: isFile,
       isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE != 0,
       isContentNotIndexed:
           attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED != 0,
