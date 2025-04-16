@@ -78,6 +78,8 @@ final class WindowsMetadata implements Metadata {
   // TODO(brianquinlan): Reoganize fields when the POSIX `metadata` is
   // available.
   // TODO(brianquinlan): Document the public fields.
+
+  /// Will never have the `FILE_ATTRIBUTE_NORMAL` bit set.
   int _attributes;
 
   @override
@@ -118,7 +120,25 @@ final class WindowsMetadata implements Metadata {
   );
 
   /// TODO(bquinlan): Document this constructor.
-  factory WindowsMetadata.fromProperties({
+  ///
+  /// Make sure to reference:
+  /// [File Attribute Constants](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
+  factory WindowsMetadata.fromFileAttributes({
+    int attributes = 0,
+    int size = 0,
+    int creationTime100Nanos = 0,
+    int lastAccessTime100Nanos = 0,
+    int lastWriteTime100Nanos = 0,
+  }) => WindowsMetadata._(
+    attributes == win32.FILE_ATTRIBUTE_NORMAL ? 0 : attributes,
+    size,
+    creationTime100Nanos,
+    lastAccessTime100Nanos,
+    lastWriteTime100Nanos,
+  );
+
+  /// TODO(bquinlan): Document this constructor.
+  factory WindowsMetadata.fromLogicalProperties({
     bool isDirectory = false,
     bool isLink = false,
 
@@ -296,22 +316,8 @@ base class WindowsFileSystem extends FileSystem {
     }
     final info = fileInfo.ref;
     final attributes = info.dwFileAttributes;
-
-    final isDirectory = attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0;
-    final isLink = attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT != 0;
-
-    return WindowsMetadata.fromProperties(
-      isReadOnly: attributes & win32.FILE_ATTRIBUTE_READONLY != 0,
-      isHidden: attributes & win32.FILE_ATTRIBUTE_HIDDEN != 0,
-      isSystem: attributes & win32.FILE_ATTRIBUTE_SYSTEM != 0,
-      isDirectory: isDirectory,
-      isArchive: attributes & win32.FILE_ATTRIBUTE_ARCHIVE != 0,
-      isTemporary: attributes & win32.FILE_ATTRIBUTE_TEMPORARY != 0,
-      isLink: isLink,
-      isOffline: attributes & win32.FILE_ATTRIBUTE_OFFLINE != 0,
-      isContentNotIndexed:
-          attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED != 0,
-
+    return WindowsMetadata.fromFileAttributes(
+      attributes: attributes,
       size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
       creationTime100Nanos:
           info.ftCreationTime.dwHighDateTime << 32 |
