@@ -72,8 +72,10 @@ jobs:
         with:
           sdk: ${{ matrix.sdk }}
       - run: dart pub get
-      - name: 🪑 Run benchmarks
+      - name: 🪑 Run Read Benchmarks
         run: dart run benchmarks/read_as_bytes.dart
+      - name: 🪑 Run Write Benchmarks
+        run: dart run benchmarks/write_as_bytes.dart
 
   ios-vm-test:
     runs-on: macos-latest
