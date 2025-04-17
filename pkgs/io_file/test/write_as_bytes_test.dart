@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('posix')
+@TestOn('vm')
 library;
 
 import 'dart:io';
@@ -11,6 +11,7 @@ import 'dart:typed_data';
 import 'package:io_file/io_file.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
+import 'package:win32/win32.dart' as win32;
 
 import 'test_utils.dart';
 
@@ -34,7 +35,11 @@ void main() {
         throwsA(
           isA<FileSystemException>()
               .having((e) => e.message, 'message', 'open failed')
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.EISDIR)
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : stdlibc.EISDIR,
+              )
               .having((e) => e.path, 'path', tmp),
         ),
       );
@@ -61,23 +66,39 @@ void main() {
         Link(symlinkPath).createSync(filePath);
         File(filePath).deleteSync();
 
-        expect(
-          () => fileSystem.writeAsBytes(
+        if (Platform.isWindows) {
+          // Windows considers a broken symlink to not be an existing file.
+          fileSystem.writeAsBytes(
             symlinkPath,
             Uint8List.fromList(data),
             WriteMode.failExisting,
-          ),
-          throwsA(
-            isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'open failed')
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  stdlibc.EEXIST,
-                )
-                .having((e) => e.path, 'path', symlinkPath),
-          ),
-        );
+          );
+
+          // Should write at the symlink target, which should also mean that the
+          // symlink is no longer broken.
+          expect(fileSystem.readAsBytes(symlinkPath), data);
+          expect(fileSystem.readAsBytes(filePath), data);
+        } else {
+          expect(
+            () => fileSystem.writeAsBytes(
+              symlinkPath,
+              Uint8List.fromList(data),
+              WriteMode.failExisting,
+            ),
+            throwsA(
+              isA<PathExistsException>()
+                  .having((e) => e.message, 'message', 'open failed')
+                  .having(
+                    (e) => e.osError?.errorCode,
+                    'errorCode',
+                    Platform.isWindows
+                        ? win32.ERROR_FILE_EXISTS
+                        : stdlibc.EEXIST,
+                  )
+                  .having((e) => e.path, 'path', symlinkPath),
+            ),
+          );
+        }
       });
       test('truncateExisting', () {
         final filePath = '$tmp/file1';
@@ -165,7 +186,7 @@ void main() {
                 .having(
                   (e) => e.osError?.errorCode,
                   'errorCode',
-                  stdlibc.EEXIST,
+                  Platform.isWindows ? win32.ERROR_FILE_EXISTS : stdlibc.EEXIST,
                 )
                 .having((e) => e.path, 'path', path),
           ),
@@ -205,7 +226,7 @@ void main() {
       }
 
       test('Write very large file', () {
-        // FreeBSD cannot write more than INT_MAX at once.
+        // FreeBSD/Windows cannot write more than INT_MAX at once.
         final data = randomUint8List(1 << 31 + 1);
         final path = '$tmp/file';
 

@@ -195,4 +195,68 @@ base class WindowsFileSystem extends FileSystem {
       rethrow;
     }
   }
+
+  @override
+  void writeAsBytes(
+    String path,
+    Uint8List data, [
+    WriteMode mode = WriteMode.failExisting,
+  ]) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
+    var createFlags = 0;
+    createFlags |= switch (mode) {
+      WriteMode.appendExisting => win32.OPEN_ALWAYS,
+      WriteMode.failExisting => win32.CREATE_NEW,
+      WriteMode.truncateExisting => win32.CREATE_ALWAYS,
+      _ => throw ArgumentError.value(mode, 'invalid write mode'),
+    };
+
+    final f = win32.CreateFile(
+      path.toNativeUtf16(),
+      mode == WriteMode.appendExisting
+          ? win32.FILE_APPEND_DATA
+          : win32.FILE_GENERIC_WRITE,
+      0,
+      nullptr,
+      createFlags,
+      win32.FILE_ATTRIBUTE_NORMAL,
+      0,
+    );
+    if (f == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'open failed', path);
+    }
+
+    try {
+      // TODO(brianquinlan): Remove this copy when typed data pointers are
+      // available for non-leaf calls.
+      var buffer = arena<Uint8>(data.length);
+      buffer.asTypedList(data.length).setAll(0, data);
+      final bytesWritten = arena<win32.DWORD>();
+      var remaining = data.length;
+
+      while (remaining > 0) {
+        if (win32.WriteFile(
+              f,
+              buffer.cast(),
+              min(maxWriteSize, remaining),
+              bytesWritten,
+              nullptr,
+            ) ==
+            win32.FALSE) {
+          final errorCode = win32.GetLastError();
+          throw _getError(errorCode, 'write failed', path);
+        }
+
+        remaining -= bytesWritten.value;
+        buffer += bytesWritten.value;
+      }
+    } finally {
+      win32.CloseHandle(f);
+    }
+  });
 }

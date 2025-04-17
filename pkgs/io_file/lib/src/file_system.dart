@@ -56,6 +56,12 @@ base class FileSystem {
   }
 
   /// Write the given bytes to a file.
+  ///
+  /// If `path` is a broken symlink and `mode` is [WriteMode.failExisting]:
+  ///
+  /// - On Windows, the target of the symlink is created, using `data` as its
+  ///   contents.
+  /// - On POSIX, [writeAsBytes] throws `PathExistsException`.
   void writeAsBytes(
     String path,
     Uint8List data, [
