@@ -97,11 +97,14 @@ final class WindowsMetadata implements Metadata {
   bool get isReadOnly => _attributes & win32.FILE_ATTRIBUTE_READONLY != 0;
   bool get isHidden => _attributes & win32.FILE_ATTRIBUTE_HIDDEN != 0;
   bool get isSystem => _attributes & win32.FILE_ATTRIBUTE_SYSTEM != 0;
-  bool get isArchive => _attributes & win32.FILE_ATTRIBUTE_ARCHIVE != 0;
+
+  // TODO(brianquinlan): Refer to
+  // https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/windows-scripting/5tx15443(v=vs.84)?redirectedfrom=MSDN
+  bool get needsArchive => _attributes & win32.FILE_ATTRIBUTE_ARCHIVE != 0;
   bool get isTemporary => _attributes & win32.FILE_ATTRIBUTE_TEMPORARY != 0;
   bool get isOffline => _attributes & win32.FILE_ATTRIBUTE_OFFLINE != 0;
-  bool get isContentNotIndexed =>
-      _attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED != 0;
+  bool get isContentIndexed =>
+      _attributes & win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED == 0;
 
   final int creationTime100Nanos;
   final int lastAccessTime100Nanos;
@@ -147,10 +150,10 @@ final class WindowsMetadata implements Metadata {
     bool isReadOnly = false,
     bool isHidden = false,
     bool isSystem = false,
-    bool isArchive = false,
+    bool needsArchive = false,
     bool isTemporary = false,
     bool isOffline = false,
-    bool isContentNotIndexed = false,
+    bool isContentIndexed = false,
 
     int creationTime100Nanos = 0,
     int lastAccessTime100Nanos = 0,
@@ -161,10 +164,10 @@ final class WindowsMetadata implements Metadata {
         (isReadOnly ? win32.FILE_ATTRIBUTE_READONLY : 0) |
         (isHidden ? win32.FILE_ATTRIBUTE_HIDDEN : 0) |
         (isSystem ? win32.FILE_ATTRIBUTE_SYSTEM : 0) |
-        (isArchive ? win32.FILE_ATTRIBUTE_ARCHIVE : 0) |
+        (needsArchive ? win32.FILE_ATTRIBUTE_ARCHIVE : 0) |
         (isTemporary ? win32.FILE_ATTRIBUTE_TEMPORARY : 0) |
         (isOffline ? win32.FILE_ATTRIBUTE_OFFLINE : 0) |
-        (isContentNotIndexed ? win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED : 0),
+        (!isContentIndexed ? win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED : 0),
     size,
     creationTime100Nanos,
     lastAccessTime100Nanos,
@@ -184,7 +187,7 @@ final class WindowsMetadata implements Metadata {
   int get hashCode => Object.hash(
     _attributes,
     size,
-    isContentNotIndexed,
+    isContentIndexed,
     creationTime100Nanos,
     lastAccessTime100Nanos,
     lastWriteTime100Nanos,
@@ -226,18 +229,18 @@ base class WindowsFileSystem extends FileSystem {
     bool? isReadOnly,
     bool? isHidden,
     bool? isSystem,
-    bool? isArchive,
+    bool? needsArchive,
     bool? isTemporary,
-    bool? isContentNotIndexed,
+    bool? isContentIndexed,
     bool? isOffline,
     WindowsMetadata? original,
   }) => using((arena) {
     if ((isReadOnly ??
             isHidden ??
             isSystem ??
-            isArchive ??
+            needsArchive ??
             isTemporary ??
-            isContentNotIndexed ??
+            isContentIndexed ??
             isOffline) ==
         null) {
       return;
@@ -279,7 +282,11 @@ base class WindowsFileSystem extends FileSystem {
     );
     attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);
     attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_SYSTEM, isSystem);
-    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_ARCHIVE, isArchive);
+    attributes = updateBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_ARCHIVE,
+      needsArchive,
+    );
     attributes = updateBit(
       attributes,
       win32.FILE_ATTRIBUTE_TEMPORARY,
@@ -288,7 +295,7 @@ base class WindowsFileSystem extends FileSystem {
     attributes = updateBit(
       attributes,
       win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED,
-      isContentNotIndexed,
+      isContentIndexed != null ? !isContentIndexed : null,
     );
     attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
     if (attributes == 0) {
