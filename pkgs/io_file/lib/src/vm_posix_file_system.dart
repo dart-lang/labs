@@ -13,8 +13,6 @@ import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'file_system.dart';
 import 'internal_constants.dart';
 
-const _maxInt32 = 2147483647;
-
 /// The default `mode` to use with `open` calls that may create a file.
 const _defaultMode = 438; // => 0666 => rw-rw-rw-
 
@@ -179,15 +177,10 @@ base class PosixFileSystem extends FileSystem {
         buffer.asTypedList(data.length).setAll(0, data);
         var remaining = data.length;
 
-        // `write` on FreeBSD returns `EINVAL` if nbytes is greater than
-        // `INT_MAX`.
-        // See https://man.freebsd.org/cgi/man.cgi?write(2)
-        final maxWriteSize =
-            (io.Platform.isIOS || io.Platform.isMacOS) ? _maxInt32 : remaining;
-
         while (remaining > 0) {
           final w = _tempFailureRetry(
-            () => write(fd, buffer, min(remaining, maxWriteSize)),
+            () =>
+                write(fd, buffer, min(remaining, min(maxWriteSize, remaining))),
           );
           if (w == -1) {
             final errno = stdlibc.errno;
