@@ -67,6 +67,7 @@ void main() {
         File(filePath).deleteSync();
 
         if (Platform.isWindows) {
+          // Windows considers a broken symlink to not be an existing file.
           fileSystem.writeAsBytes(
             symlinkPath,
             Uint8List.fromList(data),
