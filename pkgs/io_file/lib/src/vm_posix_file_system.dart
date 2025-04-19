@@ -58,6 +58,23 @@ external int write(int fd, Pointer<Uint8> buf, int count);
 /// macOS).
 base class PosixFileSystem extends FileSystem {
   @override
+  bool same(String path1, String path2) {
+    final stat1 = stdlibc.stat(path1);
+    if (stat1 == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'stat failed', path1);
+    }
+
+    final stat2 = stdlibc.stat(path2);
+    if (stat2 == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'stat failed', path2);
+    }
+
+    return (stat1.st_ino == stat2.st_ino) && (stat1.st_dev == stat2.st_dev);
+  }
+
+  @override
   void rename(String oldPath, String newPath) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
     if (stdlibc.rename(oldPath, newPath) != 0) {
