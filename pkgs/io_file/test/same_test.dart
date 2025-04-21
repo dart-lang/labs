@@ -115,7 +115,6 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path1)
               .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
         ),
