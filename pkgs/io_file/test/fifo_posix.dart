@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 
@@ -43,13 +44,22 @@ class FifoPosix implements Fifo {
         subscription.resume();
       }
 
+      void write(int fd, Uint8List data) {
+        var offset = 0;
+        while (offset < data.length) {
+          final wrote = stdlibc.write(fd, data.buffer.asUint8List(offset));
+          if (wrote == -1) {
+            throw AssertionError('write failed: ${stdlibc.errno}');
+          }
+          offset += wrote;
+        }
+      }
+
       subscription = receivePort.listen(
         (message) => switch (message) {
-          Uint8List data => stdlibc.write(fd, data),
-
+          Uint8List data => write(fd, data),
           Duration d => pause(d),
           null => stdlibc.close(fd),
-
           final other => throw UnsupportedError('unexpected message: $other'),
         },
       );
