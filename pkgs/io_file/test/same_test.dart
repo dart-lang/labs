@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:io_file/io_file.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
+import 'package:win32/win32.dart' as win32;
 
 import 'test_utils.dart';
 
@@ -40,7 +41,13 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -55,7 +62,13 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path, 'path', path2)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -69,7 +82,13 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -85,7 +104,13 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -101,7 +126,13 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path, 'path', path2)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -116,7 +147,13 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
