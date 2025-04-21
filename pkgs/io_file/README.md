@@ -8,40 +8,41 @@ See
 
 ### FileSystem
 
-| Feature               | Android | Linux | iOS   | macOS | Windows |
-| :---                  |  :---:  | :---: | :---: | :---: | :----:  |    
-|  canonicalize path    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  copy file            |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  create directory     |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  create hard link     |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  create symbolic link |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  create tmp directory |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  create tmp file      |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  delete directory     |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  delete file          |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  delete tree          |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  enum dir contents    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  exists               |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  get metadata (stat)  |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  open                 |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  read file (bytes)    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  read file (lines)    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  read file (string)   |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  rename               |   [ ]   |  [X]  |  [ ]  |  [X]  |   [X]   |
-|  set permissions      |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  write file (bytes)   |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  write file (string)  |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
+| Feature               | Android | Linux | iOS   | macOS | Windows | Fake POSIX | Fake Windows |
+| :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: | 
+|  canonicalize path    |         |       |       |       |         |            |              |
+|  copy file            |         |       |       |       |         |            |              |
+|  create directory     |         |       |       |       |         |            |              |
+|  create hard link     |         |       |       |       |         |            |              |
+|  create symbolic link |         |       |       |       |         |            |              |
+|  create tmp directory |         |       |       |       |         |            |              |
+|  create tmp file      |         |       |       |       |         |            |              |
+|  delete directory     |         |       |       |       |         |            |              |
+|  delete file          |         |       |       |       |         |            |              |
+|  delete tree          |         |       |       |       |         |            |              |
+|  enum dir contents    |         |       |       |       |         |            |              |
+|  exists               |         |       |       |       |         |            |              |
+|  get metadata (stat)  |         |       |       |       |         |            |              |
+|  identity (same file) |         |   ✓   |   ✓   |   ✓   |         |            |              |
+|  open                 |         |       |       |       |         |            |              |
+|  read file (bytes)    |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
+|  read file (lines)    |         |       |       |       |         |            |              |
+|  read file (string)   |         |       |       |       |         |            |              |
+|  rename               |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
+|  set permissions      |         |       |       |       |         |            |              |
+|  write file (bytes)   |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
+|  write file (string)  |         |       |       |       |         |            |              |
 
 ### File
 
-| Feature               | Android | Linux | iOS   | macOS | Windows |
-| :---                  |  :---:  | :---: | :---: | :---: | :----:  |    
-|  get file descriptor  |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  get file length      |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  get file metadata    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  get file position    |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  read                 |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
-|  write                |   [ ]   |  [ ]  |  [ ]  |  [ ]  |   [ ]   |
+| Feature               | Android | Linux | iOS   | macOS | Windows | Fake POSIX | Fake Windows |
+| :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: |
+|  get file descriptor  |         |       |       |       |         |            |              |
+|  get file length      |         |       |       |       |         |            |              |
+|  get file metadata    |         |       |       |       |         |            |              |
+|  get file position    |         |       |       |       |         |            |              |
+|  read                 |         |       |       |       |         |            |              |
+|  write                |         |       |       |       |         |            |              |
 
 ## Status: Experimental
 
