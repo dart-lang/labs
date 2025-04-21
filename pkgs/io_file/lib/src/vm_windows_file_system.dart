@@ -75,15 +75,18 @@ base class WindowsFileSystem extends FileSystem {
     // call before the value is needed.
     win32.GetLastError();
 
-    final info1 = _get(path1, arena);
-    final info2 = _get(path2, arena);
+    final info1 = _byHandleFileInformation(path1, arena);
+    final info2 = _byHandleFileInformation(path2, arena);
 
     return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
         info1.nFileIndexHigh == info2.nFileIndexHigh &&
         info1.nFileIndexLow == info2.nFileIndexLow;
   });
 
-  win32.BY_HANDLE_FILE_INFORMATION _get(String path, ffi.Arena arena) {
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
+    String path,
+    ffi.Arena arena,
+  ) {
     final h = win32.CreateFile(
       path.toNativeUtf16(),
       0,
