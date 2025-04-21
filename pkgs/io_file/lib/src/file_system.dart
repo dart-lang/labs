@@ -37,7 +37,6 @@ base class FileSystem {
   /// Links are resolved before determining if the paths refer to the same
   /// object. Throws `PathNotFoundException` if either path requires resolving
   /// a broken link.
-  /// ```
   bool same(String path1, String path2) {
     throw UnsupportedError('same');
   }
