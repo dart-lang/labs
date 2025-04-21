@@ -35,14 +35,14 @@ See
 
 ### File
 
-| Feature               | Android | Linux | iOS   | macOS | Windows |
-| :---                  |  :---:  | :---: | :---: | :---: | :----:  |    
-|  get file descriptor  |         |       |       |       |         |
-|  get file length      |         |       |       |       |         |
-|  get file metadata    |         |       |       |       |         |
-|  get file position    |         |       |       |       |         |
-|  read                 |         |       |       |       |         |
-|  write                |         |       |       |       |         |
+| Feature               | Android | Linux | iOS   | macOS | Windows | Fake POSIX | Fake Windows |
+| :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: |
+|  get file descriptor  |         |       |       |       |         |            |              |
+|  get file length      |         |       |       |       |         |            |              |
+|  get file metadata    |         |       |       |       |         |            |              |
+|  get file position    |         |       |       |       |         |            |              |
+|  read                 |         |       |       |       |         |            |              |
+|  write                |         |       |       |       |         |            |              |
 
 ## Status: Experimental
 
