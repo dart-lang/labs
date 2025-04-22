@@ -76,7 +76,7 @@ base class WindowsFileSystem extends FileSystem {
     win32.GetLastError();
     if (win32.CreateDirectory(path.toNativeUtf16(), nullptr) == win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'create directory', path);
+      throw _getError(errorCode, 'create directory failed', path);
     }
   });
 
