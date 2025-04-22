@@ -12,7 +12,7 @@ See
 | :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: | 
 |  canonicalize path    |         |       |       |       |         |            |              |
 |  copy file            |         |       |       |       |         |            |              |
-|  create directory     |         |       |       |       |         |            |              |
+|  create directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create hard link     |         |       |       |       |         |            |              |
 |  create symbolic link |         |       |       |       |         |            |              |
 |  create tmp directory |         |       |       |       |         |            |              |
