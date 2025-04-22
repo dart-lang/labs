@@ -69,4 +69,14 @@ base class FileSystem {
   ]) {
     throw UnsupportedError('writeAsBytes');
   }
+
+  /// Creates a temporary directory based on [template].
+  ///
+  /// The `template` is a path ending in `XXXXXX`. The `XXXXXX` is replaced by
+  /// a random string guaranteed not to already exist as a directory name.
+  ///
+  /// Returns the path of the created temporary directory.
+  String createTemporaryDirectory(String template) {
+    throw UnsupportedError('createTemporaryDirectory');
+  }
 }

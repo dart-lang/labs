@@ -67,6 +67,23 @@ base class PosixFileSystem extends FileSystem {
   }
 
   @override
+  String createTemporaryDirectory(String template) {
+    return ffi.using((arena) {
+      final templatePtr = template.toNativeUtf8(allocator: arena);
+      final resultPtr = stdlibc.mkdtemp(templatePtr.cast<ffi.Char>());
+
+      if (resultPtr == ffi.nullptr) {
+        final errno = stdlibc.errno;
+        throw _getError(errno, 'mkdtemp failed', template);
+      }
+
+      // mkdtemp modifies the string in place, so templatePtr now points to
+      // the actual path created.
+      return templatePtr.cast<ffi.Utf8>().toDartString();
+    });
+  }
+
+  @override
   Uint8List readAsBytes(String path) {
     final fd = _tempFailureRetry(
       () => stdlibc.open(path, flags: stdlibc.O_RDONLY | stdlibc.O_CLOEXEC),
@@ -193,5 +210,23 @@ base class PosixFileSystem extends FileSystem {
     } finally {
       stdlibc.close(fd);
     }
+  }
+
+  @override
+  String createTemporaryDirectory(String template) {
+    return ffi.using((arena) {
+      final templatePtr = template.toNativeUtf8(allocator: arena);
+      // mkdtemp requires Pointer<Char>, not Pointer<Utf8>.
+      final resultPtr = stdlibc.mkdtemp(templatePtr.cast<ffi.Char>());
+
+      if (resultPtr == ffi.nullptr) {
+        final errno = stdlibc.errno;
+        throw _getError(errno, 'mkdtemp failed', template);
+      }
+
+      // mkdtemp modifies the string in place, so templatePtr now points to
+      // the actual path created. Convert it back to a Dart string.
+      return templatePtr.cast<ffi.Utf8>().toDartString();
+    });
   }
 }
