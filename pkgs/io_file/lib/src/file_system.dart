@@ -30,6 +30,11 @@ class WriteMode {
 
 /// An abstract representation of a file system.
 base class FileSystem {
+  /// Create a directory at the given path.
+  ///
+  /// If the directory already exists, then `PathExistsException` is thrown.
+  ///
+  /// If the parent path does not exist, then `PathNotFoundException` is thrown.
   void createDirectory(String path) {
     throw UnsupportedError('createDirectory');
   }
