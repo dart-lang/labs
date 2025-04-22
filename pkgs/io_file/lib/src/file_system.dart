@@ -4,6 +4,10 @@
 
 import 'dart:typed_data';
 
+// TODO(brianquinlan): When we switch to using exception types outside of
+// `dart:io` then change the doc strings to use reference syntax rather than
+// code syntax e.g. `PathExistsException` => [PathExistsException].
+
 /// The modes in which a File can be written.
 class WriteMode {
   /// Open the file for writing such that data can only be appended to the end
