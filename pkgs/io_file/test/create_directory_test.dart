@@ -43,7 +43,7 @@ void main() {
                 (e) => e.osError?.errorCode,
                 'errorCode',
                 Platform.isWindows
-                    ? win32.ERROR_FILE_NOT_FOUND
+                    ? win32.ERROR_PATH_NOT_FOUND
                     : stdlibc.ENOENT,
               ),
         ),
