@@ -31,6 +31,25 @@ void main() {
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
+    test('create in non-existent directory', () {
+      final path = '$tmp/foo/dir';
+
+      expect(
+        () => fileSystem.createDirectory(path),
+        throwsA(
+          isA<PathNotFoundException>()
+              .having((e) => e.message, 'message', 'create directory failed')
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
+        ),
+      );
+    });
+
     test('create over existing directory', () {
       final path = '$tmp/dir';
       Directory(path).createSync();
