@@ -4,6 +4,10 @@
 
 import 'dart:typed_data';
 
+// TODO(brianquinlan): When we switch to using exception types outside of
+// `dart:io` then change the doc strings to use reference syntax rather than
+// code syntax e.g. `PathExistsException` => [PathExistsException].
+
 /// The modes in which a File can be written.
 class WriteMode {
   /// Open the file for writing such that data can only be appended to the end
@@ -30,6 +34,15 @@ class WriteMode {
 
 /// An abstract representation of a file system.
 base class FileSystem {
+  /// Create a directory at the given path.
+  ///
+  /// If the directory already exists, then `PathExistsException` is thrown.
+  ///
+  /// If the parent path does not exist, then `PathNotFoundException` is thrown.
+  void createDirectory(String path) {
+    throw UnsupportedError('createDirectory');
+  }
+
   /// Renames, and possibly moves a file system object from one path to another.
   ///
   /// If `newPath` is a relative path, it is resolved against the current
