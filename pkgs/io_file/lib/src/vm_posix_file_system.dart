@@ -16,6 +16,9 @@ import 'internal_constants.dart';
 /// The default `mode` to use with `open` calls that may create a file.
 const _defaultMode = 438; // => 0666 => rw-rw-rw-
 
+/// The default `mode` to use when creating a directory.
+const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
+
 Exception _getError(int errno, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
@@ -57,6 +60,14 @@ external int write(int fd, Pointer<Uint8> buf, int count);
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
 base class PosixFileSystem extends FileSystem {
+  @override
+  void createDirectory(String path) {
+    if (stdlibc.mkdir(path, _defaultDirectoryMode) == -1) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'create directory failed', path);
+    }
+  }
+
   @override
   void rename(String oldPath, String newPath) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html

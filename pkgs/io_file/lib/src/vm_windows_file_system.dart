@@ -69,6 +69,18 @@ Exception _getError(int errorCode, String message, String path) {
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
   @override
+  void createDirectory(String path) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+    if (win32.CreateDirectory(path.toNativeUtf16(), nullptr) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'create directory', path);
+    }
+  });
+
+  @override
   void rename(String oldPath, String newPath) => using((arena) {
     // Calling `GetLastError` for the first time causes the `GetLastError`
     // symbol to be loaded, which resets `GetLastError`. So make a harmless
