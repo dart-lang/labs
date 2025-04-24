@@ -43,6 +43,9 @@ base class FileSystem {
     throw UnsupportedError('createDirectory');
   }
 
+  /// Deletes the directory at the given path.
+  ///
+  ///
   void removeDirectory(String path) {
     throw UnsupportedError('removeDirectory');
   }

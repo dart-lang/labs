@@ -26,11 +26,32 @@ void main() {
 
     test('success', () {
       final path = '$tmp/dir';
-
       Directory(path).createSync();
+
       fileSystem.removeDirectory(path);
 
       expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
+    });
+
+    test('non-empty directory', () {
+      final path = '$tmp/dir';
+      Directory(path).createSync();
+      File('$tmp/dir/file').writeAsStringSync('Hello World!');
+
+      expect(
+        () => fileSystem.removeDirectory(path),
+        throwsA(
+          isA<FileSystemException>()
+              .having((e) => e.message, 'message', 'remove directory failed')
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_DIR_NOT_EMPTY
+                    : stdlibc.ENOTEMPTY,
+              ),
+        ),
+      );
     });
 
     test('non-existent directory', () {
