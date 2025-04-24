@@ -64,9 +64,7 @@ void main() {
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                Platform.isWindows
-                    ? win32.ERROR_PATH_NOT_FOUND
-                    : stdlibc.ENOTDIR,
+                Platform.isWindows ? win32.ERROR_DIRECTORY : stdlibc.ENOTDIR,
               ),
         ),
       );
@@ -78,20 +76,32 @@ void main() {
       Directory(dirPath).createSync();
       Link(linkPath).createSync(dirPath);
 
-      expect(
-        () => fileSystem.removeDirectory(linkPath),
-        throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'remove directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows
-                    ? win32.ERROR_PATH_NOT_FOUND
-                    : stdlibc.ENOTDIR,
-              ),
-        ),
-      );
+      if (Platform.isWindows) {
+        fileSystem.removeDirectory(linkPath);
+        expect(
+          FileSystemEntity.typeSync(dirPath),
+          FileSystemEntityType.directory,
+        );
+        expect(
+          FileSystemEntity.typeSync(linkPath),
+          FileSystemEntityType.notFound,
+        );
+      } else {
+        expect(
+          () => fileSystem.removeDirectory(linkPath),
+          throwsA(
+            isA<FileSystemException>()
+                .having((e) => e.message, 'message', 'remove directory failed')
+                .having(
+                  (e) => e.osError?.errorCode,
+                  'errorCode',
+                  Platform.isWindows
+                      ? win32.ERROR_PATH_NOT_FOUND
+                      : stdlibc.ENOTDIR,
+                ),
+          ),
+        );
+      }
     });
   });
 }

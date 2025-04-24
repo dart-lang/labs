@@ -88,6 +88,8 @@ base class WindowsFileSystem extends FileSystem {
 
   @override
   void removeDirectory(String path) => using((arena) {
+    _primeGetLastError();
+
     if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
