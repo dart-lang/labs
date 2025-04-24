@@ -43,6 +43,10 @@ base class FileSystem {
     throw UnsupportedError('createDirectory');
   }
 
+  void removeDirectory(String path) {
+    throw UnsupportedError('removeDirectory');
+  }
+
   /// Renames, and possibly moves a file system object from one path to another.
   ///
   /// If `newPath` is a relative path, it is resolved against the current
