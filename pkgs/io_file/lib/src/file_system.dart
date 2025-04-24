@@ -45,7 +45,16 @@ base class FileSystem {
 
   /// Deletes the directory at the given path.
   ///
+  /// If `path` is a directory but the directory is not empty, then
+  /// `FileSystemException` is thrown.
   ///
+  /// TODO(bquinlan): Explain how to delete non-empty directories.
+  ///
+  /// If `path` is not directory:
+  ///
+  /// - On Windows, if `path` is a symbolic link to a directory then the
+  ///   symbolic link is deleted. Otherwise, a `FileSystemException` is thrown.
+  /// - On POSIX, a `FileSystemException` is thrown.
   void removeDirectory(String path) {
     throw UnsupportedError('removeDirectory');
   }
