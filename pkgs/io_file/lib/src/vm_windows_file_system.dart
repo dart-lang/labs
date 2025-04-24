@@ -79,9 +79,21 @@ base class WindowsFileSystem extends FileSystem {
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.CreateDirectory(path.toNativeUtf16(), nullptr) == win32.FALSE) {
+    if (win32.CreateDirectory(path.toNativeUtf16(allocator: arena), nullptr) ==
+        win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'create directory failed', path);
+    }
+  });
+
+  @override
+  void removeDirectory(String path) => using((arena) {
+    _primeGetLastError();
+
+    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'remove directory failed', path);
     }
   });
 

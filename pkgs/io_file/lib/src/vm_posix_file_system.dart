@@ -69,6 +69,14 @@ base class PosixFileSystem extends FileSystem {
   }
 
   @override
+  void removeDirectory(String path) {
+    if (stdlibc.unlinkat(stdlibc.AT_FDCWD, path, stdlibc.AT_REMOVEDIR) == -1) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'remove directory failed', path);
+    }
+  }
+
+  @override
   void rename(String oldPath, String newPath) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
     if (stdlibc.rename(oldPath, newPath) != 0) {

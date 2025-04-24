@@ -17,7 +17,7 @@ See
 |  create symbolic link |         |       |       |       |         |            |              |
 |  create tmp directory |         |       |       |       |         |            |              |
 |  create tmp file      |         |       |       |       |         |            |              |
-|  delete directory     |         |       |       |       |         |            |              |
+|  delete directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  delete file          |         |       |       |       |         |            |              |
 |  delete tree          |         |       |       |       |         |            |              |
 |  enum dir contents    |         |       |       |       |         |            |              |
