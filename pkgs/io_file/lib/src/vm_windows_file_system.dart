@@ -14,6 +14,13 @@ import 'package:win32/win32.dart' as win32;
 import 'file_system.dart';
 import 'internal_constants.dart';
 
+void _primeGetLastError() {
+  // Calling `GetLastError` for the first time causes the `GetLastError`
+  // symbol to be loaded, which resets `GetLastError`. So make a harmless
+  // call before the value is needed.
+  win32.GetLastError();
+}
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {
@@ -69,11 +76,31 @@ Exception _getError(int errorCode, String message, String path) {
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
   @override
+  void createDirectory(String path) => using((arena) {
+    _primeGetLastError();
+
+    if (win32.CreateDirectory(path.toNativeUtf16(allocator: arena), nullptr) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'create directory failed', path);
+    }
+  });
+
+  @override
+  void removeDirectory(String path) => using((arena) {
+    _primeGetLastError();
+
+    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'remove directory failed', path);
+    }
+  });
+
+  @override
   void rename(String oldPath, String newPath) => using((arena) {
-    // Calling `GetLastError` for the first time causes the `GetLastError`
-    // symbol to be loaded, which resets `GetLastError`. So make a harmless
-    // call before the value is needed.
-    win32.GetLastError();
+    _primeGetLastError();
+
     if (win32.MoveFileEx(
           oldPath.toNativeUtf16(allocator: arena),
           newPath.toNativeUtf16(allocator: arena),
@@ -87,10 +114,7 @@ base class WindowsFileSystem extends FileSystem {
 
   @override
   Uint8List readAsBytes(String path) => using((arena) {
-    // Calling `GetLastError` for the first time causes the `GetLastError`
-    // symbol to be loaded, which resets `GetLastError`. So make a harmless
-    // call before the value is needed.
-    win32.GetLastError();
+    _primeGetLastError();
 
     final f = win32.CreateFile(
       path.toNativeUtf16(),
@@ -202,10 +226,7 @@ base class WindowsFileSystem extends FileSystem {
     Uint8List data, [
     WriteMode mode = WriteMode.failExisting,
   ]) => using((arena) {
-    // Calling `GetLastError` for the first time causes the `GetLastError`
-    // symbol to be loaded, which resets `GetLastError`. So make a harmless
-    // call before the value is needed.
-    win32.GetLastError();
+    _primeGetLastError();
 
     var createFlags = 0;
     createFlags |= switch (mode) {

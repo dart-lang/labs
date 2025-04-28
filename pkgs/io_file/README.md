@@ -12,12 +12,12 @@ See
 | :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: | 
 |  canonicalize path    |         |       |       |       |         |            |              |
 |  copy file            |         |       |       |       |         |            |              |
-|  create directory     |         |       |       |       |         |            |              |
+|  create directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create hard link     |         |       |       |       |         |            |              |
 |  create symbolic link |         |       |       |       |         |            |              |
 |  create tmp directory |         |       |       |       |         |            |              |
 |  create tmp file      |         |       |       |       |         |            |              |
-|  delete directory     |         |       |       |       |         |            |              |
+|  delete directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  delete file          |         |       |       |       |         |            |              |
 |  delete tree          |         |       |       |       |         |            |              |
 |  enum dir contents    |         |       |       |       |         |            |              |
