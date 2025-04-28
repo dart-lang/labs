@@ -16,6 +16,9 @@ import 'internal_constants.dart';
 /// The default `mode` to use with `open` calls that may create a file.
 const _defaultMode = 438; // => 0666 => rw-rw-rw-
 
+/// The default `mode` to use when creating a directory.
+const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
+
 Exception _getError(int errno, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
@@ -72,6 +75,22 @@ base class PosixFileSystem extends FileSystem {
     }
 
     return (stat1.st_ino == stat2.st_ino) && (stat1.st_dev == stat2.st_dev);
+  }
+
+  @override
+  void createDirectory(String path) {
+    if (stdlibc.mkdir(path, _defaultDirectoryMode) == -1) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'create directory failed', path);
+    }
+  }
+
+  @override
+  void removeDirectory(String path) {
+    if (stdlibc.unlinkat(stdlibc.AT_FDCWD, path, stdlibc.AT_REMOVEDIR) == -1) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'remove directory failed', path);
+    }
   }
 
   @override

@@ -4,6 +4,10 @@
 
 import 'dart:typed_data';
 
+// TODO(brianquinlan): When we switch to using exception types outside of
+// `dart:io` then change the doc strings to use reference syntax rather than
+// code syntax e.g. `PathExistsException` => [PathExistsException].
+
 /// The modes in which a File can be written.
 class WriteMode {
   /// Open the file for writing such that data can only be appended to the end
@@ -39,6 +43,31 @@ base class FileSystem {
   /// a broken link.
   bool same(String path1, String path2) {
     throw UnsupportedError('same');
+  }
+
+  /// Create a directory at the given path.
+  ///
+  /// If the directory already exists, then `PathExistsException` is thrown.
+  ///
+  /// If the parent path does not exist, then `PathNotFoundException` is thrown.
+  void createDirectory(String path) {
+    throw UnsupportedError('createDirectory');
+  }
+
+  /// Deletes the directory at the given path.
+  ///
+  /// If `path` is a directory but the directory is not empty, then
+  /// `FileSystemException` is thrown.
+  ///
+  /// TODO(bquinlan): Explain how to delete non-empty directories.
+  ///
+  /// If `path` is not directory:
+  ///
+  /// - On Windows, if `path` is a symbolic link to a directory then the
+  ///   symbolic link is deleted. Otherwise, a `FileSystemException` is thrown.
+  /// - On POSIX, a `FileSystemException` is thrown.
+  void removeDirectory(String path) {
+    throw UnsupportedError('removeDirectory');
   }
 
   /// Renames, and possibly moves a file system object from one path to another.
