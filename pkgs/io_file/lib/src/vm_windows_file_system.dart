@@ -90,6 +90,7 @@ base class WindowsFileSystem extends FileSystem {
         info1.nFileIndexLow == info2.nFileIndexLow;
   });
 
+  // NOTE: the return value is allocated in the given arena!
   static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
     String path,
     ffi.Arena arena,
