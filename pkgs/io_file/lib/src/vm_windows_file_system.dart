@@ -95,7 +95,7 @@ base class WindowsFileSystem extends FileSystem {
     ffi.Arena arena,
   ) {
     final h = win32.CreateFile(
-      path.toNativeUtf16(),
+      path.toNativeUtf16(allocator: arena),
       0,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
       nullptr,
@@ -281,7 +281,7 @@ base class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(),
+      path.toNativeUtf16(allocator: arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,
