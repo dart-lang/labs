@@ -34,6 +34,17 @@ class WriteMode {
 
 /// An abstract representation of a file system.
 base class FileSystem {
+  /// Checks whether two paths refer to the same object in the file system.
+  ///
+  /// Throws `PathNotFoundException` if either path doesn't exist.
+  ///
+  /// Links are resolved before determining if the paths refer to the same
+  /// object. Throws `PathNotFoundException` if either path requires resolving
+  /// a broken link.
+  bool same(String path1, String path2) {
+    throw UnsupportedError('same');
+  }
+
   /// Create a directory at the given path.
   ///
   /// If the directory already exists, then `PathExistsException` is thrown.
