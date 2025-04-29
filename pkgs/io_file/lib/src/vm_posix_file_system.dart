@@ -9,6 +9,7 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
+import 'package:path/path.dart' as p;
 
 import 'file_system.dart';
 import 'internal_constants.dart';
@@ -83,6 +84,19 @@ base class PosixFileSystem extends FileSystem {
       final errno = stdlibc.errno;
       throw _getError(errno, 'create directory failed', path);
     }
+  }
+
+  @override
+  String createTemporaryDirectory({String? parent, String? prefix}) {
+    final directory = parent ?? temporaryDirectory;
+    final template = p.join(directory, '${prefix ?? ''}XXXXXX');
+
+    final path = stdlibc.mkdtemp(template);
+    if (path == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'mkdtemp failed', template);
+    }
+    return path;
   }
 
   @override
@@ -181,6 +195,13 @@ base class PosixFileSystem extends FileSystem {
       rethrow;
     }
   }
+
+  @override
+  String get temporaryDirectory => p.canonicalize(
+    stdlibc.getenv('TMPDIR') ??
+        stdlibc.getenv('TMP') ??
+        (io.Platform.isAndroid ? '/data/local/tmp' : '/tmp'),
+  );
 
   @override
   void writeAsBytes(

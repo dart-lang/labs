@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   ffi: ^2.1.4
+  path: ^1.9.1
   stdlibc:
     git:
       # Change this to a released version.
@@ -19,5 +20,6 @@ dev_dependencies:
   args: ^2.7.0
   benchmark_harness: ^2.3.1
   dart_flutter_team_lints: ^3.4.0
+  dartdoc_test: ^0.1.0
   test: ^1.24.0
   uuid: ^4.5.1

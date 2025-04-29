@@ -54,6 +54,37 @@ base class FileSystem {
     throw UnsupportedError('createDirectory');
   }
 
+  /// Creates a temporary directory and returns its path.
+  ///
+  /// If `parent` is specified, then the temporary directory is created inside
+  /// that directory. If `parent` is not specified, then the temporary directory
+  /// will be created inside the directory found in [temporaryDirectory]. If
+  /// `parent` is the empty string, then the temporary directory will be created
+  /// in the current working directory. If the parent directory does not exist,
+  /// then `PathExistsException` is thrown.
+  ///
+  /// The temporary directory name is constructed by combining the parent
+  /// directory path, `prefix` (or the empty string if it is not provided), and
+  /// some random characters to make the temporary directory name unique. Some
+  /// characters in `prefix` may be removed or replaced. If `prefix` contains
+  /// any directory navigation characters then they will be used. For example,
+  /// a `prefix` of `'../foo'` will create a sibling directory to the parent
+  /// directory.
+  ///
+  /// TODO(brianquinlan): Write to a file in the created temporary directory
+  /// when that is supported.
+  ///
+  /// ```dart
+  /// import 'package:io_file/io_file.dart';
+  ///
+  /// void main() {
+  ///   fileSystem.createTemporaryDirectory(prefix: 'myproject');
+  /// }
+  /// ```
+  String createTemporaryDirectory({String? parent, String? prefix}) {
+    throw UnsupportedError('createTemporaryDirectory');
+  }
+
   /// Deletes the directory at the given path.
   ///
   /// If `path` is a directory but the directory is not empty, then
@@ -93,6 +124,18 @@ base class FileSystem {
   /// Reads the entire file contents as a list of bytes.
   Uint8List readAsBytes(String path) {
     throw UnsupportedError('readAsBytes');
+  }
+
+  /// The directory path used to store temporary files.
+  ///
+  /// On Android, Linux, macOS and iOS, the path is taken from:
+  /// 1. the TMPDIR environment variable if set
+  /// 2. the TMP environment variable if set
+  /// 3. '/data/local/tmp' on Android, '/tmp' elsewhere
+  ///
+  /// TODO(brianquinlan): Add the Windows strategy here.
+  String get temporaryDirectory {
+    throw UnsupportedError('temporaryDirectory');
   }
 
   /// Write the given bytes to a file.
