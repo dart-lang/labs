@@ -8,8 +8,8 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:path/path.dart' as p;
+import 'package:stdlibc/stdlibc.dart' as stdlibc;
 
 import 'file_system.dart';
 import 'internal_constants.dart';
