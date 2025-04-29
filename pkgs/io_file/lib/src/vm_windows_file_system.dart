@@ -76,6 +76,51 @@ Exception _getError(int errorCode, String message, String path) {
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
   @override
+  bool same(String path1, String path2) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
+    final info1 = _byHandleFileInformation(path1, arena);
+    final info2 = _byHandleFileInformation(path2, arena);
+
+    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
+        info1.nFileIndexHigh == info2.nFileIndexHigh &&
+        info1.nFileIndexLow == info2.nFileIndexLow;
+  });
+
+  // NOTE: the return value is allocated in the given arena!
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
+    String path,
+    ffi.Arena arena,
+  ) {
+    final h = win32.CreateFile(
+      path.toNativeUtf16(allocator: arena),
+      0,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS,
+      win32.NULL,
+    );
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'CreateFile failed', path);
+    }
+    try {
+      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
+      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
+      }
+      return info.ref;
+    } finally {
+      win32.CloseHandle(h);
+    }
+  }
+
+  @override
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
@@ -237,7 +282,7 @@ base class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(),
+      path.toNativeUtf16(allocator: arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,

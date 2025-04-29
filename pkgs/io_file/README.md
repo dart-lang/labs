@@ -23,7 +23,7 @@ See
 |  enum dir contents    |         |       |       |       |         |            |              |
 |  exists               |         |       |       |       |         |            |              |
 |  get metadata (stat)  |         |       |       |       |         |            |              |
-|  identity (same file) |         |   ✓   |   ✓   |   ✓   |         |            |              |
+|  identity (same file) |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  open                 |         |       |       |       |         |            |              |
 |  read file (bytes)    |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  read file (lines)    |         |       |       |       |         |            |              |

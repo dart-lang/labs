@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('posix')
+@TestOn('vm')
 library;
 
 import 'dart:io';
@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:io_file/io_file.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
+import 'package:win32/win32.dart' as win32;
 
 import 'test_utils.dart';
 
@@ -39,9 +40,14 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -55,9 +61,14 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path2)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -70,9 +81,14 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -87,9 +103,14 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -104,9 +125,14 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path2)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -120,9 +146,14 @@ void main() {
         () => fileSystem.same(path1, path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'stat failed')
               .having((e) => e.path, 'path', path1)
-              .having((e) => e.osError?.errorCode, 'errorCode', stdlibc.ENOENT),
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : stdlibc.ENOENT,
+              ),
         ),
       );
     });
@@ -174,13 +205,17 @@ void main() {
       expect(fileSystem.same(path1, path2), isTrue);
     });
 
-    test('hard links to same file', () {
-      final path1 = '$tmp/file1';
-      final path2 = '$tmp/file2';
-      File(path1).writeAsStringSync('Hello World');
-      stdlibc.link(path1, path2);
-      expect(fileSystem.same(path1, path2), isTrue);
-    });
+    test(
+      'hard links to same file',
+      () {
+        final path1 = '$tmp/file1';
+        final path2 = '$tmp/file2';
+        File(path1).writeAsStringSync('Hello World');
+        stdlibc.link(path1, path2);
+        expect(fileSystem.same(path1, path2), isTrue);
+      },
+      skip: Platform.isWindows ? 'hard links not supported' : false,
+    );
 
     test('different directories, same content', () {
       final path1 = '$tmp/dir1';
