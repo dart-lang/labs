@@ -5,14 +5,9 @@
 @TestOn('posix')
 library;
 
-import 'dart:io';
-
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
-
-import 'test_utils.dart';
 
 void main() {
   group('temporaryDirectory', () {
