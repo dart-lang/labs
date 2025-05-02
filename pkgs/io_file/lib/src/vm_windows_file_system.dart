@@ -9,6 +9,7 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffi/ffi.dart' as ffi;
+import 'package:path/path.dart' as p;
 import 'package:win32/win32.dart' as win32;
 
 import 'file_system.dart';
@@ -43,33 +44,37 @@ String _formatMessage(int errorCode) {
   }
 }
 
-Exception _getError(int errorCode, String message, String path) {
+Exception _getError(int errorCode, String message, [String? path]) {
   final osError = io.OSError(_formatMessage(errorCode), errorCode);
 
-  switch (errorCode) {
-    case win32.ERROR_ACCESS_DENIED:
-    case win32.ERROR_CURRENT_DIRECTORY:
-    case win32.ERROR_WRITE_PROTECT:
-    case win32.ERROR_BAD_LENGTH:
-    case win32.ERROR_SHARING_VIOLATION:
-    case win32.ERROR_LOCK_VIOLATION:
-    case win32.ERROR_NETWORK_ACCESS_DENIED:
-    case win32.ERROR_DRIVE_LOCKED:
-      return io.PathAccessException(path, osError, message);
-    case win32.ERROR_FILE_EXISTS:
-    case win32.ERROR_ALREADY_EXISTS:
-      return io.PathExistsException(path, osError, message);
-    case win32.ERROR_FILE_NOT_FOUND:
-    case win32.ERROR_PATH_NOT_FOUND:
-    case win32.ERROR_INVALID_DRIVE:
-    case win32.ERROR_INVALID_NAME:
-    case win32.ERROR_NO_MORE_FILES:
-    case win32.ERROR_BAD_NETPATH:
-    case win32.ERROR_BAD_NET_NAME:
-    case win32.ERROR_BAD_PATHNAME:
-      return io.PathNotFoundException(path, osError, message);
-    default:
-      return io.FileSystemException(message, path, osError);
+  if (path != null) {
+    switch (errorCode) {
+      case win32.ERROR_ACCESS_DENIED:
+      case win32.ERROR_CURRENT_DIRECTORY:
+      case win32.ERROR_WRITE_PROTECT:
+      case win32.ERROR_BAD_LENGTH:
+      case win32.ERROR_SHARING_VIOLATION:
+      case win32.ERROR_LOCK_VIOLATION:
+      case win32.ERROR_NETWORK_ACCESS_DENIED:
+      case win32.ERROR_DRIVE_LOCKED:
+        return io.PathAccessException(path, osError, message);
+      case win32.ERROR_FILE_EXISTS:
+      case win32.ERROR_ALREADY_EXISTS:
+        return io.PathExistsException(path, osError, message);
+      case win32.ERROR_FILE_NOT_FOUND:
+      case win32.ERROR_PATH_NOT_FOUND:
+      case win32.ERROR_INVALID_DRIVE:
+      case win32.ERROR_INVALID_NAME:
+      case win32.ERROR_NO_MORE_FILES:
+      case win32.ERROR_BAD_NETPATH:
+      case win32.ERROR_BAD_NET_NAME:
+      case win32.ERROR_BAD_PATHNAME:
+        return io.PathNotFoundException(path, osError, message);
+      default:
+        return io.FileSystemException(message, path, osError);
+    }
+  } else {
+    return io.FileSystemException(message, path, osError);
   }
 }
 
@@ -130,6 +135,17 @@ base class WindowsFileSystem extends FileSystem {
       throw _getError(errorCode, 'create directory failed', path);
     }
   });
+
+  @override
+  String createTemporaryDirectory({String? parent, String? prefix}) {
+    _primeGetLastError();
+
+    final suffix = win32.Guid.generate().toString();
+    final directory = parent ?? temporaryDirectory;
+    final path = p.join(directory, '${prefix ?? ''}$suffix');
+    createDirectory(path);
+    return path;
+  }
 
   @override
   void removeDirectory(String path) => using((arena) {
@@ -262,6 +278,22 @@ base class WindowsFileSystem extends FileSystem {
     } on Exception {
       ffi.malloc.free(buffer);
       rethrow;
+    }
+  }
+
+  @override
+  String get temporaryDirectory {
+    const maxLength = win32.MAX_PATH + 1;
+    final buffer = win32.wsalloc(maxLength);
+    try {
+      final length = win32.GetTempPath2(maxLength, buffer);
+      if (length == 0) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetTempPath failed');
+      }
+      return p.canonicalize(buffer.toDartString());
+    } finally {
+      win32.free(buffer);
     }
   }
 
