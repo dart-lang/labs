@@ -15,7 +15,7 @@ See
 |  create directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create hard link     |         |       |       |       |         |            |              |
 |  create symbolic link |         |       |       |       |         |            |              |
-|  create tmp directory |         |       |       |       |         |            |              |
+|  create tmp directory |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create tmp file      |         |       |       |       |         |            |              |
 |  delete directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  delete file          |         |       |       |       |         |            |              |
