@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:ffi/ffi.dart';
 import 'package:io_file/io_file.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
