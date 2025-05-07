@@ -79,8 +79,8 @@ void main() {
 
           // Should write at the symlink target, which should also mean that the
           // symlink is no longer broken.
-          expect(fileSystem.readAsBytes(symlinkPath), 'Hello World!');
-          expect(fileSystem.readAsBytes(filePath), 'Hello World!');
+          expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
+          expect(File(filePath).readAsStringSync(), 'Hello World!');
         } else {
           expect(
             () => fileSystem.writeAsString(
