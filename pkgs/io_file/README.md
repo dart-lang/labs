@@ -19,7 +19,7 @@ See
 |  create tmp file      |         |       |       |       |         |            |              |
 |  delete directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  delete file          |         |       |       |       |         |            |              |
-|  delete tree          |         |       |       |       |         |            |              |
+|  delete tree          |         |       |       |       |    ✓    |            |              |
 |  enum dir contents    |         |       |       |       |         |            |              |
 |  exists               |         |       |       |       |         |            |              |
 |  get metadata (stat)  |         |       |       |       |         |            |              |
