@@ -43,88 +43,6 @@ String _formatMessage(int errorCode) {
   } finally {
     win32.free(buffer);
   }
-
-  @override
-  void deleteDirectoryRecursively(String path) => using((arena) {
-    _primeGetLastError();
-
-    // Allocate WIN32_FIND_DATAW structure.
-    final findData = arena<win32.WIN32_FIND_DATAW>();
-    // Construct search pattern (path\*).
-    final searchPath = p.join(path, '*').toNativeUtf16(allocator: arena);
-
-    final findHandle = win32.FindFirstFileW(searchPath, findData);
-
-    if (findHandle == win32.INVALID_HANDLE_VALUE) {
-      final errorCode = win32.GetLastError();
-      // If the directory doesn't exist, it's not an error.
-      if (errorCode == win32.ERROR_FILE_NOT_FOUND ||
-          errorCode == win32.ERROR_PATH_NOT_FOUND) {
-        return;
-      }
-      throw _getError(errorCode, 'FindFirstFileW failed', path);
-    }
-
-    try {
-      do {
-        final fileName = findData.ref.cFileName.toDartString();
-        if (fileName == '.' || fileName == '..') {
-          continue;
-        }
-
-        final fullPath = p.join(path, fileName);
-        final fullPathNative = fullPath.toNativeUtf16(allocator: arena);
-        final attributes = findData.ref.dwFileAttributes;
-
-        if (attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT != 0) {
-          // It's a junction or symlink. Delete the link itself, not the target.
-          if (attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0) {
-            // Directory symlink or junction
-            if (win32.RemoveDirectoryW(fullPathNative) == win32.FALSE) {
-              final errorCode = win32.GetLastError();
-              throw _getError(errorCode, 'RemoveDirectoryW failed for link', fullPath);
-            }
-          } else {
-            // File symlink
-            if (win32.DeleteFileW(fullPathNative) == win32.FALSE) {
-              final errorCode = win32.GetLastError();
-              throw _getError(errorCode, 'DeleteFileW failed for link', fullPath);
-            }
-          }
-        } else if (attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0) {
-          // It's a regular directory, recurse.
-          // Need to release arena memory before recursing if using `using`.
-          // Let's manually manage memory for the recursive call path.
-          arena.releaseAll(); // Release before recursion
-          deleteDirectoryRecursively(fullPath); // Recursive call
-        } else {
-          // It's a file.
-          if (win32.DeleteFileW(fullPathNative) == win32.FALSE) {
-            final errorCode = win32.GetLastError();
-            throw _getError(errorCode, 'DeleteFileW failed', fullPath);
-          }
-        }
-      } while (win32.FindNextFileW(findHandle, findData) != win32.FALSE);
-
-      final findNextErrorCode = win32.GetLastError();
-      if (findNextErrorCode != win32.ERROR_NO_MORE_FILES) {
-        throw _getError(findNextErrorCode, 'FindNextFileW failed', path);
-      }
-    } finally {
-      win32.FindClose(findHandle);
-    }
-
-    // After deleting contents, remove the directory itself.
-    if (win32.RemoveDirectoryW(path.toNativeUtf16(allocator: arena)) ==
-        win32.FALSE) {
-      final errorCode = win32.GetLastError();
-      // Check if the directory is already gone (e.g., race condition or initial check failed)
-      if (errorCode != win32.ERROR_FILE_NOT_FOUND &&
-          errorCode != win32.ERROR_PATH_NOT_FOUND) {
-         throw _getError(errorCode, 'RemoveDirectoryW failed', path);
-      }
-    }
-  });
 }
 
 Exception _getError(int errorCode, String message, [String? path]) {
@@ -233,6 +151,74 @@ base class WindowsFileSystem extends FileSystem {
   @override
   void removeDirectory(String path) => using((arena) {
     _primeGetLastError();
+
+    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'remove directory failed', path);
+    }
+  });
+
+  @override
+  void removeDirectoryTree(String path) => using((arena) {
+    _primeGetLastError();
+
+    final findData = arena<win32.WIN32_FIND_DATA>();
+    final searchPath = p.join(path, '*');
+
+    final findHandle = win32.FindFirstFile(
+      searchPath.toNativeUtf16(allocator: arena),
+      findData,
+    );
+
+    if (findHandle == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'FindFirstFile failed', path);
+    }
+
+    do {
+      final childPath = findData.ref.cFileName;
+      if (childPath == '.' || childPath == '..') {
+        continue;
+      }
+
+      final fullPath = p.join(path, childPath);
+      final attributes = findData.ref.dwFileAttributes;
+
+      if ((attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT) != 0) {
+        // Do not recurse into directory links.
+        if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
+          if (win32.RemoveDirectory(fullPath.toNativeUtf16(allocator: arena)) ==
+              win32.FALSE) {
+            final errorCode = win32.GetLastError();
+            throw _getError(
+              errorCode,
+              'RemoveDirectory failed for link',
+              fullPath,
+            );
+          }
+        } else {
+          if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
+              win32.FALSE) {
+            final errorCode = win32.GetLastError();
+            throw _getError(errorCode, 'DeleteFile failed for link', fullPath);
+          }
+        }
+      } else if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
+        removeDirectoryTree(fullPath);
+      } else {
+        if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
+            win32.FALSE) {
+          final errorCode = win32.GetLastError();
+          throw _getError(errorCode, 'DeleteFile failed', fullPath);
+        }
+      }
+    } while (win32.FindNextFile(findHandle, findData) != win32.FALSE);
+
+    final errorCode = win32.GetLastError();
+    if (errorCode != win32.ERROR_NO_MORE_FILES) {
+      throw _getError(errorCode, 'FindNextFile failed', path);
+    }
 
     if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
         win32.FALSE) {
@@ -463,114 +449,5 @@ base class WindowsFileSystem extends FileSystem {
       data is Uint8List ? data : Uint8List.fromList(data),
       mode,
     );
-  }
-
-  @override
-  void deleteDirectoryRecursively(String path) {
-    _primeGetLastError();
-
-    // Allocate necessary native resources.
-    final findData = calloc<win32.WIN32_FIND_DATAW>();
-    // Construct search pattern (path\*).
-    final searchPath = p.join(path, '*').toNativeUtf16();
-
-    try {
-      final findHandle = win32.FindFirstFileW(searchPath, findData);
-
-      if (findHandle == win32.INVALID_HANDLE_VALUE) {
-        final errorCode = win32.GetLastError();
-        // If the directory doesn't exist, it's not an error for deletion.
-        if (errorCode == win32.ERROR_FILE_NOT_FOUND ||
-            errorCode == win32.ERROR_PATH_NOT_FOUND) {
-          return; // Successfully "deleted" non-existent directory.
-        }
-        // Otherwise, it's an unexpected error finding the first file/directory.
-        throw _getError(errorCode, 'FindFirstFileW failed', path);
-      }
-
-      // Ensure FindClose is called even if errors occur during iteration.
-      try {
-        do {
-          final fileName = findData.ref.cFileName.toDartString();
-          // Skip '.' and '..' entries.
-          if (fileName == '.' || fileName == '..') {
-            continue;
-          }
-
-          final fullPath = p.join(path, fileName);
-          final attributes = findData.ref.dwFileAttributes;
-          // Allocate native string for the full path of the current item.
-          final fullPathNative = fullPath.toNativeUtf16();
-
-          bool recursed = false; // Flag to track if recursion happened
-          try {
-            if ((attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT) != 0) {
-              // Handle reparse points (symlinks/junctions). Delete the link itself.
-              if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
-                // Directory symlink or junction.
-                if (win32.RemoveDirectoryW(fullPathNative) == win32.FALSE) {
-                  final errorCode = win32.GetLastError();
-                  throw _getError(
-                      errorCode, 'RemoveDirectoryW failed for link', fullPath);
-                }
-              } else {
-                // File symlink.
-                if (win32.DeleteFileW(fullPathNative) == win32.FALSE) {
-                  final errorCode = win32.GetLastError();
-                  throw _getError(
-                      errorCode, 'DeleteFileW failed for link', fullPath);
-                }
-              }
-            } else if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
-              // It's a regular directory, recurse.
-              // Free the native path string *before* the recursive call.
-              calloc.free(fullPathNative);
-              recursed = true; // Set flag before recursion
-              // Recursive call.
-              deleteDirectoryRecursively(fullPath);
-            } else {
-              // It's a regular file.
-              if (win32.DeleteFileW(fullPathNative) == win32.FALSE) {
-                final errorCode = win32.GetLastError();
-                throw _getError(errorCode, 'DeleteFileW failed', fullPath);
-              }
-            }
-          } finally {
-            // Free the native path string unless recursion happened.
-            if (!recursed) {
-              calloc.free(fullPathNative);
-            }
-          }
-        } while (win32.FindNextFileW(findHandle, findData) != win32.FALSE);
-
-        // Check for errors after the loop finishes.
-        final findNextErrorCode = win32.GetLastError();
-        if (findNextErrorCode != win32.ERROR_NO_MORE_FILES) {
-          throw _getError(findNextErrorCode, 'FindNextFileW failed', path);
-        }
-      } finally {
-        // Close the find handle.
-        win32.FindClose(findHandle);
-      }
-
-      // After successfully deleting contents, remove the directory itself.
-      final pathNative = path.toNativeUtf16();
-      try {
-        if (win32.RemoveDirectoryW(pathNative) == win32.FALSE) {
-          final errorCode = win32.GetLastError();
-          // Ignore errors if the directory is already gone.
-          if (errorCode != win32.ERROR_FILE_NOT_FOUND &&
-              errorCode != win32.ERROR_PATH_NOT_FOUND) {
-            throw _getError(errorCode, 'RemoveDirectoryW failed', path);
-          }
-        }
-      } finally {
-        calloc.free(pathNative);
-      }
-    } finally {
-      // Free the initial native allocations.
-      calloc.free(findData);
-      calloc.free(searchPath);
-    }
   }
 }

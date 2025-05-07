@@ -89,9 +89,8 @@ base class FileSystem {
   /// Deletes the directory at the given path.
   ///
   /// If `path` is a directory but the directory is not empty, then
-  /// `FileSystemException` is thrown.
-  ///
-  /// TODO(bquinlan): Explain how to delete non-empty directories.
+  /// `FileSystemException` is thrown. Use [removeDirectoryTree] to delete
+  /// non-empty directories.
   ///
   /// If `path` is not directory:
   ///
@@ -100,6 +99,14 @@ base class FileSystem {
   /// - On POSIX, a `FileSystemException` is thrown.
   void removeDirectory(String path) {
     throw UnsupportedError('removeDirectory');
+  }
+
+  /// Deletes the directory at the given path and its contents.
+  ///
+  /// If the directory (or its subdirectories) contains any symbolic links then
+  /// those links are deleted but their targets are not.
+  void removeDirectoryTree(String path) {
+    throw UnsupportedError('removeDirectoryTree');
   }
 
   /// Renames, and possibly moves a file system object from one path to another.

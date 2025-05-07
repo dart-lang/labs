@@ -18,7 +18,7 @@ void main() {
   group('removeDirectory', () {
     late String tmp;
 
-    setUp(() => tmp = createTemp('createDirectory'));
+    setUp(() => tmp = createTemp('removeDirectory'));
 
     tearDown(() => deleteTemp(tmp));
 
