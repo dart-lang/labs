@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io' as io;
 import 'dart:math';
@@ -250,5 +251,29 @@ base class PosixFileSystem extends FileSystem {
     } finally {
       stdlibc.close(fd);
     }
+  }
+
+  @override
+  void writeAsString(
+    String path,
+    String contents, [
+    WriteMode mode = WriteMode.failExisting,
+    Encoding encoding = utf8,
+    String? lineTerminator,
+  ]) {
+    lineTerminator ??= '\n';
+    final List<int> data;
+    if (lineTerminator == '\n') {
+      data = encoding.encode(contents);
+    } else if (lineTerminator == '\r\n') {
+      data = encoding.encode(contents.replaceAll('\n', '\r\n'));
+    } else {
+      throw ArgumentError.value(lineTerminator, 'lineTerminator');
+    }
+    writeAsBytes(
+      path,
+      data is Uint8List ? data : Uint8List.fromList(data),
+      mode,
+    );
   }
 }

@@ -31,7 +31,7 @@ See
 |  rename               |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  set permissions      |         |       |       |       |         |            |              |
 |  write file (bytes)   |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  write file (string)  |         |       |       |       |         |            |              |
+|  write file (string)  |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 
 ### File
 
