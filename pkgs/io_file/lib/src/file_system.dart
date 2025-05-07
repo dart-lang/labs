@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 // TODO(brianquinlan): When we switch to using exception types outside of
@@ -141,7 +142,6 @@ base class FileSystem {
   /// Write the given bytes to a file.
   ///
   /// If `path` is a broken symlink and `mode` is [WriteMode.failExisting]:
-  ///
   /// - On Windows, the target of the symlink is created, using `data` as its
   ///   contents.
   /// - On POSIX, [writeAsBytes] throws `PathExistsException`.
@@ -151,5 +151,26 @@ base class FileSystem {
     WriteMode mode = WriteMode.failExisting,
   ]) {
     throw UnsupportedError('writeAsBytes');
+  }
+
+  /// Write the string to a file.
+  ///
+  /// If `path` is a broken symlink and `mode` is [WriteMode.failExisting]:
+  /// - On Windows, the target of the symlink is created, using `data` as its
+  ///   contents.
+  /// - On POSIX, [writeAsBytes] throws `PathExistsException`.
+  ///
+  /// `lineTerminator` is used to replace `'\n'` characters in `content`.
+  /// If `lineTerminator` is provided, then it must be one of `'\n'` or
+  /// `'\r\n'`. If `lineTerminator` is not provided then the platform line
+  /// ending is used, i.e. `'\r\n'` on Windows and `'\n'` everwhere else.
+  void writeAsString(
+    String path,
+    String contents, [
+    WriteMode mode = WriteMode.failExisting,
+    Encoding encoding = utf8,
+    String? lineTerminator,
+  ]) {
+    throw UnsupportedError('writeAsString');
   }
 }
