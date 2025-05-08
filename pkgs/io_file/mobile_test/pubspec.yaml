@@ -29,4 +29,8 @@ dev_dependencies:
       url: https://github.com/canonical/stdlibc.dart.git
   test: ^1.24.0
   uuid: ^4.5.1
-  win32: ^5.11.0
+  win32:
+    git:
+      # TODO(brianquinlan): Change this to a released version.
+      url: https://github.com/halildurmus/win32.git
+      path: packages/win32
