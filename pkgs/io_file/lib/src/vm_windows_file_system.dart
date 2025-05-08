@@ -328,6 +328,7 @@ final class WindowsFileSystem extends FileSystem {
   /// Sets metadata for the file system entity.
   ///
   /// TODO(brianquinlan): Document the arguments.
+  ///
   /// Make sure to document that [original] should come from a call to
   /// `metadata`. Creating your own `WindowsMetadata` will result in unsupported
   /// fields being cleared.
@@ -342,6 +343,8 @@ final class WindowsFileSystem extends FileSystem {
     bool? isOffline,
     WindowsMetadata? original,
   }) => using((arena) {
+    _primeGetLastError();
+
     if ((isReadOnly ??
             isHidden ??
             isSystem ??
@@ -418,6 +421,8 @@ final class WindowsFileSystem extends FileSystem {
 
   @override
   WindowsMetadata metadata(String path) => using((arena) {
+    _primeGetLastError();
+
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
           path.toNativeUtf16(allocator: arena),
