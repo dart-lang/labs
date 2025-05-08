@@ -46,7 +46,7 @@ jobs:
         with:
           sdk: ${{ matrix.sdk }}
 
-      - run: dart test --test-randomize-ordering-seed=random --platform vm
+      - run: dart test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
 
   profile-vm-test:
     # Ensure that the tests pass when run under the profiler (which sends
@@ -57,7 +57,7 @@ jobs:
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
           sdk: stable
-      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
+      - run: dart --profiler --profile_period=50 test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
 
   desktop-vm-benchmark:
     strategy:
@@ -95,7 +95,7 @@ jobs:
 
       - run: |
           flutter pub get
-          flutter test integration_test --test-randomize-ordering-seed=random
+          flutter test integration_test --reporter=failures-only --test-randomize-ordering-seed=random
 
   web-test:
     runs-on: ubuntu-latest
@@ -105,4 +105,4 @@ jobs:
         with:
           sdk: stable
 
-      - run: dart test --test-randomize-ordering-seed=random --platform chrome
+      - run: dart test --reporter=failures-only --test-randomize-ordering-seed=random --platform chrome
