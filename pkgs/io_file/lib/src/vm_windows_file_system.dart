@@ -160,6 +160,74 @@ base class WindowsFileSystem extends FileSystem {
   });
 
   @override
+  void removeDirectoryTree(String path) => using((arena) {
+    _primeGetLastError();
+
+    final findData = arena<win32.WIN32_FIND_DATA>();
+    final searchPath = p.join(path, '*');
+
+    final findHandle = win32.FindFirstFile(
+      searchPath.toNativeUtf16(allocator: arena),
+      findData,
+    );
+
+    if (findHandle == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'FindFirstFile failed', path);
+    }
+
+    do {
+      final childPath = findData.ref.cFileName;
+      if (childPath == '.' || childPath == '..') {
+        continue;
+      }
+
+      final fullPath = p.join(path, childPath);
+      final attributes = findData.ref.dwFileAttributes;
+
+      if ((attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT) != 0) {
+        // Do not recurse into directory links.
+        if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
+          if (win32.RemoveDirectory(fullPath.toNativeUtf16(allocator: arena)) ==
+              win32.FALSE) {
+            final errorCode = win32.GetLastError();
+            throw _getError(
+              errorCode,
+              'RemoveDirectory failed for link',
+              fullPath,
+            );
+          }
+        } else {
+          if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
+              win32.FALSE) {
+            final errorCode = win32.GetLastError();
+            throw _getError(errorCode, 'DeleteFile failed for link', fullPath);
+          }
+        }
+      } else if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
+        removeDirectoryTree(fullPath);
+      } else {
+        if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
+            win32.FALSE) {
+          final errorCode = win32.GetLastError();
+          throw _getError(errorCode, 'DeleteFile failed', fullPath);
+        }
+      }
+    } while (win32.FindNextFile(findHandle, findData) != win32.FALSE);
+
+    final errorCode = win32.GetLastError();
+    if (errorCode != win32.ERROR_NO_MORE_FILES) {
+      throw _getError(errorCode, 'FindNextFile failed', path);
+    }
+
+    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'remove directory failed', path);
+    }
+  });
+
+  @override
   void rename(String oldPath, String newPath) => using((arena) {
     _primeGetLastError();
 
