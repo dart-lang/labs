@@ -560,6 +560,8 @@ final class WindowsFileSystem extends FileSystem {
 
   @override
   bool same(String path1, String path2) => using((arena) {
+    _primeGetLastError();
+
     final info1 = _byHandleFileInformation(path1, arena);
     final info2 = _byHandleFileInformation(path2, arena);
 
