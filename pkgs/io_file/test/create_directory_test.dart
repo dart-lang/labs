@@ -8,6 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
@@ -29,6 +30,32 @@ void main() {
 
       fileSystem.createDirectory(path);
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
+    });
+
+    test('long absolute path', () {
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final path = p.join(tmp, ''.padRight(win32.MAX_PATH - 12, 'l'));
+
+      fileSystem.createDirectory(path);
+      expect(FileSystemEntity.isDirectorySync(path), isTrue);
+    });
+
+    test('long relative path', () {
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final path = ''.padRight(win32.MAX_PATH - 12, 'l');
+      final oldCurrentDirectory = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+      try {
+        fileSystem.createDirectory(path);
+
+        expect(FileSystemEntity.isDirectorySync('$tmp/$path'), isTrue);
+      } finally {
+        fileSystem.currentDirectory = oldCurrentDirectory;
+      }
     });
 
     test('create in non-existent directory', () {

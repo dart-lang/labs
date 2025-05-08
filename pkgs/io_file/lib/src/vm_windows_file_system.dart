@@ -23,6 +23,9 @@ void _primeGetLastError() {
   win32.GetLastError();
 }
 
+Pointer<Utf16> _apiPath(String path, Allocator a) =>
+    (r'\\?\' + p.canonicalize(path)).toNativeUtf16(allocator: a);
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {
@@ -130,8 +133,7 @@ base class WindowsFileSystem extends FileSystem {
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.CreateDirectory(path.toNativeUtf16(allocator: arena), nullptr) ==
-        win32.FALSE) {
+    if (win32.CreateDirectory(_apiPath(path, arena), nullptr) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'create directory failed', path);
     }
@@ -147,6 +149,21 @@ base class WindowsFileSystem extends FileSystem {
     createDirectory(path);
     return path;
   }
+
+  @override
+  set currentDirectory(String path) => using((arena) {
+    _primeGetLastError();
+    if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'SetCurrentDirectory failed', path);
+    }
+  });
+
+  @override
+  String get currentDirectory => using((arena) {
+    _primeGetLastError();
+    return '';
+  });
 
   @override
   void removeDirectory(String path) => using((arena) {
