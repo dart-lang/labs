@@ -2,21 +2,24 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io' as io;
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
+import 'package:path/path.dart' as p;
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 
 import 'file_system.dart';
 import 'internal_constants.dart';
 
-const _maxInt32 = 2147483647;
-
 /// The default `mode` to use with `open` calls that may create a file.
 const _defaultMode = 438; // => 0666 => rw-rw-rw-
+
+/// The default `mode` to use when creating a directory.
+const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
 
 Exception _getError(int errno, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
@@ -59,6 +62,52 @@ external int write(int fd, Pointer<Uint8> buf, int count);
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
 base class PosixFileSystem extends FileSystem {
+  @override
+  bool same(String path1, String path2) {
+    final stat1 = stdlibc.stat(path1);
+    if (stat1 == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'stat failed', path1);
+    }
+
+    final stat2 = stdlibc.stat(path2);
+    if (stat2 == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'stat failed', path2);
+    }
+
+    return (stat1.st_ino == stat2.st_ino) && (stat1.st_dev == stat2.st_dev);
+  }
+
+  @override
+  void createDirectory(String path) {
+    if (stdlibc.mkdir(path, _defaultDirectoryMode) == -1) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'create directory failed', path);
+    }
+  }
+
+  @override
+  String createTemporaryDirectory({String? parent, String? prefix}) {
+    final directory = parent ?? temporaryDirectory;
+    final template = p.join(directory, '${prefix ?? ''}XXXXXX');
+
+    final path = stdlibc.mkdtemp(template);
+    if (path == null) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'mkdtemp failed', template);
+    }
+    return path;
+  }
+
+  @override
+  void removeDirectory(String path) {
+    if (stdlibc.unlinkat(stdlibc.AT_FDCWD, path, stdlibc.AT_REMOVEDIR) == -1) {
+      final errno = stdlibc.errno;
+      throw _getError(errno, 'remove directory failed', path);
+    }
+  }
+
   @override
   void rename(String oldPath, String newPath) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
@@ -149,6 +198,13 @@ base class PosixFileSystem extends FileSystem {
   }
 
   @override
+  String get temporaryDirectory => p.canonicalize(
+    stdlibc.getenv('TMPDIR') ??
+        stdlibc.getenv('TMP') ??
+        (io.Platform.isAndroid ? '/data/local/tmp' : '/tmp'),
+  );
+
+  @override
   void writeAsBytes(
     String path,
     Uint8List data, [
@@ -179,15 +235,10 @@ base class PosixFileSystem extends FileSystem {
         buffer.asTypedList(data.length).setAll(0, data);
         var remaining = data.length;
 
-        // `write` on FreeBSD returns `EINVAL` if nbytes is greater than
-        // `INT_MAX`.
-        // See https://man.freebsd.org/cgi/man.cgi?write(2)
-        final maxWriteSize =
-            (io.Platform.isIOS || io.Platform.isMacOS) ? _maxInt32 : remaining;
-
         while (remaining > 0) {
           final w = _tempFailureRetry(
-            () => write(fd, buffer, min(remaining, maxWriteSize)),
+            () =>
+                write(fd, buffer, min(remaining, min(maxWriteSize, remaining))),
           );
           if (w == -1) {
             final errno = stdlibc.errno;
@@ -200,5 +251,29 @@ base class PosixFileSystem extends FileSystem {
     } finally {
       stdlibc.close(fd);
     }
+  }
+
+  @override
+  void writeAsString(
+    String path,
+    String contents, [
+    WriteMode mode = WriteMode.failExisting,
+    Encoding encoding = utf8,
+    String? lineTerminator,
+  ]) {
+    lineTerminator ??= '\n';
+    final List<int> data;
+    if (lineTerminator == '\n') {
+      data = encoding.encode(contents);
+    } else if (lineTerminator == '\r\n') {
+      data = encoding.encode(contents.replaceAll('\n', '\r\n'));
+    } else {
+      throw ArgumentError.value(lineTerminator, 'lineTerminator');
+    }
+    writeAsBytes(
+      path,
+      data is Uint8List ? data : Uint8List.fromList(data),
+      mode,
+    );
   }
 }

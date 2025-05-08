@@ -5,6 +5,7 @@
 @TestOn('vm')
 library;
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -18,18 +19,18 @@ import 'test_utils.dart';
 void main() {
   //TODO(brianquinlan): test with a very long path.
 
-  group('writeAsBytes', () {
+  group('writeAsString', () {
     late String tmp;
 
-    setUp(() => tmp = createTemp('writeAsBytes'));
+    setUp(() => tmp = createTemp('writeAsString'));
 
     tearDown(() => deleteTemp(tmp));
 
     test('directory', () {
       expect(
-        () => fileSystem.writeAsBytes(
+        () => fileSystem.writeAsString(
           tmp,
-          Uint8List(5),
+          'Hello World!',
           WriteMode.truncateExisting,
         ),
         throwsA(
@@ -48,41 +49,43 @@ void main() {
     test('symlink', () {
       final filePath = '$tmp/file1';
       final symlinkPath = '$tmp/file2';
-      final data = randomUint8List(20);
       File(filePath).writeAsBytesSync(Uint8List(0));
       Link(symlinkPath).createSync(filePath);
 
-      fileSystem.writeAsBytes(symlinkPath, data, WriteMode.truncateExisting);
+      fileSystem.writeAsString(
+        symlinkPath,
+        'Hello World!',
+        WriteMode.truncateExisting,
+      );
 
-      expect(fileSystem.readAsBytes(symlinkPath), data);
+      expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
     });
 
     group('broken symlink', () {
       test('failExisting', () {
         final filePath = '$tmp/file1';
         final symlinkPath = '$tmp/file2';
-        final data = randomUint8List(20);
         File(filePath).writeAsBytesSync(Uint8List(0));
         Link(symlinkPath).createSync(filePath);
         File(filePath).deleteSync();
 
         if (Platform.isWindows) {
           // Windows considers a broken symlink to not be an existing file.
-          fileSystem.writeAsBytes(
+          fileSystem.writeAsString(
             symlinkPath,
-            Uint8List.fromList(data),
+            'Hello World!',
             WriteMode.failExisting,
           );
 
           // Should write at the symlink target, which should also mean that the
           // symlink is no longer broken.
-          expect(fileSystem.readAsBytes(symlinkPath), data);
-          expect(fileSystem.readAsBytes(filePath), data);
+          expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
+          expect(File(filePath).readAsStringSync(), 'Hello World!');
         } else {
           expect(
-            () => fileSystem.writeAsBytes(
+            () => fileSystem.writeAsString(
               symlinkPath,
-              Uint8List.fromList(data),
+              'Hello World!',
               WriteMode.failExisting,
             ),
             throwsA(
@@ -103,83 +106,77 @@ void main() {
       test('truncateExisting', () {
         final filePath = '$tmp/file1';
         final symlinkPath = '$tmp/file2';
-        final data = randomUint8List(20);
         File(filePath).writeAsBytesSync(Uint8List(0));
         Link(symlinkPath).createSync(filePath);
         File(filePath).deleteSync();
 
-        fileSystem.writeAsBytes(symlinkPath, data, WriteMode.truncateExisting);
+        fileSystem.writeAsString(
+          symlinkPath,
+          'Hello World!',
+          WriteMode.truncateExisting,
+        );
 
         // Should write at the symlink target, which should also mean that the
         // symlink is no longer broken.
-        expect(fileSystem.readAsBytes(symlinkPath), data);
-        expect(fileSystem.readAsBytes(filePath), data);
+        expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
+        expect(File(filePath).readAsStringSync(), 'Hello World!');
       });
     });
 
     group('new file', () {
       test('appendExisting', () {
-        final data = randomUint8List(20);
         final path = '$tmp/file';
 
-        fileSystem.writeAsBytes(
-          path,
-          Uint8List.fromList(data),
-          WriteMode.appendExisting,
-        );
+        fileSystem.writeAsString(path, 'Hello World', WriteMode.appendExisting);
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(File(path).readAsStringSync(), 'Hello World');
       });
 
       test('failExisting', () {
-        final data = randomUint8List(20);
         final path = '$tmp/file';
 
-        fileSystem.writeAsBytes(
-          path,
-          Uint8List.fromList(data),
-          WriteMode.failExisting,
-        );
+        fileSystem.writeAsString(path, 'Hello World', WriteMode.failExisting);
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(File(path).readAsStringSync(), 'Hello World');
       });
 
       test('truncateExisting', () {
-        final data = randomUint8List(20);
         final path = '$tmp/file';
 
-        fileSystem.writeAsBytes(
+        fileSystem.writeAsString(
           path,
-          Uint8List.fromList(data),
+          'Hello World',
           WriteMode.truncateExisting,
         );
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(File(path).readAsStringSync(), 'Hello World');
       });
     });
 
     group('existing file', () {
       test('appendExisting', () {
-        final data = randomUint8List(20);
         final path = '$tmp/file';
-        File(path).writeAsBytesSync([1, 2, 3]);
+        File(path).writeAsStringSync('message: ');
 
-        fileSystem.writeAsBytes(
+        fileSystem.writeAsString(
           path,
-          Uint8List.fromList(data),
+          'Hello World!',
           WriteMode.appendExisting,
         );
 
-        expect(File(path).readAsBytesSync(), [1, 2, 3] + data);
+        expect(File(path).readAsStringSync(), 'message: Hello World!');
       });
 
       test('failExisting', () {
-        final data = randomUint8List(20);
         final path = '$tmp/file';
         File(path).writeAsBytesSync([1, 2, 3]);
 
         expect(
-          () => fileSystem.writeAsBytes(path, data, WriteMode.failExisting),
+          () => fileSystem.writeAsString(
+            path,
+            'Hello World!',
+            WriteMode.failExisting,
+          ),
           throwsA(
             isA<PathExistsException>()
                 .having((e) => e.message, 'message', 'open failed')
@@ -194,45 +191,115 @@ void main() {
       });
 
       test('truncateExisting', () {
-        final data = randomUint8List(20);
         final path = '$tmp/file';
         File(path).writeAsBytesSync([1, 2, 3]);
 
-        fileSystem.writeAsBytes(path, data, WriteMode.truncateExisting);
+        fileSystem.writeAsString(
+          path,
+          'Hello World!',
+          WriteMode.truncateExisting,
+        );
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(File(path).readAsStringSync(), 'Hello World!');
       });
     });
 
-    group('regular files', () {
-      for (var i = 0; i <= 1024; ++i) {
-        test('Write small file: $i bytes', () {
-          final data = randomUint8List(i);
-          final path = '$tmp/file';
-
-          fileSystem.writeAsBytes(path, data);
-          expect(fileSystem.readAsBytes(path), data);
-        });
-      }
-
-      for (var i = 1 << 12; i <= 1 << 30; i <<= 4) {
-        test('Write large file: $i bytes', () {
-          final data = randomUint8List(i);
-          final path = '$tmp/file';
-
-          fileSystem.writeAsBytes(path, data);
-          expect(fileSystem.readAsBytes(path), data);
-        });
-      }
-
-      test('Write very large file', () {
-        // FreeBSD/Windows cannot write more than INT_MAX at once.
-        final data = randomUint8List(1 << 31 + 1);
+    group('encoding', () {
+      test('non-ascii', () {
         final path = '$tmp/file';
 
-        fileSystem.writeAsBytes(path, data);
-        expect(fileSystem.readAsBytes(path), data);
-      }, skip: 'very slow');
+        fileSystem.writeAsString(
+          path,
+          'Γειά σου!',
+          WriteMode.failExisting,
+          utf8,
+        );
+        expect(File(path).readAsStringSync(), 'Γειά σου!');
+      });
+
+      test('unencodable', () {
+        final path = '$tmp/file';
+
+        expect(
+          () => fileSystem.writeAsString(
+            path,
+            'Γειά σου!',
+            WriteMode.failExisting,
+            ascii,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      });
+    });
+
+    group('lineTerminator', () {
+      test('illegal', () {
+        final path = '$tmp/file';
+
+        expect(
+          () => fileSystem.writeAsString(
+            path,
+            'Greeting:\nHello World!',
+            WriteMode.failExisting,
+            utf8,
+            '-',
+          ),
+          throwsArgumentError,
+        );
+      });
+
+      test('null', () {
+        final path = '$tmp/file';
+
+        fileSystem.writeAsString(
+          path,
+          'Greeting:\nHello World!\rHi!\r\n',
+          WriteMode.failExisting,
+          utf8,
+          null,
+        );
+
+        expect(
+          File(path).readAsStringSync(),
+          Platform.isWindows
+              ? 'Greeting:\r\nHello World!\rHi!\r\r\n'
+              : 'Greeting:\nHello World!\rHi!\r\n',
+        );
+      });
+
+      test(r'\n', () {
+        final path = '$tmp/file';
+
+        fileSystem.writeAsString(
+          path,
+          'Greeting:\nHello World!\rHi!\r\n',
+          WriteMode.failExisting,
+          utf8,
+          '\n',
+        );
+
+        expect(
+          File(path).readAsStringSync(),
+          'Greeting:\nHello World!\rHi!\r\n',
+        );
+      });
+
+      test(r'\r\n', () {
+        final path = '$tmp/file';
+
+        fileSystem.writeAsString(
+          path,
+          'Greeting:\nHello World!\rHi!\r\n',
+          WriteMode.failExisting,
+          utf8,
+          '\r\n',
+        );
+
+        expect(
+          File(path).readAsStringSync(),
+          'Greeting:\r\nHello World!\rHi!\r\r\n',
+        );
+      });
     });
   });
 }
