@@ -5,6 +5,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart' show sealed;
+
 // TODO(brianquinlan): When we switch to using exception types outside of
 // `dart:io` then change the doc strings to use reference syntax rather than
 // code syntax e.g. `PathExistsException` => [PathExistsException].
@@ -44,7 +46,12 @@ class WriteMode {
 }
 
 /// An abstract representation of a file system.
-abstract final class FileSystem {
+///
+/// TODO(brianquinlan): Far now, this class is not meant to be implemented,
+/// extended outside of this package. Clarify somewhere that people implementing
+/// this class should reach out to be.
+@sealed
+abstract class FileSystem {
   /// Create a directory at the given path.
   ///
   /// If the directory already exists, then `PathExistsException` is thrown.
