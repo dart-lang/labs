@@ -2,7 +2,70 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'file_system.dart';
 
 /// A [FileSystem] implementation for Windows systems.
-base class WindowsFileSystem extends FileSystem {}
+base class WindowsFileSystem extends FileSystem {
+  @override
+  void createDirectory(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  String createTemporaryDirectory({String? parent, String? prefix}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Metadata metadata(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Uint8List readAsBytes(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void removeDirectory(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void removeDirectoryTree(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void rename(String oldPath, String newPath) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool same(String path1, String path2) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void writeAsBytes(
+    String path,
+    Uint8List data, [
+    WriteMode mode = WriteMode.failExisting,
+  ]) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void writeAsString(
+    String path,
+    String contents, [
+    WriteMode mode = WriteMode.failExisting,
+    Encoding encoding = utf8,
+    String? lineTerminator,
+  ]) {
+    throw UnimplementedError();
+  }
+}
