@@ -162,7 +162,21 @@ base class WindowsFileSystem extends FileSystem {
   @override
   String get currentDirectory => using((arena) {
     _primeGetLastError();
-    return '';
+
+    var length = 256;
+    do {
+      final buffer = win32.wsalloc(length);
+      try {
+        final result = win32.GetCurrentDirectory(length, buffer);
+        if (result < length) {
+          return buffer.toDartString();
+        } else {
+          length = result;
+        }
+      } finally {
+        win32.free(buffer);
+      }
+    } while (true);
   });
 
   @override
