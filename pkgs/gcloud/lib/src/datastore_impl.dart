@@ -106,7 +106,7 @@ class DatastoreImpl implements datastore.Datastore {
     return true;
   }
 
-  api.Value _convertDatastore2ApiPropertyValue(value, bool indexed,
+  api.Value _convertDatastore2ApiPropertyValue(Object? value, bool indexed,
       {bool lists = true}) {
     var apiValue = api.Value()..excludeFromIndexes = !indexed;
     if (value == null) {
@@ -132,8 +132,8 @@ class DatastoreImpl implements datastore.Datastore {
         throw Exception('List values are not allowed.');
       }
 
-      api.Value convertItem(i) =>
-          _convertDatastore2ApiPropertyValue(i, indexed, lists: false);
+      api.Value convertItem(Object? item) =>
+          _convertDatastore2ApiPropertyValue(item, indexed, lists: false);
 
       return api.Value()
         ..arrayValue =

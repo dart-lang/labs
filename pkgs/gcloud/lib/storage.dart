@@ -761,8 +761,8 @@ abstract class Bucket {
   ///
   /// If [length] is provided, it must be greater than `0`.
   ///
-  /// If there is a problem accessing the file, a [DetailedApiRequestError] is
-  /// thrown.
+  /// If there is a problem accessing the file, a
+  /// [storage_api.DetailedApiRequestError] is thrown.
   Stream<List<int>> read(String objectName, {int? offset, int? length});
 
   /// Lookup object metadata.

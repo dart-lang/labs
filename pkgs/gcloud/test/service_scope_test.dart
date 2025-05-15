@@ -16,7 +16,7 @@ void main() {
         () => ss.registerScopeExitCallback(() => null), throwsA(isStateError));
     expect(() => ss.lookup(1), throwsA(isStateError));
 
-    var c = Completer.sync();
+    var c = Completer<void>.sync();
     ss.fork(expectAsync0(() {
       c.complete();
       return Future.value();
