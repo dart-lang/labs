@@ -36,6 +36,7 @@ int64_t my_get_$constant(void) {
 
 void addConstantToCHeader(String constant, StringBuffer b) {
   b.write('''
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t my_get_$constant(void);
 ''');
 }

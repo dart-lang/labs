@@ -4,11 +4,8 @@
 
 #include <stdint.h>
 
-#if _WIN32
-#define MYLIB_EXPORT __declspec(dllexport)
-#else
-#define MYLIB_EXPORT
-#endif
+
+#define MYLIB_EXPORT __attribute__((visibility("default"))) __attribute__((used))
 
 // <string.h>
 
