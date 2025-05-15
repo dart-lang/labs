@@ -87,7 +87,7 @@ static void _fill(struct my_Stat *buf, struct stat *s) {
   buf->st_btime.tv_nsec = s->st_birthtimespec.tv_nsec;
 
   buf->st_flags = s->st_flags;
-#elif
+#elif __linux__
   // https://man7.org/linux/man-pages/man3/stat.3type.html
 
   buf->st_atim.tv_sec = s->st_atim.tv_sec;
