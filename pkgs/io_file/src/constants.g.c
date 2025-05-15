@@ -1,10 +1,8 @@
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/stat.h>
-
 #include "constants.g.h"
 
-
+#include <sys/stat.h>
+#include <errno.h>
+#include <fcntl.h>
 int64_t my_get_S_IEXEC(void) {
 #ifdef S_IEXEC
   return S_IEXEC;
@@ -185,12 +183,6 @@ int64_t my_get_UF_HIDDEN(void) {
 #endif
   return my_UNDEFINED;
 }
-int64_t my_get_EPERM(void) {
-#ifdef EPERM
-  return EPERM;
-#endif
-  return my_UNDEFINED;
-}
 int64_t my_get_EACCES(void) {
 #ifdef EACCES
   return EACCES;
@@ -203,39 +195,21 @@ int64_t my_get_EEXIST(void) {
 #endif
   return my_UNDEFINED;
 }
-int64_t my_get_ENOENT(void) {
-#ifdef ENOENT
-  return ENOENT;
-#endif
-  return my_UNDEFINED;
-}
 int64_t my_get_EINTR(void) {
 #ifdef EINTR
   return EINTR;
 #endif
   return my_UNDEFINED;
 }
-int64_t my_get_O_RDONLY(void) {
-#ifdef O_RDONLY
-  return O_RDONLY;
+int64_t my_get_ENOENT(void) {
+#ifdef ENOENT
+  return ENOENT;
 #endif
   return my_UNDEFINED;
 }
-int64_t my_get_O_CLOEXEC(void) {
-#ifdef O_CLOEXEC
-  return O_CLOEXEC;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_WRONLY(void) {
-#ifdef O_WRONLY
-  return O_WRONLY;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_CREAT(void) {
-#ifdef O_CREAT
-  return O_CREAT;
+int64_t my_get_EPERM(void) {
+#ifdef EPERM
+  return EPERM;
 #endif
   return my_UNDEFINED;
 }
@@ -245,15 +219,39 @@ int64_t my_get_O_APPEND(void) {
 #endif
   return my_UNDEFINED;
 }
+int64_t my_get_O_CLOEXEC(void) {
+#ifdef O_CLOEXEC
+  return O_CLOEXEC;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_CREAT(void) {
+#ifdef O_CREAT
+  return O_CREAT;
+#endif
+  return my_UNDEFINED;
+}
 int64_t my_get_O_EXCL(void) {
 #ifdef O_EXCL
   return O_EXCL;
 #endif
   return my_UNDEFINED;
 }
+int64_t my_get_O_RDONLY(void) {
+#ifdef O_RDONLY
+  return O_RDONLY;
+#endif
+  return my_UNDEFINED;
+}
 int64_t my_get_O_TRUNC(void) {
 #ifdef O_TRUNC
   return O_TRUNC;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_WRONLY(void) {
+#ifdef O_WRONLY
+  return O_WRONLY;
 #endif
   return my_UNDEFINED;
 }

@@ -1,4 +1,5 @@
-[
+{
+  "<sys/stat.h>": [
     "S_IEXEC",
     "S_IFBLK",
     "S_IFCHR",
@@ -28,19 +29,24 @@
     "S_IXOTH",
     "S_IXUSR",
     "UF_APPEND",
-    "UF_HIDDEN",
-    "EPERM",
+    "UF_HIDDEN"
+  ],
+  "<errno.h>": [
     "EACCES",
     "EEXIST",
-    "ENOENT",
     "EINTR",
-    "O_RDONLY",
-    "O_CLOEXEC",
-    "O_WRONLY",
-    "O_CREAT",
+    "ENOENT",
+    "EPERM",
     "O_APPEND",
+    "O_CLOEXEC",
+    "O_CREAT",
     "O_EXCL",
+    "O_RDONLY",
     "O_TRUNC",
+    "O_WRONLY"
+  ],
+  "<fcntl.h>": [
     "AT_FDCWD",
     "AT_REMOVEDIR"
-]
+  ]
+}

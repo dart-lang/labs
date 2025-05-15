@@ -272,15 +272,6 @@ int get UF_HIDDEN {
   }
 }
 
-int get EPERM {
-  final v = get_EPERM();
-  if (v == my_UNDEFINED) {
-    throw UnsupportedError('EPERM');
-  } else {
-    return v;
-  }
-}
-
 int get EACCES {
   final v = get_EACCES();
   if (v == my_UNDEFINED) {
@@ -299,15 +290,6 @@ int get EEXIST {
   }
 }
 
-int get ENOENT {
-  final v = get_ENOENT();
-  if (v == my_UNDEFINED) {
-    throw UnsupportedError('ENOENT');
-  } else {
-    return v;
-  }
-}
-
 int get EINTR {
   final v = get_EINTR();
   if (v == my_UNDEFINED) {
@@ -317,37 +299,19 @@ int get EINTR {
   }
 }
 
-int get O_RDONLY {
-  final v = get_O_RDONLY();
+int get ENOENT {
+  final v = get_ENOENT();
   if (v == my_UNDEFINED) {
-    throw UnsupportedError('O_RDONLY');
+    throw UnsupportedError('ENOENT');
   } else {
     return v;
   }
 }
 
-int get O_CLOEXEC {
-  final v = get_O_CLOEXEC();
+int get EPERM {
+  final v = get_EPERM();
   if (v == my_UNDEFINED) {
-    throw UnsupportedError('O_CLOEXEC');
-  } else {
-    return v;
-  }
-}
-
-int get O_WRONLY {
-  final v = get_O_WRONLY();
-  if (v == my_UNDEFINED) {
-    throw UnsupportedError('O_WRONLY');
-  } else {
-    return v;
-  }
-}
-
-int get O_CREAT {
-  final v = get_O_CREAT();
-  if (v == my_UNDEFINED) {
-    throw UnsupportedError('O_CREAT');
+    throw UnsupportedError('EPERM');
   } else {
     return v;
   }
@@ -362,6 +326,24 @@ int get O_APPEND {
   }
 }
 
+int get O_CLOEXEC {
+  final v = get_O_CLOEXEC();
+  if (v == my_UNDEFINED) {
+    throw UnsupportedError('O_CLOEXEC');
+  } else {
+    return v;
+  }
+}
+
+int get O_CREAT {
+  final v = get_O_CREAT();
+  if (v == my_UNDEFINED) {
+    throw UnsupportedError('O_CREAT');
+  } else {
+    return v;
+  }
+}
+
 int get O_EXCL {
   final v = get_O_EXCL();
   if (v == my_UNDEFINED) {
@@ -371,10 +353,28 @@ int get O_EXCL {
   }
 }
 
+int get O_RDONLY {
+  final v = get_O_RDONLY();
+  if (v == my_UNDEFINED) {
+    throw UnsupportedError('O_RDONLY');
+  } else {
+    return v;
+  }
+}
+
 int get O_TRUNC {
   final v = get_O_TRUNC();
   if (v == my_UNDEFINED) {
     throw UnsupportedError('O_TRUNC');
+  } else {
+    return v;
+  }
+}
+
+int get O_WRONLY {
+  final v = get_O_WRONLY();
+  if (v == my_UNDEFINED) {
+    throw UnsupportedError('O_WRONLY');
   } else {
     return v;
   }

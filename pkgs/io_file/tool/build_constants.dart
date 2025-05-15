@@ -2,12 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 const _cSourceTemplate = '''
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/stat.h>
-
 #include "constants.g.h"
-
 
 ''';
 
@@ -56,17 +51,23 @@ int get $constant {
 
 void main() {
   final constants =
-      (json.decode(File('constants.json').readAsStringSync()) as List)
-          .cast<String>();
+      (json.decode(File('constants.json').readAsStringSync()) as Map)
+          .cast<String, Object>();
 
   final cSourceBuffer = StringBuffer(_cSourceTemplate);
   final cHeaderBuffer = StringBuffer(_cHeaderTemplate);
   final dartBuffer = StringBuffer(_dartTemplate);
 
-  for (final constant in constants) {
-    addConstantToCHeader(constant, cHeaderBuffer);
-    addConstantToCSource(constant, cSourceBuffer);
-    addConstantToDart(constant, dartBuffer);
+  for (final header in constants.keys) {
+    cSourceBuffer.writeln('#include $header');
+  }
+
+  for (final entry in constants.entries) {
+    for (final constant in (entry.value as List).cast<String>()) {
+      addConstantToCHeader(constant, cHeaderBuffer);
+      addConstantToCSource(constant, cSourceBuffer);
+      addConstantToDart(constant, dartBuffer);
+    }
   }
   File('lib/src/constants.g.dart').writeAsStringSync(dartBuffer.toString());
   File('src/constants.g.c').writeAsStringSync(cSourceBuffer.toString());
