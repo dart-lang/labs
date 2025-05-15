@@ -6,6 +6,7 @@ library grpc_logging;
 
 import 'dart:async';
 import 'dart:io';
+
 import 'package:grpc/grpc.dart' as grpc;
 import 'package:stack_trace/stack_trace.dart' show Trace;
 

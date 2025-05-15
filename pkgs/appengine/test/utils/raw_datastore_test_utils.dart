@@ -16,9 +16,11 @@ const TEST_INDEXED_PROPERTY = 'indexedProp';
 const TEST_INDEXED_PROPERTY_VALUE_PREFIX = 'indexedValue';
 const TEST_UNINDEXED_PROPERTY = 'unindexedProp';
 const TEST_BLOB_INDEXED_PROPERTY = 'blobPropertyIndexed';
+// ignore: non_constant_identifier_names
 final TEST_BLOB_INDEXED_VALUE = BlobValue([0xaa, 0xaa, 0xff, 0xff]);
 
-buildKey(int i, {Function? idFunction, String kind = TEST_KIND, Partition? p}) {
+Key buildKey(int i,
+    {Function? idFunction, String kind = TEST_KIND, Partition? p}) {
   var path = [KeyElement(kind, idFunction == null ? null : idFunction(i))];
   if (p != null) {
     return Key(path, partition: p);
