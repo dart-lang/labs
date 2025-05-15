@@ -1,0 +1,31 @@
+# Run with `flutter pub run ffigen --config ffigen.yaml`.
+name: NativeAddBindings
+description: |
+  Bindings for `src/native_add_library.h`.
+
+  Regenerate bindings with `flutter pub run ffigen --config ffigen.yaml`.
+output: 'lib/src/constant_bindings.dart'
+headers:
+  entry-points:
+    - 'src/constants.g.h'
+
+  include-directives:
+    - 'src/constants.g.h'
+preamble: |
+  // Copyright (c) 2023, the Dart project authors.  Please see the AUTHORS file
+  // for details. All rights reserved. Use of this source code is governed by a
+  // BSD-style license that can be found in the LICENSE file.
+comments:
+  style: any
+  length: full
+ffi-native:
+
+structs:
+  rename:
+    'my_(.*)': '$1'
+functions:
+  rename:
+    'my_(.*)': '$1'
+typedefs:
+  rename:
+    'my_(.*)': '$1'

@@ -9,10 +9,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
+import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
@@ -38,7 +38,7 @@ void main() {
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : stdlibc.EISDIR,
+                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : errors.eisdir,
               )
               .having((e) => e.path, 'path', tmp),
         ),
@@ -93,7 +93,7 @@ void main() {
                     'errorCode',
                     Platform.isWindows
                         ? win32.ERROR_FILE_EXISTS
-                        : stdlibc.EEXIST,
+                        : errors.eexist,
                   )
                   .having((e) => e.path, 'path', symlinkPath),
             ),
@@ -186,7 +186,7 @@ void main() {
                 .having(
                   (e) => e.osError?.errorCode,
                   'errorCode',
-                  Platform.isWindows ? win32.ERROR_FILE_EXISTS : stdlibc.EEXIST,
+                  Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eexist,
                 )
                 .having((e) => e.path, 'path', path),
           ),
