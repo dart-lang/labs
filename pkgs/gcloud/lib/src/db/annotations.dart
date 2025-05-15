@@ -35,7 +35,7 @@ class Kind {
   /// annotation is placed.
   final String? name;
 
-  /// The type, either [ID_TYPE_INTEGER] or [ID_TYPE_STRING].
+  /// The type, either [IdType.Integer] or [IdType.String].
   final IdType idType;
 
   /// Annotation specifying the name of this kind and whether to use integer or
@@ -102,9 +102,7 @@ abstract class Property {
 /// An abstract base class for primitive properties which can e.g. be used
 /// within a composed `ListProperty`.
 abstract class PrimitiveProperty extends Property {
-  const PrimitiveProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const PrimitiveProperty({super.propertyName, super.required, super.indexed});
 
   @override
   Object? encodeValue(ModelDB db, Object? value,
@@ -120,9 +118,7 @@ abstract class PrimitiveProperty extends Property {
 /// It will validate that values are booleans before writing them to the
 /// datastore and when reading them back.
 class BoolProperty extends PrimitiveProperty {
-  const BoolProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const BoolProperty({super.propertyName, super.required, super.indexed});
 
   @override
   bool validate(ModelDB db, Object? value) =>
@@ -134,9 +130,7 @@ class BoolProperty extends PrimitiveProperty {
 /// It will validate that values are integers before writing them to the
 /// datastore and when reading them back.
 class IntProperty extends PrimitiveProperty {
-  const IntProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const IntProperty({super.propertyName, super.required, super.indexed});
 
   @override
   bool validate(ModelDB db, Object? value) =>
@@ -148,9 +142,7 @@ class IntProperty extends PrimitiveProperty {
 /// It will validate that values are doubles before writing them to the
 /// datastore and when reading them back.
 class DoubleProperty extends PrimitiveProperty {
-  const DoubleProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const DoubleProperty({super.propertyName, super.required, super.indexed});
 
   @override
   bool validate(ModelDB db, Object? value) =>
@@ -162,9 +154,7 @@ class DoubleProperty extends PrimitiveProperty {
 /// It will validate that values are strings before writing them to the
 /// datastore and when reading them back.
 class StringProperty extends PrimitiveProperty {
-  const StringProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const StringProperty({super.propertyName, super.required, super.indexed});
 
   @override
   bool validate(ModelDB db, Object? value) =>
@@ -176,9 +166,7 @@ class StringProperty extends PrimitiveProperty {
 /// It will validate that values are keys before writing them to the
 /// datastore and when reading them back.
 class ModelKeyProperty extends PrimitiveProperty {
-  const ModelKeyProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const ModelKeyProperty({super.propertyName, super.required, super.indexed});
 
   @override
   bool validate(ModelDB db, Object? value) =>
@@ -201,10 +189,10 @@ class ModelKeyProperty extends PrimitiveProperty {
 ///
 /// It will validate that values are blobs before writing them to the
 /// datastore and when reading them back. Blob values will be represented by
-/// List<int>.
+/// `List<int>`.
 class BlobProperty extends PrimitiveProperty {
-  const BlobProperty({String? propertyName, bool required = false})
-      : super(propertyName: propertyName, required: required, indexed: false);
+  const BlobProperty({super.propertyName, super.required})
+      : super(indexed: false);
 
   // NOTE: We don't validate that the entries of the list are really integers
   // of the range 0..255!
@@ -233,9 +221,7 @@ class BlobProperty extends PrimitiveProperty {
 /// It will validate that values are DateTime objects before writing them to the
 /// datastore and when reading them back.
 class DateTimeProperty extends PrimitiveProperty {
-  const DateTimeProperty(
-      {String? propertyName, bool required = false, bool indexed = true})
-      : super(propertyName: propertyName, required: required, indexed: indexed);
+  const DateTimeProperty({super.propertyName, super.required, super.indexed});
 
   @override
   bool validate(ModelDB db, Object? value) =>
@@ -260,9 +246,8 @@ class ListProperty extends Property {
 
   // TODO: We want to support optional list properties as well.
   // Get rid of "required: true" here.
-  const ListProperty(this.subProperty,
-      {String? propertyName, bool indexed = true})
-      : super(propertyName: propertyName, required: true, indexed: indexed);
+  const ListProperty(this.subProperty, {super.propertyName, super.indexed})
+      : super(required: true);
 
   @override
   bool validate(ModelDB db, Object? value) {

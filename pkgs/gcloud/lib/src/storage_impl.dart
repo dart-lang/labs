@@ -71,7 +71,7 @@ class _StorageImpl implements Storage {
 
   @override
   Future<bool> bucketExists(String bucketName) {
-    bool notFoundError(e) {
+    bool notFoundError(Object e) {
       return e is storage_api.DetailedApiRequestError && e.status == 404;
     }
 
@@ -431,7 +431,7 @@ class _ObjectInfoImpl implements ObjectInfo {
 }
 
 class _BucketObjectEntry extends _ObjectInfoImpl implements BucketObjectEntry {
-  _BucketObjectEntry(storage_api.Object object) : super(object);
+  _BucketObjectEntry(super.object);
 
   @override
   bool get isDirectory => false;
