@@ -54,7 +54,7 @@ int get $constant {
 }
 
 void main() {
-  final constants =
+  final headerToConstants =
       (json.decode(File('constants.json').readAsStringSync()) as Map)
           .cast<String, Object>();
 
@@ -62,12 +62,14 @@ void main() {
   final cHeaderBuffer = StringBuffer(_cHeaderTemplate);
   final dartBuffer = StringBuffer(_dartTemplate);
 
-  for (final header in constants.keys) {
+  final headers = headerToConstants.keys.toList()..sort();
+  for (final header in headers) {
     cSourceBuffer.writeln('#include $header');
   }
 
-  for (final entry in constants.entries) {
-    for (final constant in (entry.value as List).cast<String>()) {
+  for (final header in headers) {
+    final constants = (headerToConstants[header]! as List).cast<String>();
+    for (final constant in constants) {
       addConstantToCHeader(constant, cHeaderBuffer);
       addConstantToCSource(constant, cSourceBuffer);
       addConstantToDart(constant, dartBuffer);

@@ -1,8 +1,92 @@
 #include "constants.g.h"
 
-#include <sys/stat.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+int64_t my_get_EACCES(void) {
+#ifdef EACCES
+  return EACCES;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_EEXIST(void) {
+#ifdef EEXIST
+  return EEXIST;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_EINTR(void) {
+#ifdef EINTR
+  return EINTR;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_ENOENT(void) {
+#ifdef ENOENT
+  return ENOENT;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_EPERM(void) {
+#ifdef EPERM
+  return EPERM;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_APPEND(void) {
+#ifdef O_APPEND
+  return O_APPEND;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_CLOEXEC(void) {
+#ifdef O_CLOEXEC
+  return O_CLOEXEC;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_CREAT(void) {
+#ifdef O_CREAT
+  return O_CREAT;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_EXCL(void) {
+#ifdef O_EXCL
+  return O_EXCL;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_RDONLY(void) {
+#ifdef O_RDONLY
+  return O_RDONLY;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_TRUNC(void) {
+#ifdef O_TRUNC
+  return O_TRUNC;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_O_WRONLY(void) {
+#ifdef O_WRONLY
+  return O_WRONLY;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_AT_FDCWD(void) {
+#ifdef AT_FDCWD
+  return AT_FDCWD;
+#endif
+  return my_UNDEFINED;
+}
+int64_t my_get_AT_REMOVEDIR(void) {
+#ifdef AT_REMOVEDIR
+  return AT_REMOVEDIR;
+#endif
+  return my_UNDEFINED;
+}
 int64_t my_get_S_IEXEC(void) {
 #ifdef S_IEXEC
   return S_IEXEC;
@@ -180,90 +264,6 @@ int64_t my_get_UF_APPEND(void) {
 int64_t my_get_UF_HIDDEN(void) {
 #ifdef UF_HIDDEN
   return UF_HIDDEN;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_EACCES(void) {
-#ifdef EACCES
-  return EACCES;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_EEXIST(void) {
-#ifdef EEXIST
-  return EEXIST;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_EINTR(void) {
-#ifdef EINTR
-  return EINTR;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_ENOENT(void) {
-#ifdef ENOENT
-  return ENOENT;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_EPERM(void) {
-#ifdef EPERM
-  return EPERM;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_APPEND(void) {
-#ifdef O_APPEND
-  return O_APPEND;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_CLOEXEC(void) {
-#ifdef O_CLOEXEC
-  return O_CLOEXEC;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_CREAT(void) {
-#ifdef O_CREAT
-  return O_CREAT;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_EXCL(void) {
-#ifdef O_EXCL
-  return O_EXCL;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_RDONLY(void) {
-#ifdef O_RDONLY
-  return O_RDONLY;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_TRUNC(void) {
-#ifdef O_TRUNC
-  return O_TRUNC;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_O_WRONLY(void) {
-#ifdef O_WRONLY
-  return O_WRONLY;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_AT_FDCWD(void) {
-#ifdef AT_FDCWD
-  return AT_FDCWD;
-#endif
-  return my_UNDEFINED;
-}
-int64_t my_get_AT_REMOVEDIR(void) {
-#ifdef AT_REMOVEDIR
-  return AT_REMOVEDIR;
 #endif
   return my_UNDEFINED;
 }
