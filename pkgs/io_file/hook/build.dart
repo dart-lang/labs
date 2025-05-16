@@ -2,16 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
+import 'package:code_assets/code_assets.dart';
 import 'package:hooks/hooks.dart';
 import 'package:logging/logging.dart';
 import 'package:native_toolchain_c/native_toolchain_c.dart';
 
 void main(List<String> args) async {
-  if (Platform.isWindows) return;
   await build(args, (input, output) async {
     final packageName = input.packageName;
+    if (input.config.code.targetOS == OS.windows) return;
     await CBuilder.library(
       name: packageName,
       assetName: 'src/libc_bindings.dart',
