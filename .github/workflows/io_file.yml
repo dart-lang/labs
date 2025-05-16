@@ -78,6 +78,9 @@ jobs:
         run: dart --enable-experiment=native-assets run benchmarks/write_as_bytes.dart
 
   ios-vm-test:
+    # TODO(brianquinlan): Disabled because native assets are not supported by
+    # Flutter integration tests.
+    if: ${{false}}
     runs-on: macos-latest
     defaults:
       run:

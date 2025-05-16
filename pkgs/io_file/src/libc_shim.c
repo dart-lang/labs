@@ -1,4 +1,4 @@
-// Copyright (c) 2023, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2025, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -12,31 +12,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <string.h>
 
-char *my_strerror(int errnum) {
-    return strerror(errnum);
-}
-
-int64_t my_open(const char *pathname, int64_t flags, int64_t mode) {
-  return open(pathname, flags, mode);
-}
-
-int my_rename(const char *old, const char *newy) { return rename(old, newy); }
-
-int64_t my_close(int64_t fd) { return close(fd); }
-
-int64_t my_unlinkat(int64_t dirfd, const char *pathname, int64_t flags) {
-  return unlinkat(dirfd, pathname, flags);
-}
-
-void my_seterrno(int64_t err) { errno = err; }
-
-int64_t my_errno(void) { return errno; }
-
-char *my_getenv(const char *name) { return getenv(name); }
-
-char *my_mkdtemp(char *template) { return mkdtemp(template); }
+// <dirent.h>
 
 int64_t my_closedir(my_DIR *d) {
   int r = closedir(d->_dir);
@@ -65,6 +42,20 @@ struct my_dirent *my_readdir(my_DIR *myd) {
   strncpy(myd->my_dirent.d_name, d->d_name, sizeof(myd->my_dirent.d_name));
   return &(myd->my_dirent);
 }
+
+// <errno.h>
+
+void my_seterrno(int64_t err) { errno = err; }
+
+int64_t my_errno(void) { return errno; }
+
+// <fcntl.h>
+
+int64_t my_open(const char *pathname, int64_t flags, int64_t mode) {
+  return open(pathname, flags, mode);
+}
+
+// <sys/stat.h>
 
 static void _fill(struct my_Stat *buf, struct stat *s) {
   buf->st_dev = s->st_dev;
@@ -130,4 +121,26 @@ int64_t my_fstat(int64_t fd, struct my_Stat *buf) {
     _fill(buf, &s);
   }
   return r;
+}
+
+// <stdio.h>
+
+int my_rename(const char *old, const char *newy) { return rename(old, newy); }
+
+// <stdlib.h>
+
+char *my_getenv(const char *name) { return getenv(name); }
+
+char *my_mkdtemp(char *template) { return mkdtemp(template); }
+
+// <string.h>
+
+char *my_strerror(int errnum) { return strerror(errnum); }
+
+// <unistd.h>
+
+int64_t my_close(int64_t fd) { return close(fd); }
+
+int64_t my_unlinkat(int64_t dirfd, const char *pathname, int64_t flags) {
+  return unlinkat(dirfd, pathname, flags);
 }
