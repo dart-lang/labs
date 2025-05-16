@@ -43,7 +43,10 @@ jobs:
       - run: dart pub get
       - run: dart run ffigen --config ffigen.yaml
       - run: dart run ffigen --config constants-ffigen.yaml
-  
+      - run: dart --enable-experiment=native-assets run tool/build_constants.dart
+      - run: dart format lib/src/libc_bindings.dart lib/src/constants.g.dart
+      - run: git diff --exit-code
+
   desktop-vm-test:
     strategy:
       fail-fast: false
