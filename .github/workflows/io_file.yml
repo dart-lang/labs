@@ -34,7 +34,11 @@ jobs:
       - run: dart format --output=none --set-exit-if-changed .
 
   stdlib-generation:
-    runs-on: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
