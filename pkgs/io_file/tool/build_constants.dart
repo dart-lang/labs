@@ -13,6 +13,7 @@ const _cSourceTemplate = '''
 const _cHeaderTemplate = '''
 #include <stdint.h>
 
+// A sentinal indicating that a constant is not defined on the current platform.
 #define my_UNDEFINED 9223372036854775807
 ''';
 
