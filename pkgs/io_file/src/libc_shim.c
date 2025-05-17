@@ -15,7 +15,7 @@
 
 // <dirent.h>
 
-int64_t my_closedir(my_DIR *d) {
+int my_closedir(my_DIR *d) {
   int r = closedir(d->_dir);
   free(d);
   return r;
@@ -45,13 +45,13 @@ struct my_dirent *my_readdir(my_DIR *myd) {
 
 // <errno.h>
 
-void my_seterrno(int64_t err) { errno = err; }
+void my_seterrno(int err) { errno = err; }
 
-int64_t my_errno(void) { return errno; }
+int my_errno(void) { return errno; }
 
 // <fcntl.h>
 
-int64_t my_open(const char *pathname, int64_t flags, int64_t mode) {
+int my_open(const char *pathname, int flags, int mode) {
   return open(pathname, flags, mode);
 }
 
@@ -92,11 +92,11 @@ static void _fill(struct my_Stat *buf, struct stat *s) {
 #endif
 }
 
-int64_t my_mkdir(const char *pathname, int64_t mode) {
+int my_mkdir(const char *pathname, int mode) {
   return mkdir(pathname, mode);
 }
 
-int64_t my_stat(const char *path, struct my_Stat *buf) {
+int my_stat(const char *path, struct my_Stat *buf) {
   struct stat s;
   int r = stat(path, &s);
   if (r != -1) {
@@ -105,7 +105,7 @@ int64_t my_stat(const char *path, struct my_Stat *buf) {
   return r;
 }
 
-int64_t my_lstat(const char *path, struct my_Stat *buf) {
+int my_lstat(const char *path, struct my_Stat *buf) {
   struct stat s;
   int r = lstat(path, &s);
   if (r != -1) {
@@ -114,7 +114,7 @@ int64_t my_lstat(const char *path, struct my_Stat *buf) {
   return r;
 }
 
-int64_t my_fstat(int64_t fd, struct my_Stat *buf) {
+int my_fstat(int fd, struct my_Stat *buf) {
   struct stat s;
   int r = fstat(fd, &s);
   if (r != -1) {
@@ -139,8 +139,8 @@ char *my_strerror(int errnum) { return strerror(errnum); }
 
 // <unistd.h>
 
-int64_t my_close(int64_t fd) { return close(fd); }
+int my_close(int fd) { return close(fd); }
 
-int64_t my_unlinkat(int64_t dirfd, const char *pathname, int64_t flags) {
+int my_unlinkat(int dirfd, const char *pathname, int flags) {
   return unlinkat(dirfd, pathname, flags);
 }
