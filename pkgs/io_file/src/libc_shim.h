@@ -2,6 +2,24 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// A wrapper around libc that provides a consistent sent of types and symbols
+// across platforms and architectures.
+//
+// libc is not required to provide runtime accessable symbols for POSIX calls.
+// For example, glibc defines `stat` as:
+//
+// `#define stat(fname, buf) __xstat (_STAT_VER, fname, buf)`
+//
+// So running `ffigen` on `sys/stat.h` will not produce an entry for `stat`.
+//
+// libc may also reorder `struct` fields across architectures, add extra
+// fields, etc.
+//
+// Finally, POSIX lets the implementation decide the type of many `struct`
+// fields.
+//
+// `libc_shim.h` provides an interface that, when processed by `ffigen` will
+// generate the same bindings on all platforms and architectures.
 #include <stdint.h>
 
 #define MYLIB_EXPORT                                                           \
