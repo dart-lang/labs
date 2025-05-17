@@ -33,7 +33,9 @@ jobs:
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
 
-  stdlib-generation:
+  check-generation:
+    # Verify that the generated code is up-to-date. Every platform/arch should
+    # generate the same API bindings.
     strategy:
       fail-fast: false
       matrix:

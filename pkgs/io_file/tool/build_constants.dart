@@ -13,7 +13,7 @@ const _cSourceTemplate = '''
 const _cHeaderTemplate = '''
 #include <stdint.h>
 
-#define my_UNDEFINED 9223372036854775807;
+#define my_UNDEFINED 9223372036854775807
 ''';
 
 const _dartTemplate = '''
@@ -53,6 +53,15 @@ int get $constant {
 ''');
 }
 
+/// Generates Dart and C source from "constants.json"
+///
+/// Generates the following files based on "constants.json":
+/// o lib/src/constants.g.dart
+/// o src/constants.g.c
+/// o src/constants.g.h
+///
+/// After `build_constants.dart` completes, run:
+/// `dart run ffigen --config constants-ffigen.yaml`
 void main() {
   final headerToConstants =
       (json.decode(File('constants.json').readAsStringSync()) as Map)

@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#define my_UNDEFINED 9223372036854775807;
+#define my_UNDEFINED 9223372036854775807
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t my_get_EACCES(void);
 __attribute__((visibility("default"))) __attribute__((used))
