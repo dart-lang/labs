@@ -22,39 +22,39 @@
 // generate the same bindings on all platforms and architectures.
 #include <stdint.h>
 
-#define MYLIB_EXPORT                                                           \
+#define LIBC_SHIM_EXPORT                                                       \
   __attribute__((visibility("default"))) __attribute__((used))
 
 // <dirent.h>
 
-struct my_dirent {
+struct libc_shim_dirent {
   int64_t d_ino;
   char d_name[512];
 };
 
 typedef struct {
-  struct my_dirent my_dirent;
+  struct libc_shim_dirent libc_shim_dirent;
   void *_dir;
-} my_DIR;
+} libc_shim_DIR;
 
-MYLIB_EXPORT int my_closedir(my_DIR *d);
-MYLIB_EXPORT my_DIR *my_opendir(const char *path);
-MYLIB_EXPORT struct my_dirent *my_readdir(my_DIR *d);
+LIBC_SHIM_EXPORT int libc_shim_closedir(libc_shim_DIR *d);
+LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_opendir(const char *path);
+LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d);
 
 // <errno.h>
-MYLIB_EXPORT void my_seterrno(int err);
-MYLIB_EXPORT int my_errno(void);
+LIBC_SHIM_EXPORT void libc_shim_seterrno(int err);
+LIBC_SHIM_EXPORT int libc_shim_errno(void);
 
 // <fcntl.h>
-MYLIB_EXPORT int my_open(const char *pathname, int flags, int mode);
+LIBC_SHIM_EXPORT int libc_shim_open(const char *pathname, int flags, int mode);
 
 // <sys/stat.h>
-struct my_timespec {
+struct libc_shim_timespec {
   int64_t tv_sec;
   int64_t tv_nsec;
 };
 
-struct my_Stat {
+struct libc_shim_Stat {
   int64_t st_dev;
   int64_t st_ino;
   int64_t st_mode;
@@ -62,33 +62,36 @@ struct my_Stat {
   int64_t std_uid;
   int64_t st_size;
 
-  struct my_timespec st_atim;
-  struct my_timespec st_mtim;
-  struct my_timespec st_ctim;
+  struct libc_shim_timespec st_atim;
+  struct libc_shim_timespec st_mtim;
+  struct libc_shim_timespec st_ctim;
   // Only valid on macOS/iOS
-  struct my_timespec st_btime;
+  struct libc_shim_timespec st_btime;
 
   // Only valid on macOS/iOS
   int64_t st_flags;
 };
 
-MYLIB_EXPORT int my_mkdir(const char *pathname, int mode);
-MYLIB_EXPORT int my_stat(const char *path, struct my_Stat *buf);
-MYLIB_EXPORT int my_lstat(const char *path, struct my_Stat *buf);
-MYLIB_EXPORT int my_fstat(int fd, struct my_Stat *buf);
+LIBC_SHIM_EXPORT int libc_shim_mkdir(const char *pathname, int mode);
+LIBC_SHIM_EXPORT int libc_shim_stat(const char *path,
+                                    struct libc_shim_Stat *buf);
+LIBC_SHIM_EXPORT int libc_shim_lstat(const char *path,
+                                     struct libc_shim_Stat *buf);
+LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf);
 
 // <stdio.h>
-MYLIB_EXPORT int my_rename(const char *old, const char *newy);
+LIBC_SHIM_EXPORT int libc_shim_rename(const char *old, const char *newy);
 
 // <stdlib.h>
-MYLIB_EXPORT char *my_getenv(const char *name);
-MYLIB_EXPORT char *my_mkdtemp(char *template);
+LIBC_SHIM_EXPORT char *libc_shim_getenv(const char *name);
+LIBC_SHIM_EXPORT char *libc_shim_mkdtemp(char *template);
 
 // <string.h>
 
-MYLIB_EXPORT char *my_strerror(int errnum);
+LIBC_SHIM_EXPORT char *libc_shim_strerror(int errnum);
 
 // <unistd.h>
 
-MYLIB_EXPORT int my_close(int fd);
-MYLIB_EXPORT int my_unlinkat(int dirfd, const char *pathname, int flags);
+LIBC_SHIM_EXPORT int libc_shim_close(int fd);
+LIBC_SHIM_EXPORT int libc_shim_unlinkat(int dirfd, const char *pathname,
+                                        int flags);

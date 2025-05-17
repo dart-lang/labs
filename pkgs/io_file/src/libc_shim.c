@@ -15,14 +15,14 @@
 
 // <dirent.h>
 
-int my_closedir(my_DIR *d) {
+int libc_shim_closedir(libc_shim_DIR *d) {
   int r = closedir(d->_dir);
   free(d);
   return r;
 }
 
-my_DIR *my_opendir(const char *path) {
-  my_DIR *myd = malloc(sizeof(my_DIR));
+libc_shim_DIR *libc_shim_opendir(const char *path) {
+  libc_shim_DIR *myd = malloc(sizeof(libc_shim_DIR));
 
   DIR *d = opendir(path);
   if (d == NULL) {
@@ -32,32 +32,33 @@ my_DIR *my_opendir(const char *path) {
   return myd;
 }
 
-struct my_dirent *my_readdir(my_DIR *myd) {
+struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *myd) {
   struct dirent *d = readdir(myd->_dir);
   if (d == NULL) {
     return NULL;
   }
 
-  myd->my_dirent.d_ino = d->d_ino;
-  strncpy(myd->my_dirent.d_name, d->d_name, sizeof(myd->my_dirent.d_name));
-  return &(myd->my_dirent);
+  myd->libc_shim_dirent.d_ino = d->d_ino;
+  strncpy(myd->libc_shim_dirent.d_name, d->d_name,
+          sizeof(myd->libc_shim_dirent.d_name));
+  return &(myd->libc_shim_dirent);
 }
 
 // <errno.h>
 
-void my_seterrno(int err) { errno = err; }
+void libc_shim_seterrno(int err) { errno = err; }
 
-int my_errno(void) { return errno; }
+int libc_shim_errno(void) { return errno; }
 
 // <fcntl.h>
 
-int my_open(const char *pathname, int flags, int mode) {
+int libc_shim_open(const char *pathname, int flags, int mode) {
   return open(pathname, flags, mode);
 }
 
 // <sys/stat.h>
 
-static void _fill(struct my_Stat *buf, struct stat *s) {
+static void _fill(struct libc_shim_Stat *buf, struct stat *s) {
   buf->st_dev = s->st_dev;
   buf->st_ino = s->st_ino;
   buf->st_mode = s->st_mode;
@@ -92,11 +93,11 @@ static void _fill(struct my_Stat *buf, struct stat *s) {
 #endif
 }
 
-int my_mkdir(const char *pathname, int mode) {
+int libc_shim_mkdir(const char *pathname, int mode) {
   return mkdir(pathname, mode);
 }
 
-int my_stat(const char *path, struct my_Stat *buf) {
+int libc_shim_stat(const char *path, struct libc_shim_Stat *buf) {
   struct stat s;
   int r = stat(path, &s);
   if (r != -1) {
@@ -105,7 +106,7 @@ int my_stat(const char *path, struct my_Stat *buf) {
   return r;
 }
 
-int my_lstat(const char *path, struct my_Stat *buf) {
+int libc_shim_lstat(const char *path, struct libc_shim_Stat *buf) {
   struct stat s;
   int r = lstat(path, &s);
   if (r != -1) {
@@ -114,7 +115,7 @@ int my_lstat(const char *path, struct my_Stat *buf) {
   return r;
 }
 
-int my_fstat(int fd, struct my_Stat *buf) {
+int libc_shim_fstat(int fd, struct libc_shim_Stat *buf) {
   struct stat s;
   int r = fstat(fd, &s);
   if (r != -1) {
@@ -125,22 +126,24 @@ int my_fstat(int fd, struct my_Stat *buf) {
 
 // <stdio.h>
 
-int my_rename(const char *old, const char *newy) { return rename(old, newy); }
+int libc_shim_rename(const char *old, const char *newy) {
+  return rename(old, newy);
+}
 
 // <stdlib.h>
 
-char *my_getenv(const char *name) { return getenv(name); }
+char *libc_shim_getenv(const char *name) { return getenv(name); }
 
-char *my_mkdtemp(char *template) { return mkdtemp(template); }
+char *libc_shim_mkdtemp(char *template) { return mkdtemp(template); }
 
 // <string.h>
 
-char *my_strerror(int errnum) { return strerror(errnum); }
+char *libc_shim_strerror(int errnum) { return strerror(errnum); }
 
 // <unistd.h>
 
-int my_close(int fd) { return close(fd); }
+int libc_shim_close(int fd) { return close(fd); }
 
-int my_unlinkat(int dirfd, const char *pathname, int flags) {
+int libc_shim_unlinkat(int dirfd, const char *pathname, int flags) {
   return unlinkat(dirfd, pathname, flags);
 }

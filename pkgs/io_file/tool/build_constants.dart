@@ -14,7 +14,7 @@ const _cHeaderTemplate = '''
 #include <stdint.h>
 
 // A sentinal indicating that a constant is not defined on the current platform.
-#define my_UNDEFINED 9223372036854775807
+#define libc_shim_UNDEFINED 9223372036854775807
 ''';
 
 const _dartTemplate = '''
@@ -25,11 +25,11 @@ import 'constant_bindings.dart';
 
 void addConstantToCSource(String constant, StringBuffer b) {
   b.write('''
-int64_t my_get_$constant(void) {
+int64_t libc_shim_get_$constant(void) {
 #ifdef $constant
   return $constant;
 #endif
-  return my_UNDEFINED;
+  return libc_shim_UNDEFINED;
 }
 ''');
 }
@@ -37,7 +37,7 @@ int64_t my_get_$constant(void) {
 void addConstantToCHeader(String constant, StringBuffer b) {
   b.write('''
 __attribute__((visibility("default"))) __attribute__((used))
-int64_t my_get_$constant(void);
+int64_t libc_shim_get_$constant(void);
 ''');
 }
 
@@ -45,7 +45,7 @@ void addConstantToDart(String constant, StringBuffer b) {
   b.writeln('''
 int get $constant {
   final v = get_$constant();
-  if (v == my_UNDEFINED) {
+  if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('$constant');
   } else {
     return v;

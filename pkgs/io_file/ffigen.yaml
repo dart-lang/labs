@@ -19,10 +19,10 @@ comments:
 ffi-native:
 structs:
   rename:
-    'my_(.*)': '$1'
+    'libc_shim_(.*)': '$1'
 functions:
   rename:
-    'my_(.*)': '$1'
+    'libc_shim_(.*)': '$1'
 typedefs:
   rename:
-    'my_(.*)': '$1'
+    'libc_shim_(.*)': '$1'
