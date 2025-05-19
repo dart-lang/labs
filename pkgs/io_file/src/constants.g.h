@@ -1,3 +1,6 @@
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
 #include <stdint.h>
 
 // A sentinal indicating that a constant is not defined on the current platform.

@@ -6,11 +6,17 @@ import 'dart:convert';
 import 'dart:io';
 
 const _cSourceTemplate = '''
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
 #include "constants.g.h"
 
 ''';
 
 const _cHeaderTemplate = '''
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
 #include <stdint.h>
 
 // A sentinal indicating that a constant is not defined on the current platform.
@@ -18,6 +24,9 @@ const _cHeaderTemplate = '''
 ''';
 
 const _dartTemplate = '''
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
 // ignore_for_file: non_constant_identifier_names
 
 import 'constant_bindings.dart';

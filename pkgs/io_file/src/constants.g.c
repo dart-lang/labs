@@ -1,3 +1,6 @@
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
 #include "constants.g.h"
 
 #include <errno.h>

@@ -1,3 +1,6 @@
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
 // ignore_for_file: non_constant_identifier_names
 
 import 'constant_bindings.dart';
