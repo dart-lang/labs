@@ -4,7 +4,7 @@ description: |
   Bindings for `constants.g.h`.
 
   Regenerate bindings with `dart run ffigen --config constants-ffigen.yaml`.
-output: 'lib/src/constant_bindings.dart'
+output: 'lib/src/constant_bindings.g.dart'
 headers:
   entry-points:
     - 'src/constants.g.h'

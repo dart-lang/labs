@@ -3,7 +3,7 @@
 
 // ignore_for_file: non_constant_identifier_names
 
-import 'constant_bindings.dart';
+import 'constant_bindings.g.dart';
 
 int get EACCES {
   final v = get_EACCES();

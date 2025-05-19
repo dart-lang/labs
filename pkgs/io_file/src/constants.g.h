@@ -4,7 +4,11 @@
 #include <stdint.h>
 
 // A sentinal indicating that a constant is not defined on the current platform.
-#define libc_shim_UNDEFINED 9223372036854775807
+//
+// It is a random sequence of 64 bits and used by `constants.g.dart` to
+// determine whether a value returned by `libc_shim_get_(constant)` is the
+// actual platform constant or is undefined.
+#define libc_shim_UNDEFINED 5635263260456932693
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EACCES(void);
 __attribute__((visibility("default"))) __attribute__((used))

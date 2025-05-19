@@ -13,7 +13,7 @@ void main(List<String> args) async {
     if (input.config.code.targetOS == OS.windows) return;
     await CBuilder.library(
       name: packageName,
-      assetName: 'src/libc_bindings.dart',
+      assetName: 'src/libc_bindings.g.dart',
       sources: ['src/libc_shim.c'],
       flags: ['-Weverything'],
     ).run(
@@ -27,7 +27,7 @@ void main(List<String> args) async {
 
     await CBuilder.library(
       name: '${packageName}constants',
-      assetName: 'src/constant_bindings.dart',
+      assetName: 'src/constant_bindings.g.dart',
       sources: ['src/constants.g.c'],
       flags: ['-Weverything'],
     ).run(

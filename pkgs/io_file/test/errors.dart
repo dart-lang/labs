@@ -5,9 +5,14 @@
 import 'dart:io';
 import 'package:errno/errno.dart';
 
-int get eexist => Platform.isMacOS ? LinuxErrors.eexist : LinuxErrors.eexist;
-int get eisdir => Platform.isMacOS ? LinuxErrors.eisdir : LinuxErrors.eisdir;
-int get enoent => Platform.isMacOS ? LinuxErrors.enoent : LinuxErrors.enoent;
-int get enotdir => Platform.isMacOS ? LinuxErrors.enotdir : LinuxErrors.enotdir;
+int get eexist => Platform.isMacOS ? DarwinErrors.eexist : LinuxErrors.eexist;
+
+int get eisdir => Platform.isMacOS ? DarwinErrors.eisdir : LinuxErrors.eisdir;
+
+int get enoent => Platform.isMacOS ? DarwinErrors.enoent : LinuxErrors.enoent;
+
+int get enotdir =>
+    Platform.isMacOS ? DarwinErrors.enotdir : LinuxErrors.enotdir;
+
 int get enotempty =>
     Platform.isMacOS ? DarwinErrors.enotempty : LinuxErrors.enotempty;
