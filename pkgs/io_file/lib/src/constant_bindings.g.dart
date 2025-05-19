@@ -136,4 +136,4 @@ external int get_UF_APPEND();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_UF_HIDDEN')
 external int get_UF_HIDDEN();
 
-const int libc_shim_UNDEFINED = 9223372036854775807;
+const int libc_shim_UNDEFINED = 5635263260456932693;
