@@ -13,22 +13,8 @@ void main(List<String> args) async {
     if (input.config.code.targetOS == OS.windows) return;
     await CBuilder.library(
       name: packageName,
-      assetName: 'src/libc_bindings.g.dart',
-      sources: ['src/libc_shim.c'],
-      flags: ['-Weverything'],
-    ).run(
-      input: input,
-      output: output,
-      logger:
-          Logger('')
-            ..level = Level.ALL
-            ..onRecord.listen((record) => print(record.message)),
-    );
-
-    await CBuilder.library(
-      name: '${packageName}constants',
-      assetName: 'src/constant_bindings.g.dart',
-      sources: ['src/constants.g.c'],
+      assetName: 'libc_shim',
+      sources: ['src/libc_shim.c', 'src/constants.g.c'],
       flags: ['-Weverything'],
     ).run(
       input: input,

@@ -17,6 +17,7 @@ comments:
   style: any
   length: full
 ffi-native:
+  asset-id: package:io_file/libc_shim
 structs:
   rename:
     'libc_shim_(.*)': '$1'
