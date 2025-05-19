@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// A wrapper around libc that provides a consistent sent of types and symbols
+// A wrapper around libc that provides a consistent set of types and symbols
 // across platforms and architectures.
 //
-// libc is not required to provide runtime accessable symbols for POSIX calls.
+// libc is not required to provide runtime accessible symbols for POSIX calls.
 // For example, glibc defines `stat` as:
 //
 // `#define stat(fname, buf) __xstat (_STAT_VER, fname, buf)`
@@ -13,12 +13,26 @@
 // So running `ffigen` on `sys/stat.h` will not produce an entry for `stat`.
 //
 // libc may also reorder `struct` fields across architectures, add extra
-// fields, etc.
+// fields, etc. For example, the glibc definition of `struct stat` starts
+// with:
+//
+// ```
+// struct stat
+//   {
+//     __dev_t st_dev;		/* Device.  */
+// #ifndef __x86_64__
+//     unsigned short int __pad1;
+// #endif
+// #if defined __x86_64__ || !defined __USE_FILE_OFFSET64
+//     __ino_t st_ino;		/* File serial number.	*/
+// #else
+// ```
 //
 // Finally, POSIX lets the implementation decide the type of many `struct`
-// fields.
+// fields. In `struct stat`, the only requirement for the `dev_t` is that it
+// be integral; there is no requirement on size or signedness.
 //
-// `libc_shim.h` provides an interface that, when processed by `ffigen` will
+// `libc_shim.h` provides an interface that, when processed by `ffigen`, will
 // generate the same bindings on all platforms and architectures.
 #include <stdint.h>
 
