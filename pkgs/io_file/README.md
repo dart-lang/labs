@@ -12,26 +12,26 @@ See
 | :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: | 
 |  canonicalize path    |         |       |       |       |         |            |              |
 |  copy file            |         |       |       |       |         |            |              |
-|  create directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  create hard link     |         |       |       |       |         |            |              |
-|  create symbolic link |         |       |       |       |         |            |              |
-|  create tmp directory |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  create tmp file      |         |       |       |       |         |            |              |
-|  delete directory     |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  delete file          |         |       |       |       |         |            |              |
-|  delete tree          |         |       |       |       |    ✓    |            |              |
-|  enum dir contents    |         |       |       |       |         |            |              |
-|  exists               |         |       |       |       |         |            |              |
-|  get metadata (stat)  |         |       |       |       |         |            |              |
-|  identity (same file) |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  open                 |         |       |       |       |         |            |              |
-|  read file (bytes)    |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  read file (lines)    |         |       |       |       |         |            |              |
-|  read file (string)   |         |       |       |       |         |            |              |
-|  rename               |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  set permissions      |         |       |       |       |         |            |              |
-|  write file (bytes)   |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  write file (string)  |         |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
+|  create directory     |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  create hard link     |         |       |       |       |        |            |              |
+|  create symbolic link |         |       |       |       |        |            |              |
+|  create tmp directory |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  create tmp file      |         |       |       |       |        |            |              |
+|  delete directory     |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  delete file          |         |       |       |                |            |              |
+|  delete tree          |         |       |      |       |    ✓    |            |              |
+|  enum dir contents    |         |       |       |       |        |            |              |
+|  exists               |         |       |              |         |            |              |
+|  get metadata (stat)  |         |       |       |       |        |            |              |
+|  identity (same file) |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  open                 |         |       |              |         |            |              |
+|  read file (bytes)    |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  read file (lines)    |         |       |       |       |        |            |              |
+|  read file (string)   |         |       |       |       |        |            |              |
+|  rename               |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  set permissions      |         |       |       |      |         |            |              |
+|  write file (bytes)   |         |   ✓   |       |   ✓   |    ✓    |            |              |
+|  write file (string)  |         |   ✓   |       |   ✓   |    ✓    |            |              |
 
 ### File
 

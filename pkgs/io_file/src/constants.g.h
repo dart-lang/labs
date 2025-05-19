@@ -1,0 +1,99 @@
+// AUTO GENERATED FILE, DO NOT EDIT.
+// Regenerate with `dart run tool/build_constants.dart`.
+
+#include <stdint.h>
+
+// A sentinal indicating that a constant is not defined on the current platform.
+//
+// It is a random sequence of 64 bits and used by `constants.g.dart` to
+// determine whether a value returned by `libc_shim_get_(constant)` is the
+// actual platform constant or is undefined.
+#define libc_shim_UNDEFINED 5635263260456932693
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_EACCES(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_EEXIST(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_EINTR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_ENOENT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_EPERM(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_APPEND(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_CLOEXEC(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_CREAT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_EXCL(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_RDONLY(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_TRUNC(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_WRONLY(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_FDCWD(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_REMOVEDIR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IEXEC(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFBLK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFCHR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFDIR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFIFO(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFLNK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFMT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFREG(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFSOCK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IFWHT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IREAD(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IRGRP(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IROTH(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IRUSR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IRWXG(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IRWXO(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IRWXU(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_ISGID(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_ISTXT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_ISUID(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_ISVTX(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IWGRP(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IWOTH(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IWRITE(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IWUSR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IXGRP(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IXOTH(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_S_IXUSR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_UF_APPEND(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_UF_HIDDEN(void);

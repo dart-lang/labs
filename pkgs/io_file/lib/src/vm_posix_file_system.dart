@@ -10,10 +10,10 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
 import 'package:path/path.dart' as p;
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 
 import 'file_system.dart';
 import 'internal_constants.dart';
+import 'libc.dart' as libc;
 
 /// The default `mode` to use with `open` calls that may create a file.
 const _defaultMode = 438; // => 0666 => rw-rw-rw-
@@ -21,17 +21,20 @@ const _defaultMode = 438; // => 0666 => rw-rw-rw-
 /// The default `mode` to use when creating a directory.
 const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
 
-Exception _getError(int errno, String message, String path) {
+Exception _getError(int err, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
   // namespace?
-  final osError = io.OSError(stdlibc.strerror(errno) ?? '', errno);
+  final osError = io.OSError(
+    libc.strerror(err).cast<ffi.Utf8>().toDartString(),
+    err,
+  );
 
-  if (errno == stdlibc.EPERM || errno == stdlibc.EACCES) {
+  if (err == libc.EPERM || err == libc.EACCES) {
     return io.PathAccessException(path, osError, message);
-  } else if (errno == stdlibc.EEXIST) {
+  } else if (err == libc.EEXIST) {
     return io.PathExistsException(path, osError, message);
-  } else if (errno == stdlibc.ENOENT) {
+  } else if (err == libc.ENOENT) {
     return io.PathNotFoundException(path, osError, message);
   } else {
     return io.FileSystemException(message, path, osError);
@@ -43,7 +46,7 @@ int _tempFailureRetry(int Function() f) {
   int result;
   do {
     result = f();
-  } while (result == -1 && stdlibc.errno == stdlibc.EINTR);
+  } while (result == -1 && libc.errno == libc.EINTR);
   return result;
 }
 
@@ -63,85 +66,106 @@ external int write(int fd, Pointer<Uint8> buf, int count);
 /// macOS).
 base class PosixFileSystem extends FileSystem {
   @override
-  bool same(String path1, String path2) {
-    final stat1 = stdlibc.stat(path1);
-    if (stat1 == null) {
-      final errno = stdlibc.errno;
+  bool same(String path1, String path2) => ffi.using((arena) {
+    final stat1 = arena<libc.Stat>();
+    if (libc.stat(path1.toNativeUtf8(allocator: arena).cast(), stat1) == -1) {
+      final errno = libc.errno;
       throw _getError(errno, 'stat failed', path1);
     }
 
-    final stat2 = stdlibc.stat(path2);
-    if (stat2 == null) {
-      final errno = stdlibc.errno;
+    final stat2 = arena<libc.Stat>();
+    if (libc.stat(path2.toNativeUtf8(allocator: arena).cast(), stat2) == -1) {
+      final errno = libc.errno;
       throw _getError(errno, 'stat failed', path2);
     }
 
-    return (stat1.st_ino == stat2.st_ino) && (stat1.st_dev == stat2.st_dev);
-  }
+    return (stat1.ref.st_ino == stat2.ref.st_ino) &&
+        (stat1.ref.st_dev == stat2.ref.st_dev);
+  });
 
   @override
-  void createDirectory(String path) {
-    if (stdlibc.mkdir(path, _defaultDirectoryMode) == -1) {
-      final errno = stdlibc.errno;
+  void createDirectory(String path) => ffi.using((arena) {
+    if (libc.mkdir(
+          path.toNativeUtf8(allocator: arena).cast(),
+          _defaultDirectoryMode,
+        ) ==
+        -1) {
+      final errno = libc.errno;
       throw _getError(errno, 'create directory failed', path);
     }
-  }
+  });
 
   @override
-  String createTemporaryDirectory({String? parent, String? prefix}) {
-    final directory = parent ?? temporaryDirectory;
-    final template = p.join(directory, '${prefix ?? ''}XXXXXX');
+  String createTemporaryDirectory({String? parent, String? prefix}) =>
+      ffi.using((arena) {
+        final directory = parent ?? temporaryDirectory;
+        final template = p.join(directory, '${prefix ?? ''}XXXXXX');
 
-    final path = stdlibc.mkdtemp(template);
-    if (path == null) {
-      final errno = stdlibc.errno;
-      throw _getError(errno, 'mkdtemp failed', template);
-    }
-    return path;
-  }
+        final path = libc.mkdtemp(
+          template.toNativeUtf8(allocator: arena).cast(),
+        );
+        if (path == nullptr) {
+          final errno = libc.errno;
+          throw _getError(errno, 'mkdtemp failed', template);
+        }
+        return path.cast<ffi.Utf8>().toDartString();
+      });
 
   @override
-  void removeDirectory(String path) {
-    if (stdlibc.unlinkat(stdlibc.AT_FDCWD, path, stdlibc.AT_REMOVEDIR) == -1) {
-      final errno = stdlibc.errno;
+  void removeDirectory(String path) => ffi.using((arena) {
+    if (libc.unlinkat(
+          libc.AT_FDCWD,
+          path.toNativeUtf8(allocator: arena).cast(),
+          libc.AT_REMOVEDIR,
+        ) ==
+        -1) {
+      final errno = libc.errno;
       throw _getError(errno, 'remove directory failed', path);
     }
-  }
+  });
 
   @override
-  void rename(String oldPath, String newPath) {
+  void rename(String oldPath, String newPath) => ffi.using((arena) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
-    if (stdlibc.rename(oldPath, newPath) != 0) {
-      final errno = stdlibc.errno;
+    if (libc.rename(
+          oldPath.toNativeUtf8(allocator: arena).cast(),
+          newPath.toNativeUtf8(allocator: arena).cast(),
+        ) !=
+        0) {
+      final errno = libc.errno;
       throw _getError(errno, 'rename failed', oldPath);
     }
-  }
+  });
 
   @override
-  Uint8List readAsBytes(String path) {
+  Uint8List readAsBytes(String path) => ffi.using((arena) {
     final fd = _tempFailureRetry(
-      () => stdlibc.open(path, flags: stdlibc.O_RDONLY | stdlibc.O_CLOEXEC),
+      () => libc.open(
+        path.toNativeUtf8(allocator: arena).cast(),
+        libc.O_RDONLY | libc.O_CLOEXEC,
+        0,
+      ),
     );
     if (fd == -1) {
-      final errno = stdlibc.errno;
+      final errno = libc.errno;
       throw _getError(errno, 'open failed', path);
     }
     try {
-      final stat = stdlibc.fstat(fd);
+      final stat = arena<libc.Stat>();
       // The POSIX specification only defines the meaning of `st_size` for
       // regular files and symbolic links.
-      if (stat != null && stat.st_mode & stdlibc.S_IFREG != 0) {
-        if (stat.st_size == 0) {
+      if (libc.fstat(fd, stat) != -1 && stat.ref.st_mode & libc.S_IFREG != 0) {
+        if (stat.ref.st_size == 0) {
           return Uint8List(0);
         } else {
-          return _readKnownLength(path, fd, stat.st_size);
+          return _readKnownLength(path, fd, stat.ref.st_size);
         }
       }
       return _readUnknownLength(path, fd);
     } finally {
-      stdlibc.close(fd);
+      libc.close(fd);
     }
-  }
+  });
 
   Uint8List _readUnknownLength(String path, int fd) => ffi.using((arena) {
     final buffer = arena<Uint8>(blockSize);
@@ -151,7 +175,7 @@ base class PosixFileSystem extends FileSystem {
       final r = _tempFailureRetry(() => read(fd, buffer, blockSize));
       switch (r) {
         case -1:
-          final errno = stdlibc.errno;
+          final errno = libc.errno;
           throw _getError(errno, 'read failed', path);
         case 0:
           return builder.takeBytes();
@@ -179,7 +203,7 @@ base class PosixFileSystem extends FileSystem {
         );
         switch (r) {
           case -1:
-            final errno = stdlibc.errno;
+            final errno = libc.errno;
             throw _getError(errno, 'read failed', path);
           case 0:
             return buffer.asTypedList(
@@ -198,33 +222,45 @@ base class PosixFileSystem extends FileSystem {
   }
 
   @override
-  String get temporaryDirectory => p.canonicalize(
-    stdlibc.getenv('TMPDIR') ??
-        stdlibc.getenv('TMP') ??
-        (io.Platform.isAndroid ? '/data/local/tmp' : '/tmp'),
-  );
+  String get temporaryDirectory => ffi.using((arena) {
+    var env = libc.getenv('TMPDIR'.toNativeUtf8(allocator: arena).cast());
+    if (env == nullptr) {
+      env = libc.getenv('TMP'.toNativeUtf8(allocator: arena).cast());
+    }
+    late String tmp;
+    if (env == nullptr) {
+      tmp = io.Platform.isAndroid ? '/data/local/tmp' : '/tmp';
+    } else {
+      tmp = env.cast<ffi.Utf8>().toDartString();
+    }
+    return p.canonicalize(tmp);
+  });
 
   @override
   void writeAsBytes(
     String path,
     Uint8List data, [
     WriteMode mode = WriteMode.failExisting,
-  ]) {
-    var flags = stdlibc.O_WRONLY | stdlibc.O_CLOEXEC;
+  ]) => ffi.using((arena) {
+    var flags = libc.O_WRONLY | libc.O_CLOEXEC;
 
     flags |= switch (mode) {
-      WriteMode.appendExisting => stdlibc.O_CREAT | stdlibc.O_APPEND,
-      WriteMode.failExisting => stdlibc.O_CREAT | stdlibc.O_EXCL,
-      WriteMode.truncateExisting => stdlibc.O_CREAT | stdlibc.O_TRUNC,
+      WriteMode.appendExisting => libc.O_CREAT | libc.O_APPEND,
+      WriteMode.failExisting => libc.O_CREAT | libc.O_EXCL,
+      WriteMode.truncateExisting => libc.O_CREAT | libc.O_TRUNC,
       _ => throw ArgumentError.value(mode, 'invalid write mode'),
     };
 
     final fd = _tempFailureRetry(
-      () => stdlibc.open(path, flags: flags, mode: _defaultMode),
+      () => libc.open(
+        path.toNativeUtf8(allocator: arena).cast(),
+        flags,
+        _defaultMode,
+      ),
     );
     try {
       if (fd == -1) {
-        final errno = stdlibc.errno;
+        final errno = libc.errno;
         throw _getError(errno, 'open failed', path);
       }
 
@@ -241,7 +277,7 @@ base class PosixFileSystem extends FileSystem {
                 write(fd, buffer, min(remaining, min(maxWriteSize, remaining))),
           );
           if (w == -1) {
-            final errno = stdlibc.errno;
+            final errno = libc.errno;
             throw _getError(errno, 'write failed', path);
           }
           remaining -= w;
@@ -249,9 +285,9 @@ base class PosixFileSystem extends FileSystem {
         }
       });
     } finally {
-      stdlibc.close(fd);
+      libc.close(fd);
     }
-  }
+  });
 
   @override
   void writeAsString(

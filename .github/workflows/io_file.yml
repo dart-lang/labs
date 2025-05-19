@@ -28,17 +28,37 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
-          sdk: stable
+          sdk: dev
       - run: dart pub get
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
+
+  check-generation:
+    # Verify that the generated code is up-to-date. Every platform/arch should
+    # generate the same API bindings.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: dev
+      - run: dart pub get
+      - run: dart run ffigen --config ffigen.yaml
+      - run: dart run ffigen --config constants-ffigen.yaml
+      - run: dart --enable-experiment=native-assets run tool/build_constants.dart
+      - run: dart format lib/src/*.dart
+      - run: git diff --exit-code
 
   desktop-vm-test:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [stable, dev]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        sdk: [dev]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -46,7 +66,7 @@ jobs:
         with:
           sdk: ${{ matrix.sdk }}
 
-      - run: dart test --test-randomize-ordering-seed=random --platform vm
+      - run: dart --enable-experiment=native-assets test --test-randomize-ordering-seed=random --platform vm
 
   profile-vm-test:
     # Ensure that the tests pass when run under the profiler (which sends
@@ -56,14 +76,14 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
-          sdk: stable
-      - run: dart --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
+          sdk: dev
+      - run: dart --enable-experiment=native-assets --profiler --profile_period=50 test --test-randomize-ordering-seed=random --platform vm
 
   desktop-vm-benchmark:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [stable]
+        sdk: [dev]
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -73,11 +93,14 @@ jobs:
           sdk: ${{ matrix.sdk }}
       - run: dart pub get
       - name: 🪑 Run Read Benchmarks
-        run: dart run benchmarks/read_as_bytes.dart
+        run: dart --enable-experiment=native-assets run benchmarks/read_as_bytes.dart
       - name: 🪑 Run Write Benchmarks
-        run: dart run benchmarks/write_as_bytes.dart
+        run: dart --enable-experiment=native-assets run benchmarks/write_as_bytes.dart
 
   ios-vm-test:
+    # TODO(brianquinlan): Disabled because native assets are not supported by
+    # Flutter integration tests.
+    if: ${{false}}
     runs-on: macos-latest
     defaults:
       run:
@@ -86,8 +109,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: subosito/flutter-action@e938fdf56512cc96ef2f93601a5a40bde3801046
         with:
-          flutter-version: any
-          channel: 'stable'
+          channel: master
       - uses: futureware-tech/simulator-action@dab10d813144ef59b48d401cd95da151222ef8cd
         with:
           os: iOS
@@ -103,6 +125,6 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
-          sdk: stable
+          sdk: dev
 
-      - run: dart test --test-randomize-ordering-seed=random --platform chrome
+      - run: dart --enable-experiment=native-assets test --test-randomize-ordering-seed=random --platform chrome
