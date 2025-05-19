@@ -13,6 +13,7 @@ import 'src/appengine_internal.dart' as appengine_internal;
 import 'src/client_context.dart';
 
 export 'package:gcloud/http.dart';
+
 export 'src/appengine_context.dart';
 export 'src/client_context.dart';
 export 'src/errors.dart';
@@ -62,7 +63,7 @@ Future runAppEngine(
   bool shared = false,
   void onAcceptingConnections(InternetAddress address, int port)?,
 }) {
-  var errorHandler;
+  void Function(Object, StackTrace)? errorHandler;
   if (onError != null) {
     if (onError is ZoneUnaryCallback) {
       errorHandler = (error, stack) => onError(error);

@@ -9,10 +9,10 @@ import 'dart:io';
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
+import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
@@ -108,7 +108,7 @@ void main() {
           isA<PathNotFoundException>().having(
             (e) => e.osError?.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : stdlibc.ENOENT,
+            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
           ),
         ),
       );
@@ -147,7 +147,7 @@ void main() {
           isA<PathNotFoundException>().having(
             (e) => e.osError?.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : stdlibc.ENOENT,
+            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
           ),
         ),
       );

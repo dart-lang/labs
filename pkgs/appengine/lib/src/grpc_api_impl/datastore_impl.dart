@@ -506,7 +506,7 @@ class _Codec {
     final keyElements = List<raw.KeyElement?>.filled(pb.path.length, null);
     for (int i = 0; i < pb.path.length; i++) {
       final part = pb.path[i];
-      var id;
+      Object id;
       if (part.hasName()) {
         id = part.name;
       } else if (part.hasId()) {
@@ -516,7 +516,7 @@ class _Codec {
       }
       keyElements[i] = raw.KeyElement(part.kind, id);
     }
-    var partition;
+    raw.Partition? partition;
     if (pb.hasPartitionId()) {
       final partitionId = pb.partitionId;
       if (partitionId.hasNamespaceId()) {

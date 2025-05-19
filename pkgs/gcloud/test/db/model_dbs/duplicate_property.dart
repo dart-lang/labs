@@ -2,7 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore: unnecessary_library_directive
+// This library name is used by tests.
+// ignore: unnecessary_library_directive, unnecessary_library_name
 library gcloud.db.model_test.duplicate_property;
 
 import 'package:gcloud/db.dart' as db;
