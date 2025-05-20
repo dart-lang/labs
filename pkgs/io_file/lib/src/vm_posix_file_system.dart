@@ -125,6 +125,78 @@ base class PosixFileSystem extends FileSystem {
   });
 
   @override
+  void removeDirectoryTree(String path) => ffi.using((arena) {
+    _removeDirectoryTree(libc.AT_FDCWD, '.', path.toNativeUtf8());
+  });
+
+  void _removeDirectoryTree(
+    int parentfd,
+    String parentPath,
+    Pointer<ffi.Utf8> name,
+  ) => ffi.using((arena) {
+    print(
+      '_removeDirectoryTree($parentfd, $parentPath, ${name.toDartString()})',
+    );
+    final fd = _tempFailureRetry(
+      () => libc.openat(parentfd, name.cast(), libc.O_DIRECTORY, 0),
+    );
+    if (fd == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, 'openat failed', 'XXX');
+    }
+    try {
+      final dir = libc.fdopendir(fd);
+      if (dir == nullptr) {
+        final errno = libc.errno;
+        throw _getError(errno, 'fdopendir failed', 'XXX');
+      }
+      try {
+        libc.errno = 0;
+        var dirent = libc.readdir(dir);
+        while (dirent != nullptr) {
+          final child = libc.d_name_ptr(dirent);
+          if (dirent.ref.d_type == libc.DT_DIR) {
+            final childPath = child.cast<ffi.Utf8>().toDartString();
+            if (childPath == '.' || childPath == '..') {
+              libc.errno = 0;
+              dirent = libc.readdir(dir);
+              continue;
+            }
+            _removeDirectoryTree(
+              fd,
+              p.join(parentPath, childPath),
+              child.cast(),
+            );
+          } else if (dirent.ref.d_type == libc.DT_UNKNOWN) {
+            throw UnsupportedError('XXX');
+          } else {
+            print('>> deleting: ${child.cast<ffi.Utf8>().toDartString()}');
+            libc.unlinkat(fd, child, 0);
+            if (libc.errno != 0) {
+              final errno = libc.errno;
+              throw _getError(errno, 'unlinkat failed', 'XXX');
+            }
+          }
+          libc.errno = 0;
+          dirent = libc.readdir(dir);
+        }
+        if (libc.errno != 0) {
+          final errno = libc.errno;
+          throw _getError(errno, 'readdir failed', 'XXX');
+        }
+        if (libc.unlinkat(parentfd, name.cast(), libc.AT_REMOVEDIR) == -1) {
+          final errno = libc.errno;
+          throw _getError(errno, 'remove directory failed', 'XXX');
+        }
+      } finally {
+        libc.closedir(dir);
+      }
+    } finally {
+      libc.close(fd);
+    }
+  });
+
+  @override
   void rename(String oldPath, String newPath) => ffi.using((arena) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
     if (libc.rename(

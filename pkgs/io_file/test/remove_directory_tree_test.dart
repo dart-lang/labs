@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('windows')
+@TestOn('vm')
 library;
 
 import 'dart:io';
@@ -13,6 +13,8 @@ import 'package:win32/win32.dart' as win32;
 
 import 'errors.dart' as errors;
 import 'test_utils.dart';
+
+// XXX try to delete . and ..
 
 void main() {
   group('removeDirectoryTree', () {

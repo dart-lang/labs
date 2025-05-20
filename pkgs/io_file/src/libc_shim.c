@@ -4,6 +4,7 @@
 
 #include "libc_shim.h"
 
+#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -15,19 +16,32 @@
 
 // <dirent.h>
 
+char* libc_shim_d_name_ptr(struct libc_shim_dirent *d) {
+  return d->d_name;
+}
+
 int libc_shim_closedir(libc_shim_DIR *d) {
   int r = closedir(d->_dir);
   free(d);
   return r;
 }
 
-libc_shim_DIR *libc_shim_opendir(const char *path) {
+libc_shim_DIR *libc_shim_fdopendir(int fd) {
+  DIR *d = fdopendir(fd);
+  if (d == NULL) {
+    return NULL;
+  }
   libc_shim_DIR *myd = malloc(sizeof(libc_shim_DIR));
+  myd->_dir = d;
+  return myd;
+}
 
+libc_shim_DIR *libc_shim_opendir(const char *path) {
   DIR *d = opendir(path);
   if (d == NULL) {
     return NULL;
   }
+  libc_shim_DIR *myd = malloc(sizeof(libc_shim_DIR));
   myd->_dir = d;
   return myd;
 }
@@ -39,6 +53,9 @@ struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *myd) {
   }
 
   myd->libc_shim_dirent.d_ino = d->d_ino;
+  myd->libc_shim_dirent.d_type = d->d_type;
+  assert(strlen(myd->libc_shim_dirent.d_name) <
+         sizeof(myd->libc_shim_dirent.d_name));
   strncpy(myd->libc_shim_dirent.d_name, d->d_name,
           sizeof(myd->libc_shim_dirent.d_name));
   return &(myd->libc_shim_dirent);
@@ -54,6 +71,10 @@ int libc_shim_errno(void) { return errno; }
 
 int libc_shim_open(const char *pathname, int flags, int mode) {
   return open(pathname, flags, mode);
+}
+
+int libc_shim_openat(int fd, const char *pathname, int flags, int mode) {
+  return openat(fd, pathname, flags, mode);
 }
 
 // <sys/stat.h>

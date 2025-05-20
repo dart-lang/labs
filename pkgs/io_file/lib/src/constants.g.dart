@@ -4,6 +4,77 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'constant_bindings.g.dart';
+int get DT_BLK {
+  final v = get_DT_BLK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_BLK');
+  } else {
+    return v;
+  }
+}
+
+int get DT_CHR {
+  final v = get_DT_CHR();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_CHR');
+  } else {
+    return v;
+  }
+}
+
+int get DT_DIR {
+  final v = get_DT_DIR();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_DIR');
+  } else {
+    return v;
+  }
+}
+
+int get DT_FIFO {
+  final v = get_DT_FIFO();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_FIFO');
+  } else {
+    return v;
+  }
+}
+
+int get DT_LNK {
+  final v = get_DT_LNK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_LNK');
+  } else {
+    return v;
+  }
+}
+
+int get DT_REG {
+  final v = get_DT_REG();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_REG');
+  } else {
+    return v;
+  }
+}
+
+int get DT_SOCK {
+  final v = get_DT_SOCK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_SOCK');
+  } else {
+    return v;
+  }
+}
+
+int get DT_UNKNOWN {
+  final v = get_DT_UNKNOWN();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('DT_UNKNOWN');
+  } else {
+    return v;
+  }
+}
 
 int get EACCES {
   final v = get_EACCES();
@@ -50,6 +121,24 @@ int get EPERM {
   }
 }
 
+int get AT_FDCWD {
+  final v = get_AT_FDCWD();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('AT_FDCWD');
+  } else {
+    return v;
+  }
+}
+
+int get AT_REMOVEDIR {
+  final v = get_AT_REMOVEDIR();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('AT_REMOVEDIR');
+  } else {
+    return v;
+  }
+}
+
 int get O_APPEND {
   final v = get_O_APPEND();
   if (v == libc_shim_UNDEFINED) {
@@ -72,6 +161,15 @@ int get O_CREAT {
   final v = get_O_CREAT();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('O_CREAT');
+  } else {
+    return v;
+  }
+}
+
+int get O_DIRECTORY {
+  final v = get_O_DIRECTORY();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('O_DIRECTORY');
   } else {
     return v;
   }
@@ -108,24 +206,6 @@ int get O_WRONLY {
   final v = get_O_WRONLY();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('O_WRONLY');
-  } else {
-    return v;
-  }
-}
-
-int get AT_FDCWD {
-  final v = get_AT_FDCWD();
-  if (v == libc_shim_UNDEFINED) {
-    throw UnsupportedError('AT_FDCWD');
-  } else {
-    return v;
-  }
-}
-
-int get AT_REMOVEDIR {
-  final v = get_AT_REMOVEDIR();
-  if (v == libc_shim_UNDEFINED) {
-    throw UnsupportedError('AT_REMOVEDIR');
   } else {
     return v;
   }
@@ -400,3 +480,4 @@ int get UF_HIDDEN {
     return v;
   }
 }
+

@@ -10,6 +10,22 @@
 // actual platform constant or is undefined.
 #define libc_shim_UNDEFINED 5635263260456932693
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_BLK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_CHR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_DIR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_FIFO(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_LNK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_REG(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_SOCK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_DT_UNKNOWN(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EACCES(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EEXIST(void);
@@ -20,11 +36,17 @@ int64_t libc_shim_get_ENOENT(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EPERM(void);
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_FDCWD(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_REMOVEDIR(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_APPEND(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_CLOEXEC(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_CREAT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_O_DIRECTORY(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_EXCL(void);
 __attribute__((visibility("default"))) __attribute__((used))
@@ -33,10 +55,6 @@ __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_TRUNC(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_WRONLY(void);
-__attribute__((visibility("default"))) __attribute__((used))
-int64_t libc_shim_get_AT_FDCWD(void);
-__attribute__((visibility("default"))) __attribute__((used))
-int64_t libc_shim_get_AT_REMOVEDIR(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_S_IEXEC(void);
 __attribute__((visibility("default"))) __attribute__((used))

@@ -42,8 +42,9 @@
 // <dirent.h>
 
 struct libc_shim_dirent {
-  int64_t d_ino;
-  char d_name[512];
+  int64_t d_ino;  // POSIX
+  uint8_t d_type;  // Linux, macOS/iOS 
+  char d_name[1025];  // POSIX; __DARWIN_MAXNAMLEN = 1024
 };
 
 typedef struct {
@@ -51,7 +52,10 @@ typedef struct {
   void *_dir;
 } libc_shim_DIR;
 
+// https://github.com/dart-lang/sdk/issues/41237
+LIBC_SHIM_EXPORT char* libc_shim_d_name_ptr(struct libc_shim_dirent *d);
 LIBC_SHIM_EXPORT int libc_shim_closedir(libc_shim_DIR *d);
+LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_fdopendir(int fd);
 LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_opendir(const char *path);
 LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d);
 
@@ -61,6 +65,8 @@ LIBC_SHIM_EXPORT int libc_shim_errno(void);
 
 // <fcntl.h>
 LIBC_SHIM_EXPORT int libc_shim_open(const char *pathname, int flags, int mode);
+LIBC_SHIM_EXPORT int libc_shim_openat(int fd, const char *pathname, int flags, int mode);
+
 
 // <sys/stat.h>
 struct libc_shim_timespec {
