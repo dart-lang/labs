@@ -114,6 +114,7 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
@@ -132,6 +133,7 @@ void main() {
         throwsA(
           isA<PathExistsException>()
               .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
@@ -200,6 +202,7 @@ void main() {
         throwsA(
           isA<PathExistsException>()
               .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',

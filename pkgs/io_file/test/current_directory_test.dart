@@ -32,11 +32,17 @@ void main() {
       expect(fileSystem.currentDirectory, path);
     });
 
-    test('absolute path', () {
+    test('relative path', () {
       final path = '$tmp/dir';
+      final oldCurrentDirectory = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
 
-      fileSystem.currentDirectory = path;
-      expect(fileSystem.currentDirectory, path);
+      try {
+        fileSystem.currentDirectory = 'dir';
+        expect(fileSystem.currentDirectory, path);
+      } finally {
+        fileSystem.currentDirectory = oldCurrentDirectory;
+      }
     });
   });
 }
