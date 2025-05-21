@@ -42,6 +42,26 @@ void main() {
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
+    test('too long absolute path', () {
+      final path = p.join(tmp, ''.padRight(1024, 'l'));
+
+      expect(
+        () => fileSystem.createDirectory(path),
+        throwsA(
+          isA<FileSystemException>()
+              .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_PATH_NOT_FOUND
+                    : errors.enametoolong,
+              ),
+        ),
+      );
+    });
+
     test('long relative path', () {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
@@ -53,6 +73,34 @@ void main() {
         fileSystem.createDirectory(path);
 
         expect(FileSystemEntity.isDirectorySync('$tmp/$path'), isTrue);
+      } finally {
+        fileSystem.currentDirectory = oldCurrentDirectory;
+      }
+    });
+
+    test('too long relative path', () {
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final path = ''.padRight(1024, 'l');
+      final oldCurrentDirectory = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+      try {
+        expect(
+          () => fileSystem.createDirectory(path),
+          throwsA(
+            isA<FileSystemException>()
+                .having((e) => e.message, 'message', 'create directory failed')
+                .having((e) => e.path, 'path', path)
+                .having(
+                  (e) => e.osError?.errorCode,
+                  'errorCode',
+                  Platform.isWindows
+                      ? win32.ERROR_PATH_NOT_FOUND
+                      : errors.enametoolong,
+                ),
+          ),
+        );
       } finally {
         fileSystem.currentDirectory = oldCurrentDirectory;
       }

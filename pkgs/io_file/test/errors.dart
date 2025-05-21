@@ -9,6 +9,9 @@ int get eexist => Platform.isMacOS ? DarwinErrors.eexist : LinuxErrors.eexist;
 
 int get eisdir => Platform.isMacOS ? DarwinErrors.eisdir : LinuxErrors.eisdir;
 
+int get enametoolong =>
+    Platform.isMacOS ? DarwinErrors.enametoolong : LinuxErrors.enametoolong;
+
 int get enoent => Platform.isMacOS ? DarwinErrors.enoent : LinuxErrors.enoent;
 
 int get enotdir =>

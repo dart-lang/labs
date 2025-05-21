@@ -152,6 +152,15 @@ base class WindowsFileSystem extends FileSystem {
 
   @override
   set currentDirectory(String path) => using((arena) {
+    // XXX
+    // SetCurrentDirectory does not actually support paths larger than MAX_PATH,
+    // this limitation is due to the size of the internal buffer used for
+    // storing
+    // current directory. In Windows 10, version 1607, changes have been made
+    // to the OS to lift MAX_PATH limitations from file and directory management
+    // APIs, but both application and OS need to opt-in into new behavior.
+    // See https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
+
     _primeGetLastError();
     if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
       final errorCode = win32.GetLastError();

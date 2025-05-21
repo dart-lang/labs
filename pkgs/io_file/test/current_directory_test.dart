@@ -29,7 +29,7 @@ void main() {
       final path = '$tmp/dir';
 
       fileSystem.currentDirectory = path;
-      expect(FileSystemEntity.isDirectorySync(path), isTrue);
+      expect(fileSystem.currentDirectory, path);
     });
 
     test('long absolute path', () {
