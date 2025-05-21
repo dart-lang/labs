@@ -27,19 +27,38 @@ void main() {
 
     test('absolute path', () {
       final path = '$tmp/dir';
+      Directory(path).createSync(recursive: true);
+      final oldCurrentDirectory = fileSystem.currentDirectory;
 
-      fileSystem.currentDirectory = path;
-      expect(fileSystem.currentDirectory, path);
+      try {
+        fileSystem.currentDirectory = path;
+        expect(
+          fileSystem.same(fileSystem.currentDirectory, path),
+          isTrue,
+          reason:
+              '${fileSystem.currentDirectory} is a diffent directory than $path',
+        );
+      } finally {
+        fileSystem.currentDirectory = oldCurrentDirectory;
+      }
     });
 
     test('relative path', () {
       final path = '$tmp/dir';
+      Directory(path).createSync(recursive: true);
       final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
 
       try {
+        fileSystem.currentDirectory = tmp;
+
         fileSystem.currentDirectory = 'dir';
-        expect(fileSystem.currentDirectory, path);
+        print(fileSystem.currentDirectory);
+        expect(
+          fileSystem.same(fileSystem.currentDirectory, path),
+          isTrue,
+          reason:
+              '${fileSystem.currentDirectory} is a diffent directory than $path',
+        );
       } finally {
         fileSystem.currentDirectory = oldCurrentDirectory;
       }
