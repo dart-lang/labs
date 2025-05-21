@@ -170,4 +170,6 @@ in the output of `gcloud app deploy` (as well as via the
 ## Regenerating protobuf
 
 You need to have protoc in `$PATH`.
-Run the `tool/fetch_protos_and_regenerate_dart.sh` script. It will fetch the latest protos and compile them for dart using the protoc_plugin in `dev_dependencies`.
+Run the `tool/fetch_protos_and_regenerate_dart.sh` script. It will fetch the
+latest protos and compile them for dart using the protoc_plugin in
+`dev_dependencies`.

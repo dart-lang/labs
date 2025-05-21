@@ -12,6 +12,10 @@
   - changed-files:
     - any-glob-to-any-file: 'pkgs/gcloud/**'
 
+'package:googleapis_firestore_v1':
+  - changed-files:
+    - any-glob-to-any-file: 'pkgs/googleapis_firestore_v1/**'
+
 'package:io_file':
   - changed-files:
     - any-glob-to-any-file: 'pkgs/io_file/**'

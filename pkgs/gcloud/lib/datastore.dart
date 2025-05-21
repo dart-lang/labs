@@ -61,7 +61,8 @@ class DatastoreError implements Exception {
 }
 
 class UnknownDatastoreError extends DatastoreError {
-  UnknownDatastoreError(error) : super('An unknown error occurred ($error).');
+  UnknownDatastoreError(Object error)
+      : super('An unknown error occurred ($error).');
 }
 
 class TransactionAbortedError extends DatastoreError {
@@ -89,7 +90,7 @@ class InternalError extends DatastoreError {
 }
 
 class QuotaExceededError extends DatastoreError {
-  QuotaExceededError(error) : super('Quota was exceeded ($error).');
+  QuotaExceededError(Object error) : super('Quota was exceeded ($error).');
 }
 
 /// A datastore Entity
