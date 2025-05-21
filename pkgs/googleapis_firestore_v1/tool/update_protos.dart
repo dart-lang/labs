@@ -9,7 +9,7 @@ library;
 import 'dart:io';
 
 void main(List<String> args) async {
-  final dartToolDir = Directory('.dart_tool');
+  final cacheDir = Directory('.dart_tool/googleapis_firestore_v1');
   final protobufDir = Directory('.dart_tool/protobuf');
   final googleapisDir = Directory('.dart_tool/googleapis');
 
@@ -23,7 +23,7 @@ void main(List<String> args) async {
       'https://github.com/protocolbuffers/protobuf.git',
       '--depth',
       '1',
-    ], cwd: dartToolDir);
+    ], cwd: cacheDir);
   }
 
   copy(protobufDir, destDir, 'src', [
@@ -45,7 +45,7 @@ void main(List<String> args) async {
       'https://github.com/googleapis/googleapis.git',
       '--depth',
       '1',
-    ], cwd: dartToolDir);
+    ], cwd: cacheDir);
   }
 
   copy(googleapisDir, destDir, '', [
