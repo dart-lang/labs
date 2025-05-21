@@ -10,8 +10,8 @@ import 'dart:io';
 
 void main(List<String> args) async {
   final cacheDir = Directory('.dart_tool/googleapis_firestore_v1');
-  final protobufDir = Directory('.dart_tool/protobuf');
-  final googleapisDir = Directory('.dart_tool/googleapis');
+  final protobufDir = Directory('${cacheDir.path}/protobuf');
+  final googleapisDir = Directory('${cacheDir.path}/googleapis');
 
   final destDir = Directory('protos');
 
@@ -71,6 +71,10 @@ void main(List<String> args) async {
 
 Future<void> git(List<String> args, {required Directory cwd}) async {
   print('git ${args.join(' ')} [${cwd.path}]');
+
+  if (!cwd.existsSync()) {
+    cwd.createSync(recursive: true);
+  }
 
   final result = await Process.run('git', args, workingDirectory: cwd.path);
   stdout.write(result.stdout);
