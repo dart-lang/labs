@@ -8,11 +8,8 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
-import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
-import 'package:win32/win32.dart' as win32;
 
-import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
@@ -36,7 +33,8 @@ void main() {
           fileSystem.same(fileSystem.currentDirectory, path),
           isTrue,
           reason:
-              '${fileSystem.currentDirectory} is a diffent directory than $path',
+              '${fileSystem.currentDirectory} is a diffent directory than'
+              '$path',
         );
       } finally {
         fileSystem.currentDirectory = oldCurrentDirectory;
@@ -57,7 +55,8 @@ void main() {
           fileSystem.same(fileSystem.currentDirectory, path),
           isTrue,
           reason:
-              '${fileSystem.currentDirectory} is a diffent directory than $path',
+              '${fileSystem.currentDirectory} is a diffent directory than '
+              '$path',
         );
       } finally {
         fileSystem.currentDirectory = oldCurrentDirectory;
