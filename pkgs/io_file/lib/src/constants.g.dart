@@ -4,7 +4,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'constant_bindings.g.dart';
-
 int get EACCES {
   final v = get_EACCES();
   if (v == libc_shim_UNDEFINED) {
@@ -126,6 +125,15 @@ int get AT_REMOVEDIR {
   final v = get_AT_REMOVEDIR();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('AT_REMOVEDIR');
+  } else {
+    return v;
+  }
+}
+
+int get PATH_MAX {
+  final v = get_PATH_MAX();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PATH_MAX');
   } else {
     return v;
   }
@@ -400,3 +408,4 @@ int get UF_HIDDEN {
     return v;
   }
 }
+

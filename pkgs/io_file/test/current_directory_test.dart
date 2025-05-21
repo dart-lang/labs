@@ -16,10 +16,10 @@ import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
-  group('createDirectory', () {
+  group('currentDirectory', () {
     late String tmp;
 
-    setUp(() => tmp = createTemp('createDirectory'));
+    setUp(() => tmp = createTemp('currentDirectory'));
 
     tearDown(() => deleteTemp(tmp));
 
@@ -28,7 +28,7 @@ void main() {
     test('success', () {
       final path = '$tmp/dir';
 
-      fileSystem.createDirectory(path);
+      fileSystem.currentDirectory = path;
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 

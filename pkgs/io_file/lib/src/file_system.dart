@@ -86,9 +86,12 @@ base class FileSystem {
     throw UnsupportedError('createTemporaryDirectory');
   }
 
-  set currentDirectory(String path) {}
+  set currentDirectory(String path) {
+    throw UnsupportedError('currentDirectory');
+  }
+
   String get currentDirectory {
-    throw UnsupportedError('createTemporaryDirectory');
+    throw UnsupportedError('currentDirectory');
   }
 
   /// Deletes the directory at the given path.
