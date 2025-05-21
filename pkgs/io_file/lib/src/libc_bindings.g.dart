@@ -9,121 +9,90 @@ library;
 import 'dart:ffi' as ffi;
 
 @ffi.Native<ffi.Int Function(ffi.Pointer<DIR>)>(symbol: 'libc_shim_closedir')
-external int closedir(
-  ffi.Pointer<DIR> d,
-);
+external int closedir(ffi.Pointer<DIR> d);
 
 @ffi.Native<ffi.Pointer<DIR> Function(ffi.Pointer<ffi.Char>)>(
-    symbol: 'libc_shim_opendir')
-external ffi.Pointer<DIR> opendir(
-  ffi.Pointer<ffi.Char> path,
-);
+  symbol: 'libc_shim_opendir',
+)
+external ffi.Pointer<DIR> opendir(ffi.Pointer<ffi.Char> path);
 
 @ffi.Native<ffi.Pointer<dirent> Function(ffi.Pointer<DIR>)>(
-    symbol: 'libc_shim_readdir')
-external ffi.Pointer<dirent> readdir(
-  ffi.Pointer<DIR> d,
-);
+  symbol: 'libc_shim_readdir',
+)
+external ffi.Pointer<dirent> readdir(ffi.Pointer<DIR> d);
 
 /// <errno.h>
 @ffi.Native<ffi.Void Function(ffi.Int)>(symbol: 'libc_shim_seterrno')
-external void seterrno(
-  int err,
-);
+external void seterrno(int err);
 
 @ffi.Native<ffi.Int Function()>(symbol: 'libc_shim_errno')
 external int errno();
 
 /// <fcntl.h>
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int)>(
-    symbol: 'libc_shim_open')
-external int open(
-  ffi.Pointer<ffi.Char> pathname,
-  int flags,
-  int mode,
-);
+  symbol: 'libc_shim_open',
+)
+external int open(ffi.Pointer<ffi.Char> pathname, int flags, int mode);
 
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
-    symbol: 'libc_shim_mkdir')
-external int mkdir(
-  ffi.Pointer<ffi.Char> pathname,
-  int mode,
-);
+  symbol: 'libc_shim_mkdir',
+)
+external int mkdir(ffi.Pointer<ffi.Char> pathname, int mode);
 
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>)>(
-    symbol: 'libc_shim_stat')
-external int stat(
-  ffi.Pointer<ffi.Char> path,
-  ffi.Pointer<Stat> buf,
-);
+  symbol: 'libc_shim_stat',
+)
+external int stat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
 
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>)>(
-    symbol: 'libc_shim_lstat')
-external int lstat(
-  ffi.Pointer<ffi.Char> path,
-  ffi.Pointer<Stat> buf,
-);
+  symbol: 'libc_shim_lstat',
+)
+external int lstat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
 
 @ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<Stat>)>(
-    symbol: 'libc_shim_fstat')
-external int fstat(
-  int fd,
-  ffi.Pointer<Stat> buf,
-);
+  symbol: 'libc_shim_fstat',
+)
+external int fstat(int fd, ffi.Pointer<Stat> buf);
 
 /// <stdio.h>
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
-    symbol: 'libc_shim_rename')
-external int rename(
-  ffi.Pointer<ffi.Char> old,
-  ffi.Pointer<ffi.Char> newy,
-);
+  symbol: 'libc_shim_rename',
+)
+external int rename(ffi.Pointer<ffi.Char> old, ffi.Pointer<ffi.Char> newy);
 
 /// <stdlib.h>
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
-    symbol: 'libc_shim_getenv')
-external ffi.Pointer<ffi.Char> getenv(
-  ffi.Pointer<ffi.Char> name,
-);
+  symbol: 'libc_shim_getenv',
+)
+external ffi.Pointer<ffi.Char> getenv(ffi.Pointer<ffi.Char> name);
 
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
-    symbol: 'libc_shim_mkdtemp')
-external ffi.Pointer<ffi.Char> mkdtemp(
-  ffi.Pointer<ffi.Char> template,
-);
+  symbol: 'libc_shim_mkdtemp',
+)
+external ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> template);
 
 /// <string.h>
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Int)>(
-    symbol: 'libc_shim_strerror')
-external ffi.Pointer<ffi.Char> strerror(
-  int errnum,
-);
+  symbol: 'libc_shim_strerror',
+)
+external ffi.Pointer<ffi.Char> strerror(int errnum);
 
 /// <unistd.h>
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_chdir')
-external int chdir(
-  ffi.Pointer<ffi.Char> path,
-);
+external int chdir(ffi.Pointer<ffi.Char> path);
 
 @ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_close')
-external int close(
-  int fd,
-);
+external int close(int fd);
 
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int64)>(
-    symbol: 'libc_shim_getcwd')
-external ffi.Pointer<ffi.Char> getcwd(
-  ffi.Pointer<ffi.Char> buf,
-  int size,
-);
+  symbol: 'libc_shim_getcwd',
+)
+external ffi.Pointer<ffi.Char> getcwd(ffi.Pointer<ffi.Char> buf, int size);
 
 @ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>(
-    symbol: 'libc_shim_unlinkat')
-external int unlinkat(
-  int dirfd,
-  ffi.Pointer<ffi.Char> pathname,
-  int flags,
-);
+  symbol: 'libc_shim_unlinkat',
+)
+external int unlinkat(int dirfd, ffi.Pointer<ffi.Char> pathname, int flags);
 
 /// <dirent.h>
 final class dirent extends ffi.Struct {
