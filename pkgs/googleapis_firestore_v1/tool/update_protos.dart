@@ -16,7 +16,7 @@ void main(List<String> args) async {
   final destDir = Directory('protos');
 
   if (protobufDir.existsSync()) {
-    await git(['pull'], cwd: protobufDir);
+    await git(['pull', '--depth', '1'], cwd: protobufDir);
   } else {
     await git([
       'clone',
