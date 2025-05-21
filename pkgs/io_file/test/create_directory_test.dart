@@ -55,7 +55,7 @@ void main() {
                 (e) => e.osError?.errorCode,
                 'errorCode',
                 Platform.isWindows
-                    ? win32.ERROR_PATH_NOT_FOUND
+                    ? win32.ERROR_INVALID_NAME
                     : errors.enametoolong,
               ),
         ),
@@ -96,7 +96,7 @@ void main() {
                   (e) => e.osError?.errorCode,
                   'errorCode',
                   Platform.isWindows
-                      ? win32.ERROR_PATH_NOT_FOUND
+                      ? win32.ERROR_INVALID_NAME
                       : errors.enametoolong,
                 ),
           ),

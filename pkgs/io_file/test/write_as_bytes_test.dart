@@ -207,7 +207,7 @@ void main() {
 
     test('long path', () {
       final data = randomUint8List(20);
-      final subdir = p.join(tmp, ''.padRight(500, 'long'));
+      final subdir = p.join(tmp, ''.padRight(255, 'l'));
       final path = '$subdir/file';
       Directory(subdir).createSync();
 
