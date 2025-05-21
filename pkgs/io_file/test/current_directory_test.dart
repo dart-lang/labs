@@ -25,140 +25,18 @@ void main() {
 
     //TODO(brianquinlan): test with a very long path.
 
-    test('success', () {
+    test('absolute path', () {
       final path = '$tmp/dir';
 
       fileSystem.currentDirectory = path;
       expect(fileSystem.currentDirectory, path);
     });
 
-    test('long absolute path', () {
-      // When using an API to create a directory, the specified path cannot be
-      // so long that you cannot append an 8.3 file name (that is, the directory
-      // name cannot exceed MAX_PATH minus 12).
-      final path = p.join(tmp, ''.padRight(win32.MAX_PATH - 12, 'l'));
-
-      fileSystem.createDirectory(path);
-      expect(FileSystemEntity.isDirectorySync(path), isTrue);
-    });
-
-    test('long relative path', () {
-      // When using an API to create a directory, the specified path cannot be
-      // so long that you cannot append an 8.3 file name (that is, the directory
-      // name cannot exceed MAX_PATH minus 12).
-      final path = ''.padRight(win32.MAX_PATH - 12, 'l');
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        fileSystem.createDirectory(path);
-
-        expect(FileSystemEntity.isDirectorySync('$tmp/$path'), isTrue);
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
-    });
-
-    test('create in non-existent directory', () {
-      final path = '$tmp/foo/dir';
-
-      expect(
-        () => fileSystem.createDirectory(path),
-        throwsA(
-          isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
-              ),
-        ),
-      );
-    });
-
-    test('create over existing directory', () {
+    test('absolute path', () {
       final path = '$tmp/dir';
-      Directory(path).createSync();
 
-      expect(
-        () => fileSystem.createDirectory(path),
-        throwsA(
-          isA<PathExistsException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
-              ),
-        ),
-      );
-    });
-
-    test('create "."', () {
-      const path = '.';
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        expect(
-          () => fileSystem.createDirectory(path),
-          throwsA(
-            isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'create directory failed')
-                .having((e) => e.path, 'path', path)
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  Platform.isWindows
-                      ? win32.ERROR_ALREADY_EXISTS
-                      : errors.eexist,
-                ),
-          ),
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
-    });
-
-    test('create ".."', () {
-      const path = '..';
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        expect(
-          () => fileSystem.createDirectory(path),
-          throwsA(
-            isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'create directory failed')
-                .having((e) => e.path, 'path', path)
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  Platform.isWindows
-                      ? win32.ERROR_ALREADY_EXISTS
-                      : errors.eexist,
-                ),
-          ),
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
-    });
-
-    test('create over existing file', () {
-      final path = '$tmp/file';
-      File(path).createSync();
-
-      expect(
-        () => fileSystem.createDirectory(path),
-        throwsA(
-          isA<PathExistsException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
-              ),
-        ),
-      );
+      fileSystem.currentDirectory = path;
+      expect(fileSystem.currentDirectory, path);
     });
   });
 }
