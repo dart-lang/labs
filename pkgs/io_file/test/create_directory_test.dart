@@ -32,18 +32,23 @@ void main() {
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
-    test('long absolute path', () {
+    test('absolute path, long directory name', () {
+      // On Windows:
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final path = p.join(tmp, ''.padRight(win32.MAX_PATH - 12, 'l'));
+      final dirname = ''.padLeft(
+        Platform.isWindows ? win32.MAX_PATH - 12 : 255,
+        'd',
+      );
+      final path = p.join(tmp, dirname);
 
       fileSystem.createDirectory(path);
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
-    test('too long absolute path', () {
-      final path = p.join(createLongPath(tmp), ''.padRight(256, 'd'));
+    test('absolute path, too long directory name', () {
+      final path = p.join(tmp, ''.padRight(256, 'd'));
 
       expect(
         () => fileSystem.createDirectory(path),
@@ -62,11 +67,15 @@ void main() {
       );
     });
 
-    test('long relative path', () {
+    test('relative path, long directory name', () {
+      // On Windows:
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final path = ''.padRight(win32.MAX_PATH, 'l');
+      final path = ''.padLeft(
+        Platform.isWindows ? win32.MAX_PATH - 12 : 255,
+        'd',
+      );
       final oldCurrentDirectory = fileSystem.currentDirectory;
       fileSystem.currentDirectory = tmp;
       try {
@@ -78,11 +87,8 @@ void main() {
       }
     });
 
-    test('too long relative path', () {
-      // When using an API to create a directory, the specified path cannot be
-      // so long that you cannot append an 8.3 file name (that is, the directory
-      // name cannot exceed MAX_PATH minus 12).
-      final path = ''.padRight(1024, 'l');
+    test('relative path, too long directory name', () {
+      final path = ''.padRight(256, 'd');
       final oldCurrentDirectory = fileSystem.currentDirectory;
       fileSystem.currentDirectory = tmp;
       try {
