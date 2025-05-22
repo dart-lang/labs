@@ -205,9 +205,9 @@ void main() {
       });
     });
 
-    test('long path', () {
+    test('absolute path, long file name', () {
       final data = randomUint8List(20);
-      final subdir = p.join(tmp, ''.padRight(255, 'l'));
+      final subdir = p.join(tmp, ''.padRight(255, 'f'));
       final path = '$subdir/file';
       Directory(subdir).createSync();
 

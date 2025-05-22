@@ -10,6 +10,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -202,6 +203,15 @@ void main() {
 
         expect(File(path).readAsStringSync(), 'Hello World!');
       });
+    });
+
+    test('absolute path, long file name', () {
+      final subdir = p.join(tmp, ''.padRight(255, 'f'));
+      final path = '$subdir/file';
+      Directory(subdir).createSync();
+
+      fileSystem.writeAsString(path, 'Hello World!');
+      expect(File(path).readAsStringSync(), 'Hello World!');
     });
 
     group('encoding', () {

@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:io_file/io_file.dart';
 import 'package:test/test.dart';
+import 'package:path/path.dart' as p;
 
 import 'test_utils.dart';
 
@@ -36,6 +37,36 @@ void main() {
               '${fileSystem.currentDirectory} is a diffent directory than'
               '$path',
         );
+        expect(
+          p.isAbsolute(fileSystem.currentDirectory),
+          isTrue,
+          reason: '${fileSystem.currentDirectory} is not absolute',
+        );
+      } finally {
+        fileSystem.currentDirectory = oldCurrentDirectory;
+      }
+    });
+
+    test('absolute path, too long path', () {
+      final dirnames = ''.padLeft(200, 'd');
+      final path = '$tmp/$dirnames/$dirnames/dir';
+      Directory(path).createSync(recursive: true);
+      final oldCurrentDirectory = fileSystem.currentDirectory;
+
+      try {
+        fileSystem.currentDirectory = path;
+        expect(
+          fileSystem.same(fileSystem.currentDirectory, path),
+          isTrue,
+          reason:
+              '${fileSystem.currentDirectory} is a diffent directory than'
+              '$path',
+        );
+        expect(
+          p.isAbsolute(fileSystem.currentDirectory),
+          isTrue,
+          reason: '${fileSystem.currentDirectory} is not absolute',
+        );
       } finally {
         fileSystem.currentDirectory = oldCurrentDirectory;
       }
@@ -57,6 +88,11 @@ void main() {
           reason:
               '${fileSystem.currentDirectory} is a diffent directory than '
               '$path',
+        );
+        expect(
+          p.isAbsolute(fileSystem.currentDirectory),
+          isTrue,
+          reason: '${fileSystem.currentDirectory} is not absolute',
         );
       } finally {
         fileSystem.currentDirectory = oldCurrentDirectory;

@@ -27,6 +27,7 @@ void main() {
 
     tearDown(() {
       Directory.current = cwd;
+      fileSystem.currentDirectory = cwd.path;
       deleteTemp(tmp);
     });
 
@@ -157,7 +158,7 @@ void main() {
     });
 
     test('same file, absolute and relative paths', () {
-      Directory.current = tmp;
+      fileSystem.currentDirectory = tmp;
       final path1 = '$tmp/file1';
       const path2 = 'file1';
       File(path1).writeAsStringSync('Hello World');
