@@ -43,7 +43,7 @@ void main() {
     });
 
     test('too long absolute path', () {
-      final path = createLongPath(tmp);
+      final path = p.join(createLongPath(tmp), ''.padRight(256, 'd'));
 
       expect(
         () => fileSystem.createDirectory(path),
@@ -66,7 +66,7 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final path = ''.padRight(255, 'l');
+      final path = ''.padRight(win32.MAX_PATH, 'l');
       final oldCurrentDirectory = fileSystem.currentDirectory;
       fileSystem.currentDirectory = tmp;
       try {
