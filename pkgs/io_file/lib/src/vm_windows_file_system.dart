@@ -423,7 +423,7 @@ base class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
+      _apiPath(path, arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,
