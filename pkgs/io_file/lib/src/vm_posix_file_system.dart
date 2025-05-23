@@ -112,7 +112,6 @@ final class PosixFileSystem extends FileSystem {
       });
 
   @override
-
   Metadata metadata(String path) {
     throw UnimplementedError();
   }
