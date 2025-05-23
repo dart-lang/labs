@@ -287,7 +287,7 @@ base class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(),
+      _apiPath(path, arena),
       win32.GENERIC_READ | win32.FILE_SHARE_READ,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE,
       nullptr,
