@@ -10,7 +10,7 @@ topics:
  - gcp
 
 environment:
-  sdk: '^3.0.0'
+  sdk: ^3.0.0
 
 dependencies:
   _discoveryapis_commons: ^1.0.0
@@ -20,7 +20,7 @@ dependencies:
   retry: ^3.1.1
 
 dev_dependencies:
-  dart_flutter_team_lints: ^1.0.0
+  dart_flutter_team_lints: ^3.0.0
   googleapis_auth: ^1.1.0
   http_parser: ^4.0.0
   mime: ^1.0.0

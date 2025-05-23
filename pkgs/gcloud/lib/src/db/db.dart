@@ -85,7 +85,7 @@ class Transaction {
     }
   }
 
-  /// Query for [kind] models with [ancestorKey].
+  /// Query for kind models with [ancestorKey].
   ///
   /// Note that [ancestorKey] is required, since a transaction is not allowed to
   /// touch/look at an arbitrary number of rows.
@@ -325,7 +325,7 @@ class DatastoreDB {
     });
   }
 
-  /// Build a query for [kind] models.
+  /// Build a query for kind models.
   Query<T> query<T extends Model>({Partition? partition, Key? ancestorKey}) {
     // TODO(#26): There is only one case where `partition` is not redundant
     // Namely if `ancestorKey == null` and `partition != null`. We could
@@ -350,8 +350,8 @@ class DatastoreDB {
   /// Any key that is not found in the datastore will have a corresponding
   /// value of null in the list of model objects that is returned.
   ///
-  /// For transactions, please use [beginTransaction] and call the [lookup]
-  /// method on it's returned [Transaction] object.
+  /// For transactions, please use [ds.Datastore.beginTransaction] and call the
+  /// [lookup] method on it's returned [Transaction] object.
   ///
   /// See also:
   ///

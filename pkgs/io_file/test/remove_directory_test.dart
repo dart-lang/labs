@@ -8,17 +8,17 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
-import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
+import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
   group('removeDirectory', () {
     late String tmp;
 
-    setUp(() => tmp = createTemp('createDirectory'));
+    setUp(() => tmp = createTemp('removeDirectory'));
 
     tearDown(() => deleteTemp(tmp));
 
@@ -48,7 +48,7 @@ void main() {
                 'errorCode',
                 Platform.isWindows
                     ? win32.ERROR_DIR_NOT_EMPTY
-                    : stdlibc.ENOTEMPTY,
+                    : errors.enotempty,
               ),
         ),
       );
@@ -65,9 +65,7 @@ void main() {
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                Platform.isWindows
-                    ? win32.ERROR_PATH_NOT_FOUND
-                    : stdlibc.ENOENT,
+                Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
               ),
         ),
       );
@@ -85,7 +83,7 @@ void main() {
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_DIRECTORY : stdlibc.ENOTDIR,
+                Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enotdir,
               ),
         ),
       );
@@ -118,7 +116,7 @@ void main() {
                   'errorCode',
                   Platform.isWindows
                       ? win32.ERROR_PATH_NOT_FOUND
-                      : stdlibc.ENOTDIR,
+                      : errors.enotdir,
                 ),
           ),
         );

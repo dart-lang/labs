@@ -1,7 +1,10 @@
+include: package:lints/core.yaml
+
 analyzer:
   errors:
-    # This is triggered in generated code.
-    unnecessary_import: ignore
+    # TODO: We need to update the grpc generator to escape html entities in
+    # proto comments.
+    unintended_html_in_doc_comment: ignore
 
   exclude:
     - tmp/**

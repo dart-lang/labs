@@ -26,6 +26,14 @@ const projectEnv = 'GCLOUD_E2E_TEST_PROJECT';
 // attempt to account for that.
 const storageListDelay = Duration(seconds: 5);
 
+String? shouldSkip() {
+  if (!Platform.environment.containsKey(projectEnv)) {
+    return '$projectEnv not set';
+  }
+
+  return null;
+}
+
 Future<T> withAuthClient<T>(
   List<String> scopes,
   Future<T> Function(String project, http.Client client) callback, {
