@@ -67,9 +67,7 @@ void main() {
               .having(
                 (e) => e.osError?.errorCode,
                 'errorCode',
-                Platform.isWindows
-                    ? win32.ERROR_INVALID_NAME
-                    : errors.enametoolong,
+                win32.ERROR_FILENAME_EXCED_RANGE,
               ),
         ),
       );
