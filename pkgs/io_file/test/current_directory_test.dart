@@ -12,7 +12,6 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
-import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
