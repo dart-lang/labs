@@ -23,14 +23,17 @@ dev_dependencies:
   io_file:
     path: ../
   # Dependencies required by io_file/test:
+  code_assets: ^0.19.0
+  ffi: ^2.1.4
+  hooks: ^0.19.0
+  logging: ^1.3.0
+  native_toolchain_c: ^0.16.0
+  path: ^1.9.1
+  win32: ^5.11.0
+  errno: ^1.4.1
   stdlibc:
     git:
       # Change this to a released version.
       url: https://github.com/canonical/stdlibc.dart.git
   test: ^1.24.0
   uuid: ^4.5.1
-  win32:
-    git:
-      # TODO(brianquinlan): Change this to a released version.
-      url: https://github.com/halildurmus/win32.git
-      path: packages/win32

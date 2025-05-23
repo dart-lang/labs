@@ -1,5 +1,5 @@
 name: io_file
-description: A starting point for Dart libraries or applications.
+description: File system access functionality written in Dart.
 version: 0.1.0-wip
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/io_file
 publish_to: none
@@ -8,23 +8,24 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  code_assets: ^0.19.0
   ffi: ^2.1.4
+  hooks: ^0.19.0
+  logging: ^1.3.0
+  native_toolchain_c: ^0.16.0
   meta: ^1.16.0
   path: ^1.9.1
-  stdlibc:
-    git:
-      # TODO(brianquinlan): Change this to a released version.
-      url: https://github.com/canonical/stdlibc.dart.git
-  win32:
-    git:
-      # TODO(brianquinlan): Change this to a released version.
-      url: https://github.com/halildurmus/win32.git
-      path: packages/win32
+  win32: ^5.11.0
 
 dev_dependencies:
   args: ^2.7.0
   benchmark_harness: ^2.3.1
   dart_flutter_team_lints: ^3.4.0
-  dartdoc_test: ^0.1.0
+  errno: ^1.4.1
+  ffigen: ^19.0.0
+  stdlibc:
+    git:
+      # Change this to a released version.
+      url: https://github.com/canonical/stdlibc.dart.git
   test: ^1.24.0
   uuid: ^4.5.1

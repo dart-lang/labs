@@ -61,9 +61,10 @@ class Person extends db.Model {
   @db.ModelKeyProperty(propertyName: 'mangledWife')
   db.Key? wife;
 
-  operator ==(Object other) => sameAs(other);
+  @override
+  bool operator ==(Object other) => sameAs(other);
 
-  sameAs(Object other) {
+  bool sameAs(Object other) {
     return other is Person &&
         id == other.id &&
         parentKey == other.parentKey &&
@@ -71,6 +72,9 @@ class Person extends db.Model {
         age == other.age &&
         wife == other.wife;
   }
+
+  @override
+  int get hashCode => Object.hash(name, age, wife);
 
   String toString() => 'Person(id: $id, name: $name, age: $age)';
 }
@@ -126,7 +130,8 @@ class ExpandoPerson extends db.ExpandoModel {
   @db.StringProperty(propertyName: 'NN')
   String? nickname;
 
-  operator ==(Object other) {
+  @override
+  bool operator ==(Object other) {
     if (other is ExpandoPerson && id == other.id && name == other.name) {
       if (additionalProperties.length != other.additionalProperties.length) {
         return false;
@@ -140,6 +145,9 @@ class ExpandoPerson extends db.ExpandoModel {
     }
     return false;
   }
+
+  @override
+  int get hashCode => Object.hash(name, nickname);
 }
 
 Future sleep(Duration duration) => Future.delayed(duration);
@@ -310,7 +318,9 @@ runTests(db.DatastoreDB store, String namespace) {
         persons[0].parentKey = users[0].key;
         users[1].parentKey = persons[1].key;
 
-        return testInsertLookupDelete([]..addAll(users)..addAll(persons));
+        return testInsertLookupDelete([]
+          ..addAll(users)
+          ..addAll(persons));
       });
 
       test('auto_ids', () {
@@ -420,7 +430,7 @@ runTests(db.DatastoreDB store, String namespace) {
         expandoPersons.add(expandoPerson);
       }
 
-      var LOWER_BOUND = 'user2';
+      const LOWER_BOUND = 'user2';
 
       var usersSortedNameDescNicknameAsc = List<User>.from(users);
       usersSortedNameDescNicknameAsc.sort((User a, User b) {
@@ -454,7 +464,9 @@ runTests(db.DatastoreDB store, String namespace) {
           .where((User u) => u.wife == root.append(User, id: 42 + 3))
           .toList();
 
-      var allInserts = <db.Model>[]..addAll(users)..addAll(expandoPersons);
+      var allInserts = <db.Model>[]
+        ..addAll(users)
+        ..addAll(expandoPersons);
       var allKeys = allInserts.map((model) => model.key).toList();
       List<db.Key> userKeys = users.map((model) => model.key).toList();
       List<db.Key> expandoPersonsKeys =

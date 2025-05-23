@@ -86,7 +86,7 @@ void runTests(Datastore datastore, String? namespace) {
             .then((result) => null);
       }, xg: true);
     } else {
-      return datastore.commit(deletes: keys).then((_) => _);
+      return datastore.commit(deletes: keys);
     }
   }
 
@@ -572,7 +572,8 @@ void runTests(Datastore datastore, String? namespace) {
     group('conflicting_transaction', () {
       Future testConflictingTransaction(List<Entity> entities,
           {bool xg = false}) {
-        Future test(List<Entity?> entities, Transaction transaction, value) {
+        Future test(
+            List<Entity?> entities, Transaction transaction, int value) {
           // Change entities:
           var changedEntities = List<Entity?>.filled(entities.length, null);
           for (var i = 0; i < entities.length; i++) {

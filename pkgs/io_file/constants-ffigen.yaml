@@ -1,0 +1,27 @@
+# Run with `dart run ffigen --config constants-ffigen.yaml`.
+name: NativeAddBindings
+description: |
+  Bindings for `constants.g.h`.
+
+  Regenerate bindings with `dart run ffigen --config constants-ffigen.yaml`.
+output: 'lib/src/constant_bindings.g.dart'
+headers:
+  entry-points:
+    - 'src/constants.g.h'
+
+  include-directives:
+    - 'src/constants.g.h'
+comments:
+  style: any
+  length: full
+ffi-native:
+  asset-id: package:io_file/libc_shim
+structs:
+  rename:
+    'libc_shim_(.*)': '$1'
+functions:
+  rename:
+    'libc_shim_(.*)': '$1'
+typedefs:
+  rename:
+    'libc_shim_(.*)': '$1'
