@@ -10,6 +10,7 @@ import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
 import 'package:io_file/src/internal_constants.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -144,6 +145,16 @@ void main() {
       }
     });
     group('regular files', () {
+      test('absolute path, long file name', () {
+        final data = randomUint8List(20);
+        final subdir = p.join(tmp, ''.padRight(255, 'f'));
+        final path = '$subdir/file';
+        Directory(subdir).createSync();
+
+        File(path).writeAsBytesSync(data);
+        expect(fileSystem.readAsBytes(path), data);
+      });
+
       for (var i = 0; i <= 1024; ++i) {
         test('Read small file: $i bytes', () {
           final data = randomUint8List(i);

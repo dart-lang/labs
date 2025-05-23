@@ -17,8 +17,6 @@ import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
-  //TODO(brianquinlan): test with a very long path.
-
   group('writeAsBytes', () {
     late String tmp;
     late String cwd;
