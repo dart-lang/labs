@@ -18,20 +18,18 @@ import 'test_utils.dart';
 void main() {
   group('same', () {
     late String tmp;
-    late Directory cwd;
+    late String cwd;
 
     setUp(() {
       tmp = createTemp('same');
-      cwd = Directory.current;
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
     });
 
     tearDown(() {
-      Directory.current = cwd;
-      fileSystem.currentDirectory = cwd.path;
+      fileSystem.currentDirectory = cwd;
       deleteTemp(tmp);
     });
-
-    //TODO(brianquinlan): test with a very long path.
 
     test('path1 does not exist', () {
       final path1 = '$tmp/file1';
@@ -217,7 +215,6 @@ void main() {
     });
 
     test('same directory, absolute and relative paths', () {
-      Directory.current = tmp;
       final path1 = '$tmp/dir1';
       const path2 = 'dir1';
       Directory(path1).createSync();

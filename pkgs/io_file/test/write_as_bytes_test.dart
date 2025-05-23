@@ -21,10 +21,18 @@ void main() {
 
   group('writeAsBytes', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('writeAsBytes'));
+    setUp(() {
+      tmp = createTemp('writeAsBytes');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('directory', () {
       expect(

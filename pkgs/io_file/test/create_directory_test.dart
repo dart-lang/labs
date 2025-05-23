@@ -18,12 +18,18 @@ import 'test_utils.dart';
 void main() {
   group('createDirectory', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('createDirectory'));
+    setUp(() {
+      tmp = createTemp('createDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
-
-    //TODO(brianquinlan): test with a very long path.
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('success', () {
       final path = '$tmp/dir';
@@ -76,40 +82,29 @@ void main() {
         Platform.isWindows ? win32.MAX_PATH - 12 : 255,
         'd',
       );
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        fileSystem.createDirectory(path);
+      fileSystem.createDirectory(path);
 
-        expect(FileSystemEntity.isDirectorySync('$tmp/$path'), isTrue);
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
+      expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
     test('relative path, too long directory name', () {
       final path = ''.padRight(256, 'd');
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        expect(
-          () => fileSystem.createDirectory(path),
-          throwsA(
-            isA<FileSystemException>()
-                .having((e) => e.message, 'message', 'create directory failed')
-                .having((e) => e.path, 'path', path)
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  Platform.isWindows
-                      ? win32.ERROR_INVALID_NAME
-                      : errors.enametoolong,
-                ),
-          ),
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
+
+      expect(
+        () => fileSystem.createDirectory(path),
+        throwsA(
+          isA<FileSystemException>()
+              .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_INVALID_NAME
+                    : errors.enametoolong,
+              ),
+        ),
+      );
     });
 
     test('create in non-existent directory', () {
@@ -151,52 +146,36 @@ void main() {
 
     test('create "."', () {
       const path = '.';
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        expect(
-          () => fileSystem.createDirectory(path),
-          throwsA(
-            isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'create directory failed')
-                .having((e) => e.path, 'path', path)
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  Platform.isWindows
-                      ? win32.ERROR_ALREADY_EXISTS
-                      : errors.eexist,
-                ),
-          ),
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
+      expect(
+        () => fileSystem.createDirectory(path),
+        throwsA(
+          isA<PathExistsException>()
+              .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
+              ),
+        ),
+      );
     });
 
     test('create ".."', () {
       const path = '..';
-      final oldCurrentDirectory = fileSystem.currentDirectory;
-      fileSystem.currentDirectory = tmp;
-      try {
-        expect(
-          () => fileSystem.createDirectory(path),
-          throwsA(
-            isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'create directory failed')
-                .having((e) => e.path, 'path', path)
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  Platform.isWindows
-                      ? win32.ERROR_ALREADY_EXISTS
-                      : errors.eexist,
-                ),
-          ),
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
+      expect(
+        () => fileSystem.createDirectory(path),
+        throwsA(
+          isA<PathExistsException>()
+              .having((e) => e.message, 'message', 'create directory failed')
+              .having((e) => e.path, 'path', path)
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
+              ),
+        ),
+      );
     });
 
     test('create over existing file', () {

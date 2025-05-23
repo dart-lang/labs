@@ -17,10 +17,18 @@ import 'test_utils.dart';
 void main() {
   group('removeDirectory', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('removeDirectory'));
+    setUp(() {
+      tmp = createTemp('removeDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     //TODO(brianquinlan): test with a very long path.
 

@@ -10,93 +10,90 @@ import 'dart:io';
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+import 'package:win32/win32.dart' as win32;
 
+import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
   group('currentDirectory', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('currentDirectory'));
+    setUp(() {
+      tmp = createTemp('currentDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     //TODO(brianquinlan): test with a very long path.
 
     test('absolute path', () {
       final path = '$tmp/dir';
       Directory(path).createSync(recursive: true);
-      final oldCurrentDirectory = fileSystem.currentDirectory;
 
-      try {
-        fileSystem.currentDirectory = path;
-        expect(
-          fileSystem.same(fileSystem.currentDirectory, path),
-          isTrue,
-          reason:
-              '${fileSystem.currentDirectory} is a diffent directory than'
-              '$path',
-        );
-        expect(
-          p.isAbsolute(fileSystem.currentDirectory),
-          isTrue,
-          reason: '${fileSystem.currentDirectory} is not absolute',
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
+      fileSystem.currentDirectory = path;
+
+      expect(
+        fileSystem.same(fileSystem.currentDirectory, path),
+        isTrue,
+        reason:
+            '${fileSystem.currentDirectory} is a diffent directory than'
+            '$path',
+      );
+      expect(
+        p.isAbsolute(fileSystem.currentDirectory),
+        isTrue,
+        reason: '${fileSystem.currentDirectory} is not absolute',
+      );
     });
 
     test('absolute path, too long path', () {
-      final dirnames = ''.padLeft(200, 'd');
-      final path = '$tmp/$dirnames/$dirnames/dir';
+      // On Windows, limited to MAX_PATH (260) characters.
+      final path = p.join(tmp, ''.padLeft(200, 'a'), ''.padLeft(200, 'b'));
       Directory(path).createSync(recursive: true);
       final oldCurrentDirectory = fileSystem.currentDirectory;
 
-      try {
-        fileSystem.currentDirectory = path;
-        expect(
-          fileSystem.same(fileSystem.currentDirectory, path),
-          isTrue,
-          reason:
-              '${fileSystem.currentDirectory} is a diffent directory than'
-              '$path',
-        );
-        expect(
-          p.isAbsolute(fileSystem.currentDirectory),
-          isTrue,
-          reason: '${fileSystem.currentDirectory} is not absolute',
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
-    });
+      expect(
+        () => fileSystem.currentDirectory = path,
+        throwsA(
+          isA<FileSystemException>()
+              .having((e) => e.path, 'path', path)
+              .having(
+                (e) => e.osError?.errorCode,
+                'errorCode',
+                Platform.isWindows
+                    ? win32.ERROR_INVALID_NAME
+                    : errors.enametoolong,
+              ),
+        ),
+      );
+      expect(fileSystem.currentDirectory, oldCurrentDirectory);
+    }, skip: !Platform.isWindows);
 
     test('relative path', () {
       final path = '$tmp/dir';
       Directory(path).createSync(recursive: true);
-      final oldCurrentDirectory = fileSystem.currentDirectory;
 
-      try {
-        fileSystem.currentDirectory = tmp;
+      fileSystem.currentDirectory = 'dir';
 
-        fileSystem.currentDirectory = 'dir';
-        print(fileSystem.currentDirectory);
-        expect(
-          fileSystem.same(fileSystem.currentDirectory, path),
-          isTrue,
-          reason:
-              '${fileSystem.currentDirectory} is a diffent directory than '
-              '$path',
-        );
-        expect(
-          p.isAbsolute(fileSystem.currentDirectory),
-          isTrue,
-          reason: '${fileSystem.currentDirectory} is not absolute',
-        );
-      } finally {
-        fileSystem.currentDirectory = oldCurrentDirectory;
-      }
+      expect(
+        fileSystem.same(fileSystem.currentDirectory, path),
+        isTrue,
+        reason:
+            '${fileSystem.currentDirectory} is a diffent directory than '
+            '$path',
+      );
+      expect(
+        p.isAbsolute(fileSystem.currentDirectory),
+        isTrue,
+        reason: '${fileSystem.currentDirectory} is not absolute',
+      );
     });
   });
 }

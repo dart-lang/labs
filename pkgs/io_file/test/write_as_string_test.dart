@@ -22,10 +22,18 @@ void main() {
 
   group('writeAsString', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('writeAsString'));
+    setUp(() {
+      tmp = createTemp('writeAsString');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('directory', () {
       expect(

@@ -22,10 +22,18 @@ void main() {
 
   group('readAsBytes', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('readAsBytes'));
+    setUp(() {
+      tmp = createTemp('readAsBytes');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('non-existant file', () {
       expect(
