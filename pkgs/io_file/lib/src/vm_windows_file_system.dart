@@ -26,6 +26,30 @@ void _primeGetLastError() {
 Pointer<Utf16> _apiPath(String path, Allocator a) =>
     (r'\\?\' + p.canonicalize(path)).toNativeUtf16(allocator: a);
 
+/*
+Pointer<Utf16> _apiPath(String path, Allocator a) {
+  var length = 256;
+  var utf16Path = path.toNativeUtf16(allocator: a);
+  do {
+    final buffer = win32.wsalloc(length);
+    try {
+      final result = win32.GetFullPathName(utf16Path, length, buffer, nullptr);
+      if (result == 0) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFullPathName failed', path);
+      }
+      if (result < length) {
+        win32.PathAllocCanonicalize()
+      } else {
+        length = result;
+      }
+    } finally {
+      win32.free(buffer);
+    }
+  } while (true);
+}
+*/
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {

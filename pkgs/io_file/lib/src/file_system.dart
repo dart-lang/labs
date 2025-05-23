@@ -86,11 +86,21 @@ base class FileSystem {
     throw UnsupportedError('createTemporaryDirectory');
   }
 
-  set currentDirectory(String path) {
+  /// The current
+  /// [working directory](https://en.wikipedia.org/wiki/Working_directory) of
+  /// the Dart process.
+  ///
+  /// Setting the value of this field will change the working directory for
+  /// *all* isolates.
+  ///
+  /// On Windows, unless
+  /// [long paths are enabled](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation),
+  /// the maximum length of the [currentDirectory] path is 260 characters.
+  String get currentDirectory {
     throw UnsupportedError('currentDirectory');
   }
 
-  String get currentDirectory {
+  set currentDirectory(String path) {
     throw UnsupportedError('currentDirectory');
   }
 
