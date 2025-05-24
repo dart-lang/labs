@@ -1,5 +1,5 @@
 name: io_file
-description: A starting point for Dart libraries or applications.
+description: File system access functionality written in Dart.
 version: 0.1.0-wip
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/io_file
 publish_to: none
