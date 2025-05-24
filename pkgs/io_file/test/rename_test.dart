@@ -13,12 +13,20 @@ import 'package:test/test.dart';
 import 'test_utils.dart';
 
 void main() {
-  group('move', () {
+  group('rename', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('move'));
+    setUp(() {
+      tmp = createTemp('rename');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     //TODO(brianquinlan): test with a very long path.
 

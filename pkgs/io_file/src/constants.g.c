@@ -7,6 +7,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <sys/stat.h>
 int64_t libc_shim_get_EACCES(void) {
 #ifdef EACCES
@@ -103,6 +104,13 @@ int64_t libc_shim_get_AT_REMOVEDIR(void) {
 #ifdef AT_REMOVEDIR
   assert(AT_REMOVEDIR != libc_shim_UNDEFINED);
   return AT_REMOVEDIR;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_PATH_MAX(void) {
+#ifdef PATH_MAX
+  assert(PATH_MAX != libc_shim_UNDEFINED);
+  return PATH_MAX;
 #endif
   return libc_shim_UNDEFINED;
 }

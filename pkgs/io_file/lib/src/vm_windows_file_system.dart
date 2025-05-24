@@ -23,6 +23,33 @@ void _primeGetLastError() {
   win32.GetLastError();
 }
 
+Pointer<Utf16> _apiPath(String path, Allocator a) =>
+    (r'\\?\' + p.canonicalize(path)).toNativeUtf16(allocator: a);
+
+/*
+Pointer<Utf16> _apiPath(String path, Allocator a) {
+  var length = 256;
+  var utf16Path = path.toNativeUtf16(allocator: a);
+  do {
+    final buffer = win32.wsalloc(length);
+    try {
+      final result = win32.GetFullPathName(utf16Path, length, buffer, nullptr);
+      if (result == 0) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFullPathName failed', path);
+      }
+      if (result < length) {
+        win32.PathAllocCanonicalize()
+      } else {
+        length = result;
+      }
+    } finally {
+      win32.free(buffer);
+    }
+  } while (true);
+}
+*/
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {
@@ -130,8 +157,7 @@ base class WindowsFileSystem extends FileSystem {
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.CreateDirectory(path.toNativeUtf16(allocator: arena), nullptr) ==
-        win32.FALSE) {
+    if (win32.CreateDirectory(_apiPath(path, arena), nullptr) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'create directory failed', path);
     }
@@ -147,6 +173,44 @@ base class WindowsFileSystem extends FileSystem {
     createDirectory(path);
     return path;
   }
+
+  @override
+  set currentDirectory(String path) => using((arena) {
+    // XXX
+    // SetCurrentDirectory does not actually support paths larger than MAX_PATH,
+    // this limitation is due to the size of the internal buffer used for
+    // storing
+    // current directory. In Windows 10, version 1607, changes have been made
+    // to the OS to lift MAX_PATH limitations from file and directory management
+    // APIs, but both application and OS need to opt-in into new behavior.
+    // See https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
+
+    _primeGetLastError();
+    if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'SetCurrentDirectory failed', path);
+    }
+  });
+
+  @override
+  String get currentDirectory => using((arena) {
+    _primeGetLastError();
+
+    var length = 256;
+    do {
+      final buffer = win32.wsalloc(length);
+      try {
+        final result = win32.GetCurrentDirectory(length, buffer);
+        if (result < length) {
+          return buffer.toDartString();
+        } else {
+          length = result;
+        }
+      } finally {
+        win32.free(buffer);
+      }
+    } while (true);
+  });
 
   @override
   void removeDirectory(String path) => using((arena) {
@@ -247,7 +311,7 @@ base class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(),
+      _apiPath(path, arena),
       win32.GENERIC_READ | win32.FILE_SHARE_READ,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE,
       nullptr,
@@ -383,7 +447,7 @@ base class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
+      _apiPath(path, arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,

@@ -18,12 +18,18 @@ import 'test_utils.dart';
 void main() {
   group('createTemporaryDirectory', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('createTemporaryDirectory'));
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
-
-    //TODO(brianquinlan): test with a very long path.
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('no arguments', () {
       final tmp1 = fileSystem.createTemporaryDirectory();

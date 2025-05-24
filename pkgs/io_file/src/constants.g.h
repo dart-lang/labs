@@ -38,6 +38,8 @@ int64_t libc_shim_get_AT_FDCWD(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_AT_REMOVEDIR(void);
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_PATH_MAX(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_S_IEXEC(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_S_IFBLK(void);

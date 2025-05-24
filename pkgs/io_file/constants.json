@@ -48,5 +48,8 @@
   "<fcntl.h>": [
     "AT_FDCWD",
     "AT_REMOVEDIR"
+  ],
+  "<limits.h>": [
+    "PATH_MAX"
   ]
 }
