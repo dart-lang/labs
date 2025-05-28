@@ -5,9 +5,10 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -26,15 +27,15 @@ class AggregationResult extends $pb.GeneratedMessage {
   factory AggregationResult({
     $core.Iterable<$core.MapEntry<$core.String, $1.Value>>? aggregateFields,
   }) {
-    final $result = create();
-    if (aggregateFields != null) {
-      $result.aggregateFields.addEntries(aggregateFields);
-    }
-    return $result;
+    final result = create();
+    if (aggregateFields != null) result.aggregateFields.addEntries(aggregateFields);
+    return result;
   }
-  AggregationResult._() : super();
-  factory AggregationResult.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AggregationResult.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  AggregationResult._();
+
+  factory AggregationResult.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory AggregationResult.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AggregationResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..m<$core.String, $1.Value>(2, _omitFieldNames ? '' : 'aggregateFields', entryClassName: 'AggregationResult.AggregateFieldsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: $1.Value.create, valueDefaultOrMaker: $1.Value.getDefault, packageName: const $pb.PackageName('google.firestore.v1'))
@@ -46,10 +47,12 @@ class AggregationResult extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   AggregationResult copyWith(void Function(AggregationResult) updates) => super.copyWith((message) => updates(message as AggregationResult)) as AggregationResult;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static AggregationResult create() => AggregationResult._();
+  @$core.override
   AggregationResult createEmptyInstance() => create();
   static $pb.PbList<AggregationResult> createRepeated() => $pb.PbList<AggregationResult>();
   @$core.pragma('dart2js:noInline')
@@ -67,5 +70,5 @@ class AggregationResult extends $pb.GeneratedMessage {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

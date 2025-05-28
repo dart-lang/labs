@@ -5,9 +5,10 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -24,15 +25,15 @@ class ExplainOptions extends $pb.GeneratedMessage {
   factory ExplainOptions({
     $core.bool? analyze,
   }) {
-    final $result = create();
-    if (analyze != null) {
-      $result.analyze = analyze;
-    }
-    return $result;
+    final result = create();
+    if (analyze != null) result.analyze = analyze;
+    return result;
   }
-  ExplainOptions._() : super();
-  factory ExplainOptions.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ExplainOptions.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ExplainOptions._();
+
+  factory ExplainOptions.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ExplainOptions.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExplainOptions', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'analyze')
@@ -44,10 +45,12 @@ class ExplainOptions extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExplainOptions copyWith(void Function(ExplainOptions) updates) => super.copyWith((message) => updates(message as ExplainOptions)) as ExplainOptions;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ExplainOptions create() => ExplainOptions._();
+  @$core.override
   ExplainOptions createEmptyInstance() => create();
   static $pb.PbList<ExplainOptions> createRepeated() => $pb.PbList<ExplainOptions>();
   @$core.pragma('dart2js:noInline')
@@ -64,7 +67,7 @@ class ExplainOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool get analyze => $_getBF(0);
   @$pb.TagNumber(1)
-  set analyze($core.bool v) { $_setBool(0, v); }
+  set analyze($core.bool value) => $_setBool(0, value);
   @$pb.TagNumber(1)
   $core.bool hasAnalyze() => $_has(0);
   @$pb.TagNumber(1)
@@ -77,18 +80,16 @@ class ExplainMetrics extends $pb.GeneratedMessage {
     PlanSummary? planSummary,
     ExecutionStats? executionStats,
   }) {
-    final $result = create();
-    if (planSummary != null) {
-      $result.planSummary = planSummary;
-    }
-    if (executionStats != null) {
-      $result.executionStats = executionStats;
-    }
-    return $result;
+    final result = create();
+    if (planSummary != null) result.planSummary = planSummary;
+    if (executionStats != null) result.executionStats = executionStats;
+    return result;
   }
-  ExplainMetrics._() : super();
-  factory ExplainMetrics.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ExplainMetrics.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ExplainMetrics._();
+
+  factory ExplainMetrics.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ExplainMetrics.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExplainMetrics', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOM<PlanSummary>(1, _omitFieldNames ? '' : 'planSummary', subBuilder: PlanSummary.create)
@@ -101,10 +102,12 @@ class ExplainMetrics extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExplainMetrics copyWith(void Function(ExplainMetrics) updates) => super.copyWith((message) => updates(message as ExplainMetrics)) as ExplainMetrics;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ExplainMetrics create() => ExplainMetrics._();
+  @$core.override
   ExplainMetrics createEmptyInstance() => create();
   static $pb.PbList<ExplainMetrics> createRepeated() => $pb.PbList<ExplainMetrics>();
   @$core.pragma('dart2js:noInline')
@@ -115,7 +118,7 @@ class ExplainMetrics extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   PlanSummary get planSummary => $_getN(0);
   @$pb.TagNumber(1)
-  set planSummary(PlanSummary v) { $_setField(1, v); }
+  set planSummary(PlanSummary value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPlanSummary() => $_has(0);
   @$pb.TagNumber(1)
@@ -129,7 +132,7 @@ class ExplainMetrics extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   ExecutionStats get executionStats => $_getN(1);
   @$pb.TagNumber(2)
-  set executionStats(ExecutionStats v) { $_setField(2, v); }
+  set executionStats(ExecutionStats value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasExecutionStats() => $_has(1);
   @$pb.TagNumber(2)
@@ -143,15 +146,15 @@ class PlanSummary extends $pb.GeneratedMessage {
   factory PlanSummary({
     $core.Iterable<$8.Struct>? indexesUsed,
   }) {
-    final $result = create();
-    if (indexesUsed != null) {
-      $result.indexesUsed.addAll(indexesUsed);
-    }
-    return $result;
+    final result = create();
+    if (indexesUsed != null) result.indexesUsed.addAll(indexesUsed);
+    return result;
   }
-  PlanSummary._() : super();
-  factory PlanSummary.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PlanSummary.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  PlanSummary._();
+
+  factory PlanSummary.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory PlanSummary.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PlanSummary', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pc<$8.Struct>(1, _omitFieldNames ? '' : 'indexesUsed', $pb.PbFieldType.PM, subBuilder: $8.Struct.create)
@@ -163,10 +166,12 @@ class PlanSummary extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PlanSummary copyWith(void Function(PlanSummary) updates) => super.copyWith((message) => updates(message as PlanSummary)) as PlanSummary;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PlanSummary create() => PlanSummary._();
+  @$core.override
   PlanSummary createEmptyInstance() => create();
   static $pb.PbList<PlanSummary> createRepeated() => $pb.PbList<PlanSummary>();
   @$core.pragma('dart2js:noInline')
@@ -190,24 +195,18 @@ class ExecutionStats extends $pb.GeneratedMessage {
     $fixnum.Int64? readOperations,
     $8.Struct? debugStats,
   }) {
-    final $result = create();
-    if (resultsReturned != null) {
-      $result.resultsReturned = resultsReturned;
-    }
-    if (executionDuration != null) {
-      $result.executionDuration = executionDuration;
-    }
-    if (readOperations != null) {
-      $result.readOperations = readOperations;
-    }
-    if (debugStats != null) {
-      $result.debugStats = debugStats;
-    }
-    return $result;
+    final result = create();
+    if (resultsReturned != null) result.resultsReturned = resultsReturned;
+    if (executionDuration != null) result.executionDuration = executionDuration;
+    if (readOperations != null) result.readOperations = readOperations;
+    if (debugStats != null) result.debugStats = debugStats;
+    return result;
   }
-  ExecutionStats._() : super();
-  factory ExecutionStats.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ExecutionStats.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ExecutionStats._();
+
+  factory ExecutionStats.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ExecutionStats.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExecutionStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'resultsReturned')
@@ -222,10 +221,12 @@ class ExecutionStats extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExecutionStats copyWith(void Function(ExecutionStats) updates) => super.copyWith((message) => updates(message as ExecutionStats)) as ExecutionStats;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ExecutionStats create() => ExecutionStats._();
+  @$core.override
   ExecutionStats createEmptyInstance() => create();
   static $pb.PbList<ExecutionStats> createRepeated() => $pb.PbList<ExecutionStats>();
   @$core.pragma('dart2js:noInline')
@@ -237,7 +238,7 @@ class ExecutionStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $fixnum.Int64 get resultsReturned => $_getI64(0);
   @$pb.TagNumber(1)
-  set resultsReturned($fixnum.Int64 v) { $_setInt64(0, v); }
+  set resultsReturned($fixnum.Int64 value) => $_setInt64(0, value);
   @$pb.TagNumber(1)
   $core.bool hasResultsReturned() => $_has(0);
   @$pb.TagNumber(1)
@@ -247,7 +248,7 @@ class ExecutionStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $4.Duration get executionDuration => $_getN(1);
   @$pb.TagNumber(3)
-  set executionDuration($4.Duration v) { $_setField(3, v); }
+  set executionDuration($4.Duration value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasExecutionDuration() => $_has(1);
   @$pb.TagNumber(3)
@@ -259,7 +260,7 @@ class ExecutionStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $fixnum.Int64 get readOperations => $_getI64(2);
   @$pb.TagNumber(4)
-  set readOperations($fixnum.Int64 v) { $_setInt64(2, v); }
+  set readOperations($fixnum.Int64 value) => $_setInt64(2, value);
   @$pb.TagNumber(4)
   $core.bool hasReadOperations() => $_has(2);
   @$pb.TagNumber(4)
@@ -280,7 +281,7 @@ class ExecutionStats extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $8.Struct get debugStats => $_getN(3);
   @$pb.TagNumber(5)
-  set debugStats($8.Struct v) { $_setField(5, v); }
+  set debugStats($8.Struct value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasDebugStats() => $_has(3);
   @$pb.TagNumber(5)
@@ -290,5 +291,5 @@ class ExecutionStats extends $pb.GeneratedMessage {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
