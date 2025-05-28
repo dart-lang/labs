@@ -15,7 +15,7 @@ void main(List<String> args) async {
 
   await protoc(src, dst);
 
-  // TODO(devoncarew): We need on option to not generate the pbjson files.
+  // TODO(devoncarew): We need an option to not generate the pbjson files.
   final jsonFiles = dst
       .listSync(recursive: true)
       .whereType<File>()
