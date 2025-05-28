@@ -230,7 +230,7 @@ class TraceClient extends http.BaseClient {
 class RequestImpl extends http.BaseRequest {
   final List<int> _body;
 
-  RequestImpl(String method, Uri url, this._body) : super(method, url);
+  RequestImpl(super.method, super.url, this._body);
 
   @override
   http.ByteStream finalize() {

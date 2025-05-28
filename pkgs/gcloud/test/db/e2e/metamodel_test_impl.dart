@@ -37,8 +37,8 @@ List<Entity> buildEntitiesWithDifferentNamespaces() {
   ];
 }
 
-Future sleep(Duration duration) {
-  var completer = Completer();
+Future<void> sleep(Duration duration) {
+  var completer = Completer<void>();
   Timer(duration, completer.complete);
   return completer.future;
 }

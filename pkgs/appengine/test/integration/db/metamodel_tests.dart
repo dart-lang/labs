@@ -9,7 +9,6 @@ import 'dart:async';
 import 'package:test/test.dart';
 
 import 'package:gcloud/datastore.dart';
-import 'package:gcloud/datastore.dart' show Key, Partition;
 import 'package:gcloud/db.dart' as db;
 import 'package:gcloud/db/metamodel.dart';
 

@@ -21,7 +21,8 @@ const _rootPath = '/storage/v1/';
 
 MockClient mockClient() => MockClient(_hostName, _rootPath);
 
-void withMockClient(Function(MockClient client, Storage storage) function) {
+void withMockClient(
+    dynamic Function(MockClient client, Storage storage) function) {
   var mock = mockClient();
   function(mock, Storage(mock, testProject));
 }
@@ -328,8 +329,9 @@ void main() {
 
     final isDetailedApiError = isA<storage.DetailedApiRequestError>();
 
-    void expectNormalUpload(MockClient mock, data, String objectName) {
-      var bytes = data.fold([], (p, e) => p..addAll(e));
+    void expectNormalUpload(
+        MockClient mock, List<List<int>> data, String objectName) {
+      var bytes = data.fold(<int>[], (p, e) => p..addAll(e));
       mock.registerUpload('POST', 'b/$bucketName/o', expectAsync1((request) {
         return mock
             .processNormalMediaUpload(request)
@@ -344,8 +346,9 @@ void main() {
       }));
     }
 
-    void expectResumableUpload(MockClient mock, data, String objectName) {
-      var bytes = data.fold([], (p, e) => p..addAll(e));
+    void expectResumableUpload(
+        MockClient mock, List<List<int>> data, String objectName) {
+      var bytes = data.fold(<int>[], (p, e) => p..addAll(e));
       expect(bytes.length, bytesResumableUpload.length);
       var count = 0;
       mock.registerResumableUpload('POST', 'b/$bucketName/o',
@@ -370,39 +373,39 @@ void main() {
           }, count: 2));
     }
 
-    void checkResult(result) {
+    void checkResult(dynamic result) {
       expect(result.name, objectName);
     }
 
     Future pipeToSink(StreamSink<List<int>> sink, List<List<int>> data) {
       sink.done.then(expectAsync1(checkResult));
-      sink.done.catchError((e) => throw 'Unexpected $e');
+      sink.done.catchError((Object e) => throw 'Unexpected $e');
       return Stream.fromIterable(data)
           .pipe(sink)
           .then(expectAsync1(checkResult))
-          .catchError((e) => throw 'Unexpected $e');
+          .catchError((Object e) => throw 'Unexpected $e');
     }
 
     Future addStreamToSink(StreamSink<List<int>> sink, List<List<int>> data) {
       sink.done.then(expectAsync1(checkResult));
-      sink.done.catchError((e) => throw 'Unexpected $e');
+      sink.done.catchError((Object e) => throw 'Unexpected $e');
       return sink
           .addStream(Stream.fromIterable(data))
           .then((_) => sink.close())
           .then(expectAsync1(checkResult))
-          .catchError((e) => throw 'Unexpected $e');
+          .catchError((Object e) => throw 'Unexpected $e');
     }
 
     Future addToSink(StreamSink<List<int>> sink, List<List<int>> data) {
       sink.done.then(expectAsync1(checkResult));
-      sink.done.catchError((e) => throw 'Unexpected $e');
+      sink.done.catchError((Object e) => throw 'Unexpected $e');
       for (var bytes in data) {
         sink.add(bytes);
       }
       return sink
           .close()
           .then(expectAsync1(checkResult))
-          .catchError((e) => throw 'Unexpected $e');
+          .catchError((Object e) => throw 'Unexpected $e');
     }
 
     Future runTest(
@@ -877,7 +880,7 @@ void main() {
               expectAsync1(mock.respondBytes));
 
           var bucket = api.bucket(bucketName);
-          var data = [];
+          var data = <int>[];
 
           await bucket.read(objectName).forEach(data.addAll);
           expect(data, MockClient.bytes);
@@ -933,7 +936,7 @@ void main() {
               expectAsync1(mock.respondBytes));
 
           var bucket = api.bucket(bucketName);
-          var data = [];
+          var data = <int>[];
 
           await bucket.read(objectName, length: 4).forEach(data.addAll);
           expect(data, MockClient.bytes.sublist(0, 4));
@@ -946,7 +949,7 @@ void main() {
               expectAsync1(mock.respondBytes));
 
           var bucket = api.bucket(bucketName);
-          var data = [];
+          var data = <int>[];
 
           await bucket
               .read(objectName, offset: 1, length: 3)

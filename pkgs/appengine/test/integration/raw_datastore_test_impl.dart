@@ -95,7 +95,7 @@ runTests(Datastore datastore, String namespace) {
             .then((result) => null);
       }, xg: true);
     } else {
-      return datastore.commit(deletes: keys).then((_) => _);
+      return datastore.commit(deletes: keys);
     }
   }
 
@@ -580,7 +580,7 @@ runTests(Datastore datastore, String namespace) {
         return insert(entities, [], transactional: true).then((_) {
           var keys = entities.map((e) => e.key).toList();
 
-          var NUM_TRANSACTIONS = 10;
+          const NUM_TRANSACTIONS = 10;
 
           // Start transactions
           var transactions = <Future<Transaction>>[];
@@ -731,11 +731,11 @@ runTests(Datastore datastore, String namespace) {
           partition: partition);
       var stringNamedKeys = stringNamedEntities.map((e) => e.key).toList();
 
-      var QUERY_KEY = TEST_PROPERTY_KEY_PREFIX;
-      var QUERY_UPPER_BOUND = "${TEST_PROPERTY_VALUE_PREFIX}4";
-      var QUERY_LOWER_BOUND = "${TEST_PROPERTY_VALUE_PREFIX}1";
-      var QUERY_LIST_ENTRY = '${TEST_LIST_VALUE}2';
-      var QUERY_INDEX_VALUE = '${TEST_INDEXED_PROPERTY_VALUE_PREFIX}1';
+      const QUERY_KEY = TEST_PROPERTY_KEY_PREFIX;
+      const QUERY_UPPER_BOUND = "${TEST_PROPERTY_VALUE_PREFIX}4";
+      const QUERY_LOWER_BOUND = "${TEST_PROPERTY_VALUE_PREFIX}1";
+      const QUERY_LIST_ENTRY = '${TEST_LIST_VALUE}2';
+      const QUERY_INDEX_VALUE = '${TEST_INDEXED_PROPERTY_VALUE_PREFIX}1';
 
       var reverseOrderFunction = (Entity a, Entity b) {
         // Reverse the order

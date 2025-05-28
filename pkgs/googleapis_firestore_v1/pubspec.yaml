@@ -1,0 +1,14 @@
+name: googleapis_firestore_v1
+description: A gRPC client for the Cloud Firestore API.
+version: 0.1.0
+repository: https://github.com/dart-lang/labs/tree/main/pkgs/googleapis_firestore_v1
+
+publish_to: none
+
+environment:
+  sdk: ^3.7.0
+
+#dependencies:
+
+dev_dependencies:
+  lints: ^6.0.0

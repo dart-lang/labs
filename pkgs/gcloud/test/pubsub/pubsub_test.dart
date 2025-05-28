@@ -383,7 +383,7 @@ void main() {
               var totalPages = (n + pageSize - 1) ~/ pageSize;
               var pageCount = 0;
 
-              var completer = Completer();
+              var completer = Completer<void>();
               var mock = mockClient();
               registerQueryMock(mock, n, pageSize);
 
@@ -811,7 +811,7 @@ void main() {
             var totalPages = (n + pageSize - 1) ~/ pageSize;
             var pageCount = 0;
 
-            var completer = Completer();
+            var completer = Completer<void>();
             var mock = mockClient();
             registerQueryMock(mock, n, pageSize, topic: topic);
 

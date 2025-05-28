@@ -102,8 +102,7 @@ Future fork(Future Function() func, {Function? onError}) {
   return currentServiceScope._fork(func, onError: onError);
 }
 
-/// Register a new [object] into the current service scope using the given
-/// [key].
+/// Register [value] into the current service scope using the given [key].
 ///
 /// If [onScopeExit] is provided, it will be called when the service scope ends.
 ///
@@ -240,7 +239,7 @@ class _ServiceScope {
   /// Runs all on-scope-exit functions in [_ServiceScope].
   Future _runScopeExitHandlers() {
     _cleaningUp = true;
-    var errors = [];
+    var errors = <Object>[];
 
     // We are running all on-scope-exit functions in reverse registration order.
     // Even if one fails, we continue cleaning up and report then the list of
@@ -252,7 +251,7 @@ class _ServiceScope {
       }
       if (registeredEntry.scopeExitCallback != null) {
         return Future.sync(registeredEntry.scopeExitCallback!)
-            .catchError((e, s) => errors.add(e));
+            .catchError((Object e, s) => errors.add(e));
       } else {
         return Future.value();
       }

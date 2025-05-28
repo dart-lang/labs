@@ -168,7 +168,7 @@ class ModelDBImpl implements ModelDB {
     return modelDescription.fieldNameToPropertyName(fieldName);
   }
 
-  /// Converts [value] according to the [Property] named [name] in [type].
+  /// Converts [value] according to the given [kind].
   @override
   Object? toDatastoreValue(String kind, String fieldName, Object? value,
       {bool forComparison = false}) {
@@ -528,8 +528,7 @@ class _ExpandoModelDescription extends _ModelDescription<ExpandoModel> {
   late Set<String> realPropertyNames;
   late Set<String> usedNames;
 
-  _ExpandoModelDescription(String kind, bool useIntegerId)
-      : super(kind, useIntegerId);
+  _ExpandoModelDescription(super.kind, super.useIntegerId);
 
   @override
   void initialize(ModelDBImpl db) {
