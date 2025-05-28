@@ -5,9 +5,21 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:meta/meta.dart' show sealed;
+
 // TODO(brianquinlan): When we switch to using exception types outside of
 // `dart:io` then change the doc strings to use reference syntax rather than
 // code syntax e.g. `PathExistsException` => [PathExistsException].
+
+/// Information about a directory, link, etc. stored in the [FileSystem].
+abstract interface class Metadata {
+  // TODO(brianquinlan): Document all public fields.
+
+  bool get isFile;
+  bool get isDirectory;
+  bool get isLink;
+  int get size;
+}
 
 /// The modes in which a File can be written.
 class WriteMode {
@@ -34,26 +46,18 @@ class WriteMode {
 }
 
 /// An abstract representation of a file system.
-base class FileSystem {
-  /// Checks whether two paths refer to the same object in the file system.
-  ///
-  /// Throws `PathNotFoundException` if either path doesn't exist.
-  ///
-  /// Links are resolved before determining if the paths refer to the same
-  /// object. Throws `PathNotFoundException` if either path requires resolving
-  /// a broken link.
-  bool same(String path1, String path2) {
-    throw UnsupportedError('same');
-  }
-
+///
+/// TODO(brianquinlan): Far now, this class is not meant to be implemented,
+/// extended outside of this package. Clarify somewhere that people implementing
+/// this class should reach out to be.
+@sealed
+abstract class FileSystem {
   /// Create a directory at the given path.
   ///
   /// If the directory already exists, then `PathExistsException` is thrown.
   ///
   /// If the parent path does not exist, then `PathNotFoundException` is thrown.
-  void createDirectory(String path) {
-    throw UnsupportedError('createDirectory');
-  }
+  void createDirectory(String path);
 
   /// Creates a temporary directory and returns its path.
   ///
@@ -82,9 +86,13 @@ base class FileSystem {
   ///   fileSystem.createTemporaryDirectory(prefix: 'myproject');
   /// }
   /// ```
-  String createTemporaryDirectory({String? parent, String? prefix}) {
-    throw UnsupportedError('createTemporaryDirectory');
-  }
+  String createTemporaryDirectory({String? parent, String? prefix});
+
+  /// Metadata for the file system object at [path].
+  ///
+  /// If `path` represents a symbolic link then metadata for the link is
+  /// returned.
+  Metadata metadata(String path);
 
   /// Deletes the directory at the given path.
   ///
@@ -97,17 +105,13 @@ base class FileSystem {
   /// - On Windows, if `path` is a symbolic link to a directory then the
   ///   symbolic link is deleted. Otherwise, a `FileSystemException` is thrown.
   /// - On POSIX, a `FileSystemException` is thrown.
-  void removeDirectory(String path) {
-    throw UnsupportedError('removeDirectory');
-  }
+  void removeDirectory(String path);
 
   /// Deletes the directory at the given path and its contents.
   ///
   /// If the directory (or its subdirectories) contains any symbolic links then
   /// those links are deleted but their targets are not.
-  void removeDirectoryTree(String path) {
-    throw UnsupportedError('removeDirectoryTree');
-  }
+  void removeDirectoryTree(String path);
 
   /// Renames, and possibly moves a file system object from one path to another.
   ///
@@ -125,14 +129,19 @@ base class FileSystem {
   // If `newPath` identifies an existing file or link, that entity is removed
   // first. If `newPath` identifies an existing directory, the operation
   // fails and raises [PathExistsException].
-  void rename(String oldPath, String newPath) {
-    throw UnsupportedError('rename');
-  }
+  void rename(String oldPath, String newPath);
 
   /// Reads the entire file contents as a list of bytes.
-  Uint8List readAsBytes(String path) {
-    throw UnsupportedError('readAsBytes');
-  }
+  Uint8List readAsBytes(String path);
+
+  /// Checks whether two paths refer to the same object in the file system.
+  ///
+  /// Throws `PathNotFoundException` if either path doesn't exist.
+  ///
+  /// Links are resolved before determining if the paths refer to the same
+  /// object. Throws `PathNotFoundException` if either path requires resolving
+  /// a broken link.
+  bool same(String path1, String path2);
 
   /// The directory path used to store temporary files.
   ///
@@ -156,9 +165,7 @@ base class FileSystem {
     String path,
     Uint8List data, [
     WriteMode mode = WriteMode.failExisting,
-  ]) {
-    throw UnsupportedError('writeAsBytes');
-  }
+  ]);
 
   /// Write the string to a file.
   ///
@@ -177,7 +184,5 @@ base class FileSystem {
     WriteMode mode = WriteMode.failExisting,
     Encoding encoding = utf8,
     String? lineTerminator,
-  ]) {
-    throw UnsupportedError('writeAsString');
-  }
+  ]);
 }

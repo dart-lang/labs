@@ -64,7 +64,7 @@ external int write(int fd, Pointer<Uint8> buf, int count);
 
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
-base class PosixFileSystem extends FileSystem {
+final class PosixFileSystem extends FileSystem {
   @override
   bool same(String path1, String path2) => ffi.using((arena) {
     final stat1 = arena<libc.Stat>();
@@ -112,6 +112,11 @@ base class PosixFileSystem extends FileSystem {
       });
 
   @override
+  Metadata metadata(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
   void removeDirectory(String path) => ffi.using((arena) {
     if (libc.unlinkat(
           libc.AT_FDCWD,
@@ -123,6 +128,11 @@ base class PosixFileSystem extends FileSystem {
       throw _getError(errno, 'remove directory failed', path);
     }
   });
+
+  @override
+  void removeDirectoryTree(String path) {
+    throw UnimplementedError();
+  }
 
   @override
   void rename(String oldPath, String newPath) => ffi.using((arena) {
