@@ -34,13 +34,15 @@ Future<void> protoc(Directory source, Directory dest) async {
     (file) => path.relative(file.path, from: source.path),
   );
 
+  final protocPlugin = Platform.script.resolve('protoc_plugin.sh').toFilePath();
+
   final args = <String>[
     // The protos include path.
     '--proto_path=${source.path}',
     // Where to write the generated Dart code.
     '--dart_out=grpc:${dest.path}',
     // protoc_plugin.sh trampolines into package:protoc_plugin.
-    '--plugin=tool/protoc_plugin.sh',
+    '--plugin=$protocPlugin',
     // The proto files to compile.
     ...names,
   ];
