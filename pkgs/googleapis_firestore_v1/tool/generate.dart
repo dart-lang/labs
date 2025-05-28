@@ -42,7 +42,7 @@ Future<void> protoc(Directory source, Directory dest) async {
     // Where to write the generated Dart code.
     '--dart_out=grpc:${dest.path}',
     // protoc_plugin.sh trampolines into package:protoc_plugin.
-    '--plugin=$protocPlugin',
+    '--plugin=dart=$protocPlugin',
     // The proto files to compile.
     ...names,
   ];
