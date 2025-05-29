@@ -11,16 +11,49 @@ import 'package:meta/meta.dart' show sealed;
 // `dart:io` then change the doc strings to use reference syntax rather than
 // code syntax e.g. `PathExistsException` => [PathExistsException].
 
+enum FileSystemType {
+  block, // POSIX
+  character, // POSIX, windows
+  directory,
+  file,
+  link,
+  pipe, // or fifo, windows
+  socket, // Posix
+  unknown,
+}
+
 /// Information about a directory, link, etc. stored in the [FileSystem].
 abstract interface class Metadata {
   // TODO(brianquinlan): Document all public fields.
 
+  FileSystemType get type;
+
+  /// Whether the file system object is a regular file.
+  ///
+  /// This will be `false` for some file system objects that can be read or
+  /// written to, such as sockets, pipse, and character devices. The most
+  /// reliable way to determine if a file system object can be read or written
+  /// to is to attempt to open it.
+  ///
+  /// At most one of [isDirectory], [isFile], or [isLink] will be `true`.
   bool get isFile;
+
+  /// Whether the file system object is a directory.
+  ///
+  /// At most one of [isDirectory], [isFile], or [isLink] will be `true`.
   bool get isDirectory;
+
+  /// Whether the file system object is symbolic link.
+  ///
+  /// At most one of [isDirectory], [isFile], or [isLink] will be `true`.
   bool get isLink;
 
   // Size of directories and links is platform specific.
   int get size;
+
+  DateTime? get access;
+  DateTime? get creation;
+  DateTime? get modification;
 }
 
 /// The modes in which a File can be written.

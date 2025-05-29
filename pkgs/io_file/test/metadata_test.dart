@@ -2,16 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('windows')
+@TestOn('vm')
 library;
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
 import 'errors.dart' as errors;
+import 'fifo.dart';
 import 'test_utils.dart';
 
 void main() {
@@ -37,13 +39,31 @@ void main() {
       );
     });
 
-    group('isDirectory/isFile/isLink', () {
+    group('file types', () {
       test('directory', () {
         final data = fileSystem.metadata(tmp);
         expect(data.isDirectory, isTrue);
         expect(data.isFile, isFalse);
         expect(data.isLink, isFalse);
+        expect(data.type, FileSystemType.directory);
       });
+      test(
+        'tty',
+        () {
+          final data = fileSystem.metadata('/dev/tty');
+          expect(data.isDirectory, isFalse);
+          expect(data.isFile, isFalse);
+          expect(data.isLink, isFalse);
+          expect(data.type, FileSystemType.character);
+        },
+        skip:
+            !(Platform.isAndroid |
+                    Platform.isIOS |
+                    Platform.isLinux |
+                    Platform.isIOS)
+                ? 'no /dev/tty'
+                : false,
+      );
       test('file', () {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('Hello World');
@@ -52,6 +72,19 @@ void main() {
         expect(data.isDirectory, isFalse);
         expect(data.isFile, isTrue);
         expect(data.isLink, isFalse);
+        expect(data.type, FileSystemType.file);
+      });
+      test('fifo', () async {
+        final fifo = (await Fifo.create('$tmp/file'))
+          ..write(Uint8List.fromList([1, 2, 3]));
+        final data = fileSystem.metadata(fifo.path);
+        expect(data.isDirectory, isFalse);
+        expect(data.isFile, isFalse);
+        expect(data.isLink, isFalse);
+        expect(data.type, FileSystemType.pipe);
+
+        fifo.close();
+        File(fifo.path).readAsBytesSync();
       });
       test('file link', () {
         File('$tmp/file1').writeAsStringSync('Hello World');
@@ -62,8 +95,8 @@ void main() {
         expect(data.isDirectory, isFalse);
         expect(data.isFile, isFalse);
         expect(data.isLink, isTrue);
+        expect(data.type, FileSystemType.link);
       });
-
       test('directory link', () {
         File('$tmp/file1').writeAsStringSync('Hello World');
         final path = '$tmp/link';
@@ -73,6 +106,7 @@ void main() {
         expect(data.isDirectory, isFalse);
         expect(data.isFile, isFalse);
         expect(data.isLink, isTrue);
+        expect(data.type, FileSystemType.link);
       });
     });
 
@@ -90,6 +124,53 @@ void main() {
 
         final data = fileSystem.metadata(path);
         expect(data.size, 12);
+      });
+    });
+
+    group(
+      'creation',
+      () {
+        test('newly created', () {
+          final path = '$tmp/file1';
+          File(path).writeAsStringSync('');
+
+          final data = fileSystem.metadata(path);
+          expect(
+            data.creation!.millisecondsSinceEpoch,
+            closeTo(DateTime.now().millisecondsSinceEpoch, 5000),
+          );
+        });
+      },
+      skip:
+          !(Platform.isIOS || Platform.isMacOS || Platform.isWindows)
+              ? 'creation not supported'
+              : false,
+    );
+
+    group('modification', () {
+      test('newly created', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World!');
+
+        final data = fileSystem.metadata(path);
+        expect(
+          data.modification!.millisecondsSinceEpoch,
+          closeTo(DateTime.now().millisecondsSinceEpoch, 5000),
+        );
+      });
+      test('modified after creation', () async {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World!');
+        final data1 = fileSystem.metadata(path);
+
+        await Future<void>.delayed(const Duration(milliseconds: 1000));
+        File(path).writeAsStringSync('Hello World!');
+        final data2 = fileSystem.metadata(path);
+
+        expect(
+          data2.modification!.millisecondsSinceEpoch,
+          greaterThan(data1.modification!.millisecondsSinceEpoch),
+        );
       });
     });
   });

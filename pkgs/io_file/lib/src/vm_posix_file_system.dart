@@ -52,31 +52,82 @@ int _tempFailureRetry(int Function() f) {
 
 /// File system entity data available on Windows.
 final class PosixMetadata implements Metadata {
-  final int _mode;
-  final int _flags;
-
-  int get _fmt => _mode & libc.S_IFMT;
-
-  @override
-  bool get isDirectory => _fmt == libc.S_IFDIR;
-
-  @override
-  bool get isFile => !(isDirectory || isLink);
-
-  @override
-  bool get isLink => _fmt == libc.S_IFLNK;
+  final int mode;
+  final int flags;
 
   @override
   final int size;
 
-  bool get isHidden {
-    if (io.Platform.isIOS || io.Platform.isMacOS) {
-      return _flags & libc.UF_HIDDEN != 0;
+  final int accessedTimeNanos;
+  final int? creationTimeNanos;
+  final int modificationTimeNanos;
+
+  int get _fmt => mode & libc.S_IFMT;
+
+  @override
+  FileSystemType get type {
+    if (_fmt == libc.S_IFBLK) {
+      return FileSystemType.block;
     }
-    throw UnsupportedError('isHidden is only supported on iOS/macOS');
+    if (_fmt == libc.S_IFCHR) {
+      return FileSystemType.character;
+    }
+    if (_fmt == libc.S_IFDIR) {
+      return FileSystemType.directory;
+    }
+    if (_fmt == libc.S_IFREG) {
+      return FileSystemType.file;
+    }
+    if (_fmt == libc.S_IFLNK) {
+      return FileSystemType.link;
+    }
+    if (_fmt == libc.S_IFIFO) {
+      return FileSystemType.pipe;
+    }
+    if (_fmt == libc.S_IFSOCK) {
+      return FileSystemType.socket;
+    }
+    return FileSystemType.unknown;
   }
 
-  PosixMetadata._(this._mode, this._flags, this.size);
+  @override
+  bool get isDirectory => type == FileSystemType.directory;
+
+  @override
+  bool get isFile => type == FileSystemType.file;
+
+  @override
+  bool get isLink => type == FileSystemType.link;
+
+  @override
+  DateTime get access =>
+      DateTime.fromMicrosecondsSinceEpoch(accessedTimeNanos ~/ 1000);
+
+  @override
+  DateTime? get creation =>
+      creationTimeNanos == null
+          ? null
+          : DateTime.fromMicrosecondsSinceEpoch(creationTimeNanos! ~/ 1000);
+
+  @override
+  DateTime get modification =>
+      DateTime.fromMicrosecondsSinceEpoch(modificationTimeNanos ~/ 1000);
+
+  bool? get isHidden {
+    if (io.Platform.isIOS || io.Platform.isMacOS) {
+      return flags & libc.UF_HIDDEN != 0;
+    }
+    return null;
+  }
+
+  PosixMetadata._(
+    this.mode,
+    this.flags,
+    this.size,
+    this.accessedTimeNanos,
+    this.creationTimeNanos,
+    this.modificationTimeNanos,
+  );
 
   /// TODO(bquinlan): Document this constructor.
   ///
@@ -86,7 +137,37 @@ final class PosixMetadata implements Metadata {
     required int mode,
     int flags = 0,
     int size = 0,
-  }) => PosixMetadata._(mode, flags, size);
+    int accessedTimeNanos = 0,
+    int? creationTimeNanos,
+    int modificationTimeNanos = 0,
+  }) => PosixMetadata._(
+    mode,
+    flags,
+    size,
+    accessedTimeNanos,
+    creationTimeNanos,
+    modificationTimeNanos,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      other is PosixMetadata &&
+      mode == other.mode &&
+      flags == other.flags &&
+      size == other.size &&
+      accessedTimeNanos == other.accessedTimeNanos &&
+      creationTimeNanos == other.creationTimeNanos &&
+      modificationTimeNanos == other.modificationTimeNanos;
+
+  @override
+  int get hashCode => Object.hash(
+    mode,
+    flags,
+    size,
+    accessedTimeNanos,
+    creationTimeNanos,
+    modificationTimeNanos,
+  );
 }
 
 /// The POSIX `read` function.
@@ -163,6 +244,12 @@ final class PosixFileSystem extends FileSystem {
       mode: stat.ref.st_mode,
       flags: stat.ref.st_flags,
       size: stat.ref.st_size,
+      accessedTimeNanos:
+          stat.ref.st_atim.tv_sec * 1000000000 + stat.ref.st_atim.tv_sec,
+      creationTimeNanos:
+          stat.ref.st_btime.tv_sec * 1000000000 + stat.ref.st_btime.tv_sec,
+      modificationTimeNanos:
+          stat.ref.st_mtim.tv_sec * 1000000000 + stat.ref.st_mtim.tv_sec,
     );
   });
 

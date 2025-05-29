@@ -94,12 +94,34 @@ final class WindowsMetadata implements Metadata {
 
   /// Will never have the `FILE_ATTRIBUTE_NORMAL` bit set.
   int _attributes;
+  int _fileType;
+
+  @override
+  FileSystemType get type {
+    if (isDirectory) {
+      return FileSystemType.directory;
+    }
+    if (isLink) {
+      return FileSystemType.link;
+    }
+
+    if (_fileType == win32.FILE_TYPE_CHAR) {
+      return FileSystemType.character;
+    }
+    if (_fileType == win32.FILE_TYPE_DISK) {
+      return FileSystemType.file;
+    }
+    if (_fileType == win32.FILE_TYPE_PIPE) {
+      return FileSystemType.pipe;
+    }
+    return FileSystemType.unknown;
+  }
 
   @override
   bool get isDirectory => _attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0;
 
   @override
-  bool get isFile => !isDirectory && !isLink;
+  bool get isFile => type == FileSystemType.file;
 
   @override
   bool get isLink => _attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT != 0;
@@ -123,12 +145,18 @@ final class WindowsMetadata implements Metadata {
   final int lastAccessTime100Nanos;
   final int lastWriteTime100Nanos;
 
-  DateTime get creation => _fileTimeToDateTime(creationTime100Nanos);
+  @override
   DateTime get access => _fileTimeToDateTime(lastAccessTime100Nanos);
+
+  @override
+  DateTime get creation => _fileTimeToDateTime(creationTime100Nanos);
+
+  @override
   DateTime get modification => _fileTimeToDateTime(lastWriteTime100Nanos);
 
   WindowsMetadata._(
     this._attributes,
+    this._fileType,
     this.size,
     this.creationTime100Nanos,
     this.lastAccessTime100Nanos,
@@ -141,12 +169,14 @@ final class WindowsMetadata implements Metadata {
   /// [File Attribute Constants](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
   factory WindowsMetadata.fromFileAttributes({
     int attributes = 0,
+    int fileType = 0, // FILE_TYPE_UNKNOWN
     int size = 0,
     int creationTime100Nanos = 0,
     int lastAccessTime100Nanos = 0,
     int lastWriteTime100Nanos = 0,
   }) => WindowsMetadata._(
     attributes == win32.FILE_ATTRIBUTE_NORMAL ? 0 : attributes,
+    fileType,
     size,
     creationTime100Nanos,
     lastAccessTime100Nanos,
@@ -155,8 +185,7 @@ final class WindowsMetadata implements Metadata {
 
   /// TODO(bquinlan): Document this constructor.
   factory WindowsMetadata.fromLogicalProperties({
-    bool isDirectory = false,
-    bool isLink = false,
+    FileSystemType type = FileSystemType.unknown,
 
     int size = 0,
 
@@ -172,8 +201,8 @@ final class WindowsMetadata implements Metadata {
     int lastAccessTime100Nanos = 0,
     int lastWriteTime100Nanos = 0,
   }) => WindowsMetadata._(
-    (isDirectory ? win32.FILE_ATTRIBUTE_DIRECTORY : 0) |
-        (isLink ? win32.FILE_ATTRIBUTE_REPARSE_POINT : 0) |
+    (type == FileSystemType.directory ? win32.FILE_ATTRIBUTE_DIRECTORY : 0) |
+        (type == FileSystemType.link ? win32.FILE_ATTRIBUTE_REPARSE_POINT : 0) |
         (isReadOnly ? win32.FILE_ATTRIBUTE_READONLY : 0) |
         (isHidden ? win32.FILE_ATTRIBUTE_HIDDEN : 0) |
         (isSystem ? win32.FILE_ATTRIBUTE_SYSTEM : 0) |
@@ -181,6 +210,12 @@ final class WindowsMetadata implements Metadata {
         (isTemporary ? win32.FILE_ATTRIBUTE_TEMPORARY : 0) |
         (isOffline ? win32.FILE_ATTRIBUTE_OFFLINE : 0) |
         (!isContentIndexed ? win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED : 0),
+    switch (type) {
+      FileSystemType.character => win32.FILE_TYPE_CHAR,
+      FileSystemType.file => win32.FILE_TYPE_DISK,
+      FileSystemType.pipe => win32.FILE_TYPE_PIPE,
+      _ => throw UnsupportedError('$type is not supoorted on Windows'),
+    },
     size,
     creationTime100Nanos,
     lastAccessTime100Nanos,
@@ -191,6 +226,7 @@ final class WindowsMetadata implements Metadata {
   bool operator ==(Object other) =>
       other is WindowsMetadata &&
       _attributes == other._attributes &&
+      _fileType == other._fileType &&
       size == other.size &&
       creationTime100Nanos == other.creationTime100Nanos &&
       lastAccessTime100Nanos == other.lastAccessTime100Nanos &&
@@ -199,6 +235,7 @@ final class WindowsMetadata implements Metadata {
   @override
   int get hashCode => Object.hash(
     _attributes,
+    _fileType,
     size,
     isContentIndexed,
     creationTime100Nanos,
@@ -423,9 +460,10 @@ final class WindowsFileSystem extends FileSystem {
   WindowsMetadata metadata(String path) => using((arena) {
     _primeGetLastError();
 
+    final pathUtf16 = path.toNativeUtf16(allocator: arena);
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
-          path.toNativeUtf16(allocator: arena),
+          pathUtf16,
           win32.GetFileExInfoStandard,
           fileInfo,
         ) ==
@@ -435,8 +473,37 @@ final class WindowsFileSystem extends FileSystem {
     }
     final info = fileInfo.ref;
     final attributes = info.dwFileAttributes;
+
+    final h = win32.CreateFile(
+      pathUtf16,
+      0,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS,
+      win32.NULL,
+    );
+
+    final int fileType;
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'CreateFile failed', path);
+    }
+    try {
+      fileType = win32.GetFileType(h);
+      if (fileType == win32.FILE_TYPE_UNKNOWN) {
+        final errorCode = win32.GetLastError();
+        if (errorCode != win32.ERROR_SUCCESS) {
+          throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
+        }
+      }
+    } finally {
+      win32.CloseHandle(h);
+    }
+
     return WindowsMetadata.fromFileAttributes(
       attributes: attributes,
+      fileType: fileType,
       size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
       creationTime100Nanos:
           info.ftCreationTime.dwHighDateTime << 32 |
@@ -562,8 +629,8 @@ final class WindowsFileSystem extends FileSystem {
   bool same(String path1, String path2) => using((arena) {
     _primeGetLastError();
 
-    final info1 = _byHandleFileInformation(path1, arena);
-    final info2 = _byHandleFileInformation(path2, arena);
+    final info1 = _byHandleFileInformationFromPath(path1, arena);
+    final info2 = _byHandleFileInformationFromPath(path2, arena);
 
     return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
         info1.nFileIndexHigh == info2.nFileIndexHigh &&
@@ -571,12 +638,23 @@ final class WindowsFileSystem extends FileSystem {
   });
 
   // NOTE: the return value is allocated in the given arena!
-  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformationFromPath(
     String path,
+    ffi.Arena arena,
+  ) => _byHandleFileInformationFromPath16(
+    path,
+    path.toNativeUtf16(allocator: arena),
+    arena,
+  );
+
+  // NOTE: the return value is allocated in the given arena!
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformationFromPath16(
+    String path,
+    Pointer<Utf16> path16,
     ffi.Arena arena,
   ) {
     final h = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
+      path16,
       0,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
       nullptr,
