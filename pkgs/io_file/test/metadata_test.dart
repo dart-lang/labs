@@ -9,7 +9,9 @@ import 'dart:io';
 
 import 'package:io_file/io_file.dart';
 import 'package:test/test.dart';
+import 'package:win32/win32.dart' as win32;
 
+import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
@@ -26,13 +28,11 @@ void main() {
       expect(
         () => fileSystem.metadata('$tmp/file1'),
         throwsA(
-          isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'metadata failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                2, // ENOENT, ERROR_FILE_NOT_FOUND
-              ),
+          isA<PathNotFoundException>().having(
+            (e) => e.osError?.errorCode,
+            'errorCode',
+            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
+          ),
         ),
       );
     });
@@ -53,7 +53,7 @@ void main() {
         expect(data.isFile, isTrue);
         expect(data.isLink, isFalse);
       });
-      test('link', () {
+      test('file link', () {
         File('$tmp/file1').writeAsStringSync('Hello World');
         final path = '$tmp/link';
         Link(path).createSync('$tmp/file1');
@@ -63,13 +63,20 @@ void main() {
         expect(data.isFile, isFalse);
         expect(data.isLink, isTrue);
       });
+
+      test('directory link', () {
+        File('$tmp/file1').writeAsStringSync('Hello World');
+        final path = '$tmp/link';
+        Link(path).createSync('$tmp/dir');
+
+        final data = fileSystem.metadata(path);
+        expect(data.isDirectory, isFalse);
+        expect(data.isFile, isFalse);
+        expect(data.isLink, isTrue);
+      });
     });
 
     group('size', () {
-      test('directory', () {
-        final data = fileSystem.metadata(tmp);
-        expect(data.size, 0);
-      });
       test('empty file', () {
         final path = '$tmp/file1';
         File(path).writeAsStringSync('');
@@ -83,14 +90,6 @@ void main() {
 
         final data = fileSystem.metadata(path);
         expect(data.size, 12);
-      });
-      test('link', () {
-        File('$tmp/file1').writeAsStringSync('Hello World');
-        final path = '$tmp/link';
-        Link(path).createSync('$tmp/file1');
-
-        final data = fileSystem.metadata(path);
-        expect(data.size, 0);
       });
     });
   });

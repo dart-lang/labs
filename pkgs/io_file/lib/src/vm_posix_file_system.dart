@@ -50,31 +50,44 @@ int _tempFailureRetry(int Function() f) {
   return result;
 }
 
-final class PosixMetadata {
-  @override
-  final bool isDirectory;
+/// File system entity data available on Windows.
+final class PosixMetadata implements Metadata {
+  final int _mode;
+  final int _flags;
+
+  int get _fmt => _mode & libc.S_IFMT;
 
   @override
-  final bool isFile;
+  bool get isDirectory => _fmt == libc.S_IFDIR;
 
   @override
-  final bool isLink;
+  bool get isFile => !(isDirectory || isLink);
+
+  @override
+  bool get isLink => _fmt == libc.S_IFLNK;
 
   @override
   final int size;
 
-  @override
-  final bool isHidden;
+  bool get isHidden {
+    if (io.Platform.isIOS || io.Platform.isMacOS) {
+      return _flags & libc.UF_HIDDEN != 0;
+    }
+    ;
+    throw UnsupportedError('isHidden is only supported on iOS/macOS');
+  }
 
-  PosixMetadata({
-    this.isDirectory = false,
-    this.isFile = false,
-    this.isLink = false,
+  PosixMetadata._(this._mode, this._flags, this.size);
 
-    this.size = 0,
-
-    this.isHidden = false,
-  });
+  /// TODO(bquinlan): Document this constructor.
+  ///
+  /// Make sure to reference:
+  /// [File Attribute Constants](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
+  factory PosixMetadata.fromFileAttributes({
+    required int mode,
+    int flags = 0,
+    int size = 0,
+  }) => PosixMetadata._(mode, flags, size);
 }
 
 /// The POSIX `read` function.
@@ -139,9 +152,20 @@ final class PosixFileSystem extends FileSystem {
       });
 
   @override
-  Metadata metadata(String path) {
-    throw UnimplementedError();
-  }
+  PosixMetadata metadata(String path) => ffi.using((arena) {
+    final stat = arena<libc.Stat>();
+
+    if (libc.lstat(path.toNativeUtf8(allocator: arena).cast(), stat) == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, 'stat failed', path);
+    }
+
+    return PosixMetadata.fromFileAttributes(
+      mode: stat.ref.st_mode,
+      flags: stat.ref.st_flags,
+      size: stat.ref.st_size,
+    );
+  });
 
   @override
   void removeDirectory(String path) => ffi.using((arena) {
@@ -347,35 +371,6 @@ final class PosixFileSystem extends FileSystem {
       path,
       data is Uint8List ? data : Uint8List.fromList(data),
       mode,
-    );
-  }
-
-  PosixMetadata metadata(String path) {
-    final stat = stdlibc.stat(path);
-    if (stat == null) {
-      final errno = stdlibc.errno;
-      throw _getError(errno, 'stat failed', path);
-    }
-
-    final bool isHidden;
-    if (io.Platform.isIOS || io.Platform.isMacOS) {
-      final flags = stat.st_flags!;
-      isHidden = flags & stdlibc.UF_HIDDEN != 0;
-    } else {
-      isHidden = false;
-    }
-
-    final isDirectory = stat.st_mode & stdlibc.S_IFDIR != 0;
-    final isLink = stat.st_mode & stdlibc.S_IFLNK != 0;
-    final isFile = !(isDirectory || isLink);
-
-    // st_birthtimespec;
-    return PosixMetadata(
-      isDirectory: isDirectory,
-      isFile: isFile,
-      isLink: isLink,
-      size: stat.st_size,
-      isHidden: isHidden,
     );
   }
 }

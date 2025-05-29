@@ -18,6 +18,8 @@ abstract interface class Metadata {
   bool get isFile;
   bool get isDirectory;
   bool get isLink;
+
+  // Size of directories and links is platform specific.
   int get size;
 }
 
