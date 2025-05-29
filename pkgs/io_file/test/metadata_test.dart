@@ -31,7 +31,7 @@ void main() {
           isA<PathNotFoundException>().having(
             (e) => e.osError?.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
+            Platform.isWindows ? win32.ERROR_FILE_NOT_FOUND : errors.enoent,
           ),
         ),
       );
