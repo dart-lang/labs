@@ -73,7 +73,6 @@ final class PosixMetadata implements Metadata {
     if (io.Platform.isIOS || io.Platform.isMacOS) {
       return _flags & libc.UF_HIDDEN != 0;
     }
-    ;
     throw UnsupportedError('isHidden is only supported on iOS/macOS');
   }
 
