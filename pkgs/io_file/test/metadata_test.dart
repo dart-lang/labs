@@ -80,7 +80,12 @@ void main() {
         expect(data.isDirectory, isFalse);
         expect(data.isFile, isFalse);
         expect(data.isLink, isFalse);
-        expect(data.type, FileSystemType.pipe);
+        expect(
+          data.type,
+          // On Windows, a named pape cannot be opened a second time, which
+          // is required to get the file type.
+          Platform.isWindows ? FileSystemType.unknown : FileSystemType.pipe,
+        );
 
         fileSystem.readAsBytes(fifo.path);
       });
