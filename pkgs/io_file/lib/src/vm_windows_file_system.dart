@@ -118,7 +118,10 @@ final class WindowsMetadata implements Metadata {
   }
 
   @override
-  bool get isDirectory => _attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0;
+  // On Windows, a reparse point that refers to a directory will have the
+  // `FILE_ATTRIBUTE_DIRECTORY` attribute.
+  bool get isDirectory =>
+      _attributes & win32.FILE_ATTRIBUTE_DIRECTORY != 0 && !isLink;
 
   @override
   bool get isFile => type == FileSystemType.file;

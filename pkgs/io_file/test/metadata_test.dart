@@ -75,17 +75,14 @@ void main() {
         expect(data.type, FileSystemType.file);
       });
       test('fifo', () async {
-        final fifo = (await Fifo.create('$tmp/file'))
-          ..write(Uint8List.fromList([1, 2, 3]));
-        addTearDown(fifo.close);
+        final fifo = (await Fifo.create('$tmp/file'))..close();
+        File(fifo.path).readAsBytesSync();
 
         final data = fileSystem.metadata(fifo.path);
         expect(data.isDirectory, isFalse);
         expect(data.isFile, isFalse);
         expect(data.isLink, isFalse);
         expect(data.type, FileSystemType.pipe);
-
-        File(fifo.path).readAsBytesSync();
       });
       test('file link', () {
         File('$tmp/file1').writeAsStringSync('Hello World');
