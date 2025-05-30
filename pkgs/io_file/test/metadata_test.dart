@@ -6,7 +6,6 @@
 library;
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
 import 'package:test/test.dart';
