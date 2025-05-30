@@ -29,12 +29,10 @@ class FifoPosix implements Fifo {
     await Isolate.spawn<SendPort>((port) {
       final receivePort = ReceivePort();
       port.send(receivePort.sendPort);
-      print('spawn 1');
       final fd = stdlibc.open(
         suggestedPath,
         flags: stdlibc.O_WRONLY | stdlibc.O_CLOEXEC,
       );
-      print('spawn 2');
       if (fd == -1) {
         throw AssertionError('could not open fifo: ${stdlibc.errno}');
       }
