@@ -5,9 +5,10 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -40,30 +41,20 @@ class Write extends $pb.GeneratedMessage {
     DocumentTransform? transform,
     $core.Iterable<DocumentTransform_FieldTransform>? updateTransforms,
   }) {
-    final $result = create();
-    if (update != null) {
-      $result.update = update;
-    }
-    if (delete != null) {
-      $result.delete = delete;
-    }
-    if (updateMask != null) {
-      $result.updateMask = updateMask;
-    }
-    if (currentDocument != null) {
-      $result.currentDocument = currentDocument;
-    }
-    if (transform != null) {
-      $result.transform = transform;
-    }
-    if (updateTransforms != null) {
-      $result.updateTransforms.addAll(updateTransforms);
-    }
-    return $result;
+    final result = create();
+    if (update != null) result.update = update;
+    if (delete != null) result.delete = delete;
+    if (updateMask != null) result.updateMask = updateMask;
+    if (currentDocument != null) result.currentDocument = currentDocument;
+    if (transform != null) result.transform = transform;
+    if (updateTransforms != null) result.updateTransforms.addAll(updateTransforms);
+    return result;
   }
-  Write._() : super();
-  factory Write.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Write.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Write._();
+
+  factory Write.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Write.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Write_Operation> _Write_OperationByTag = {
     1 : Write_Operation.update,
@@ -87,10 +78,12 @@ class Write extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Write copyWith(void Function(Write) updates) => super.copyWith((message) => updates(message as Write)) as Write;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Write create() => Write._();
+  @$core.override
   Write createEmptyInstance() => create();
   static $pb.PbList<Write> createRepeated() => $pb.PbList<Write>();
   @$core.pragma('dart2js:noInline')
@@ -104,7 +97,7 @@ class Write extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Document get update => $_getN(0);
   @$pb.TagNumber(1)
-  set update($1.Document v) { $_setField(1, v); }
+  set update($1.Document value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUpdate() => $_has(0);
   @$pb.TagNumber(1)
@@ -117,7 +110,7 @@ class Write extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get delete => $_getSZ(1);
   @$pb.TagNumber(2)
-  set delete($core.String v) { $_setString(1, v); }
+  set delete($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasDelete() => $_has(1);
   @$pb.TagNumber(2)
@@ -136,7 +129,7 @@ class Write extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $9.DocumentMask get updateMask => $_getN(2);
   @$pb.TagNumber(3)
-  set updateMask($9.DocumentMask v) { $_setField(3, v); }
+  set updateMask($9.DocumentMask value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasUpdateMask() => $_has(2);
   @$pb.TagNumber(3)
@@ -150,7 +143,7 @@ class Write extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $9.Precondition get currentDocument => $_getN(3);
   @$pb.TagNumber(4)
-  set currentDocument($9.Precondition v) { $_setField(4, v); }
+  set currentDocument($9.Precondition value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCurrentDocument() => $_has(3);
   @$pb.TagNumber(4)
@@ -162,7 +155,7 @@ class Write extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   DocumentTransform get transform => $_getN(4);
   @$pb.TagNumber(6)
-  set transform(DocumentTransform v) { $_setField(6, v); }
+  set transform(DocumentTransform value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasTransform() => $_has(4);
   @$pb.TagNumber(6)
@@ -200,33 +193,21 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
     $1.ArrayValue? appendMissingElements,
     $1.ArrayValue? removeAllFromArray,
   }) {
-    final $result = create();
-    if (fieldPath != null) {
-      $result.fieldPath = fieldPath;
-    }
-    if (setToServerValue != null) {
-      $result.setToServerValue = setToServerValue;
-    }
-    if (increment != null) {
-      $result.increment = increment;
-    }
-    if (maximum != null) {
-      $result.maximum = maximum;
-    }
-    if (minimum != null) {
-      $result.minimum = minimum;
-    }
-    if (appendMissingElements != null) {
-      $result.appendMissingElements = appendMissingElements;
-    }
-    if (removeAllFromArray != null) {
-      $result.removeAllFromArray = removeAllFromArray;
-    }
-    return $result;
+    final result = create();
+    if (fieldPath != null) result.fieldPath = fieldPath;
+    if (setToServerValue != null) result.setToServerValue = setToServerValue;
+    if (increment != null) result.increment = increment;
+    if (maximum != null) result.maximum = maximum;
+    if (minimum != null) result.minimum = minimum;
+    if (appendMissingElements != null) result.appendMissingElements = appendMissingElements;
+    if (removeAllFromArray != null) result.removeAllFromArray = removeAllFromArray;
+    return result;
   }
-  DocumentTransform_FieldTransform._() : super();
-  factory DocumentTransform_FieldTransform.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DocumentTransform_FieldTransform.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DocumentTransform_FieldTransform._();
+
+  factory DocumentTransform_FieldTransform.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DocumentTransform_FieldTransform.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, DocumentTransform_FieldTransform_TransformType> _DocumentTransform_FieldTransform_TransformTypeByTag = {
     2 : DocumentTransform_FieldTransform_TransformType.setToServerValue,
@@ -254,10 +235,12 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DocumentTransform_FieldTransform copyWith(void Function(DocumentTransform_FieldTransform) updates) => super.copyWith((message) => updates(message as DocumentTransform_FieldTransform)) as DocumentTransform_FieldTransform;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DocumentTransform_FieldTransform create() => DocumentTransform_FieldTransform._();
+  @$core.override
   DocumentTransform_FieldTransform createEmptyInstance() => create();
   static $pb.PbList<DocumentTransform_FieldTransform> createRepeated() => $pb.PbList<DocumentTransform_FieldTransform>();
   @$core.pragma('dart2js:noInline')
@@ -273,7 +256,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get fieldPath => $_getSZ(0);
   @$pb.TagNumber(1)
-  set fieldPath($core.String v) { $_setString(0, v); }
+  set fieldPath($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasFieldPath() => $_has(0);
   @$pb.TagNumber(1)
@@ -283,7 +266,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   DocumentTransform_FieldTransform_ServerValue get setToServerValue => $_getN(1);
   @$pb.TagNumber(2)
-  set setToServerValue(DocumentTransform_FieldTransform_ServerValue v) { $_setField(2, v); }
+  set setToServerValue(DocumentTransform_FieldTransform_ServerValue value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSetToServerValue() => $_has(1);
   @$pb.TagNumber(2)
@@ -302,7 +285,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $1.Value get increment => $_getN(2);
   @$pb.TagNumber(3)
-  set increment($1.Value v) { $_setField(3, v); }
+  set increment($1.Value value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasIncrement() => $_has(2);
   @$pb.TagNumber(3)
@@ -325,7 +308,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $1.Value get maximum => $_getN(3);
   @$pb.TagNumber(4)
-  set maximum($1.Value v) { $_setField(4, v); }
+  set maximum($1.Value value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasMaximum() => $_has(3);
   @$pb.TagNumber(4)
@@ -348,7 +331,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $1.Value get minimum => $_getN(4);
   @$pb.TagNumber(5)
-  set minimum($1.Value v) { $_setField(5, v); }
+  set minimum($1.Value value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasMinimum() => $_has(4);
   @$pb.TagNumber(5)
@@ -371,7 +354,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $1.ArrayValue get appendMissingElements => $_getN(5);
   @$pb.TagNumber(6)
-  set appendMissingElements($1.ArrayValue v) { $_setField(6, v); }
+  set appendMissingElements($1.ArrayValue value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasAppendMissingElements() => $_has(5);
   @$pb.TagNumber(6)
@@ -392,7 +375,7 @@ class DocumentTransform_FieldTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $1.ArrayValue get removeAllFromArray => $_getN(6);
   @$pb.TagNumber(7)
-  set removeAllFromArray($1.ArrayValue v) { $_setField(7, v); }
+  set removeAllFromArray($1.ArrayValue value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasRemoveAllFromArray() => $_has(6);
   @$pb.TagNumber(7)
@@ -407,18 +390,16 @@ class DocumentTransform extends $pb.GeneratedMessage {
     $core.String? document,
     $core.Iterable<DocumentTransform_FieldTransform>? fieldTransforms,
   }) {
-    final $result = create();
-    if (document != null) {
-      $result.document = document;
-    }
-    if (fieldTransforms != null) {
-      $result.fieldTransforms.addAll(fieldTransforms);
-    }
-    return $result;
+    final result = create();
+    if (document != null) result.document = document;
+    if (fieldTransforms != null) result.fieldTransforms.addAll(fieldTransforms);
+    return result;
   }
-  DocumentTransform._() : super();
-  factory DocumentTransform.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DocumentTransform.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DocumentTransform._();
+
+  factory DocumentTransform.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DocumentTransform.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DocumentTransform', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'document')
@@ -431,10 +412,12 @@ class DocumentTransform extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DocumentTransform copyWith(void Function(DocumentTransform) updates) => super.copyWith((message) => updates(message as DocumentTransform)) as DocumentTransform;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DocumentTransform create() => DocumentTransform._();
+  @$core.override
   DocumentTransform createEmptyInstance() => create();
   static $pb.PbList<DocumentTransform> createRepeated() => $pb.PbList<DocumentTransform>();
   @$core.pragma('dart2js:noInline')
@@ -445,7 +428,7 @@ class DocumentTransform extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get document => $_getSZ(0);
   @$pb.TagNumber(1)
-  set document($core.String v) { $_setString(0, v); }
+  set document($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
@@ -464,18 +447,16 @@ class WriteResult extends $pb.GeneratedMessage {
     $6.Timestamp? updateTime,
     $core.Iterable<$1.Value>? transformResults,
   }) {
-    final $result = create();
-    if (updateTime != null) {
-      $result.updateTime = updateTime;
-    }
-    if (transformResults != null) {
-      $result.transformResults.addAll(transformResults);
-    }
-    return $result;
+    final result = create();
+    if (updateTime != null) result.updateTime = updateTime;
+    if (transformResults != null) result.transformResults.addAll(transformResults);
+    return result;
   }
-  WriteResult._() : super();
-  factory WriteResult.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WriteResult.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  WriteResult._();
+
+  factory WriteResult.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory WriteResult.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WriteResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOM<$6.Timestamp>(1, _omitFieldNames ? '' : 'updateTime', subBuilder: $6.Timestamp.create)
@@ -488,10 +469,12 @@ class WriteResult extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   WriteResult copyWith(void Function(WriteResult) updates) => super.copyWith((message) => updates(message as WriteResult)) as WriteResult;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static WriteResult create() => WriteResult._();
+  @$core.override
   WriteResult createEmptyInstance() => create();
   static $pb.PbList<WriteResult> createRepeated() => $pb.PbList<WriteResult>();
   @$core.pragma('dart2js:noInline')
@@ -506,7 +489,7 @@ class WriteResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $6.Timestamp get updateTime => $_getN(0);
   @$pb.TagNumber(1)
-  set updateTime($6.Timestamp v) { $_setField(1, v); }
+  set updateTime($6.Timestamp value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUpdateTime() => $_has(0);
   @$pb.TagNumber(1)
@@ -535,21 +518,17 @@ class DocumentChange extends $pb.GeneratedMessage {
     $core.Iterable<$core.int>? targetIds,
     $core.Iterable<$core.int>? removedTargetIds,
   }) {
-    final $result = create();
-    if (document != null) {
-      $result.document = document;
-    }
-    if (targetIds != null) {
-      $result.targetIds.addAll(targetIds);
-    }
-    if (removedTargetIds != null) {
-      $result.removedTargetIds.addAll(removedTargetIds);
-    }
-    return $result;
+    final result = create();
+    if (document != null) result.document = document;
+    if (targetIds != null) result.targetIds.addAll(targetIds);
+    if (removedTargetIds != null) result.removedTargetIds.addAll(removedTargetIds);
+    return result;
   }
-  DocumentChange._() : super();
-  factory DocumentChange.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DocumentChange.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DocumentChange._();
+
+  factory DocumentChange.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DocumentChange.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DocumentChange', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOM<$1.Document>(1, _omitFieldNames ? '' : 'document', subBuilder: $1.Document.create)
@@ -563,10 +542,12 @@ class DocumentChange extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DocumentChange copyWith(void Function(DocumentChange) updates) => super.copyWith((message) => updates(message as DocumentChange)) as DocumentChange;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DocumentChange create() => DocumentChange._();
+  @$core.override
   DocumentChange createEmptyInstance() => create();
   static $pb.PbList<DocumentChange> createRepeated() => $pb.PbList<DocumentChange>();
   @$core.pragma('dart2js:noInline')
@@ -579,7 +560,7 @@ class DocumentChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Document get document => $_getN(0);
   @$pb.TagNumber(1)
-  set document($1.Document v) { $_setField(1, v); }
+  set document($1.Document value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
@@ -610,21 +591,17 @@ class DocumentDelete extends $pb.GeneratedMessage {
     $6.Timestamp? readTime,
     $core.Iterable<$core.int>? removedTargetIds,
   }) {
-    final $result = create();
-    if (document != null) {
-      $result.document = document;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (removedTargetIds != null) {
-      $result.removedTargetIds.addAll(removedTargetIds);
-    }
-    return $result;
+    final result = create();
+    if (document != null) result.document = document;
+    if (readTime != null) result.readTime = readTime;
+    if (removedTargetIds != null) result.removedTargetIds.addAll(removedTargetIds);
+    return result;
   }
-  DocumentDelete._() : super();
-  factory DocumentDelete.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DocumentDelete.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DocumentDelete._();
+
+  factory DocumentDelete.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DocumentDelete.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DocumentDelete', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'document')
@@ -638,10 +615,12 @@ class DocumentDelete extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DocumentDelete copyWith(void Function(DocumentDelete) updates) => super.copyWith((message) => updates(message as DocumentDelete)) as DocumentDelete;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DocumentDelete create() => DocumentDelete._();
+  @$core.override
   DocumentDelete createEmptyInstance() => create();
   static $pb.PbList<DocumentDelete> createRepeated() => $pb.PbList<DocumentDelete>();
   @$core.pragma('dart2js:noInline')
@@ -653,7 +632,7 @@ class DocumentDelete extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get document => $_getSZ(0);
   @$pb.TagNumber(1)
-  set document($core.String v) { $_setString(0, v); }
+  set document($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
@@ -665,7 +644,7 @@ class DocumentDelete extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $6.Timestamp get readTime => $_getN(1);
   @$pb.TagNumber(4)
-  set readTime($6.Timestamp v) { $_setField(4, v); }
+  set readTime($6.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReadTime() => $_has(1);
   @$pb.TagNumber(4)
@@ -694,21 +673,17 @@ class DocumentRemove extends $pb.GeneratedMessage {
     $core.Iterable<$core.int>? removedTargetIds,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (document != null) {
-      $result.document = document;
-    }
-    if (removedTargetIds != null) {
-      $result.removedTargetIds.addAll(removedTargetIds);
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (document != null) result.document = document;
+    if (removedTargetIds != null) result.removedTargetIds.addAll(removedTargetIds);
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  DocumentRemove._() : super();
-  factory DocumentRemove.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DocumentRemove.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DocumentRemove._();
+
+  factory DocumentRemove.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DocumentRemove.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DocumentRemove', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'document')
@@ -722,10 +697,12 @@ class DocumentRemove extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DocumentRemove copyWith(void Function(DocumentRemove) updates) => super.copyWith((message) => updates(message as DocumentRemove)) as DocumentRemove;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DocumentRemove create() => DocumentRemove._();
+  @$core.override
   DocumentRemove createEmptyInstance() => create();
   static $pb.PbList<DocumentRemove> createRepeated() => $pb.PbList<DocumentRemove>();
   @$core.pragma('dart2js:noInline')
@@ -737,7 +714,7 @@ class DocumentRemove extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get document => $_getSZ(0);
   @$pb.TagNumber(1)
-  set document($core.String v) { $_setString(0, v); }
+  set document($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
@@ -753,7 +730,7 @@ class DocumentRemove extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $6.Timestamp get readTime => $_getN(2);
   @$pb.TagNumber(4)
-  set readTime($6.Timestamp v) { $_setField(4, v); }
+  set readTime($6.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReadTime() => $_has(2);
   @$pb.TagNumber(4)
@@ -769,21 +746,17 @@ class ExistenceFilter extends $pb.GeneratedMessage {
     $core.int? count,
     $16.BloomFilter? unchangedNames,
   }) {
-    final $result = create();
-    if (targetId != null) {
-      $result.targetId = targetId;
-    }
-    if (count != null) {
-      $result.count = count;
-    }
-    if (unchangedNames != null) {
-      $result.unchangedNames = unchangedNames;
-    }
-    return $result;
+    final result = create();
+    if (targetId != null) result.targetId = targetId;
+    if (count != null) result.count = count;
+    if (unchangedNames != null) result.unchangedNames = unchangedNames;
+    return result;
   }
-  ExistenceFilter._() : super();
-  factory ExistenceFilter.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ExistenceFilter.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ExistenceFilter._();
+
+  factory ExistenceFilter.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ExistenceFilter.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExistenceFilter', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'targetId', $pb.PbFieldType.O3)
@@ -797,10 +770,12 @@ class ExistenceFilter extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExistenceFilter copyWith(void Function(ExistenceFilter) updates) => super.copyWith((message) => updates(message as ExistenceFilter)) as ExistenceFilter;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ExistenceFilter create() => ExistenceFilter._();
+  @$core.override
   ExistenceFilter createEmptyInstance() => create();
   static $pb.PbList<ExistenceFilter> createRepeated() => $pb.PbList<ExistenceFilter>();
   @$core.pragma('dart2js:noInline')
@@ -811,7 +786,7 @@ class ExistenceFilter extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.int get targetId => $_getIZ(0);
   @$pb.TagNumber(1)
-  set targetId($core.int v) { $_setSignedInt32(0, v); }
+  set targetId($core.int value) => $_setSignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasTargetId() => $_has(0);
   @$pb.TagNumber(1)
@@ -830,7 +805,7 @@ class ExistenceFilter extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get count => $_getIZ(1);
   @$pb.TagNumber(2)
-  set count($core.int v) { $_setSignedInt32(1, v); }
+  set count($core.int value) => $_setSignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasCount() => $_has(1);
   @$pb.TagNumber(2)
@@ -850,7 +825,7 @@ class ExistenceFilter extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $16.BloomFilter get unchangedNames => $_getN(2);
   @$pb.TagNumber(3)
-  set unchangedNames($16.BloomFilter v) { $_setField(3, v); }
+  set unchangedNames($16.BloomFilter value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasUnchangedNames() => $_has(2);
   @$pb.TagNumber(3)
@@ -860,5 +835,5 @@ class ExistenceFilter extends $pb.GeneratedMessage {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

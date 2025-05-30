@@ -5,9 +5,10 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -29,22 +30,17 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
     $core.Iterable<ClientLibraryDestination>? destinations,
     SelectiveGapicGeneration? selectiveGapicGeneration,
   }) {
-    final $result = create();
-    if (referenceDocsUri != null) {
-      // ignore: deprecated_member_use_from_same_package
-      $result.referenceDocsUri = referenceDocsUri;
-    }
-    if (destinations != null) {
-      $result.destinations.addAll(destinations);
-    }
-    if (selectiveGapicGeneration != null) {
-      $result.selectiveGapicGeneration = selectiveGapicGeneration;
-    }
-    return $result;
+    final result = create();
+    if (referenceDocsUri != null) result.referenceDocsUri = referenceDocsUri;
+    if (destinations != null) result.destinations.addAll(destinations);
+    if (selectiveGapicGeneration != null) result.selectiveGapicGeneration = selectiveGapicGeneration;
+    return result;
   }
-  CommonLanguageSettings._() : super();
-  factory CommonLanguageSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CommonLanguageSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  CommonLanguageSettings._();
+
+  factory CommonLanguageSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory CommonLanguageSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CommonLanguageSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'referenceDocsUri')
@@ -58,10 +54,12 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CommonLanguageSettings copyWith(void Function(CommonLanguageSettings) updates) => super.copyWith((message) => updates(message as CommonLanguageSettings)) as CommonLanguageSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CommonLanguageSettings create() => CommonLanguageSettings._();
+  @$core.override
   CommonLanguageSettings createEmptyInstance() => create();
   static $pb.PbList<CommonLanguageSettings> createRepeated() => $pb.PbList<CommonLanguageSettings>();
   @$core.pragma('dart2js:noInline')
@@ -75,7 +73,7 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
   $core.String get referenceDocsUri => $_getSZ(0);
   @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(1)
-  set referenceDocsUri($core.String v) { $_setString(0, v); }
+  set referenceDocsUri($core.String value) => $_setString(0, value);
   @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(1)
   $core.bool hasReferenceDocsUri() => $_has(0);
@@ -91,7 +89,7 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   SelectiveGapicGeneration get selectiveGapicGeneration => $_getN(2);
   @$pb.TagNumber(3)
-  set selectiveGapicGeneration(SelectiveGapicGeneration v) { $_setField(3, v); }
+  set selectiveGapicGeneration(SelectiveGapicGeneration value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasSelectiveGapicGeneration() => $_has(2);
   @$pb.TagNumber(3)
@@ -115,45 +113,25 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
     RubySettings? rubySettings,
     GoSettings? goSettings,
   }) {
-    final $result = create();
-    if (version != null) {
-      $result.version = version;
-    }
-    if (launchStage != null) {
-      $result.launchStage = launchStage;
-    }
-    if (restNumericEnums != null) {
-      $result.restNumericEnums = restNumericEnums;
-    }
-    if (javaSettings != null) {
-      $result.javaSettings = javaSettings;
-    }
-    if (cppSettings != null) {
-      $result.cppSettings = cppSettings;
-    }
-    if (phpSettings != null) {
-      $result.phpSettings = phpSettings;
-    }
-    if (pythonSettings != null) {
-      $result.pythonSettings = pythonSettings;
-    }
-    if (nodeSettings != null) {
-      $result.nodeSettings = nodeSettings;
-    }
-    if (dotnetSettings != null) {
-      $result.dotnetSettings = dotnetSettings;
-    }
-    if (rubySettings != null) {
-      $result.rubySettings = rubySettings;
-    }
-    if (goSettings != null) {
-      $result.goSettings = goSettings;
-    }
-    return $result;
+    final result = create();
+    if (version != null) result.version = version;
+    if (launchStage != null) result.launchStage = launchStage;
+    if (restNumericEnums != null) result.restNumericEnums = restNumericEnums;
+    if (javaSettings != null) result.javaSettings = javaSettings;
+    if (cppSettings != null) result.cppSettings = cppSettings;
+    if (phpSettings != null) result.phpSettings = phpSettings;
+    if (pythonSettings != null) result.pythonSettings = pythonSettings;
+    if (nodeSettings != null) result.nodeSettings = nodeSettings;
+    if (dotnetSettings != null) result.dotnetSettings = dotnetSettings;
+    if (rubySettings != null) result.rubySettings = rubySettings;
+    if (goSettings != null) result.goSettings = goSettings;
+    return result;
   }
-  ClientLibrarySettings._() : super();
-  factory ClientLibrarySettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ClientLibrarySettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ClientLibrarySettings._();
+
+  factory ClientLibrarySettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ClientLibrarySettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ClientLibrarySettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'version')
@@ -175,10 +153,12 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ClientLibrarySettings copyWith(void Function(ClientLibrarySettings) updates) => super.copyWith((message) => updates(message as ClientLibrarySettings)) as ClientLibrarySettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ClientLibrarySettings create() => ClientLibrarySettings._();
+  @$core.override
   ClientLibrarySettings createEmptyInstance() => create();
   static $pb.PbList<ClientLibrarySettings> createRepeated() => $pb.PbList<ClientLibrarySettings>();
   @$core.pragma('dart2js:noInline')
@@ -191,7 +171,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get version => $_getSZ(0);
   @$pb.TagNumber(1)
-  set version($core.String v) { $_setString(0, v); }
+  set version($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasVersion() => $_has(0);
   @$pb.TagNumber(1)
@@ -201,7 +181,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $5.LaunchStage get launchStage => $_getN(1);
   @$pb.TagNumber(2)
-  set launchStage($5.LaunchStage v) { $_setField(2, v); }
+  set launchStage($5.LaunchStage value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasLaunchStage() => $_has(1);
   @$pb.TagNumber(2)
@@ -212,7 +192,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool get restNumericEnums => $_getBF(2);
   @$pb.TagNumber(3)
-  set restNumericEnums($core.bool v) { $_setBool(2, v); }
+  set restNumericEnums($core.bool value) => $_setBool(2, value);
   @$pb.TagNumber(3)
   $core.bool hasRestNumericEnums() => $_has(2);
   @$pb.TagNumber(3)
@@ -222,7 +202,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   JavaSettings get javaSettings => $_getN(3);
   @$pb.TagNumber(21)
-  set javaSettings(JavaSettings v) { $_setField(21, v); }
+  set javaSettings(JavaSettings value) => $_setField(21, value);
   @$pb.TagNumber(21)
   $core.bool hasJavaSettings() => $_has(3);
   @$pb.TagNumber(21)
@@ -234,7 +214,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(22)
   CppSettings get cppSettings => $_getN(4);
   @$pb.TagNumber(22)
-  set cppSettings(CppSettings v) { $_setField(22, v); }
+  set cppSettings(CppSettings value) => $_setField(22, value);
   @$pb.TagNumber(22)
   $core.bool hasCppSettings() => $_has(4);
   @$pb.TagNumber(22)
@@ -246,7 +226,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(23)
   PhpSettings get phpSettings => $_getN(5);
   @$pb.TagNumber(23)
-  set phpSettings(PhpSettings v) { $_setField(23, v); }
+  set phpSettings(PhpSettings value) => $_setField(23, value);
   @$pb.TagNumber(23)
   $core.bool hasPhpSettings() => $_has(5);
   @$pb.TagNumber(23)
@@ -258,7 +238,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(24)
   PythonSettings get pythonSettings => $_getN(6);
   @$pb.TagNumber(24)
-  set pythonSettings(PythonSettings v) { $_setField(24, v); }
+  set pythonSettings(PythonSettings value) => $_setField(24, value);
   @$pb.TagNumber(24)
   $core.bool hasPythonSettings() => $_has(6);
   @$pb.TagNumber(24)
@@ -270,7 +250,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(25)
   NodeSettings get nodeSettings => $_getN(7);
   @$pb.TagNumber(25)
-  set nodeSettings(NodeSettings v) { $_setField(25, v); }
+  set nodeSettings(NodeSettings value) => $_setField(25, value);
   @$pb.TagNumber(25)
   $core.bool hasNodeSettings() => $_has(7);
   @$pb.TagNumber(25)
@@ -282,7 +262,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(26)
   DotnetSettings get dotnetSettings => $_getN(8);
   @$pb.TagNumber(26)
-  set dotnetSettings(DotnetSettings v) { $_setField(26, v); }
+  set dotnetSettings(DotnetSettings value) => $_setField(26, value);
   @$pb.TagNumber(26)
   $core.bool hasDotnetSettings() => $_has(8);
   @$pb.TagNumber(26)
@@ -294,7 +274,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(27)
   RubySettings get rubySettings => $_getN(9);
   @$pb.TagNumber(27)
-  set rubySettings(RubySettings v) { $_setField(27, v); }
+  set rubySettings(RubySettings value) => $_setField(27, value);
   @$pb.TagNumber(27)
   $core.bool hasRubySettings() => $_has(9);
   @$pb.TagNumber(27)
@@ -306,7 +286,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(28)
   GoSettings get goSettings => $_getN(10);
   @$pb.TagNumber(28)
-  set goSettings(GoSettings v) { $_setField(28, v); }
+  set goSettings(GoSettings value) => $_setField(28, value);
   @$pb.TagNumber(28)
   $core.bool hasGoSettings() => $_has(10);
   @$pb.TagNumber(28)
@@ -332,45 +312,25 @@ class Publishing extends $pb.GeneratedMessage {
     $core.String? protoReferenceDocumentationUri,
     $core.String? restReferenceDocumentationUri,
   }) {
-    final $result = create();
-    if (methodSettings != null) {
-      $result.methodSettings.addAll(methodSettings);
-    }
-    if (newIssueUri != null) {
-      $result.newIssueUri = newIssueUri;
-    }
-    if (documentationUri != null) {
-      $result.documentationUri = documentationUri;
-    }
-    if (apiShortName != null) {
-      $result.apiShortName = apiShortName;
-    }
-    if (githubLabel != null) {
-      $result.githubLabel = githubLabel;
-    }
-    if (codeownerGithubTeams != null) {
-      $result.codeownerGithubTeams.addAll(codeownerGithubTeams);
-    }
-    if (docTagPrefix != null) {
-      $result.docTagPrefix = docTagPrefix;
-    }
-    if (organization != null) {
-      $result.organization = organization;
-    }
-    if (librarySettings != null) {
-      $result.librarySettings.addAll(librarySettings);
-    }
-    if (protoReferenceDocumentationUri != null) {
-      $result.protoReferenceDocumentationUri = protoReferenceDocumentationUri;
-    }
-    if (restReferenceDocumentationUri != null) {
-      $result.restReferenceDocumentationUri = restReferenceDocumentationUri;
-    }
-    return $result;
+    final result = create();
+    if (methodSettings != null) result.methodSettings.addAll(methodSettings);
+    if (newIssueUri != null) result.newIssueUri = newIssueUri;
+    if (documentationUri != null) result.documentationUri = documentationUri;
+    if (apiShortName != null) result.apiShortName = apiShortName;
+    if (githubLabel != null) result.githubLabel = githubLabel;
+    if (codeownerGithubTeams != null) result.codeownerGithubTeams.addAll(codeownerGithubTeams);
+    if (docTagPrefix != null) result.docTagPrefix = docTagPrefix;
+    if (organization != null) result.organization = organization;
+    if (librarySettings != null) result.librarySettings.addAll(librarySettings);
+    if (protoReferenceDocumentationUri != null) result.protoReferenceDocumentationUri = protoReferenceDocumentationUri;
+    if (restReferenceDocumentationUri != null) result.restReferenceDocumentationUri = restReferenceDocumentationUri;
+    return result;
   }
-  Publishing._() : super();
-  factory Publishing.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Publishing.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Publishing._();
+
+  factory Publishing.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Publishing.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Publishing', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..pc<MethodSettings>(2, _omitFieldNames ? '' : 'methodSettings', $pb.PbFieldType.PM, subBuilder: MethodSettings.create)
@@ -392,10 +352,12 @@ class Publishing extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Publishing copyWith(void Function(Publishing) updates) => super.copyWith((message) => updates(message as Publishing)) as Publishing;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Publishing create() => Publishing._();
+  @$core.override
   Publishing createEmptyInstance() => create();
   static $pb.PbList<Publishing> createRepeated() => $pb.PbList<Publishing>();
   @$core.pragma('dart2js:noInline')
@@ -412,7 +374,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(101)
   $core.String get newIssueUri => $_getSZ(1);
   @$pb.TagNumber(101)
-  set newIssueUri($core.String v) { $_setString(1, v); }
+  set newIssueUri($core.String value) => $_setString(1, value);
   @$pb.TagNumber(101)
   $core.bool hasNewIssueUri() => $_has(1);
   @$pb.TagNumber(101)
@@ -423,7 +385,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(102)
   $core.String get documentationUri => $_getSZ(2);
   @$pb.TagNumber(102)
-  set documentationUri($core.String v) { $_setString(2, v); }
+  set documentationUri($core.String value) => $_setString(2, value);
   @$pb.TagNumber(102)
   $core.bool hasDocumentationUri() => $_has(2);
   @$pb.TagNumber(102)
@@ -435,7 +397,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(103)
   $core.String get apiShortName => $_getSZ(3);
   @$pb.TagNumber(103)
-  set apiShortName($core.String v) { $_setString(3, v); }
+  set apiShortName($core.String value) => $_setString(3, value);
   @$pb.TagNumber(103)
   $core.bool hasApiShortName() => $_has(3);
   @$pb.TagNumber(103)
@@ -445,7 +407,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(104)
   $core.String get githubLabel => $_getSZ(4);
   @$pb.TagNumber(104)
-  set githubLabel($core.String v) { $_setString(4, v); }
+  set githubLabel($core.String value) => $_setString(4, value);
   @$pb.TagNumber(104)
   $core.bool hasGithubLabel() => $_has(4);
   @$pb.TagNumber(104)
@@ -461,7 +423,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(106)
   $core.String get docTagPrefix => $_getSZ(6);
   @$pb.TagNumber(106)
-  set docTagPrefix($core.String v) { $_setString(6, v); }
+  set docTagPrefix($core.String value) => $_setString(6, value);
   @$pb.TagNumber(106)
   $core.bool hasDocTagPrefix() => $_has(6);
   @$pb.TagNumber(106)
@@ -471,7 +433,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(107)
   ClientLibraryOrganization get organization => $_getN(7);
   @$pb.TagNumber(107)
-  set organization(ClientLibraryOrganization v) { $_setField(107, v); }
+  set organization(ClientLibraryOrganization value) => $_setField(107, value);
   @$pb.TagNumber(107)
   $core.bool hasOrganization() => $_has(7);
   @$pb.TagNumber(107)
@@ -488,7 +450,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(110)
   $core.String get protoReferenceDocumentationUri => $_getSZ(9);
   @$pb.TagNumber(110)
-  set protoReferenceDocumentationUri($core.String v) { $_setString(9, v); }
+  set protoReferenceDocumentationUri($core.String value) => $_setString(9, value);
   @$pb.TagNumber(110)
   $core.bool hasProtoReferenceDocumentationUri() => $_has(9);
   @$pb.TagNumber(110)
@@ -499,7 +461,7 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(111)
   $core.String get restReferenceDocumentationUri => $_getSZ(10);
   @$pb.TagNumber(111)
-  set restReferenceDocumentationUri($core.String v) { $_setString(10, v); }
+  set restReferenceDocumentationUri($core.String value) => $_setString(10, value);
   @$pb.TagNumber(111)
   $core.bool hasRestReferenceDocumentationUri() => $_has(10);
   @$pb.TagNumber(111)
@@ -513,21 +475,17 @@ class JavaSettings extends $pb.GeneratedMessage {
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? serviceClassNames,
     CommonLanguageSettings? common,
   }) {
-    final $result = create();
-    if (libraryPackage != null) {
-      $result.libraryPackage = libraryPackage;
-    }
-    if (serviceClassNames != null) {
-      $result.serviceClassNames.addEntries(serviceClassNames);
-    }
-    if (common != null) {
-      $result.common = common;
-    }
-    return $result;
+    final result = create();
+    if (libraryPackage != null) result.libraryPackage = libraryPackage;
+    if (serviceClassNames != null) result.serviceClassNames.addEntries(serviceClassNames);
+    if (common != null) result.common = common;
+    return result;
   }
-  JavaSettings._() : super();
-  factory JavaSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory JavaSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  JavaSettings._();
+
+  factory JavaSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory JavaSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'JavaSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'libraryPackage')
@@ -541,10 +499,12 @@ class JavaSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JavaSettings copyWith(void Function(JavaSettings) updates) => super.copyWith((message) => updates(message as JavaSettings)) as JavaSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static JavaSettings create() => JavaSettings._();
+  @$core.override
   JavaSettings createEmptyInstance() => create();
   static $pb.PbList<JavaSettings> createRepeated() => $pb.PbList<JavaSettings>();
   @$core.pragma('dart2js:noInline')
@@ -565,7 +525,7 @@ class JavaSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get libraryPackage => $_getSZ(0);
   @$pb.TagNumber(1)
-  set libraryPackage($core.String v) { $_setString(0, v); }
+  set libraryPackage($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasLibraryPackage() => $_has(0);
   @$pb.TagNumber(1)
@@ -592,7 +552,7 @@ class JavaSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   CommonLanguageSettings get common => $_getN(2);
   @$pb.TagNumber(3)
-  set common(CommonLanguageSettings v) { $_setField(3, v); }
+  set common(CommonLanguageSettings value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasCommon() => $_has(2);
   @$pb.TagNumber(3)
@@ -606,15 +566,15 @@ class CppSettings extends $pb.GeneratedMessage {
   factory CppSettings({
     CommonLanguageSettings? common,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    return result;
   }
-  CppSettings._() : super();
-  factory CppSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CppSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  CppSettings._();
+
+  factory CppSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory CppSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CppSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -626,10 +586,12 @@ class CppSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CppSettings copyWith(void Function(CppSettings) updates) => super.copyWith((message) => updates(message as CppSettings)) as CppSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CppSettings create() => CppSettings._();
+  @$core.override
   CppSettings createEmptyInstance() => create();
   static $pb.PbList<CppSettings> createRepeated() => $pb.PbList<CppSettings>();
   @$core.pragma('dart2js:noInline')
@@ -640,7 +602,7 @@ class CppSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -654,15 +616,15 @@ class PhpSettings extends $pb.GeneratedMessage {
   factory PhpSettings({
     CommonLanguageSettings? common,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    return result;
   }
-  PhpSettings._() : super();
-  factory PhpSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PhpSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  PhpSettings._();
+
+  factory PhpSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory PhpSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PhpSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -674,10 +636,12 @@ class PhpSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PhpSettings copyWith(void Function(PhpSettings) updates) => super.copyWith((message) => updates(message as PhpSettings)) as PhpSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PhpSettings create() => PhpSettings._();
+  @$core.override
   PhpSettings createEmptyInstance() => create();
   static $pb.PbList<PhpSettings> createRepeated() => $pb.PbList<PhpSettings>();
   @$core.pragma('dart2js:noInline')
@@ -688,7 +652,7 @@ class PhpSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -706,21 +670,17 @@ class PythonSettings_ExperimentalFeatures extends $pb.GeneratedMessage {
     $core.bool? protobufPythonicTypesEnabled,
     $core.bool? unversionedPackageDisabled,
   }) {
-    final $result = create();
-    if (restAsyncIoEnabled != null) {
-      $result.restAsyncIoEnabled = restAsyncIoEnabled;
-    }
-    if (protobufPythonicTypesEnabled != null) {
-      $result.protobufPythonicTypesEnabled = protobufPythonicTypesEnabled;
-    }
-    if (unversionedPackageDisabled != null) {
-      $result.unversionedPackageDisabled = unversionedPackageDisabled;
-    }
-    return $result;
+    final result = create();
+    if (restAsyncIoEnabled != null) result.restAsyncIoEnabled = restAsyncIoEnabled;
+    if (protobufPythonicTypesEnabled != null) result.protobufPythonicTypesEnabled = protobufPythonicTypesEnabled;
+    if (unversionedPackageDisabled != null) result.unversionedPackageDisabled = unversionedPackageDisabled;
+    return result;
   }
-  PythonSettings_ExperimentalFeatures._() : super();
-  factory PythonSettings_ExperimentalFeatures.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PythonSettings_ExperimentalFeatures.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  PythonSettings_ExperimentalFeatures._();
+
+  factory PythonSettings_ExperimentalFeatures.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory PythonSettings_ExperimentalFeatures.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PythonSettings.ExperimentalFeatures', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'restAsyncIoEnabled')
@@ -734,10 +694,12 @@ class PythonSettings_ExperimentalFeatures extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PythonSettings_ExperimentalFeatures copyWith(void Function(PythonSettings_ExperimentalFeatures) updates) => super.copyWith((message) => updates(message as PythonSettings_ExperimentalFeatures)) as PythonSettings_ExperimentalFeatures;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PythonSettings_ExperimentalFeatures create() => PythonSettings_ExperimentalFeatures._();
+  @$core.override
   PythonSettings_ExperimentalFeatures createEmptyInstance() => create();
   static $pb.PbList<PythonSettings_ExperimentalFeatures> createRepeated() => $pb.PbList<PythonSettings_ExperimentalFeatures>();
   @$core.pragma('dart2js:noInline')
@@ -751,7 +713,7 @@ class PythonSettings_ExperimentalFeatures extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool get restAsyncIoEnabled => $_getBF(0);
   @$pb.TagNumber(1)
-  set restAsyncIoEnabled($core.bool v) { $_setBool(0, v); }
+  set restAsyncIoEnabled($core.bool value) => $_setBool(0, value);
   @$pb.TagNumber(1)
   $core.bool hasRestAsyncIoEnabled() => $_has(0);
   @$pb.TagNumber(1)
@@ -764,7 +726,7 @@ class PythonSettings_ExperimentalFeatures extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool get protobufPythonicTypesEnabled => $_getBF(1);
   @$pb.TagNumber(2)
-  set protobufPythonicTypesEnabled($core.bool v) { $_setBool(1, v); }
+  set protobufPythonicTypesEnabled($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
   $core.bool hasProtobufPythonicTypesEnabled() => $_has(1);
   @$pb.TagNumber(2)
@@ -777,7 +739,7 @@ class PythonSettings_ExperimentalFeatures extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.bool get unversionedPackageDisabled => $_getBF(2);
   @$pb.TagNumber(3)
-  set unversionedPackageDisabled($core.bool v) { $_setBool(2, v); }
+  set unversionedPackageDisabled($core.bool value) => $_setBool(2, value);
   @$pb.TagNumber(3)
   $core.bool hasUnversionedPackageDisabled() => $_has(2);
   @$pb.TagNumber(3)
@@ -790,18 +752,16 @@ class PythonSettings extends $pb.GeneratedMessage {
     CommonLanguageSettings? common,
     PythonSettings_ExperimentalFeatures? experimentalFeatures,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    if (experimentalFeatures != null) {
-      $result.experimentalFeatures = experimentalFeatures;
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    if (experimentalFeatures != null) result.experimentalFeatures = experimentalFeatures;
+    return result;
   }
-  PythonSettings._() : super();
-  factory PythonSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PythonSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  PythonSettings._();
+
+  factory PythonSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory PythonSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PythonSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -814,10 +774,12 @@ class PythonSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PythonSettings copyWith(void Function(PythonSettings) updates) => super.copyWith((message) => updates(message as PythonSettings)) as PythonSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PythonSettings create() => PythonSettings._();
+  @$core.override
   PythonSettings createEmptyInstance() => create();
   static $pb.PbList<PythonSettings> createRepeated() => $pb.PbList<PythonSettings>();
   @$core.pragma('dart2js:noInline')
@@ -828,7 +790,7 @@ class PythonSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -840,7 +802,7 @@ class PythonSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   PythonSettings_ExperimentalFeatures get experimentalFeatures => $_getN(1);
   @$pb.TagNumber(2)
-  set experimentalFeatures(PythonSettings_ExperimentalFeatures v) { $_setField(2, v); }
+  set experimentalFeatures(PythonSettings_ExperimentalFeatures value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasExperimentalFeatures() => $_has(1);
   @$pb.TagNumber(2)
@@ -854,15 +816,15 @@ class NodeSettings extends $pb.GeneratedMessage {
   factory NodeSettings({
     CommonLanguageSettings? common,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    return result;
   }
-  NodeSettings._() : super();
-  factory NodeSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory NodeSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  NodeSettings._();
+
+  factory NodeSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory NodeSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'NodeSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -874,10 +836,12 @@ class NodeSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   NodeSettings copyWith(void Function(NodeSettings) updates) => super.copyWith((message) => updates(message as NodeSettings)) as NodeSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static NodeSettings create() => NodeSettings._();
+  @$core.override
   NodeSettings createEmptyInstance() => create();
   static $pb.PbList<NodeSettings> createRepeated() => $pb.PbList<NodeSettings>();
   @$core.pragma('dart2js:noInline')
@@ -888,7 +852,7 @@ class NodeSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -907,30 +871,20 @@ class DotnetSettings extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? forcedNamespaceAliases,
     $core.Iterable<$core.String>? handwrittenSignatures,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    if (renamedServices != null) {
-      $result.renamedServices.addEntries(renamedServices);
-    }
-    if (renamedResources != null) {
-      $result.renamedResources.addEntries(renamedResources);
-    }
-    if (ignoredResources != null) {
-      $result.ignoredResources.addAll(ignoredResources);
-    }
-    if (forcedNamespaceAliases != null) {
-      $result.forcedNamespaceAliases.addAll(forcedNamespaceAliases);
-    }
-    if (handwrittenSignatures != null) {
-      $result.handwrittenSignatures.addAll(handwrittenSignatures);
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    if (renamedServices != null) result.renamedServices.addEntries(renamedServices);
+    if (renamedResources != null) result.renamedResources.addEntries(renamedResources);
+    if (ignoredResources != null) result.ignoredResources.addAll(ignoredResources);
+    if (forcedNamespaceAliases != null) result.forcedNamespaceAliases.addAll(forcedNamespaceAliases);
+    if (handwrittenSignatures != null) result.handwrittenSignatures.addAll(handwrittenSignatures);
+    return result;
   }
-  DotnetSettings._() : super();
-  factory DotnetSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DotnetSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DotnetSettings._();
+
+  factory DotnetSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DotnetSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DotnetSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -947,10 +901,12 @@ class DotnetSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DotnetSettings copyWith(void Function(DotnetSettings) updates) => super.copyWith((message) => updates(message as DotnetSettings)) as DotnetSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DotnetSettings create() => DotnetSettings._();
+  @$core.override
   DotnetSettings createEmptyInstance() => create();
   static $pb.PbList<DotnetSettings> createRepeated() => $pb.PbList<DotnetSettings>();
   @$core.pragma('dart2js:noInline')
@@ -961,7 +917,7 @@ class DotnetSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -1010,15 +966,15 @@ class RubySettings extends $pb.GeneratedMessage {
   factory RubySettings({
     CommonLanguageSettings? common,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    return result;
   }
-  RubySettings._() : super();
-  factory RubySettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RubySettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  RubySettings._();
+
+  factory RubySettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory RubySettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RubySettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -1030,10 +986,12 @@ class RubySettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RubySettings copyWith(void Function(RubySettings) updates) => super.copyWith((message) => updates(message as RubySettings)) as RubySettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RubySettings create() => RubySettings._();
+  @$core.override
   RubySettings createEmptyInstance() => create();
   static $pb.PbList<RubySettings> createRepeated() => $pb.PbList<RubySettings>();
   @$core.pragma('dart2js:noInline')
@@ -1044,7 +1002,7 @@ class RubySettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -1059,18 +1017,16 @@ class GoSettings extends $pb.GeneratedMessage {
     CommonLanguageSettings? common,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? renamedServices,
   }) {
-    final $result = create();
-    if (common != null) {
-      $result.common = common;
-    }
-    if (renamedServices != null) {
-      $result.renamedServices.addEntries(renamedServices);
-    }
-    return $result;
+    final result = create();
+    if (common != null) result.common = common;
+    if (renamedServices != null) result.renamedServices.addEntries(renamedServices);
+    return result;
   }
-  GoSettings._() : super();
-  factory GoSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GoSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  GoSettings._();
+
+  factory GoSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory GoSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GoSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
@@ -1083,10 +1039,12 @@ class GoSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GoSettings copyWith(void Function(GoSettings) updates) => super.copyWith((message) => updates(message as GoSettings)) as GoSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static GoSettings create() => GoSettings._();
+  @$core.override
   GoSettings createEmptyInstance() => create();
   static $pb.PbList<GoSettings> createRepeated() => $pb.PbList<GoSettings>();
   @$core.pragma('dart2js:noInline')
@@ -1097,7 +1055,7 @@ class GoSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   CommonLanguageSettings get common => $_getN(0);
   @$pb.TagNumber(1)
-  set common(CommonLanguageSettings v) { $_setField(1, v); }
+  set common(CommonLanguageSettings value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCommon() => $_has(0);
   @$pb.TagNumber(1)
@@ -1129,24 +1087,18 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
     $4.Duration? maxPollDelay,
     $4.Duration? totalPollTimeout,
   }) {
-    final $result = create();
-    if (initialPollDelay != null) {
-      $result.initialPollDelay = initialPollDelay;
-    }
-    if (pollDelayMultiplier != null) {
-      $result.pollDelayMultiplier = pollDelayMultiplier;
-    }
-    if (maxPollDelay != null) {
-      $result.maxPollDelay = maxPollDelay;
-    }
-    if (totalPollTimeout != null) {
-      $result.totalPollTimeout = totalPollTimeout;
-    }
-    return $result;
+    final result = create();
+    if (initialPollDelay != null) result.initialPollDelay = initialPollDelay;
+    if (pollDelayMultiplier != null) result.pollDelayMultiplier = pollDelayMultiplier;
+    if (maxPollDelay != null) result.maxPollDelay = maxPollDelay;
+    if (totalPollTimeout != null) result.totalPollTimeout = totalPollTimeout;
+    return result;
   }
-  MethodSettings_LongRunning._() : super();
-  factory MethodSettings_LongRunning.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory MethodSettings_LongRunning.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  MethodSettings_LongRunning._();
+
+  factory MethodSettings_LongRunning.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory MethodSettings_LongRunning.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MethodSettings.LongRunning', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOM<$4.Duration>(1, _omitFieldNames ? '' : 'initialPollDelay', subBuilder: $4.Duration.create)
@@ -1161,10 +1113,12 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   MethodSettings_LongRunning copyWith(void Function(MethodSettings_LongRunning) updates) => super.copyWith((message) => updates(message as MethodSettings_LongRunning)) as MethodSettings_LongRunning;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static MethodSettings_LongRunning create() => MethodSettings_LongRunning._();
+  @$core.override
   MethodSettings_LongRunning createEmptyInstance() => create();
   static $pb.PbList<MethodSettings_LongRunning> createRepeated() => $pb.PbList<MethodSettings_LongRunning>();
   @$core.pragma('dart2js:noInline')
@@ -1176,7 +1130,7 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $4.Duration get initialPollDelay => $_getN(0);
   @$pb.TagNumber(1)
-  set initialPollDelay($4.Duration v) { $_setField(1, v); }
+  set initialPollDelay($4.Duration value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasInitialPollDelay() => $_has(0);
   @$pb.TagNumber(1)
@@ -1190,7 +1144,7 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get pollDelayMultiplier => $_getN(1);
   @$pb.TagNumber(2)
-  set pollDelayMultiplier($core.double v) { $_setFloat(1, v); }
+  set pollDelayMultiplier($core.double value) => $_setFloat(1, value);
   @$pb.TagNumber(2)
   $core.bool hasPollDelayMultiplier() => $_has(1);
   @$pb.TagNumber(2)
@@ -1201,7 +1155,7 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $4.Duration get maxPollDelay => $_getN(2);
   @$pb.TagNumber(3)
-  set maxPollDelay($4.Duration v) { $_setField(3, v); }
+  set maxPollDelay($4.Duration value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasMaxPollDelay() => $_has(2);
   @$pb.TagNumber(3)
@@ -1214,7 +1168,7 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $4.Duration get totalPollTimeout => $_getN(3);
   @$pb.TagNumber(4)
-  set totalPollTimeout($4.Duration v) { $_setField(4, v); }
+  set totalPollTimeout($4.Duration value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTotalPollTimeout() => $_has(3);
   @$pb.TagNumber(4)
@@ -1230,21 +1184,17 @@ class MethodSettings extends $pb.GeneratedMessage {
     MethodSettings_LongRunning? longRunning,
     $core.Iterable<$core.String>? autoPopulatedFields,
   }) {
-    final $result = create();
-    if (selector != null) {
-      $result.selector = selector;
-    }
-    if (longRunning != null) {
-      $result.longRunning = longRunning;
-    }
-    if (autoPopulatedFields != null) {
-      $result.autoPopulatedFields.addAll(autoPopulatedFields);
-    }
-    return $result;
+    final result = create();
+    if (selector != null) result.selector = selector;
+    if (longRunning != null) result.longRunning = longRunning;
+    if (autoPopulatedFields != null) result.autoPopulatedFields.addAll(autoPopulatedFields);
+    return result;
   }
-  MethodSettings._() : super();
-  factory MethodSettings.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory MethodSettings.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  MethodSettings._();
+
+  factory MethodSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory MethodSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MethodSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'selector')
@@ -1258,10 +1208,12 @@ class MethodSettings extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   MethodSettings copyWith(void Function(MethodSettings) updates) => super.copyWith((message) => updates(message as MethodSettings)) as MethodSettings;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static MethodSettings create() => MethodSettings._();
+  @$core.override
   MethodSettings createEmptyInstance() => create();
   static $pb.PbList<MethodSettings> createRepeated() => $pb.PbList<MethodSettings>();
   @$core.pragma('dart2js:noInline')
@@ -1280,7 +1232,7 @@ class MethodSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get selector => $_getSZ(0);
   @$pb.TagNumber(1)
-  set selector($core.String v) { $_setString(0, v); }
+  set selector($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasSelector() => $_has(0);
   @$pb.TagNumber(1)
@@ -1303,7 +1255,7 @@ class MethodSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   MethodSettings_LongRunning get longRunning => $_getN(1);
   @$pb.TagNumber(2)
-  set longRunning(MethodSettings_LongRunning v) { $_setField(2, v); }
+  set longRunning(MethodSettings_LongRunning value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasLongRunning() => $_has(1);
   @$pb.TagNumber(2)
@@ -1333,18 +1285,16 @@ class SelectiveGapicGeneration extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? methods,
     $core.bool? generateOmittedAsInternal,
   }) {
-    final $result = create();
-    if (methods != null) {
-      $result.methods.addAll(methods);
-    }
-    if (generateOmittedAsInternal != null) {
-      $result.generateOmittedAsInternal = generateOmittedAsInternal;
-    }
-    return $result;
+    final result = create();
+    if (methods != null) result.methods.addAll(methods);
+    if (generateOmittedAsInternal != null) result.generateOmittedAsInternal = generateOmittedAsInternal;
+    return result;
   }
-  SelectiveGapicGeneration._() : super();
-  factory SelectiveGapicGeneration.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory SelectiveGapicGeneration.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  SelectiveGapicGeneration._();
+
+  factory SelectiveGapicGeneration.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory SelectiveGapicGeneration.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SelectiveGapicGeneration', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'methods')
@@ -1357,10 +1307,12 @@ class SelectiveGapicGeneration extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   SelectiveGapicGeneration copyWith(void Function(SelectiveGapicGeneration) updates) => super.copyWith((message) => updates(message as SelectiveGapicGeneration)) as SelectiveGapicGeneration;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static SelectiveGapicGeneration create() => SelectiveGapicGeneration._();
+  @$core.override
   SelectiveGapicGeneration createEmptyInstance() => create();
   static $pb.PbList<SelectiveGapicGeneration> createRepeated() => $pb.PbList<SelectiveGapicGeneration>();
   @$core.pragma('dart2js:noInline')
@@ -1381,7 +1333,7 @@ class SelectiveGapicGeneration extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool get generateOmittedAsInternal => $_getBF(1);
   @$pb.TagNumber(2)
-  set generateOmittedAsInternal($core.bool v) { $_setBool(1, v); }
+  set generateOmittedAsInternal($core.bool value) => $_setBool(1, value);
   @$pb.TagNumber(2)
   $core.bool hasGenerateOmittedAsInternal() => $_has(1);
   @$pb.TagNumber(2)
@@ -1402,5 +1354,5 @@ class Client {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -5,9 +5,11 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: implementation_imports, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -106,18 +108,16 @@ class Any extends $pb.GeneratedMessage with $mixin.AnyMixin {
     $core.String? typeUrl,
     $core.List<$core.int>? value,
   }) {
-    final $result = create();
-    if (typeUrl != null) {
-      $result.typeUrl = typeUrl;
-    }
-    if (value != null) {
-      $result.value = value;
-    }
-    return $result;
+    final result = create();
+    if (typeUrl != null) result.typeUrl = typeUrl;
+    if (value != null) result.value = value;
+    return result;
   }
-  Any._() : super();
-  factory Any.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Any.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Any._();
+
+  factory Any.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Any.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Any', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'), createEmptyInstance: create, toProto3Json: $mixin.AnyMixin.toProto3JsonHelper, fromProto3Json: $mixin.AnyMixin.fromProto3JsonHelper)
     ..aOS(1, _omitFieldNames ? '' : 'typeUrl')
@@ -130,10 +130,12 @@ class Any extends $pb.GeneratedMessage with $mixin.AnyMixin {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Any copyWith(void Function(Any) updates) => super.copyWith((message) => updates(message as Any)) as Any;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Any create() => Any._();
+  @$core.override
   Any createEmptyInstance() => create();
   static $pb.PbList<Any> createRepeated() => $pb.PbList<Any>();
   @$core.pragma('dart2js:noInline')
@@ -171,7 +173,7 @@ class Any extends $pb.GeneratedMessage with $mixin.AnyMixin {
   @$pb.TagNumber(1)
   $core.String get typeUrl => $_getSZ(0);
   @$pb.TagNumber(1)
-  set typeUrl($core.String v) { $_setString(0, v); }
+  set typeUrl($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasTypeUrl() => $_has(0);
   @$pb.TagNumber(1)
@@ -181,7 +183,7 @@ class Any extends $pb.GeneratedMessage with $mixin.AnyMixin {
   @$pb.TagNumber(2)
   $core.List<$core.int> get value => $_getN(1);
   @$pb.TagNumber(2)
-  set value($core.List<$core.int> v) { $_setBytes(1, v); }
+  set value($core.List<$core.int> value) => $_setBytes(1, value);
   @$pb.TagNumber(2)
   $core.bool hasValue() => $_has(1);
   @$pb.TagNumber(2)
@@ -200,5 +202,5 @@ class Any extends $pb.GeneratedMessage with $mixin.AnyMixin {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

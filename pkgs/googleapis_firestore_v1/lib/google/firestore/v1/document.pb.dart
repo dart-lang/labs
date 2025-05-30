@@ -5,9 +5,10 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -30,24 +31,18 @@ class Document extends $pb.GeneratedMessage {
     $6.Timestamp? createTime,
     $6.Timestamp? updateTime,
   }) {
-    final $result = create();
-    if (name != null) {
-      $result.name = name;
-    }
-    if (fields != null) {
-      $result.fields.addEntries(fields);
-    }
-    if (createTime != null) {
-      $result.createTime = createTime;
-    }
-    if (updateTime != null) {
-      $result.updateTime = updateTime;
-    }
-    return $result;
+    final result = create();
+    if (name != null) result.name = name;
+    if (fields != null) result.fields.addEntries(fields);
+    if (createTime != null) result.createTime = createTime;
+    if (updateTime != null) result.updateTime = updateTime;
+    return result;
   }
-  Document._() : super();
-  factory Document.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Document.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Document._();
+
+  factory Document.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Document.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Document', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
@@ -62,10 +57,12 @@ class Document extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Document copyWith(void Function(Document) updates) => super.copyWith((message) => updates(message as Document)) as Document;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Document create() => Document._();
+  @$core.override
   Document createEmptyInstance() => create();
   static $pb.PbList<Document> createRepeated() => $pb.PbList<Document>();
   @$core.pragma('dart2js:noInline')
@@ -77,7 +74,7 @@ class Document extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
@@ -118,7 +115,7 @@ class Document extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $6.Timestamp get createTime => $_getN(2);
   @$pb.TagNumber(3)
-  set createTime($6.Timestamp v) { $_setField(3, v); }
+  set createTime($6.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasCreateTime() => $_has(2);
   @$pb.TagNumber(3)
@@ -134,7 +131,7 @@ class Document extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $6.Timestamp get updateTime => $_getN(3);
   @$pb.TagNumber(4)
-  set updateTime($6.Timestamp v) { $_setField(4, v); }
+  set updateTime($6.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasUpdateTime() => $_has(3);
   @$pb.TagNumber(4)
@@ -173,45 +170,25 @@ class Value extends $pb.GeneratedMessage {
     $core.String? stringValue,
     $core.List<$core.int>? bytesValue,
   }) {
-    final $result = create();
-    if (booleanValue != null) {
-      $result.booleanValue = booleanValue;
-    }
-    if (integerValue != null) {
-      $result.integerValue = integerValue;
-    }
-    if (doubleValue != null) {
-      $result.doubleValue = doubleValue;
-    }
-    if (referenceValue != null) {
-      $result.referenceValue = referenceValue;
-    }
-    if (mapValue != null) {
-      $result.mapValue = mapValue;
-    }
-    if (geoPointValue != null) {
-      $result.geoPointValue = geoPointValue;
-    }
-    if (arrayValue != null) {
-      $result.arrayValue = arrayValue;
-    }
-    if (timestampValue != null) {
-      $result.timestampValue = timestampValue;
-    }
-    if (nullValue != null) {
-      $result.nullValue = nullValue;
-    }
-    if (stringValue != null) {
-      $result.stringValue = stringValue;
-    }
-    if (bytesValue != null) {
-      $result.bytesValue = bytesValue;
-    }
-    return $result;
+    final result = create();
+    if (booleanValue != null) result.booleanValue = booleanValue;
+    if (integerValue != null) result.integerValue = integerValue;
+    if (doubleValue != null) result.doubleValue = doubleValue;
+    if (referenceValue != null) result.referenceValue = referenceValue;
+    if (mapValue != null) result.mapValue = mapValue;
+    if (geoPointValue != null) result.geoPointValue = geoPointValue;
+    if (arrayValue != null) result.arrayValue = arrayValue;
+    if (timestampValue != null) result.timestampValue = timestampValue;
+    if (nullValue != null) result.nullValue = nullValue;
+    if (stringValue != null) result.stringValue = stringValue;
+    if (bytesValue != null) result.bytesValue = bytesValue;
+    return result;
   }
-  Value._() : super();
-  factory Value.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Value.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Value._();
+
+  factory Value.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Value.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Value_ValueType> _Value_ValueTypeByTag = {
     1 : Value_ValueType.booleanValue,
@@ -248,10 +225,12 @@ class Value extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Value copyWith(void Function(Value) updates) => super.copyWith((message) => updates(message as Value)) as Value;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Value create() => Value._();
+  @$core.override
   Value createEmptyInstance() => create();
   static $pb.PbList<Value> createRepeated() => $pb.PbList<Value>();
   @$core.pragma('dart2js:noInline')
@@ -265,7 +244,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool get booleanValue => $_getBF(0);
   @$pb.TagNumber(1)
-  set booleanValue($core.bool v) { $_setBool(0, v); }
+  set booleanValue($core.bool value) => $_setBool(0, value);
   @$pb.TagNumber(1)
   $core.bool hasBooleanValue() => $_has(0);
   @$pb.TagNumber(1)
@@ -275,7 +254,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $fixnum.Int64 get integerValue => $_getI64(1);
   @$pb.TagNumber(2)
-  set integerValue($fixnum.Int64 v) { $_setInt64(1, v); }
+  set integerValue($fixnum.Int64 value) => $_setInt64(1, value);
   @$pb.TagNumber(2)
   $core.bool hasIntegerValue() => $_has(1);
   @$pb.TagNumber(2)
@@ -285,7 +264,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get doubleValue => $_getN(2);
   @$pb.TagNumber(3)
-  set doubleValue($core.double v) { $_setDouble(2, v); }
+  set doubleValue($core.double value) => $_setDouble(2, value);
   @$pb.TagNumber(3)
   $core.bool hasDoubleValue() => $_has(2);
   @$pb.TagNumber(3)
@@ -296,7 +275,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.String get referenceValue => $_getSZ(3);
   @$pb.TagNumber(5)
-  set referenceValue($core.String v) { $_setString(3, v); }
+  set referenceValue($core.String value) => $_setString(3, value);
   @$pb.TagNumber(5)
   $core.bool hasReferenceValue() => $_has(3);
   @$pb.TagNumber(5)
@@ -306,7 +285,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   MapValue get mapValue => $_getN(4);
   @$pb.TagNumber(6)
-  set mapValue(MapValue v) { $_setField(6, v); }
+  set mapValue(MapValue value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasMapValue() => $_has(4);
   @$pb.TagNumber(6)
@@ -318,7 +297,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $7.LatLng get geoPointValue => $_getN(5);
   @$pb.TagNumber(8)
-  set geoPointValue($7.LatLng v) { $_setField(8, v); }
+  set geoPointValue($7.LatLng value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasGeoPointValue() => $_has(5);
   @$pb.TagNumber(8)
@@ -333,7 +312,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   ArrayValue get arrayValue => $_getN(6);
   @$pb.TagNumber(9)
-  set arrayValue(ArrayValue v) { $_setField(9, v); }
+  set arrayValue(ArrayValue value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasArrayValue() => $_has(6);
   @$pb.TagNumber(9)
@@ -348,7 +327,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $6.Timestamp get timestampValue => $_getN(7);
   @$pb.TagNumber(10)
-  set timestampValue($6.Timestamp v) { $_setField(10, v); }
+  set timestampValue($6.Timestamp value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasTimestampValue() => $_has(7);
   @$pb.TagNumber(10)
@@ -360,7 +339,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $8.NullValue get nullValue => $_getN(8);
   @$pb.TagNumber(11)
-  set nullValue($8.NullValue v) { $_setField(11, v); }
+  set nullValue($8.NullValue value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasNullValue() => $_has(8);
   @$pb.TagNumber(11)
@@ -374,7 +353,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $core.String get stringValue => $_getSZ(9);
   @$pb.TagNumber(17)
-  set stringValue($core.String v) { $_setString(9, v); }
+  set stringValue($core.String value) => $_setString(9, value);
   @$pb.TagNumber(17)
   $core.bool hasStringValue() => $_has(9);
   @$pb.TagNumber(17)
@@ -387,7 +366,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   $core.List<$core.int> get bytesValue => $_getN(10);
   @$pb.TagNumber(18)
-  set bytesValue($core.List<$core.int> v) { $_setBytes(10, v); }
+  set bytesValue($core.List<$core.int> value) => $_setBytes(10, value);
   @$pb.TagNumber(18)
   $core.bool hasBytesValue() => $_has(10);
   @$pb.TagNumber(18)
@@ -399,15 +378,15 @@ class ArrayValue extends $pb.GeneratedMessage {
   factory ArrayValue({
     $core.Iterable<Value>? values,
   }) {
-    final $result = create();
-    if (values != null) {
-      $result.values.addAll(values);
-    }
-    return $result;
+    final result = create();
+    if (values != null) result.values.addAll(values);
+    return result;
   }
-  ArrayValue._() : super();
-  factory ArrayValue.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ArrayValue.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ArrayValue._();
+
+  factory ArrayValue.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ArrayValue.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ArrayValue', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pc<Value>(1, _omitFieldNames ? '' : 'values', $pb.PbFieldType.PM, subBuilder: Value.create)
@@ -419,10 +398,12 @@ class ArrayValue extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ArrayValue copyWith(void Function(ArrayValue) updates) => super.copyWith((message) => updates(message as ArrayValue)) as ArrayValue;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ArrayValue create() => ArrayValue._();
+  @$core.override
   ArrayValue createEmptyInstance() => create();
   static $pb.PbList<ArrayValue> createRepeated() => $pb.PbList<ArrayValue>();
   @$core.pragma('dart2js:noInline')
@@ -439,15 +420,15 @@ class MapValue extends $pb.GeneratedMessage {
   factory MapValue({
     $core.Iterable<$core.MapEntry<$core.String, Value>>? fields,
   }) {
-    final $result = create();
-    if (fields != null) {
-      $result.fields.addEntries(fields);
-    }
-    return $result;
+    final result = create();
+    if (fields != null) result.fields.addEntries(fields);
+    return result;
   }
-  MapValue._() : super();
-  factory MapValue.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory MapValue.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  MapValue._();
+
+  factory MapValue.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory MapValue.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MapValue', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..m<$core.String, Value>(1, _omitFieldNames ? '' : 'fields', entryClassName: 'MapValue.FieldsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: Value.create, valueDefaultOrMaker: Value.getDefault, packageName: const $pb.PackageName('google.firestore.v1'))
@@ -459,10 +440,12 @@ class MapValue extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   MapValue copyWith(void Function(MapValue) updates) => super.copyWith((message) => updates(message as MapValue)) as MapValue;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static MapValue create() => MapValue._();
+  @$core.override
   MapValue createEmptyInstance() => create();
   static $pb.PbList<MapValue> createRepeated() => $pb.PbList<MapValue>();
   @$core.pragma('dart2js:noInline')
@@ -480,5 +463,5 @@ class MapValue extends $pb.GeneratedMessage {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -5,9 +5,10 @@
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
-// ignore_for_file: constant_identifier_names, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_final_fields
-// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -44,24 +45,18 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
     $core.List<$core.int>? transaction,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (name != null) {
-      $result.name = name;
-    }
-    if (mask != null) {
-      $result.mask = mask;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (name != null) result.name = name;
+    if (mask != null) result.mask = mask;
+    if (transaction != null) result.transaction = transaction;
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  GetDocumentRequest._() : super();
-  factory GetDocumentRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GetDocumentRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  GetDocumentRequest._();
+
+  factory GetDocumentRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory GetDocumentRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, GetDocumentRequest_ConsistencySelector> _GetDocumentRequest_ConsistencySelectorByTag = {
     3 : GetDocumentRequest_ConsistencySelector.transaction,
@@ -82,10 +77,12 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GetDocumentRequest copyWith(void Function(GetDocumentRequest) updates) => super.copyWith((message) => updates(message as GetDocumentRequest)) as GetDocumentRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static GetDocumentRequest create() => GetDocumentRequest._();
+  @$core.override
   GetDocumentRequest createEmptyInstance() => create();
   static $pb.PbList<GetDocumentRequest> createRepeated() => $pb.PbList<GetDocumentRequest>();
   @$core.pragma('dart2js:noInline')
@@ -100,7 +97,7 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
@@ -113,7 +110,7 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $9.DocumentMask get mask => $_getN(1);
   @$pb.TagNumber(2)
-  set mask($9.DocumentMask v) { $_setField(2, v); }
+  set mask($9.DocumentMask value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasMask() => $_has(1);
   @$pb.TagNumber(2)
@@ -125,7 +122,7 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.List<$core.int> get transaction => $_getN(2);
   @$pb.TagNumber(3)
-  set transaction($core.List<$core.int> v) { $_setBytes(2, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(3)
   $core.bool hasTransaction() => $_has(2);
   @$pb.TagNumber(3)
@@ -139,7 +136,7 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $6.Timestamp get readTime => $_getN(3);
   @$pb.TagNumber(5)
-  set readTime($6.Timestamp v) { $_setField(5, v); }
+  set readTime($6.Timestamp value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasReadTime() => $_has(3);
   @$pb.TagNumber(5)
@@ -168,39 +165,23 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
     $6.Timestamp? readTime,
     $core.bool? showMissing,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (collectionId != null) {
-      $result.collectionId = collectionId;
-    }
-    if (pageSize != null) {
-      $result.pageSize = pageSize;
-    }
-    if (pageToken != null) {
-      $result.pageToken = pageToken;
-    }
-    if (orderBy != null) {
-      $result.orderBy = orderBy;
-    }
-    if (mask != null) {
-      $result.mask = mask;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (showMissing != null) {
-      $result.showMissing = showMissing;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (collectionId != null) result.collectionId = collectionId;
+    if (pageSize != null) result.pageSize = pageSize;
+    if (pageToken != null) result.pageToken = pageToken;
+    if (orderBy != null) result.orderBy = orderBy;
+    if (mask != null) result.mask = mask;
+    if (transaction != null) result.transaction = transaction;
+    if (readTime != null) result.readTime = readTime;
+    if (showMissing != null) result.showMissing = showMissing;
+    return result;
   }
-  ListDocumentsRequest._() : super();
-  factory ListDocumentsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ListDocumentsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ListDocumentsRequest._();
+
+  factory ListDocumentsRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ListDocumentsRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, ListDocumentsRequest_ConsistencySelector> _ListDocumentsRequest_ConsistencySelectorByTag = {
     8 : ListDocumentsRequest_ConsistencySelector.transaction,
@@ -226,10 +207,12 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ListDocumentsRequest copyWith(void Function(ListDocumentsRequest) updates) => super.copyWith((message) => updates(message as ListDocumentsRequest)) as ListDocumentsRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ListDocumentsRequest create() => ListDocumentsRequest._();
+  @$core.override
   ListDocumentsRequest createEmptyInstance() => create();
   static $pb.PbList<ListDocumentsRequest> createRepeated() => $pb.PbList<ListDocumentsRequest>();
   @$core.pragma('dart2js:noInline')
@@ -249,7 +232,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -264,7 +247,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get collectionId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set collectionId($core.String v) { $_setString(1, v); }
+  set collectionId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasCollectionId() => $_has(1);
   @$pb.TagNumber(2)
@@ -276,7 +259,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get pageSize => $_getIZ(2);
   @$pb.TagNumber(3)
-  set pageSize($core.int v) { $_setSignedInt32(2, v); }
+  set pageSize($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(3)
   $core.bool hasPageSize() => $_has(2);
   @$pb.TagNumber(3)
@@ -290,7 +273,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.String get pageToken => $_getSZ(3);
   @$pb.TagNumber(4)
-  set pageToken($core.String v) { $_setString(3, v); }
+  set pageToken($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
   $core.bool hasPageToken() => $_has(3);
   @$pb.TagNumber(4)
@@ -306,7 +289,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.String get orderBy => $_getSZ(4);
   @$pb.TagNumber(6)
-  set orderBy($core.String v) { $_setString(4, v); }
+  set orderBy($core.String value) => $_setString(4, value);
   @$pb.TagNumber(6)
   $core.bool hasOrderBy() => $_has(4);
   @$pb.TagNumber(6)
@@ -319,7 +302,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $9.DocumentMask get mask => $_getN(5);
   @$pb.TagNumber(7)
-  set mask($9.DocumentMask v) { $_setField(7, v); }
+  set mask($9.DocumentMask value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasMask() => $_has(5);
   @$pb.TagNumber(7)
@@ -331,7 +314,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.List<$core.int> get transaction => $_getN(6);
   @$pb.TagNumber(8)
-  set transaction($core.List<$core.int> v) { $_setBytes(6, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(6, value);
   @$pb.TagNumber(8)
   $core.bool hasTransaction() => $_has(6);
   @$pb.TagNumber(8)
@@ -345,7 +328,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $6.Timestamp get readTime => $_getN(7);
   @$pb.TagNumber(10)
-  set readTime($6.Timestamp v) { $_setField(10, v); }
+  set readTime($6.Timestamp value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasReadTime() => $_has(7);
   @$pb.TagNumber(10)
@@ -365,7 +348,7 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.bool get showMissing => $_getBF(8);
   @$pb.TagNumber(12)
-  set showMissing($core.bool v) { $_setBool(8, v); }
+  set showMissing($core.bool value) => $_setBool(8, value);
   @$pb.TagNumber(12)
   $core.bool hasShowMissing() => $_has(8);
   @$pb.TagNumber(12)
@@ -379,18 +362,16 @@ class ListDocumentsResponse extends $pb.GeneratedMessage {
     $core.Iterable<$1.Document>? documents,
     $core.String? nextPageToken,
   }) {
-    final $result = create();
-    if (documents != null) {
-      $result.documents.addAll(documents);
-    }
-    if (nextPageToken != null) {
-      $result.nextPageToken = nextPageToken;
-    }
-    return $result;
+    final result = create();
+    if (documents != null) result.documents.addAll(documents);
+    if (nextPageToken != null) result.nextPageToken = nextPageToken;
+    return result;
   }
-  ListDocumentsResponse._() : super();
-  factory ListDocumentsResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ListDocumentsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ListDocumentsResponse._();
+
+  factory ListDocumentsResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ListDocumentsResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ListDocumentsResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pc<$1.Document>(1, _omitFieldNames ? '' : 'documents', $pb.PbFieldType.PM, subBuilder: $1.Document.create)
@@ -403,10 +384,12 @@ class ListDocumentsResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ListDocumentsResponse copyWith(void Function(ListDocumentsResponse) updates) => super.copyWith((message) => updates(message as ListDocumentsResponse)) as ListDocumentsResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ListDocumentsResponse create() => ListDocumentsResponse._();
+  @$core.override
   ListDocumentsResponse createEmptyInstance() => create();
   static $pb.PbList<ListDocumentsResponse> createRepeated() => $pb.PbList<ListDocumentsResponse>();
   @$core.pragma('dart2js:noInline')
@@ -423,7 +406,7 @@ class ListDocumentsResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get nextPageToken => $_getSZ(1);
   @$pb.TagNumber(2)
-  set nextPageToken($core.String v) { $_setString(1, v); }
+  set nextPageToken($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasNextPageToken() => $_has(1);
   @$pb.TagNumber(2)
@@ -440,27 +423,19 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
     $1.Document? document,
     $9.DocumentMask? mask,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (collectionId != null) {
-      $result.collectionId = collectionId;
-    }
-    if (documentId != null) {
-      $result.documentId = documentId;
-    }
-    if (document != null) {
-      $result.document = document;
-    }
-    if (mask != null) {
-      $result.mask = mask;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (collectionId != null) result.collectionId = collectionId;
+    if (documentId != null) result.documentId = documentId;
+    if (document != null) result.document = document;
+    if (mask != null) result.mask = mask;
+    return result;
   }
-  CreateDocumentRequest._() : super();
-  factory CreateDocumentRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CreateDocumentRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  CreateDocumentRequest._();
+
+  factory CreateDocumentRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory CreateDocumentRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CreateDocumentRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'parent')
@@ -476,10 +451,12 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CreateDocumentRequest copyWith(void Function(CreateDocumentRequest) updates) => super.copyWith((message) => updates(message as CreateDocumentRequest)) as CreateDocumentRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CreateDocumentRequest create() => CreateDocumentRequest._();
+  @$core.override
   CreateDocumentRequest createEmptyInstance() => create();
   static $pb.PbList<CreateDocumentRequest> createRepeated() => $pb.PbList<CreateDocumentRequest>();
   @$core.pragma('dart2js:noInline')
@@ -492,7 +469,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -503,7 +480,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get collectionId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set collectionId($core.String v) { $_setString(1, v); }
+  set collectionId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasCollectionId() => $_has(1);
   @$pb.TagNumber(2)
@@ -515,7 +492,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.String get documentId => $_getSZ(2);
   @$pb.TagNumber(3)
-  set documentId($core.String v) { $_setString(2, v); }
+  set documentId($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasDocumentId() => $_has(2);
   @$pb.TagNumber(3)
@@ -525,7 +502,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $1.Document get document => $_getN(3);
   @$pb.TagNumber(4)
-  set document($1.Document v) { $_setField(4, v); }
+  set document($1.Document value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasDocument() => $_has(3);
   @$pb.TagNumber(4)
@@ -540,7 +517,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $9.DocumentMask get mask => $_getN(4);
   @$pb.TagNumber(5)
-  set mask($9.DocumentMask v) { $_setField(5, v); }
+  set mask($9.DocumentMask value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasMask() => $_has(4);
   @$pb.TagNumber(5)
@@ -558,24 +535,18 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
     $9.DocumentMask? mask,
     $9.Precondition? currentDocument,
   }) {
-    final $result = create();
-    if (document != null) {
-      $result.document = document;
-    }
-    if (updateMask != null) {
-      $result.updateMask = updateMask;
-    }
-    if (mask != null) {
-      $result.mask = mask;
-    }
-    if (currentDocument != null) {
-      $result.currentDocument = currentDocument;
-    }
-    return $result;
+    final result = create();
+    if (document != null) result.document = document;
+    if (updateMask != null) result.updateMask = updateMask;
+    if (mask != null) result.mask = mask;
+    if (currentDocument != null) result.currentDocument = currentDocument;
+    return result;
   }
-  UpdateDocumentRequest._() : super();
-  factory UpdateDocumentRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory UpdateDocumentRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  UpdateDocumentRequest._();
+
+  factory UpdateDocumentRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory UpdateDocumentRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'UpdateDocumentRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOM<$1.Document>(1, _omitFieldNames ? '' : 'document', subBuilder: $1.Document.create)
@@ -590,10 +561,12 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UpdateDocumentRequest copyWith(void Function(UpdateDocumentRequest) updates) => super.copyWith((message) => updates(message as UpdateDocumentRequest)) as UpdateDocumentRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static UpdateDocumentRequest create() => UpdateDocumentRequest._();
+  @$core.override
   UpdateDocumentRequest createEmptyInstance() => create();
   static $pb.PbList<UpdateDocumentRequest> createRepeated() => $pb.PbList<UpdateDocumentRequest>();
   @$core.pragma('dart2js:noInline')
@@ -605,7 +578,7 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Document get document => $_getN(0);
   @$pb.TagNumber(1)
-  set document($1.Document v) { $_setField(1, v); }
+  set document($1.Document value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
@@ -623,7 +596,7 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $9.DocumentMask get updateMask => $_getN(1);
   @$pb.TagNumber(2)
-  set updateMask($9.DocumentMask v) { $_setField(2, v); }
+  set updateMask($9.DocumentMask value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasUpdateMask() => $_has(1);
   @$pb.TagNumber(2)
@@ -638,7 +611,7 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $9.DocumentMask get mask => $_getN(2);
   @$pb.TagNumber(3)
-  set mask($9.DocumentMask v) { $_setField(3, v); }
+  set mask($9.DocumentMask value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasMask() => $_has(2);
   @$pb.TagNumber(3)
@@ -651,7 +624,7 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $9.Precondition get currentDocument => $_getN(3);
   @$pb.TagNumber(4)
-  set currentDocument($9.Precondition v) { $_setField(4, v); }
+  set currentDocument($9.Precondition value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCurrentDocument() => $_has(3);
   @$pb.TagNumber(4)
@@ -667,18 +640,16 @@ class DeleteDocumentRequest extends $pb.GeneratedMessage {
     $core.String? name,
     $9.Precondition? currentDocument,
   }) {
-    final $result = create();
-    if (name != null) {
-      $result.name = name;
-    }
-    if (currentDocument != null) {
-      $result.currentDocument = currentDocument;
-    }
-    return $result;
+    final result = create();
+    if (name != null) result.name = name;
+    if (currentDocument != null) result.currentDocument = currentDocument;
+    return result;
   }
-  DeleteDocumentRequest._() : super();
-  factory DeleteDocumentRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DeleteDocumentRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  DeleteDocumentRequest._();
+
+  factory DeleteDocumentRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory DeleteDocumentRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DeleteDocumentRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
@@ -691,10 +662,12 @@ class DeleteDocumentRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeleteDocumentRequest copyWith(void Function(DeleteDocumentRequest) updates) => super.copyWith((message) => updates(message as DeleteDocumentRequest)) as DeleteDocumentRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static DeleteDocumentRequest create() => DeleteDocumentRequest._();
+  @$core.override
   DeleteDocumentRequest createEmptyInstance() => create();
   static $pb.PbList<DeleteDocumentRequest> createRepeated() => $pb.PbList<DeleteDocumentRequest>();
   @$core.pragma('dart2js:noInline')
@@ -706,7 +679,7 @@ class DeleteDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
@@ -717,7 +690,7 @@ class DeleteDocumentRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $9.Precondition get currentDocument => $_getN(1);
   @$pb.TagNumber(2)
-  set currentDocument($9.Precondition v) { $_setField(2, v); }
+  set currentDocument($9.Precondition value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasCurrentDocument() => $_has(1);
   @$pb.TagNumber(2)
@@ -744,30 +717,20 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
     $9.TransactionOptions? newTransaction,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (documents != null) {
-      $result.documents.addAll(documents);
-    }
-    if (mask != null) {
-      $result.mask = mask;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (newTransaction != null) {
-      $result.newTransaction = newTransaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (documents != null) result.documents.addAll(documents);
+    if (mask != null) result.mask = mask;
+    if (transaction != null) result.transaction = transaction;
+    if (newTransaction != null) result.newTransaction = newTransaction;
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  BatchGetDocumentsRequest._() : super();
-  factory BatchGetDocumentsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BatchGetDocumentsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  BatchGetDocumentsRequest._();
+
+  factory BatchGetDocumentsRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory BatchGetDocumentsRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, BatchGetDocumentsRequest_ConsistencySelector> _BatchGetDocumentsRequest_ConsistencySelectorByTag = {
     4 : BatchGetDocumentsRequest_ConsistencySelector.transaction,
@@ -791,10 +754,12 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BatchGetDocumentsRequest copyWith(void Function(BatchGetDocumentsRequest) updates) => super.copyWith((message) => updates(message as BatchGetDocumentsRequest)) as BatchGetDocumentsRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BatchGetDocumentsRequest create() => BatchGetDocumentsRequest._();
+  @$core.override
   BatchGetDocumentsRequest createEmptyInstance() => create();
   static $pb.PbList<BatchGetDocumentsRequest> createRepeated() => $pb.PbList<BatchGetDocumentsRequest>();
   @$core.pragma('dart2js:noInline')
@@ -809,7 +774,7 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -829,7 +794,7 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $9.DocumentMask get mask => $_getN(2);
   @$pb.TagNumber(3)
-  set mask($9.DocumentMask v) { $_setField(3, v); }
+  set mask($9.DocumentMask value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasMask() => $_has(2);
   @$pb.TagNumber(3)
@@ -841,7 +806,7 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.List<$core.int> get transaction => $_getN(3);
   @$pb.TagNumber(4)
-  set transaction($core.List<$core.int> v) { $_setBytes(3, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(3, value);
   @$pb.TagNumber(4)
   $core.bool hasTransaction() => $_has(3);
   @$pb.TagNumber(4)
@@ -854,7 +819,7 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $9.TransactionOptions get newTransaction => $_getN(4);
   @$pb.TagNumber(5)
-  set newTransaction($9.TransactionOptions v) { $_setField(5, v); }
+  set newTransaction($9.TransactionOptions value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasNewTransaction() => $_has(4);
   @$pb.TagNumber(5)
@@ -870,7 +835,7 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $6.Timestamp get readTime => $_getN(5);
   @$pb.TagNumber(7)
-  set readTime($6.Timestamp v) { $_setField(7, v); }
+  set readTime($6.Timestamp value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasReadTime() => $_has(5);
   @$pb.TagNumber(7)
@@ -894,24 +859,18 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
     $core.List<$core.int>? transaction,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (found != null) {
-      $result.found = found;
-    }
-    if (missing != null) {
-      $result.missing = missing;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (found != null) result.found = found;
+    if (missing != null) result.missing = missing;
+    if (transaction != null) result.transaction = transaction;
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  BatchGetDocumentsResponse._() : super();
-  factory BatchGetDocumentsResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BatchGetDocumentsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  BatchGetDocumentsResponse._();
+
+  factory BatchGetDocumentsResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory BatchGetDocumentsResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, BatchGetDocumentsResponse_Result> _BatchGetDocumentsResponse_ResultByTag = {
     1 : BatchGetDocumentsResponse_Result.found,
@@ -932,10 +891,12 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BatchGetDocumentsResponse copyWith(void Function(BatchGetDocumentsResponse) updates) => super.copyWith((message) => updates(message as BatchGetDocumentsResponse)) as BatchGetDocumentsResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BatchGetDocumentsResponse create() => BatchGetDocumentsResponse._();
+  @$core.override
   BatchGetDocumentsResponse createEmptyInstance() => create();
   static $pb.PbList<BatchGetDocumentsResponse> createRepeated() => $pb.PbList<BatchGetDocumentsResponse>();
   @$core.pragma('dart2js:noInline')
@@ -949,7 +910,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Document get found => $_getN(0);
   @$pb.TagNumber(1)
-  set found($1.Document v) { $_setField(1, v); }
+  set found($1.Document value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasFound() => $_has(0);
   @$pb.TagNumber(1)
@@ -962,7 +923,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get missing => $_getSZ(1);
   @$pb.TagNumber(2)
-  set missing($core.String v) { $_setString(1, v); }
+  set missing($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasMissing() => $_has(1);
   @$pb.TagNumber(2)
@@ -975,7 +936,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.List<$core.int> get transaction => $_getN(2);
   @$pb.TagNumber(3)
-  set transaction($core.List<$core.int> v) { $_setBytes(2, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(3)
   $core.bool hasTransaction() => $_has(2);
   @$pb.TagNumber(3)
@@ -988,7 +949,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $6.Timestamp get readTime => $_getN(3);
   @$pb.TagNumber(4)
-  set readTime($6.Timestamp v) { $_setField(4, v); }
+  set readTime($6.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReadTime() => $_has(3);
   @$pb.TagNumber(4)
@@ -1004,18 +965,16 @@ class BeginTransactionRequest extends $pb.GeneratedMessage {
     $core.String? database,
     $9.TransactionOptions? options,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (options != null) {
-      $result.options = options;
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (options != null) result.options = options;
+    return result;
   }
-  BeginTransactionRequest._() : super();
-  factory BeginTransactionRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BeginTransactionRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  BeginTransactionRequest._();
+
+  factory BeginTransactionRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory BeginTransactionRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BeginTransactionRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
@@ -1028,10 +987,12 @@ class BeginTransactionRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BeginTransactionRequest copyWith(void Function(BeginTransactionRequest) updates) => super.copyWith((message) => updates(message as BeginTransactionRequest)) as BeginTransactionRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BeginTransactionRequest create() => BeginTransactionRequest._();
+  @$core.override
   BeginTransactionRequest createEmptyInstance() => create();
   static $pb.PbList<BeginTransactionRequest> createRepeated() => $pb.PbList<BeginTransactionRequest>();
   @$core.pragma('dart2js:noInline')
@@ -1043,7 +1004,7 @@ class BeginTransactionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -1054,7 +1015,7 @@ class BeginTransactionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $9.TransactionOptions get options => $_getN(1);
   @$pb.TagNumber(2)
-  set options($9.TransactionOptions v) { $_setField(2, v); }
+  set options($9.TransactionOptions value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOptions() => $_has(1);
   @$pb.TagNumber(2)
@@ -1069,15 +1030,15 @@ class BeginTransactionResponse extends $pb.GeneratedMessage {
   factory BeginTransactionResponse({
     $core.List<$core.int>? transaction,
   }) {
-    final $result = create();
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    return $result;
+    final result = create();
+    if (transaction != null) result.transaction = transaction;
+    return result;
   }
-  BeginTransactionResponse._() : super();
-  factory BeginTransactionResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BeginTransactionResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  BeginTransactionResponse._();
+
+  factory BeginTransactionResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory BeginTransactionResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BeginTransactionResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..a<$core.List<$core.int>>(1, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
@@ -1089,10 +1050,12 @@ class BeginTransactionResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BeginTransactionResponse copyWith(void Function(BeginTransactionResponse) updates) => super.copyWith((message) => updates(message as BeginTransactionResponse)) as BeginTransactionResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BeginTransactionResponse create() => BeginTransactionResponse._();
+  @$core.override
   BeginTransactionResponse createEmptyInstance() => create();
   static $pb.PbList<BeginTransactionResponse> createRepeated() => $pb.PbList<BeginTransactionResponse>();
   @$core.pragma('dart2js:noInline')
@@ -1103,7 +1066,7 @@ class BeginTransactionResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.List<$core.int> get transaction => $_getN(0);
   @$pb.TagNumber(1)
-  set transaction($core.List<$core.int> v) { $_setBytes(0, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(0, value);
   @$pb.TagNumber(1)
   $core.bool hasTransaction() => $_has(0);
   @$pb.TagNumber(1)
@@ -1117,21 +1080,17 @@ class CommitRequest extends $pb.GeneratedMessage {
     $core.Iterable<$10.Write>? writes,
     $core.List<$core.int>? transaction,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (writes != null) {
-      $result.writes.addAll(writes);
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (writes != null) result.writes.addAll(writes);
+    if (transaction != null) result.transaction = transaction;
+    return result;
   }
-  CommitRequest._() : super();
-  factory CommitRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CommitRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  CommitRequest._();
+
+  factory CommitRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory CommitRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CommitRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
@@ -1145,10 +1104,12 @@ class CommitRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CommitRequest copyWith(void Function(CommitRequest) updates) => super.copyWith((message) => updates(message as CommitRequest)) as CommitRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CommitRequest create() => CommitRequest._();
+  @$core.override
   CommitRequest createEmptyInstance() => create();
   static $pb.PbList<CommitRequest> createRepeated() => $pb.PbList<CommitRequest>();
   @$core.pragma('dart2js:noInline')
@@ -1160,7 +1121,7 @@ class CommitRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -1176,7 +1137,7 @@ class CommitRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.List<$core.int> get transaction => $_getN(2);
   @$pb.TagNumber(3)
-  set transaction($core.List<$core.int> v) { $_setBytes(2, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(3)
   $core.bool hasTransaction() => $_has(2);
   @$pb.TagNumber(3)
@@ -1189,18 +1150,16 @@ class CommitResponse extends $pb.GeneratedMessage {
     $core.Iterable<$10.WriteResult>? writeResults,
     $6.Timestamp? commitTime,
   }) {
-    final $result = create();
-    if (writeResults != null) {
-      $result.writeResults.addAll(writeResults);
-    }
-    if (commitTime != null) {
-      $result.commitTime = commitTime;
-    }
-    return $result;
+    final result = create();
+    if (writeResults != null) result.writeResults.addAll(writeResults);
+    if (commitTime != null) result.commitTime = commitTime;
+    return result;
   }
-  CommitResponse._() : super();
-  factory CommitResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CommitResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  CommitResponse._();
+
+  factory CommitResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory CommitResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CommitResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pc<$10.WriteResult>(1, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $10.WriteResult.create)
@@ -1213,10 +1172,12 @@ class CommitResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CommitResponse copyWith(void Function(CommitResponse) updates) => super.copyWith((message) => updates(message as CommitResponse)) as CommitResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static CommitResponse create() => CommitResponse._();
+  @$core.override
   CommitResponse createEmptyInstance() => create();
   static $pb.PbList<CommitResponse> createRepeated() => $pb.PbList<CommitResponse>();
   @$core.pragma('dart2js:noInline')
@@ -1235,7 +1196,7 @@ class CommitResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $6.Timestamp get commitTime => $_getN(1);
   @$pb.TagNumber(2)
-  set commitTime($6.Timestamp v) { $_setField(2, v); }
+  set commitTime($6.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasCommitTime() => $_has(1);
   @$pb.TagNumber(2)
@@ -1250,18 +1211,16 @@ class RollbackRequest extends $pb.GeneratedMessage {
     $core.String? database,
     $core.List<$core.int>? transaction,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (transaction != null) result.transaction = transaction;
+    return result;
   }
-  RollbackRequest._() : super();
-  factory RollbackRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RollbackRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  RollbackRequest._();
+
+  factory RollbackRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory RollbackRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RollbackRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
@@ -1274,10 +1233,12 @@ class RollbackRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RollbackRequest copyWith(void Function(RollbackRequest) updates) => super.copyWith((message) => updates(message as RollbackRequest)) as RollbackRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RollbackRequest create() => RollbackRequest._();
+  @$core.override
   RollbackRequest createEmptyInstance() => create();
   static $pb.PbList<RollbackRequest> createRepeated() => $pb.PbList<RollbackRequest>();
   @$core.pragma('dart2js:noInline')
@@ -1289,7 +1250,7 @@ class RollbackRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -1299,7 +1260,7 @@ class RollbackRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.List<$core.int> get transaction => $_getN(1);
   @$pb.TagNumber(2)
-  set transaction($core.List<$core.int> v) { $_setBytes(1, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(1, value);
   @$pb.TagNumber(2)
   $core.bool hasTransaction() => $_has(1);
   @$pb.TagNumber(2)
@@ -1328,30 +1289,20 @@ class RunQueryRequest extends $pb.GeneratedMessage {
     $6.Timestamp? readTime,
     $12.ExplainOptions? explainOptions,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (structuredQuery != null) {
-      $result.structuredQuery = structuredQuery;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (newTransaction != null) {
-      $result.newTransaction = newTransaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (explainOptions != null) {
-      $result.explainOptions = explainOptions;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (structuredQuery != null) result.structuredQuery = structuredQuery;
+    if (transaction != null) result.transaction = transaction;
+    if (newTransaction != null) result.newTransaction = newTransaction;
+    if (readTime != null) result.readTime = readTime;
+    if (explainOptions != null) result.explainOptions = explainOptions;
+    return result;
   }
-  RunQueryRequest._() : super();
-  factory RunQueryRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RunQueryRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  RunQueryRequest._();
+
+  factory RunQueryRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory RunQueryRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, RunQueryRequest_QueryType> _RunQueryRequest_QueryTypeByTag = {
     2 : RunQueryRequest_QueryType.structuredQuery,
@@ -1380,10 +1331,12 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RunQueryRequest copyWith(void Function(RunQueryRequest) updates) => super.copyWith((message) => updates(message as RunQueryRequest)) as RunQueryRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RunQueryRequest create() => RunQueryRequest._();
+  @$core.override
   RunQueryRequest createEmptyInstance() => create();
   static $pb.PbList<RunQueryRequest> createRepeated() => $pb.PbList<RunQueryRequest>();
   @$core.pragma('dart2js:noInline')
@@ -1405,7 +1358,7 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -1415,7 +1368,7 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $11.StructuredQuery get structuredQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredQuery($11.StructuredQuery v) { $_setField(2, v); }
+  set structuredQuery($11.StructuredQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredQuery() => $_has(1);
   @$pb.TagNumber(2)
@@ -1429,7 +1382,7 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.List<$core.int> get transaction => $_getN(2);
   @$pb.TagNumber(5)
-  set transaction($core.List<$core.int> v) { $_setBytes(2, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(5)
   $core.bool hasTransaction() => $_has(2);
   @$pb.TagNumber(5)
@@ -1442,7 +1395,7 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $9.TransactionOptions get newTransaction => $_getN(3);
   @$pb.TagNumber(6)
-  set newTransaction($9.TransactionOptions v) { $_setField(6, v); }
+  set newTransaction($9.TransactionOptions value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasNewTransaction() => $_has(3);
   @$pb.TagNumber(6)
@@ -1458,7 +1411,7 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $6.Timestamp get readTime => $_getN(4);
   @$pb.TagNumber(7)
-  set readTime($6.Timestamp v) { $_setField(7, v); }
+  set readTime($6.Timestamp value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasReadTime() => $_has(4);
   @$pb.TagNumber(7)
@@ -1471,7 +1424,7 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $12.ExplainOptions get explainOptions => $_getN(5);
   @$pb.TagNumber(10)
-  set explainOptions($12.ExplainOptions v) { $_setField(10, v); }
+  set explainOptions($12.ExplainOptions value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasExplainOptions() => $_has(5);
   @$pb.TagNumber(10)
@@ -1496,30 +1449,20 @@ class RunQueryResponse extends $pb.GeneratedMessage {
     $core.bool? done,
     $12.ExplainMetrics? explainMetrics,
   }) {
-    final $result = create();
-    if (document != null) {
-      $result.document = document;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (skippedResults != null) {
-      $result.skippedResults = skippedResults;
-    }
-    if (done != null) {
-      $result.done = done;
-    }
-    if (explainMetrics != null) {
-      $result.explainMetrics = explainMetrics;
-    }
-    return $result;
+    final result = create();
+    if (document != null) result.document = document;
+    if (transaction != null) result.transaction = transaction;
+    if (readTime != null) result.readTime = readTime;
+    if (skippedResults != null) result.skippedResults = skippedResults;
+    if (done != null) result.done = done;
+    if (explainMetrics != null) result.explainMetrics = explainMetrics;
+    return result;
   }
-  RunQueryResponse._() : super();
-  factory RunQueryResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RunQueryResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  RunQueryResponse._();
+
+  factory RunQueryResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory RunQueryResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, RunQueryResponse_ContinuationSelector> _RunQueryResponse_ContinuationSelectorByTag = {
     6 : RunQueryResponse_ContinuationSelector.done,
@@ -1541,10 +1484,12 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RunQueryResponse copyWith(void Function(RunQueryResponse) updates) => super.copyWith((message) => updates(message as RunQueryResponse)) as RunQueryResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RunQueryResponse create() => RunQueryResponse._();
+  @$core.override
   RunQueryResponse createEmptyInstance() => create();
   static $pb.PbList<RunQueryResponse> createRepeated() => $pb.PbList<RunQueryResponse>();
   @$core.pragma('dart2js:noInline')
@@ -1558,7 +1503,7 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.Document get document => $_getN(0);
   @$pb.TagNumber(1)
-  set document($1.Document v) { $_setField(1, v); }
+  set document($1.Document value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDocument() => $_has(0);
   @$pb.TagNumber(1)
@@ -1574,7 +1519,7 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.List<$core.int> get transaction => $_getN(1);
   @$pb.TagNumber(2)
-  set transaction($core.List<$core.int> v) { $_setBytes(1, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(1, value);
   @$pb.TagNumber(2)
   $core.bool hasTransaction() => $_has(1);
   @$pb.TagNumber(2)
@@ -1590,7 +1535,7 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $6.Timestamp get readTime => $_getN(2);
   @$pb.TagNumber(3)
-  set readTime($6.Timestamp v) { $_setField(3, v); }
+  set readTime($6.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasReadTime() => $_has(2);
   @$pb.TagNumber(3)
@@ -1603,7 +1548,7 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.int get skippedResults => $_getIZ(3);
   @$pb.TagNumber(4)
-  set skippedResults($core.int v) { $_setSignedInt32(3, v); }
+  set skippedResults($core.int value) => $_setSignedInt32(3, value);
   @$pb.TagNumber(4)
   $core.bool hasSkippedResults() => $_has(3);
   @$pb.TagNumber(4)
@@ -1614,7 +1559,7 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool get done => $_getBF(4);
   @$pb.TagNumber(6)
-  set done($core.bool v) { $_setBool(4, v); }
+  set done($core.bool value) => $_setBool(4, value);
   @$pb.TagNumber(6)
   $core.bool hasDone() => $_has(4);
   @$pb.TagNumber(6)
@@ -1626,7 +1571,7 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $12.ExplainMetrics get explainMetrics => $_getN(5);
   @$pb.TagNumber(11)
-  set explainMetrics($12.ExplainMetrics v) { $_setField(11, v); }
+  set explainMetrics($12.ExplainMetrics value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasExplainMetrics() => $_has(5);
   @$pb.TagNumber(11)
@@ -1658,30 +1603,20 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
     $6.Timestamp? readTime,
     $12.ExplainOptions? explainOptions,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (structuredAggregationQuery != null) {
-      $result.structuredAggregationQuery = structuredAggregationQuery;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (newTransaction != null) {
-      $result.newTransaction = newTransaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (explainOptions != null) {
-      $result.explainOptions = explainOptions;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (structuredAggregationQuery != null) result.structuredAggregationQuery = structuredAggregationQuery;
+    if (transaction != null) result.transaction = transaction;
+    if (newTransaction != null) result.newTransaction = newTransaction;
+    if (readTime != null) result.readTime = readTime;
+    if (explainOptions != null) result.explainOptions = explainOptions;
+    return result;
   }
-  RunAggregationQueryRequest._() : super();
-  factory RunAggregationQueryRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RunAggregationQueryRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  RunAggregationQueryRequest._();
+
+  factory RunAggregationQueryRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory RunAggregationQueryRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, RunAggregationQueryRequest_QueryType> _RunAggregationQueryRequest_QueryTypeByTag = {
     2 : RunAggregationQueryRequest_QueryType.structuredAggregationQuery,
@@ -1710,10 +1645,12 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RunAggregationQueryRequest copyWith(void Function(RunAggregationQueryRequest) updates) => super.copyWith((message) => updates(message as RunAggregationQueryRequest)) as RunAggregationQueryRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RunAggregationQueryRequest create() => RunAggregationQueryRequest._();
+  @$core.override
   RunAggregationQueryRequest createEmptyInstance() => create();
   static $pb.PbList<RunAggregationQueryRequest> createRepeated() => $pb.PbList<RunAggregationQueryRequest>();
   @$core.pragma('dart2js:noInline')
@@ -1735,7 +1672,7 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -1745,7 +1682,7 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $11.StructuredAggregationQuery get structuredAggregationQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredAggregationQuery($11.StructuredAggregationQuery v) { $_setField(2, v); }
+  set structuredAggregationQuery($11.StructuredAggregationQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredAggregationQuery() => $_has(1);
   @$pb.TagNumber(2)
@@ -1759,7 +1696,7 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.List<$core.int> get transaction => $_getN(2);
   @$pb.TagNumber(4)
-  set transaction($core.List<$core.int> v) { $_setBytes(2, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(4)
   $core.bool hasTransaction() => $_has(2);
   @$pb.TagNumber(4)
@@ -1772,7 +1709,7 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $9.TransactionOptions get newTransaction => $_getN(3);
   @$pb.TagNumber(5)
-  set newTransaction($9.TransactionOptions v) { $_setField(5, v); }
+  set newTransaction($9.TransactionOptions value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasNewTransaction() => $_has(3);
   @$pb.TagNumber(5)
@@ -1788,7 +1725,7 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $6.Timestamp get readTime => $_getN(4);
   @$pb.TagNumber(6)
-  set readTime($6.Timestamp v) { $_setField(6, v); }
+  set readTime($6.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasReadTime() => $_has(4);
   @$pb.TagNumber(6)
@@ -1801,7 +1738,7 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $12.ExplainOptions get explainOptions => $_getN(5);
   @$pb.TagNumber(8)
-  set explainOptions($12.ExplainOptions v) { $_setField(8, v); }
+  set explainOptions($12.ExplainOptions value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasExplainOptions() => $_has(5);
   @$pb.TagNumber(8)
@@ -1819,24 +1756,18 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
     $6.Timestamp? readTime,
     $12.ExplainMetrics? explainMetrics,
   }) {
-    final $result = create();
-    if (result != null) {
-      $result.result = result;
-    }
-    if (transaction != null) {
-      $result.transaction = transaction;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (explainMetrics != null) {
-      $result.explainMetrics = explainMetrics;
-    }
-    return $result;
+    final result$ = create();
+    if (result != null) result$.result = result;
+    if (transaction != null) result$.transaction = transaction;
+    if (readTime != null) result$.readTime = readTime;
+    if (explainMetrics != null) result$.explainMetrics = explainMetrics;
+    return result$;
   }
-  RunAggregationQueryResponse._() : super();
-  factory RunAggregationQueryResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory RunAggregationQueryResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  RunAggregationQueryResponse._();
+
+  factory RunAggregationQueryResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory RunAggregationQueryResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RunAggregationQueryResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOM<$13.AggregationResult>(1, _omitFieldNames ? '' : 'result', subBuilder: $13.AggregationResult.create)
@@ -1851,10 +1782,12 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RunAggregationQueryResponse copyWith(void Function(RunAggregationQueryResponse) updates) => super.copyWith((message) => updates(message as RunAggregationQueryResponse)) as RunAggregationQueryResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static RunAggregationQueryResponse create() => RunAggregationQueryResponse._();
+  @$core.override
   RunAggregationQueryResponse createEmptyInstance() => create();
   static $pb.PbList<RunAggregationQueryResponse> createRepeated() => $pb.PbList<RunAggregationQueryResponse>();
   @$core.pragma('dart2js:noInline')
@@ -1867,7 +1800,7 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $13.AggregationResult get result => $_getN(0);
   @$pb.TagNumber(1)
-  set result($13.AggregationResult v) { $_setField(1, v); }
+  set result($13.AggregationResult value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasResult() => $_has(0);
   @$pb.TagNumber(1)
@@ -1882,7 +1815,7 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.List<$core.int> get transaction => $_getN(1);
   @$pb.TagNumber(2)
-  set transaction($core.List<$core.int> v) { $_setBytes(1, v); }
+  set transaction($core.List<$core.int> value) => $_setBytes(1, value);
   @$pb.TagNumber(2)
   $core.bool hasTransaction() => $_has(1);
   @$pb.TagNumber(2)
@@ -1899,7 +1832,7 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $6.Timestamp get readTime => $_getN(2);
   @$pb.TagNumber(3)
-  set readTime($6.Timestamp v) { $_setField(3, v); }
+  set readTime($6.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasReadTime() => $_has(2);
   @$pb.TagNumber(3)
@@ -1913,7 +1846,7 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $12.ExplainMetrics get explainMetrics => $_getN(3);
   @$pb.TagNumber(10)
-  set explainMetrics($12.ExplainMetrics v) { $_setField(10, v); }
+  set explainMetrics($12.ExplainMetrics value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasExplainMetrics() => $_has(3);
   @$pb.TagNumber(10)
@@ -1943,30 +1876,20 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
     $core.int? pageSize,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (structuredQuery != null) {
-      $result.structuredQuery = structuredQuery;
-    }
-    if (partitionCount != null) {
-      $result.partitionCount = partitionCount;
-    }
-    if (pageToken != null) {
-      $result.pageToken = pageToken;
-    }
-    if (pageSize != null) {
-      $result.pageSize = pageSize;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (structuredQuery != null) result.structuredQuery = structuredQuery;
+    if (partitionCount != null) result.partitionCount = partitionCount;
+    if (pageToken != null) result.pageToken = pageToken;
+    if (pageSize != null) result.pageSize = pageSize;
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  PartitionQueryRequest._() : super();
-  factory PartitionQueryRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PartitionQueryRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  PartitionQueryRequest._();
+
+  factory PartitionQueryRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory PartitionQueryRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, PartitionQueryRequest_QueryType> _PartitionQueryRequest_QueryTypeByTag = {
     2 : PartitionQueryRequest_QueryType.structuredQuery,
@@ -1993,10 +1916,12 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PartitionQueryRequest copyWith(void Function(PartitionQueryRequest) updates) => super.copyWith((message) => updates(message as PartitionQueryRequest)) as PartitionQueryRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PartitionQueryRequest create() => PartitionQueryRequest._();
+  @$core.override
   PartitionQueryRequest createEmptyInstance() => create();
   static $pb.PbList<PartitionQueryRequest> createRepeated() => $pb.PbList<PartitionQueryRequest>();
   @$core.pragma('dart2js:noInline')
@@ -2016,7 +1941,7 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -2029,7 +1954,7 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $11.StructuredQuery get structuredQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredQuery($11.StructuredQuery v) { $_setField(2, v); }
+  set structuredQuery($11.StructuredQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredQuery() => $_has(1);
   @$pb.TagNumber(2)
@@ -2048,7 +1973,7 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $fixnum.Int64 get partitionCount => $_getI64(2);
   @$pb.TagNumber(3)
-  set partitionCount($fixnum.Int64 v) { $_setInt64(2, v); }
+  set partitionCount($fixnum.Int64 value) => $_setInt64(2, value);
   @$pb.TagNumber(3)
   $core.bool hasPartitionCount() => $_has(2);
   @$pb.TagNumber(3)
@@ -2070,7 +1995,7 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.String get pageToken => $_getSZ(3);
   @$pb.TagNumber(4)
-  set pageToken($core.String v) { $_setString(3, v); }
+  set pageToken($core.String value) => $_setString(3, value);
   @$pb.TagNumber(4)
   $core.bool hasPageToken() => $_has(3);
   @$pb.TagNumber(4)
@@ -2086,7 +2011,7 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.int get pageSize => $_getIZ(4);
   @$pb.TagNumber(5)
-  set pageSize($core.int v) { $_setSignedInt32(4, v); }
+  set pageSize($core.int value) => $_setSignedInt32(4, value);
   @$pb.TagNumber(5)
   $core.bool hasPageSize() => $_has(4);
   @$pb.TagNumber(5)
@@ -2100,7 +2025,7 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $6.Timestamp get readTime => $_getN(5);
   @$pb.TagNumber(6)
-  set readTime($6.Timestamp v) { $_setField(6, v); }
+  set readTime($6.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasReadTime() => $_has(5);
   @$pb.TagNumber(6)
@@ -2116,18 +2041,16 @@ class PartitionQueryResponse extends $pb.GeneratedMessage {
     $core.Iterable<$11.Cursor>? partitions,
     $core.String? nextPageToken,
   }) {
-    final $result = create();
-    if (partitions != null) {
-      $result.partitions.addAll(partitions);
-    }
-    if (nextPageToken != null) {
-      $result.nextPageToken = nextPageToken;
-    }
-    return $result;
+    final result = create();
+    if (partitions != null) result.partitions.addAll(partitions);
+    if (nextPageToken != null) result.nextPageToken = nextPageToken;
+    return result;
   }
-  PartitionQueryResponse._() : super();
-  factory PartitionQueryResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PartitionQueryResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  PartitionQueryResponse._();
+
+  factory PartitionQueryResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory PartitionQueryResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PartitionQueryResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pc<$11.Cursor>(1, _omitFieldNames ? '' : 'partitions', $pb.PbFieldType.PM, subBuilder: $11.Cursor.create)
@@ -2140,10 +2063,12 @@ class PartitionQueryResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PartitionQueryResponse copyWith(void Function(PartitionQueryResponse) updates) => super.copyWith((message) => updates(message as PartitionQueryResponse)) as PartitionQueryResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PartitionQueryResponse create() => PartitionQueryResponse._();
+  @$core.override
   PartitionQueryResponse createEmptyInstance() => create();
   static $pb.PbList<PartitionQueryResponse> createRepeated() => $pb.PbList<PartitionQueryResponse>();
   @$core.pragma('dart2js:noInline')
@@ -2176,7 +2101,7 @@ class PartitionQueryResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get nextPageToken => $_getSZ(1);
   @$pb.TagNumber(2)
-  set nextPageToken($core.String v) { $_setString(1, v); }
+  set nextPageToken($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasNextPageToken() => $_has(1);
   @$pb.TagNumber(2)
@@ -2201,27 +2126,19 @@ class WriteRequest extends $pb.GeneratedMessage {
     $core.List<$core.int>? streamToken,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? labels,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (streamId != null) {
-      $result.streamId = streamId;
-    }
-    if (writes != null) {
-      $result.writes.addAll(writes);
-    }
-    if (streamToken != null) {
-      $result.streamToken = streamToken;
-    }
-    if (labels != null) {
-      $result.labels.addEntries(labels);
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (streamId != null) result.streamId = streamId;
+    if (writes != null) result.writes.addAll(writes);
+    if (streamToken != null) result.streamToken = streamToken;
+    if (labels != null) result.labels.addEntries(labels);
+    return result;
   }
-  WriteRequest._() : super();
-  factory WriteRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WriteRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  WriteRequest._();
+
+  factory WriteRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory WriteRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WriteRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
@@ -2237,10 +2154,12 @@ class WriteRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   WriteRequest copyWith(void Function(WriteRequest) updates) => super.copyWith((message) => updates(message as WriteRequest)) as WriteRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static WriteRequest create() => WriteRequest._();
+  @$core.override
   WriteRequest createEmptyInstance() => create();
   static $pb.PbList<WriteRequest> createRepeated() => $pb.PbList<WriteRequest>();
   @$core.pragma('dart2js:noInline')
@@ -2253,7 +2172,7 @@ class WriteRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -2265,7 +2184,7 @@ class WriteRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get streamId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set streamId($core.String v) { $_setString(1, v); }
+  set streamId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasStreamId() => $_has(1);
   @$pb.TagNumber(2)
@@ -2297,7 +2216,7 @@ class WriteRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.List<$core.int> get streamToken => $_getN(3);
   @$pb.TagNumber(4)
-  set streamToken($core.List<$core.int> v) { $_setBytes(3, v); }
+  set streamToken($core.List<$core.int> value) => $_setBytes(3, value);
   @$pb.TagNumber(4)
   $core.bool hasStreamToken() => $_has(3);
   @$pb.TagNumber(4)
@@ -2316,24 +2235,18 @@ class WriteResponse extends $pb.GeneratedMessage {
     $core.Iterable<$10.WriteResult>? writeResults,
     $6.Timestamp? commitTime,
   }) {
-    final $result = create();
-    if (streamId != null) {
-      $result.streamId = streamId;
-    }
-    if (streamToken != null) {
-      $result.streamToken = streamToken;
-    }
-    if (writeResults != null) {
-      $result.writeResults.addAll(writeResults);
-    }
-    if (commitTime != null) {
-      $result.commitTime = commitTime;
-    }
-    return $result;
+    final result = create();
+    if (streamId != null) result.streamId = streamId;
+    if (streamToken != null) result.streamToken = streamToken;
+    if (writeResults != null) result.writeResults.addAll(writeResults);
+    if (commitTime != null) result.commitTime = commitTime;
+    return result;
   }
-  WriteResponse._() : super();
-  factory WriteResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory WriteResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  WriteResponse._();
+
+  factory WriteResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory WriteResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WriteResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'streamId')
@@ -2348,10 +2261,12 @@ class WriteResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   WriteResponse copyWith(void Function(WriteResponse) updates) => super.copyWith((message) => updates(message as WriteResponse)) as WriteResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static WriteResponse create() => WriteResponse._();
+  @$core.override
   WriteResponse createEmptyInstance() => create();
   static $pb.PbList<WriteResponse> createRepeated() => $pb.PbList<WriteResponse>();
   @$core.pragma('dart2js:noInline')
@@ -2363,7 +2278,7 @@ class WriteResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get streamId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set streamId($core.String v) { $_setString(0, v); }
+  set streamId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasStreamId() => $_has(0);
   @$pb.TagNumber(1)
@@ -2376,7 +2291,7 @@ class WriteResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.List<$core.int> get streamToken => $_getN(1);
   @$pb.TagNumber(2)
-  set streamToken($core.List<$core.int> v) { $_setBytes(1, v); }
+  set streamToken($core.List<$core.int> value) => $_setBytes(1, value);
   @$pb.TagNumber(2)
   $core.bool hasStreamToken() => $_has(1);
   @$pb.TagNumber(2)
@@ -2394,7 +2309,7 @@ class WriteResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $6.Timestamp get commitTime => $_getN(3);
   @$pb.TagNumber(4)
-  set commitTime($6.Timestamp v) { $_setField(4, v); }
+  set commitTime($6.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCommitTime() => $_has(3);
   @$pb.TagNumber(4)
@@ -2417,24 +2332,18 @@ class ListenRequest extends $pb.GeneratedMessage {
     $core.int? removeTarget,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? labels,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (addTarget != null) {
-      $result.addTarget = addTarget;
-    }
-    if (removeTarget != null) {
-      $result.removeTarget = removeTarget;
-    }
-    if (labels != null) {
-      $result.labels.addEntries(labels);
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (addTarget != null) result.addTarget = addTarget;
+    if (removeTarget != null) result.removeTarget = removeTarget;
+    if (labels != null) result.labels.addEntries(labels);
+    return result;
   }
-  ListenRequest._() : super();
-  factory ListenRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ListenRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ListenRequest._();
+
+  factory ListenRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ListenRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, ListenRequest_TargetChange> _ListenRequest_TargetChangeByTag = {
     2 : ListenRequest_TargetChange.addTarget,
@@ -2455,10 +2364,12 @@ class ListenRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ListenRequest copyWith(void Function(ListenRequest) updates) => super.copyWith((message) => updates(message as ListenRequest)) as ListenRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ListenRequest create() => ListenRequest._();
+  @$core.override
   ListenRequest createEmptyInstance() => create();
   static $pb.PbList<ListenRequest> createRepeated() => $pb.PbList<ListenRequest>();
   @$core.pragma('dart2js:noInline')
@@ -2473,7 +2384,7 @@ class ListenRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -2483,7 +2394,7 @@ class ListenRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Target get addTarget => $_getN(1);
   @$pb.TagNumber(2)
-  set addTarget(Target v) { $_setField(2, v); }
+  set addTarget(Target value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasAddTarget() => $_has(1);
   @$pb.TagNumber(2)
@@ -2495,7 +2406,7 @@ class ListenRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get removeTarget => $_getIZ(2);
   @$pb.TagNumber(3)
-  set removeTarget($core.int v) { $_setSignedInt32(2, v); }
+  set removeTarget($core.int value) => $_setSignedInt32(2, value);
   @$pb.TagNumber(3)
   $core.bool hasRemoveTarget() => $_has(2);
   @$pb.TagNumber(3)
@@ -2524,27 +2435,19 @@ class ListenResponse extends $pb.GeneratedMessage {
     $10.ExistenceFilter? filter,
     $10.DocumentRemove? documentRemove,
   }) {
-    final $result = create();
-    if (targetChange != null) {
-      $result.targetChange = targetChange;
-    }
-    if (documentChange != null) {
-      $result.documentChange = documentChange;
-    }
-    if (documentDelete != null) {
-      $result.documentDelete = documentDelete;
-    }
-    if (filter != null) {
-      $result.filter = filter;
-    }
-    if (documentRemove != null) {
-      $result.documentRemove = documentRemove;
-    }
-    return $result;
+    final result = create();
+    if (targetChange != null) result.targetChange = targetChange;
+    if (documentChange != null) result.documentChange = documentChange;
+    if (documentDelete != null) result.documentDelete = documentDelete;
+    if (filter != null) result.filter = filter;
+    if (documentRemove != null) result.documentRemove = documentRemove;
+    return result;
   }
-  ListenResponse._() : super();
-  factory ListenResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ListenResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ListenResponse._();
+
+  factory ListenResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ListenResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, ListenResponse_ResponseType> _ListenResponse_ResponseTypeByTag = {
     2 : ListenResponse_ResponseType.targetChange,
@@ -2569,10 +2472,12 @@ class ListenResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ListenResponse copyWith(void Function(ListenResponse) updates) => super.copyWith((message) => updates(message as ListenResponse)) as ListenResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ListenResponse create() => ListenResponse._();
+  @$core.override
   ListenResponse createEmptyInstance() => create();
   static $pb.PbList<ListenResponse> createRepeated() => $pb.PbList<ListenResponse>();
   @$core.pragma('dart2js:noInline')
@@ -2586,7 +2491,7 @@ class ListenResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   TargetChange get targetChange => $_getN(0);
   @$pb.TagNumber(2)
-  set targetChange(TargetChange v) { $_setField(2, v); }
+  set targetChange(TargetChange value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasTargetChange() => $_has(0);
   @$pb.TagNumber(2)
@@ -2598,7 +2503,7 @@ class ListenResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $10.DocumentChange get documentChange => $_getN(1);
   @$pb.TagNumber(3)
-  set documentChange($10.DocumentChange v) { $_setField(3, v); }
+  set documentChange($10.DocumentChange value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasDocumentChange() => $_has(1);
   @$pb.TagNumber(3)
@@ -2610,7 +2515,7 @@ class ListenResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $10.DocumentDelete get documentDelete => $_getN(2);
   @$pb.TagNumber(4)
-  set documentDelete($10.DocumentDelete v) { $_setField(4, v); }
+  set documentDelete($10.DocumentDelete value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasDocumentDelete() => $_has(2);
   @$pb.TagNumber(4)
@@ -2626,7 +2531,7 @@ class ListenResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $10.ExistenceFilter get filter => $_getN(3);
   @$pb.TagNumber(5)
-  set filter($10.ExistenceFilter v) { $_setField(5, v); }
+  set filter($10.ExistenceFilter value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasFilter() => $_has(3);
   @$pb.TagNumber(5)
@@ -2639,7 +2544,7 @@ class ListenResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $10.DocumentRemove get documentRemove => $_getN(4);
   @$pb.TagNumber(6)
-  set documentRemove($10.DocumentRemove v) { $_setField(6, v); }
+  set documentRemove($10.DocumentRemove value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasDocumentRemove() => $_has(4);
   @$pb.TagNumber(6)
@@ -2653,15 +2558,15 @@ class Target_DocumentsTarget extends $pb.GeneratedMessage {
   factory Target_DocumentsTarget({
     $core.Iterable<$core.String>? documents,
   }) {
-    final $result = create();
-    if (documents != null) {
-      $result.documents.addAll(documents);
-    }
-    return $result;
+    final result = create();
+    if (documents != null) result.documents.addAll(documents);
+    return result;
   }
-  Target_DocumentsTarget._() : super();
-  factory Target_DocumentsTarget.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Target_DocumentsTarget.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Target_DocumentsTarget._();
+
+  factory Target_DocumentsTarget.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Target_DocumentsTarget.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Target.DocumentsTarget', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pPS(2, _omitFieldNames ? '' : 'documents')
@@ -2673,10 +2578,12 @@ class Target_DocumentsTarget extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Target_DocumentsTarget copyWith(void Function(Target_DocumentsTarget) updates) => super.copyWith((message) => updates(message as Target_DocumentsTarget)) as Target_DocumentsTarget;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Target_DocumentsTarget create() => Target_DocumentsTarget._();
+  @$core.override
   Target_DocumentsTarget createEmptyInstance() => create();
   static $pb.PbList<Target_DocumentsTarget> createRepeated() => $pb.PbList<Target_DocumentsTarget>();
   @$core.pragma('dart2js:noInline')
@@ -2702,18 +2609,16 @@ class Target_QueryTarget extends $pb.GeneratedMessage {
     $core.String? parent,
     $11.StructuredQuery? structuredQuery,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (structuredQuery != null) {
-      $result.structuredQuery = structuredQuery;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (structuredQuery != null) result.structuredQuery = structuredQuery;
+    return result;
   }
-  Target_QueryTarget._() : super();
-  factory Target_QueryTarget.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Target_QueryTarget.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Target_QueryTarget._();
+
+  factory Target_QueryTarget.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Target_QueryTarget.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Target_QueryTarget_QueryType> _Target_QueryTarget_QueryTypeByTag = {
     2 : Target_QueryTarget_QueryType.structuredQuery,
@@ -2731,10 +2636,12 @@ class Target_QueryTarget extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Target_QueryTarget copyWith(void Function(Target_QueryTarget) updates) => super.copyWith((message) => updates(message as Target_QueryTarget)) as Target_QueryTarget;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Target_QueryTarget create() => Target_QueryTarget._();
+  @$core.override
   Target_QueryTarget createEmptyInstance() => create();
   static $pb.PbList<Target_QueryTarget> createRepeated() => $pb.PbList<Target_QueryTarget>();
   @$core.pragma('dart2js:noInline')
@@ -2753,7 +2660,7 @@ class Target_QueryTarget extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -2763,7 +2670,7 @@ class Target_QueryTarget extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $11.StructuredQuery get structuredQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredQuery($11.StructuredQuery v) { $_setField(2, v); }
+  set structuredQuery($11.StructuredQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredQuery() => $_has(1);
   @$pb.TagNumber(2)
@@ -2795,33 +2702,21 @@ class Target extends $pb.GeneratedMessage {
     $6.Timestamp? readTime,
     $14.Int32Value? expectedCount,
   }) {
-    final $result = create();
-    if (query != null) {
-      $result.query = query;
-    }
-    if (documents != null) {
-      $result.documents = documents;
-    }
-    if (resumeToken != null) {
-      $result.resumeToken = resumeToken;
-    }
-    if (targetId != null) {
-      $result.targetId = targetId;
-    }
-    if (once != null) {
-      $result.once = once;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    if (expectedCount != null) {
-      $result.expectedCount = expectedCount;
-    }
-    return $result;
+    final result = create();
+    if (query != null) result.query = query;
+    if (documents != null) result.documents = documents;
+    if (resumeToken != null) result.resumeToken = resumeToken;
+    if (targetId != null) result.targetId = targetId;
+    if (once != null) result.once = once;
+    if (readTime != null) result.readTime = readTime;
+    if (expectedCount != null) result.expectedCount = expectedCount;
+    return result;
   }
-  Target._() : super();
-  factory Target.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Target.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  Target._();
+
+  factory Target.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory Target.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, Target_TargetType> _Target_TargetTypeByTag = {
     2 : Target_TargetType.query,
@@ -2851,10 +2746,12 @@ class Target extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Target copyWith(void Function(Target) updates) => super.copyWith((message) => updates(message as Target)) as Target;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static Target create() => Target._();
+  @$core.override
   Target createEmptyInstance() => create();
   static $pb.PbList<Target> createRepeated() => $pb.PbList<Target>();
   @$core.pragma('dart2js:noInline')
@@ -2871,7 +2768,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Target_QueryTarget get query => $_getN(0);
   @$pb.TagNumber(2)
-  set query(Target_QueryTarget v) { $_setField(2, v); }
+  set query(Target_QueryTarget value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasQuery() => $_has(0);
   @$pb.TagNumber(2)
@@ -2883,7 +2780,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   Target_DocumentsTarget get documents => $_getN(1);
   @$pb.TagNumber(3)
-  set documents(Target_DocumentsTarget v) { $_setField(3, v); }
+  set documents(Target_DocumentsTarget value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasDocuments() => $_has(1);
   @$pb.TagNumber(3)
@@ -2898,7 +2795,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.List<$core.int> get resumeToken => $_getN(2);
   @$pb.TagNumber(4)
-  set resumeToken($core.List<$core.int> v) { $_setBytes(2, v); }
+  set resumeToken($core.List<$core.int> value) => $_setBytes(2, value);
   @$pb.TagNumber(4)
   $core.bool hasResumeToken() => $_has(2);
   @$pb.TagNumber(4)
@@ -2924,7 +2821,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.int get targetId => $_getIZ(3);
   @$pb.TagNumber(5)
-  set targetId($core.int v) { $_setSignedInt32(3, v); }
+  set targetId($core.int value) => $_setSignedInt32(3, value);
   @$pb.TagNumber(5)
   $core.bool hasTargetId() => $_has(3);
   @$pb.TagNumber(5)
@@ -2934,7 +2831,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.bool get once => $_getBF(4);
   @$pb.TagNumber(6)
-  set once($core.bool v) { $_setBool(4, v); }
+  set once($core.bool value) => $_setBool(4, value);
   @$pb.TagNumber(6)
   $core.bool hasOnce() => $_has(4);
   @$pb.TagNumber(6)
@@ -2946,7 +2843,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $6.Timestamp get readTime => $_getN(5);
   @$pb.TagNumber(11)
-  set readTime($6.Timestamp v) { $_setField(11, v); }
+  set readTime($6.Timestamp value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasReadTime() => $_has(5);
   @$pb.TagNumber(11)
@@ -2963,7 +2860,7 @@ class Target extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $14.Int32Value get expectedCount => $_getN(6);
   @$pb.TagNumber(12)
-  set expectedCount($14.Int32Value v) { $_setField(12, v); }
+  set expectedCount($14.Int32Value value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasExpectedCount() => $_has(6);
   @$pb.TagNumber(12)
@@ -2981,27 +2878,19 @@ class TargetChange extends $pb.GeneratedMessage {
     $core.List<$core.int>? resumeToken,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (targetChangeType != null) {
-      $result.targetChangeType = targetChangeType;
-    }
-    if (targetIds != null) {
-      $result.targetIds.addAll(targetIds);
-    }
-    if (cause != null) {
-      $result.cause = cause;
-    }
-    if (resumeToken != null) {
-      $result.resumeToken = resumeToken;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (targetChangeType != null) result.targetChangeType = targetChangeType;
+    if (targetIds != null) result.targetIds.addAll(targetIds);
+    if (cause != null) result.cause = cause;
+    if (resumeToken != null) result.resumeToken = resumeToken;
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  TargetChange._() : super();
-  factory TargetChange.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory TargetChange.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  TargetChange._();
+
+  factory TargetChange.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory TargetChange.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TargetChange', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..e<TargetChange_TargetChangeType>(1, _omitFieldNames ? '' : 'targetChangeType', $pb.PbFieldType.OE, defaultOrMaker: TargetChange_TargetChangeType.NO_CHANGE, valueOf: TargetChange_TargetChangeType.valueOf, enumValues: TargetChange_TargetChangeType.values)
@@ -3017,10 +2906,12 @@ class TargetChange extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   TargetChange copyWith(void Function(TargetChange) updates) => super.copyWith((message) => updates(message as TargetChange)) as TargetChange;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static TargetChange create() => TargetChange._();
+  @$core.override
   TargetChange createEmptyInstance() => create();
   static $pb.PbList<TargetChange> createRepeated() => $pb.PbList<TargetChange>();
   @$core.pragma('dart2js:noInline')
@@ -3031,7 +2922,7 @@ class TargetChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   TargetChange_TargetChangeType get targetChangeType => $_getN(0);
   @$pb.TagNumber(1)
-  set targetChangeType(TargetChange_TargetChangeType v) { $_setField(1, v); }
+  set targetChangeType(TargetChange_TargetChangeType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasTargetChangeType() => $_has(0);
   @$pb.TagNumber(1)
@@ -3049,7 +2940,7 @@ class TargetChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $15.Status get cause => $_getN(2);
   @$pb.TagNumber(3)
-  set cause($15.Status v) { $_setField(3, v); }
+  set cause($15.Status value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasCause() => $_has(2);
   @$pb.TagNumber(3)
@@ -3064,7 +2955,7 @@ class TargetChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.List<$core.int> get resumeToken => $_getN(3);
   @$pb.TagNumber(4)
-  set resumeToken($core.List<$core.int> v) { $_setBytes(3, v); }
+  set resumeToken($core.List<$core.int> value) => $_setBytes(3, value);
   @$pb.TagNumber(4)
   $core.bool hasResumeToken() => $_has(3);
   @$pb.TagNumber(4)
@@ -3083,7 +2974,7 @@ class TargetChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $6.Timestamp get readTime => $_getN(4);
   @$pb.TagNumber(6)
-  set readTime($6.Timestamp v) { $_setField(6, v); }
+  set readTime($6.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasReadTime() => $_has(4);
   @$pb.TagNumber(6)
@@ -3106,24 +2997,18 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
     $core.String? pageToken,
     $6.Timestamp? readTime,
   }) {
-    final $result = create();
-    if (parent != null) {
-      $result.parent = parent;
-    }
-    if (pageSize != null) {
-      $result.pageSize = pageSize;
-    }
-    if (pageToken != null) {
-      $result.pageToken = pageToken;
-    }
-    if (readTime != null) {
-      $result.readTime = readTime;
-    }
-    return $result;
+    final result = create();
+    if (parent != null) result.parent = parent;
+    if (pageSize != null) result.pageSize = pageSize;
+    if (pageToken != null) result.pageToken = pageToken;
+    if (readTime != null) result.readTime = readTime;
+    return result;
   }
-  ListCollectionIdsRequest._() : super();
-  factory ListCollectionIdsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ListCollectionIdsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ListCollectionIdsRequest._();
+
+  factory ListCollectionIdsRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ListCollectionIdsRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static const $core.Map<$core.int, ListCollectionIdsRequest_ConsistencySelector> _ListCollectionIdsRequest_ConsistencySelectorByTag = {
     4 : ListCollectionIdsRequest_ConsistencySelector.readTime,
@@ -3143,10 +3028,12 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ListCollectionIdsRequest copyWith(void Function(ListCollectionIdsRequest) updates) => super.copyWith((message) => updates(message as ListCollectionIdsRequest)) as ListCollectionIdsRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ListCollectionIdsRequest create() => ListCollectionIdsRequest._();
+  @$core.override
   ListCollectionIdsRequest createEmptyInstance() => create();
   static $pb.PbList<ListCollectionIdsRequest> createRepeated() => $pb.PbList<ListCollectionIdsRequest>();
   @$core.pragma('dart2js:noInline')
@@ -3163,7 +3050,7 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get parent => $_getSZ(0);
   @$pb.TagNumber(1)
-  set parent($core.String v) { $_setString(0, v); }
+  set parent($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasParent() => $_has(0);
   @$pb.TagNumber(1)
@@ -3173,7 +3060,7 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get pageSize => $_getIZ(1);
   @$pb.TagNumber(2)
-  set pageSize($core.int v) { $_setSignedInt32(1, v); }
+  set pageSize($core.int value) => $_setSignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasPageSize() => $_has(1);
   @$pb.TagNumber(2)
@@ -3184,7 +3071,7 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.String get pageToken => $_getSZ(2);
   @$pb.TagNumber(3)
-  set pageToken($core.String v) { $_setString(2, v); }
+  set pageToken($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
   $core.bool hasPageToken() => $_has(2);
   @$pb.TagNumber(3)
@@ -3198,7 +3085,7 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $6.Timestamp get readTime => $_getN(3);
   @$pb.TagNumber(4)
-  set readTime($6.Timestamp v) { $_setField(4, v); }
+  set readTime($6.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReadTime() => $_has(3);
   @$pb.TagNumber(4)
@@ -3214,18 +3101,16 @@ class ListCollectionIdsResponse extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? collectionIds,
     $core.String? nextPageToken,
   }) {
-    final $result = create();
-    if (collectionIds != null) {
-      $result.collectionIds.addAll(collectionIds);
-    }
-    if (nextPageToken != null) {
-      $result.nextPageToken = nextPageToken;
-    }
-    return $result;
+    final result = create();
+    if (collectionIds != null) result.collectionIds.addAll(collectionIds);
+    if (nextPageToken != null) result.nextPageToken = nextPageToken;
+    return result;
   }
-  ListCollectionIdsResponse._() : super();
-  factory ListCollectionIdsResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ListCollectionIdsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  ListCollectionIdsResponse._();
+
+  factory ListCollectionIdsResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory ListCollectionIdsResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ListCollectionIdsResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'collectionIds')
@@ -3238,10 +3123,12 @@ class ListCollectionIdsResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ListCollectionIdsResponse copyWith(void Function(ListCollectionIdsResponse) updates) => super.copyWith((message) => updates(message as ListCollectionIdsResponse)) as ListCollectionIdsResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static ListCollectionIdsResponse create() => ListCollectionIdsResponse._();
+  @$core.override
   ListCollectionIdsResponse createEmptyInstance() => create();
   static $pb.PbList<ListCollectionIdsResponse> createRepeated() => $pb.PbList<ListCollectionIdsResponse>();
   @$core.pragma('dart2js:noInline')
@@ -3256,7 +3143,7 @@ class ListCollectionIdsResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get nextPageToken => $_getSZ(1);
   @$pb.TagNumber(2)
-  set nextPageToken($core.String v) { $_setString(1, v); }
+  set nextPageToken($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
   $core.bool hasNextPageToken() => $_has(1);
   @$pb.TagNumber(2)
@@ -3271,21 +3158,17 @@ class BatchWriteRequest extends $pb.GeneratedMessage {
     $core.Iterable<$10.Write>? writes,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? labels,
   }) {
-    final $result = create();
-    if (database != null) {
-      $result.database = database;
-    }
-    if (writes != null) {
-      $result.writes.addAll(writes);
-    }
-    if (labels != null) {
-      $result.labels.addEntries(labels);
-    }
-    return $result;
+    final result = create();
+    if (database != null) result.database = database;
+    if (writes != null) result.writes.addAll(writes);
+    if (labels != null) result.labels.addEntries(labels);
+    return result;
   }
-  BatchWriteRequest._() : super();
-  factory BatchWriteRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BatchWriteRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  BatchWriteRequest._();
+
+  factory BatchWriteRequest.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory BatchWriteRequest.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BatchWriteRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
@@ -3299,10 +3182,12 @@ class BatchWriteRequest extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BatchWriteRequest copyWith(void Function(BatchWriteRequest) updates) => super.copyWith((message) => updates(message as BatchWriteRequest)) as BatchWriteRequest;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BatchWriteRequest create() => BatchWriteRequest._();
+  @$core.override
   BatchWriteRequest createEmptyInstance() => create();
   static $pb.PbList<BatchWriteRequest> createRepeated() => $pb.PbList<BatchWriteRequest>();
   @$core.pragma('dart2js:noInline')
@@ -3314,7 +3199,7 @@ class BatchWriteRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get database => $_getSZ(0);
   @$pb.TagNumber(1)
-  set database($core.String v) { $_setString(0, v); }
+  set database($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
   $core.bool hasDatabase() => $_has(0);
   @$pb.TagNumber(1)
@@ -3340,18 +3225,16 @@ class BatchWriteResponse extends $pb.GeneratedMessage {
     $core.Iterable<$10.WriteResult>? writeResults,
     $core.Iterable<$15.Status>? status,
   }) {
-    final $result = create();
-    if (writeResults != null) {
-      $result.writeResults.addAll(writeResults);
-    }
-    if (status != null) {
-      $result.status.addAll(status);
-    }
-    return $result;
+    final result = create();
+    if (writeResults != null) result.writeResults.addAll(writeResults);
+    if (status != null) result.status.addAll(status);
+    return result;
   }
-  BatchWriteResponse._() : super();
-  factory BatchWriteResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory BatchWriteResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  BatchWriteResponse._();
+
+  factory BatchWriteResponse.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
+  factory BatchWriteResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BatchWriteResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..pc<$10.WriteResult>(1, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $10.WriteResult.create)
@@ -3364,10 +3247,12 @@ class BatchWriteResponse extends $pb.GeneratedMessage {
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BatchWriteResponse copyWith(void Function(BatchWriteResponse) updates) => super.copyWith((message) => updates(message as BatchWriteResponse)) as BatchWriteResponse;
 
+  @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static BatchWriteResponse create() => BatchWriteResponse._();
+  @$core.override
   BatchWriteResponse createEmptyInstance() => create();
   static $pb.PbList<BatchWriteResponse> createRepeated() => $pb.PbList<BatchWriteResponse>();
   @$core.pragma('dart2js:noInline')
@@ -3390,5 +3275,5 @@ class BatchWriteResponse extends $pb.GeneratedMessage {
 }
 
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
