@@ -40,7 +40,6 @@ class FifoWindows implements Fifo {
       0, // timeout in milliseconds
       nullptr,
     );
-    print('Created pipe');
     if (f == win32.INVALID_HANDLE_VALUE) {
       throw AssertionError('could not create pipe: ${win32.GetLastError()}');
     }
@@ -53,7 +52,6 @@ class FifoWindows implements Fifo {
 
       final receivePort = ReceivePort();
       port.send(receivePort.sendPort);
-      print('Connecting pipe');
       if (win32.ConnectNamedPipe(f, nullptr) == win32.FALSE) {
         final error = win32.GetLastError();
         if (error !=
@@ -63,7 +61,6 @@ class FifoWindows implements Fifo {
           throw AssertionError('error waiting for client connection: $error');
         }
       }
-      print('pipe connected');
 
       late final StreamSubscription<dynamic> subscription;
 

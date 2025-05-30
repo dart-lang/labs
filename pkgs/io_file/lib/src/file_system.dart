@@ -27,7 +27,7 @@ enum FileSystemType {
   /// A regular file.
   file,
 
-  /// A symbpolic link.
+  /// A symbolic link.
   link,
 
   /// A pipe, named pipe or FIFO.
@@ -69,8 +69,8 @@ abstract interface class Metadata {
 
   /// Whether the file system object is visible to the user.
   ///
-  /// This property is not available on all platforms and file systems. It will
-  /// always be `null` on Android and Linux.
+  /// This will be `null` if the operating system does not support file system
+  /// visibility. It will always be `null` on Android and Linux.
   bool? get isHidden;
 
   /// The size of the file system object in bytes.
@@ -86,11 +86,12 @@ abstract interface class Metadata {
   /// The resolution of the access time varies by platform and file system.
   /// For example, FAT has an access time resolution of one day and NTFS may
   /// delay updating the access time for up to one hour after the last access.
-  DateTime? get access;
+  DateTime get access;
 
   /// The time that the file system object was created.
   ///
-  /// This will always be `null` on Android and Linux.
+  /// This will always be `null` on platforms that do not track file creation
+  /// time. It will always be `null` on Android and Linux.
   ///
   /// The resolution of the creation time varies by platform and file system.
   /// For example, FAT has a creation time resolution of 10 millseconds.
@@ -100,7 +101,7 @@ abstract interface class Metadata {
   ///
   /// The resolution of the modification time varies by platform and file
   /// system. For example, FAT has a modification time resolution of 2 seconds.
-  DateTime? get modification;
+  DateTime get modification;
 }
 
 /// The modes in which a File can be written.

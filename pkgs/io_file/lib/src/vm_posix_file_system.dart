@@ -21,6 +21,8 @@ const _defaultMode = 438; // => 0666 => rw-rw-rw-
 /// The default `mode` to use when creating a directory.
 const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
 
+const _nanosecondsPerSecond = 1000000000;
+
 Exception _getError(int err, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
@@ -262,11 +264,14 @@ final class PosixFileSystem extends FileSystem {
       flags: stat.ref.st_flags,
       size: stat.ref.st_size,
       accessedTimeNanos:
-          stat.ref.st_atim.tv_sec * 1000000000 + stat.ref.st_atim.tv_sec,
+          stat.ref.st_atim.tv_sec * _nanosecondsPerSecond +
+          stat.ref.st_atim.tv_sec,
       creationTimeNanos:
-          stat.ref.st_btime.tv_sec * 1000000000 + stat.ref.st_btime.tv_sec,
+          stat.ref.st_btime.tv_sec * _nanosecondsPerSecond +
+          stat.ref.st_btime.tv_sec,
       modificationTimeNanos:
-          stat.ref.st_mtim.tv_sec * 1000000000 + stat.ref.st_mtim.tv_sec,
+          stat.ref.st_mtim.tv_sec * _nanosecondsPerSecond +
+          stat.ref.st_mtim.tv_sec,
     );
   });
 

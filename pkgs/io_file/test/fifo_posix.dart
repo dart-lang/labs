@@ -29,6 +29,7 @@ class FifoPosix implements Fifo {
     await Isolate.spawn<SendPort>((port) {
       final receivePort = ReceivePort();
       port.send(receivePort.sendPort);
+
       final fd = stdlibc.open(
         suggestedPath,
         flags: stdlibc.O_WRONLY | stdlibc.O_CLOEXEC,
