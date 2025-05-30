@@ -49,6 +49,9 @@ external int get_AT_FDCWD();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_REMOVEDIR')
 external int get_AT_REMOVEDIR();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PATH_MAX')
+external int get_PATH_MAX();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_S_IEXEC')
 external int get_S_IEXEC();
 
