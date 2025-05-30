@@ -493,6 +493,7 @@ final class WindowsFileSystem extends FileSystem {
       fileType = win32.FILE_TYPE_UNKNOWN;
     } else {
       try {
+        // Returns `FILE_TYPE_UNKNOWN` on failure, which is what we want anyway.
         fileType = win32.GetFileType(h);
       } finally {
         win32.CloseHandle(h);
