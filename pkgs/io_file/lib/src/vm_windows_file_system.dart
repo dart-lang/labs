@@ -486,12 +486,12 @@ final class WindowsFileSystem extends FileSystem {
       win32.FILE_FLAG_BACKUP_SEMANTICS,
       win32.NULL,
     );
-
-    final int fileType;
     if (h == win32.INVALID_HANDLE_VALUE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'CreateFile failed', path);
     }
+
+    final int fileType;
     try {
       fileType = win32.GetFileType(h);
       if (fileType == win32.FILE_TYPE_UNKNOWN) {
