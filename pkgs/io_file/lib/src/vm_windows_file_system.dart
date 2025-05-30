@@ -486,24 +486,17 @@ final class WindowsFileSystem extends FileSystem {
       win32.FILE_FLAG_BACKUP_SEMANTICS,
       win32.NULL,
     );
-    if (h == win32.INVALID_HANDLE_VALUE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'CreateFile failed', path);
-    }
-
     final int fileType;
-    try {
-      fileType = win32.GetFileType(h);
-      if (fileType == win32.FILE_TYPE_UNKNOWN) {
-        final errorCode = win32.GetLastError();
-        if (errorCode != win32.ERROR_SUCCESS) {
-          throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
-        }
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      // `CreateFile` may have modes incompatible with opening some file types.
+      fileType = win32.FILE_TYPE_UNKNOWN;
+    } else {
+      try {
+        fileType = win32.GetFileType(h);
+      } finally {
+        win32.CloseHandle(h);
       }
-    } finally {
-      win32.CloseHandle(h);
     }
-
     return WindowsMetadata.fromFileAttributes(
       attributes: attributes,
       fileType: fileType,
