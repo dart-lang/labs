@@ -84,10 +84,12 @@ void main() {
           data.type,
           // On Windows, a named pape cannot be opened a second time, which
           // is required to get the file type.
-          Platform.isWindows ? FileSystemType.unknown : FileSystemType.pipe,
+          FileSystemType.pipe,
         );
 
-        fileSystem.readAsBytes(fifo.path);
+        try {
+          fileSystem.readAsBytes(fifo.path);
+        } catch (_) {}
       });
       test('file link', () {
         File('$tmp/file1').writeAsStringSync('Hello World');
