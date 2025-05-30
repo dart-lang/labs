@@ -133,6 +133,7 @@ final class WindowsMetadata implements Metadata {
   final int size;
 
   bool get isReadOnly => _attributes & win32.FILE_ATTRIBUTE_READONLY != 0;
+  @override
   bool get isHidden => _attributes & win32.FILE_ATTRIBUTE_HIDDEN != 0;
   bool get isSystem => _attributes & win32.FILE_ATTRIBUTE_SYSTEM != 0;
 

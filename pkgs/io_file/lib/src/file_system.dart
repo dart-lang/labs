@@ -11,21 +11,40 @@ import 'package:meta/meta.dart' show sealed;
 // `dart:io` then change the doc strings to use reference syntax rather than
 // code syntax e.g. `PathExistsException` => [PathExistsException].
 
+/// The type of a file system object, such as a file or directory.
 enum FileSystemType {
-  block, // POSIX
-  character, // POSIX, windows
+  /// A special block file (also called a block device).
+  ///
+  /// Only exists on POSIX systems.
+  block,
+
+  /// A file that represents a character device, such as a terminal or printer.
+  character,
+
+  /// A container for other file system objects.
   directory,
+
+  /// A regular file.
   file,
+
+  /// A symbpolic link.
   link,
-  pipe, // or fifo, windows
-  socket, // Posix
+
+  /// A pipe, named pipe or FIFO.
+  pipe,
+
+  /// A unix domain socket.
+  ///
+  /// Only exists on POSIX systems.
+  socket,
+
+  /// The type of the file could not be determined.
   unknown,
 }
 
 /// Information about a directory, link, etc. stored in the [FileSystem].
 abstract interface class Metadata {
-  // TODO(brianquinlan): Document all public fields.
-
+  /// The type of the file system object.
   FileSystemType get type;
 
   /// Whether the file system object is a regular file.
@@ -48,11 +67,39 @@ abstract interface class Metadata {
   /// At most one of [isDirectory], [isFile], or [isLink] will be `true`.
   bool get isLink;
 
-  // Size of directories and links is platform specific.
+  /// Whether the file system object is visible to the user.
+  ///
+  /// This property is not available on all platforms and file systems. It will
+  /// always be `null` on Android and Linux.
+  bool? get isHidden;
+
+  /// The size of the file system object in bytes.
+  ///
+  /// The `size` presented for file system objects other than regular files is
+  /// platform-specific.
   int get size;
 
+  /// The time that the file system object was last accessed.
+  ///
+  /// Access time is updated when the object is read or modified.
+  ///
+  /// The resolution of the access time varies by platform and file system.
+  /// For example, FAT has an access time resolution of one day and NTFS may
+  /// delay updating the access time for up to one hour after the last access.
   DateTime? get access;
+
+  /// The time that the file system object was created.
+  ///
+  /// This will always be `null` on Android and Linux.
+  ///
+  /// The resolution of the creation time varies by platform and file system.
+  /// For example, FAT has a creation time resolution of 10 millseconds.
   DateTime? get creation;
+
+  /// The time that the file system object was last modified.
+  ///
+  /// The resolution of the modification time varies by platform and file
+  /// system. For example, FAT has a modification time resolution of 2 seconds.
   DateTime? get modification;
 }
 
@@ -123,10 +170,19 @@ abstract class FileSystem {
   /// ```
   String createTemporaryDirectory({String? parent, String? prefix});
 
+  /// TODO(brianquinlan): Add an `exists` method that can determine if a file
+  /// exists without mutating it on Windows (maybe using `FindFirstFile`?)
+
   /// Metadata for the file system object at [path].
   ///
   /// If `path` represents a symbolic link then metadata for the link is
   /// returned.
+  ///
+  /// On Windows, asking for the metadata for a named pipe may cause the server
+  /// to close it.
+  ///
+  /// The most reliable way to determine if a file system object can be read or
+  /// written to is to attempt to open it.
   Metadata metadata(String path);
 
   /// Deletes the directory at the given path.

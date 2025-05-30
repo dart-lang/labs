@@ -82,12 +82,12 @@ void main() {
         expect(data.isLink, isFalse);
         expect(
           data.type,
-          // On Windows, a named pape cannot be opened a second time, which
-          // is required to get the file type.
-          FileSystemType.pipe,
+          Platform.isWindows ? FileSystemType.unknown : FileSystemType.pipe,
         );
 
         try {
+          // On Windows, opening the pipe consumes it. See:
+          // https://github.com/dotnet/runtime/issues/69604
           fileSystem.readAsBytes(fifo.path);
         } catch (_) {}
       });
@@ -115,6 +115,23 @@ void main() {
       });
     });
 
+    test(
+      'isHidden',
+      () {
+        // Tested on iOS/macOS at: metadata_apple_test.dart
+        // Tested on Windows at: metadata_windows_test.dart
+
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World!');
+
+        final data = fileSystem.metadata(path);
+        expect(data.isHidden, isNull);
+      },
+      skip:
+          (Platform.isIOS || Platform.isMacOS || Platform.isWindows)
+              ? 'does not support hidden file metadata'
+              : false,
+    );
     group('size', () {
       test('empty file', () {
         final path = '$tmp/file1';

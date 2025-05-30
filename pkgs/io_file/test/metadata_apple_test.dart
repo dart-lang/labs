@@ -21,7 +21,7 @@ external int chflags(Pointer<Utf8> buf, int count);
 void main() {
   final posixFileSystem = PosixFileSystem();
 
-  group('windows metadata', () {
+  group('apple metadata', () {
     late String tmp;
 
     setUp(() => tmp = createTemp('metadata'));
@@ -36,7 +36,7 @@ void main() {
         final data = posixFileSystem.metadata(path);
         expect(data.isHidden, isFalse);
       });
-      test('false', () {
+      test('true', () {
         final path = '$tmp/file';
         File(path).writeAsStringSync('Hello World');
         using((arena) {

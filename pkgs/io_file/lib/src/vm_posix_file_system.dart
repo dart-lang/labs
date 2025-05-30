@@ -50,19 +50,38 @@ int _tempFailureRetry(int Function() f) {
   return result;
 }
 
-/// File system entity data available on Windows.
+/// Information about a directory, link, etc. stored in the [PosixFileSystem].
 final class PosixMetadata implements Metadata {
-  final int mode;
-  final int flags;
+  final int _mode;
+  final int _flags;
 
   @override
   final int size;
 
+  /// The time that the file system object was last accessed in nanoseconds
+  /// since the epoch.
+  ///
+  /// Access time is updated when the object is read or modified.
+  ///
+  /// The resolution of the access time varies by platform and file system.
   final int accessedTimeNanos;
+
+  /// The time that the file system object was created in nanoseconds since the
+  /// epoch.
+  ///
+  /// This will always be `null` on Android and Linux.
+  ///
+  /// The resolution of the creation time varies by platform and file system.
   final int? creationTimeNanos;
+
+  /// The time that the file system object was last modified in nanoseconds
+  /// since the epoch.
+  ///
+  /// The resolution of the modification time varies by platform and file
+  /// system.
   final int modificationTimeNanos;
 
-  int get _fmt => mode & libc.S_IFMT;
+  int get _fmt => _mode & libc.S_IFMT;
 
   @override
   FileSystemType get type {
@@ -113,26 +132,24 @@ final class PosixMetadata implements Metadata {
   DateTime get modification =>
       DateTime.fromMicrosecondsSinceEpoch(modificationTimeNanos ~/ 1000);
 
+  @override
   bool? get isHidden {
     if (io.Platform.isIOS || io.Platform.isMacOS) {
-      return flags & libc.UF_HIDDEN != 0;
+      return _flags & libc.UF_HIDDEN != 0;
     }
     return null;
   }
 
   PosixMetadata._(
-    this.mode,
-    this.flags,
+    this._mode,
+    this._flags,
     this.size,
     this.accessedTimeNanos,
     this.creationTimeNanos,
     this.modificationTimeNanos,
   );
 
-  /// TODO(bquinlan): Document this constructor.
-  ///
-  /// Make sure to reference:
-  /// [File Attribute Constants](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
+  /// Construct [PosixMetadata] from data returned by the `stat` system call.
   factory PosixMetadata.fromFileAttributes({
     required int mode,
     int flags = 0,
@@ -152,8 +169,8 @@ final class PosixMetadata implements Metadata {
   @override
   bool operator ==(Object other) =>
       other is PosixMetadata &&
-      mode == other.mode &&
-      flags == other.flags &&
+      _mode == other._mode &&
+      _flags == other._flags &&
       size == other.size &&
       accessedTimeNanos == other.accessedTimeNanos &&
       creationTimeNanos == other.creationTimeNanos &&
@@ -161,8 +178,8 @@ final class PosixMetadata implements Metadata {
 
   @override
   int get hashCode => Object.hash(
-    mode,
-    flags,
+    _mode,
+    _flags,
     size,
     accessedTimeNanos,
     creationTimeNanos,
