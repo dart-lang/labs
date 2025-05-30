@@ -176,7 +176,7 @@ void main() {
 
         final data = fileSystem.metadata(path);
         expect(
-          data.modification!.millisecondsSinceEpoch,
+          data.modification.millisecondsSinceEpoch,
           closeTo(DateTime.now().millisecondsSinceEpoch, 5000),
         );
       });
@@ -190,8 +190,8 @@ void main() {
         final data2 = fileSystem.metadata(path);
 
         expect(
-          data2.modification!.millisecondsSinceEpoch,
-          greaterThan(data1.modification!.millisecondsSinceEpoch),
+          data2.modification.millisecondsSinceEpoch,
+          greaterThan(data1.modification.millisecondsSinceEpoch),
         );
       });
     });
