@@ -75,7 +75,7 @@ void main() {
       });
       test('fifo', () async {
         final fifo = (await Fifo.create('$tmp/file'))..close();
-        File(fifo.path).readAsBytesSync();
+        fileSystem.readAsBytes(fifo.path);
 
         final data = fileSystem.metadata(fifo.path);
         expect(data.isDirectory, isFalse);
