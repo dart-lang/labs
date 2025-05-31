@@ -22,8 +22,10 @@ class FifoPosix implements Fifo {
   static Future<FifoPosix> create(String suggestedPath) async {
     final p = ReceivePort();
 
-    stdlibc.mkfifo(suggestedPath, 438); // 0436 => permissions: -rw-rw-rw-
-
+    // 0436 => permissions: -rw-rw-rw-
+    if (stdlibc.mkfifo(suggestedPath, 438) == -1) {
+      throw AssertionError('mkfifo failed: ${stdlibc.errno}');
+    }
     await Isolate.spawn<SendPort>((port) {
       final receivePort = ReceivePort();
       port.send(receivePort.sendPort);
@@ -32,7 +34,6 @@ class FifoPosix implements Fifo {
         suggestedPath,
         flags: stdlibc.O_WRONLY | stdlibc.O_CLOEXEC,
       );
-
       if (fd == -1) {
         throw AssertionError('could not open fifo: ${stdlibc.errno}');
       }
