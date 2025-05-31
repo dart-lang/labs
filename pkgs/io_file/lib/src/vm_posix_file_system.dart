@@ -54,7 +54,11 @@ int _tempFailureRetry(int Function() f) {
 
 /// Information about a directory, link, etc. stored in the [PosixFileSystem].
 final class PosixMetadata implements Metadata {
-  final int _mode;
+  /// The `st_mode` field of the POSIX stat struct.
+  ///
+  /// See [stat.h](https://pubs.opengroup.org/onlinepubs/009696799/basedefs/sys/stat.h.html)
+  /// for information on how to interpret this field.
+  final int mode;
   final int _flags;
 
   @override
@@ -83,7 +87,7 @@ final class PosixMetadata implements Metadata {
   /// system.
   final int modificationTimeNanos;
 
-  int get _fmt => _mode & libc.S_IFMT;
+  int get _fmt => mode & libc.S_IFMT;
 
   @override
   FileSystemType get type {
@@ -143,7 +147,7 @@ final class PosixMetadata implements Metadata {
   }
 
   PosixMetadata._(
-    this._mode,
+    this.mode,
     this._flags,
     this.size,
     this.accessedTimeNanos,
@@ -171,7 +175,7 @@ final class PosixMetadata implements Metadata {
   @override
   bool operator ==(Object other) =>
       other is PosixMetadata &&
-      _mode == other._mode &&
+      mode == other.mode &&
       _flags == other._flags &&
       size == other.size &&
       accessedTimeNanos == other.accessedTimeNanos &&
@@ -180,7 +184,7 @@ final class PosixMetadata implements Metadata {
 
   @override
   int get hashCode => Object.hash(
-    _mode,
+    mode,
     _flags,
     size,
     accessedTimeNanos,
