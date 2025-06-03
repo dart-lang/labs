@@ -4,6 +4,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'constant_bindings.g.dart';
+
 int get DT_BLK {
   final v = get_DT_BLK();
   if (v == libc_shim_UNDEFINED) {
@@ -480,4 +481,3 @@ int get UF_HIDDEN {
     return v;
   }
 }
-

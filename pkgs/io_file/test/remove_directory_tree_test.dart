@@ -113,7 +113,7 @@ void main() {
           isA<FileSystemException>().having(
             (e) => e.osError?.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enoent,
+            Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enotdir,
           ),
         ),
       );
