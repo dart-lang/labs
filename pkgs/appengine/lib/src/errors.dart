@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library appengine.api.errors;
 
 import 'dart:io';
 
@@ -16,7 +15,7 @@ class AppEngineError implements Exception {
 }
 
 class NetworkError extends AppEngineError implements IOException {
-  NetworkError(String message) : super(message);
+  NetworkError(super.message);
 
   @override
   String toString() => 'NetworkError: $message';
@@ -26,7 +25,7 @@ class ProtocolError extends AppEngineError implements IOException {
   static const ProtocolError INVALID_RESPONSE =
       ProtocolError('Invalid response');
 
-  const ProtocolError(String message) : super(message);
+  const ProtocolError(super.message);
 
   @override
   String toString() => 'ProtocolError: $message';
@@ -35,15 +34,14 @@ class ProtocolError extends AppEngineError implements IOException {
 class ServiceError extends AppEngineError {
   final String serviceName;
 
-  ServiceError(String message, {this.serviceName = 'ServiceError'})
-      : super(message);
+  ServiceError(super.message, {this.serviceName = 'ServiceError'});
 
   @override
   String toString() => '$serviceName: $message';
 }
 
 class ApplicationError extends AppEngineError {
-  ApplicationError(String message) : super(message);
+  ApplicationError(super.message);
 
   @override
   String toString() => 'ApplicationError: $message';

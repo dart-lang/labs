@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library appengine;
-
 import 'dart:async';
 import 'dart:io';
 
@@ -57,11 +55,11 @@ const Symbol _APPENGINE_CONTEXT = #appengine.context;
 /// The returned `Future` will complete when the HTTP server has been shutdown
 /// and is no longer serving requests.
 Future runAppEngine(
-  void handler(HttpRequest request), {
+  void Function(HttpRequest request) handler, {
   Function? onError,
   int port = 8080,
   bool shared = false,
-  void onAcceptingConnections(InternetAddress address, int port)?,
+  void Function(InternetAddress address, int port)? onAcceptingConnections,
 }) {
   void Function(Object, StackTrace)? errorHandler;
   if (onError != null) {
@@ -147,7 +145,7 @@ bool isCronJobRequest(HttpRequest request) {
 ///         ]);
 ///       });
 ///     }
-Future withAppEngineServices(Future callback()) {
+Future withAppEngineServices(Future Function() callback) {
   return appengine_internal.withAppEngineServices(callback);
 }
 

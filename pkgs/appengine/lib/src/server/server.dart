@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library application;
 
 import 'dart:async';
 import 'dart:convert' show utf8;
@@ -37,8 +36,8 @@ class AppEngineHttpServer {
   Future get done => _shutdownCompleter.future;
 
   void run(
-    applicationHandler(HttpRequest request, ClientContext context), {
-    void onAcceptingConnections(InternetAddress address, int port)?,
+    Function(HttpRequest request, ClientContext context) applicationHandler, {
+    void Function(InternetAddress address, int port)? onAcceptingConnections,
   }) {
     final serviceHandlers = {
       '/_ah/start': _start,
