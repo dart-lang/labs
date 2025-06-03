@@ -52,6 +52,7 @@ class FifoWindows implements Fifo {
 
       final receivePort = ReceivePort();
       port.send(receivePort.sendPort);
+
       if (win32.ConnectNamedPipe(f, nullptr) == win32.FALSE) {
         final error = win32.GetLastError();
         if (error !=

@@ -50,7 +50,7 @@ abstract interface class Metadata {
   /// Whether the file system object is a regular file.
   ///
   /// This will be `false` for some file system objects that can be read or
-  /// written to, such as sockets, pipse, and character devices. The most
+  /// written to, such as sockets, pipes, and character devices. The most
   /// reliable way to determine if a file system object can be read or written
   /// to is to attempt to open it.
   ///

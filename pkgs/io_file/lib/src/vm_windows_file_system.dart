@@ -627,8 +627,8 @@ final class WindowsFileSystem extends FileSystem {
   bool same(String path1, String path2) => using((arena) {
     _primeGetLastError();
 
-    final info1 = _byHandleFileInformationFromPath(path1, arena);
-    final info2 = _byHandleFileInformationFromPath(path2, arena);
+    final info1 = _byHandleFileInformation(path1, arena);
+    final info2 = _byHandleFileInformation(path2, arena);
 
     return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
         info1.nFileIndexHigh == info2.nFileIndexHigh &&
@@ -636,23 +636,12 @@ final class WindowsFileSystem extends FileSystem {
   });
 
   // NOTE: the return value is allocated in the given arena!
-  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformationFromPath(
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
     String path,
-    ffi.Arena arena,
-  ) => _byHandleFileInformationFromPath16(
-    path,
-    path.toNativeUtf16(allocator: arena),
-    arena,
-  );
-
-  // NOTE: the return value is allocated in the given arena!
-  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformationFromPath16(
-    String path,
-    Pointer<Utf16> path16,
     ffi.Arena arena,
   ) {
     final h = win32.CreateFile(
-      path16,
+      path.toNativeUtf16(allocator: arena),
       0,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
       nullptr,
