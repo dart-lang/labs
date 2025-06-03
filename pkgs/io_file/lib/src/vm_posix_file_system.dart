@@ -21,6 +21,8 @@ const _defaultMode = 438; // => 0666 => rw-rw-rw-
 /// The default `mode` to use when creating a directory.
 const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
 
+const _nanosecondsPerSecond = 1000000000;
+
 Exception _getError(int err, String message, String path) {
   //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
@@ -48,6 +50,147 @@ int _tempFailureRetry(int Function() f) {
     result = f();
   } while (result == -1 && libc.errno == libc.EINTR);
   return result;
+}
+
+/// Information about a directory, link, etc. stored in the [PosixFileSystem].
+final class PosixMetadata implements Metadata {
+  /// The `st_mode` field of the POSIX stat struct.
+  ///
+  /// See [stat.h](https://pubs.opengroup.org/onlinepubs/009696799/basedefs/sys/stat.h.html)
+  /// for information on how to interpret this field.
+  final int mode;
+  final int _flags;
+
+  @override
+  final int size;
+
+  /// The time that the file system object was last accessed in nanoseconds
+  /// since the epoch.
+  ///
+  /// Access time is updated when the object is read or modified.
+  ///
+  /// The resolution of the access time varies by platform and file system.
+  final int accessedTimeNanos;
+
+  /// The time that the file system object was created in nanoseconds since the
+  /// epoch.
+  ///
+  /// This will always be `null` on Android and Linux.
+  ///
+  /// The resolution of the creation time varies by platform and file system.
+  final int? creationTimeNanos;
+
+  /// The time that the file system object was last modified in nanoseconds
+  /// since the epoch.
+  ///
+  /// The resolution of the modification time varies by platform and file
+  /// system.
+  final int modificationTimeNanos;
+
+  int get _fmt => mode & libc.S_IFMT;
+
+  @override
+  FileSystemType get type {
+    if (_fmt == libc.S_IFBLK) {
+      return FileSystemType.block;
+    }
+    if (_fmt == libc.S_IFCHR) {
+      return FileSystemType.character;
+    }
+    if (_fmt == libc.S_IFDIR) {
+      return FileSystemType.directory;
+    }
+    if (_fmt == libc.S_IFREG) {
+      return FileSystemType.file;
+    }
+    if (_fmt == libc.S_IFLNK) {
+      return FileSystemType.link;
+    }
+    if (_fmt == libc.S_IFIFO) {
+      return FileSystemType.pipe;
+    }
+    if (_fmt == libc.S_IFSOCK) {
+      return FileSystemType.socket;
+    }
+    return FileSystemType.unknown;
+  }
+
+  @override
+  bool get isDirectory => type == FileSystemType.directory;
+
+  @override
+  bool get isFile => type == FileSystemType.file;
+
+  @override
+  bool get isLink => type == FileSystemType.link;
+
+  @override
+  DateTime get access =>
+      DateTime.fromMicrosecondsSinceEpoch(accessedTimeNanos ~/ 1000);
+
+  @override
+  DateTime? get creation =>
+      creationTimeNanos == null
+          ? null
+          : DateTime.fromMicrosecondsSinceEpoch(creationTimeNanos! ~/ 1000);
+
+  @override
+  DateTime get modification =>
+      DateTime.fromMicrosecondsSinceEpoch(modificationTimeNanos ~/ 1000);
+
+  @override
+  bool? get isHidden {
+    if (io.Platform.isIOS || io.Platform.isMacOS) {
+      return _flags & libc.UF_HIDDEN != 0;
+    }
+    return null;
+  }
+
+  PosixMetadata._(
+    this.mode,
+    this._flags,
+    this.size,
+    this.accessedTimeNanos,
+    this.creationTimeNanos,
+    this.modificationTimeNanos,
+  );
+
+  /// Construct [PosixMetadata] from data returned by the `stat` system call.
+  factory PosixMetadata.fromFileAttributes({
+    required int mode,
+    int flags = 0,
+    int size = 0,
+    int accessedTimeNanos = 0,
+    int? creationTimeNanos,
+    int modificationTimeNanos = 0,
+  }) => PosixMetadata._(
+    mode,
+    flags,
+    size,
+    accessedTimeNanos,
+    creationTimeNanos,
+    modificationTimeNanos,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      other is PosixMetadata &&
+      mode == other.mode &&
+      _flags == other._flags &&
+      size == other.size &&
+      accessedTimeNanos == other.accessedTimeNanos &&
+      creationTimeNanos == other.creationTimeNanos &&
+      modificationTimeNanos == other.modificationTimeNanos;
+
+  @override
+  int get hashCode => Object.hash(
+    mode,
+    _flags,
+    size,
+    accessedTimeNanos,
+    creationTimeNanos,
+    modificationTimeNanos,
+  );
 }
 
 /// The POSIX `read` function.
@@ -112,9 +255,29 @@ final class PosixFileSystem extends FileSystem {
       });
 
   @override
-  Metadata metadata(String path) {
-    throw UnimplementedError();
-  }
+  PosixMetadata metadata(String path) => ffi.using((arena) {
+    final stat = arena<libc.Stat>();
+
+    if (libc.lstat(path.toNativeUtf8(allocator: arena).cast(), stat) == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, 'stat failed', path);
+    }
+
+    return PosixMetadata.fromFileAttributes(
+      mode: stat.ref.st_mode,
+      flags: stat.ref.st_flags,
+      size: stat.ref.st_size,
+      accessedTimeNanos:
+          stat.ref.st_atim.tv_sec * _nanosecondsPerSecond +
+          stat.ref.st_atim.tv_sec,
+      creationTimeNanos:
+          stat.ref.st_btime.tv_sec * _nanosecondsPerSecond +
+          stat.ref.st_btime.tv_sec,
+      modificationTimeNanos:
+          stat.ref.st_mtim.tv_sec * _nanosecondsPerSecond +
+          stat.ref.st_mtim.tv_sec,
+    );
+  });
 
   @override
   void removeDirectory(String path) => ffi.using((arena) {
