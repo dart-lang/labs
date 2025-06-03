@@ -1,0 +1,47 @@
+name: package:googleapis_firestore_v1
+
+permissions: read-all
+
+on:
+  # Run CI on pushes to the main branch, and on PRs against main.
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/googleapis_firestore_v1.yml'
+      - 'pkgs/googleapis_firestore_v1/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/googleapis_firestore_v1.yml'
+      - 'pkgs/googleapis_firestore_v1/**'
+  schedule:
+    - cron: '0 0 * * 0' # weekly
+
+defaults:
+  run:
+    working-directory: pkgs/googleapis_firestore_v1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [stable, dev]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - run: dart pub get
+
+      - run: dart analyze --fatal-infos
+
+      # TODO(devoncarew): We should update protoc_plugin to generate formatted
+      # files.
+      # - run: dart format --output=none --set-exit-if-changed .
+      #   if: ${{ matrix.sdk == 'stable' }}
+
+      # Enable once we have tests.
+      # - run: dart test

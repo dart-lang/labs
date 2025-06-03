@@ -22,7 +22,7 @@ See
 |  delete tree          |         |       |      |       |    ✓    |            |              |
 |  enum dir contents    |         |       |       |       |        |            |              |
 |  exists               |         |       |              |         |            |              |
-|  get metadata (stat)  |         |       |       |       |        |            |              |
+|  get metadata (stat)  |         |   ✓   |       |   ✓   |    ✓    |            |              |
 |  identity (same file) |         |   ✓   |       |   ✓   |    ✓    |            |              |
 |  open                 |         |       |              |         |            |              |
 |  read file (bytes)    |         |   ✓   |       |   ✓   |    ✓    |            |              |
