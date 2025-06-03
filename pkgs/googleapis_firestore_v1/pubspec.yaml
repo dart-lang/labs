@@ -4,7 +4,7 @@ version: 0.1.0-wip
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/googleapis_firestore_v1
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.6.0
 
 dependencies:
   fixnum: ^1.1.0
@@ -12,6 +12,7 @@ dependencies:
   protobuf: ^4.1.0
 
 dev_dependencies:
+  args: ^2.7.0
   lints: ^6.0.0
   path: ^1.9.0
   # We use a pinned version to make the gRPC library generation hermetic.
