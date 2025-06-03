@@ -3,5 +3,3 @@ include: package:dart_flutter_team_lints/analysis_options.yaml
 linter:
   rules:
     - cancel_subscriptions
-    - prefer_relative_imports
-    - test_types_in_equals
