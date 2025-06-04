@@ -121,7 +121,7 @@ void main() {
       },
       skip:
           Platform.isWindows
-              ? 'cannot change permissions on Windows (yet)'
+              ? 'TODO(brianquinlan): make this work on Windows'
               : false,
     );
 
@@ -158,7 +158,7 @@ void main() {
       },
       skip:
           Platform.isWindows
-              ? 'cannot change permissions on Windows (yet)'
+              ? 'TODO(brianquinlan): make this work on Windows'
               : false,
     );
 
