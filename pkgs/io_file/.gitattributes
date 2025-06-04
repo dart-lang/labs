@@ -1,0 +1,6 @@
+# ffigen generated code
+lib/src/constant_bindings.g.dart
+lib/src/constants.g.dart
+lib/src/libc_bindings.g.dart
+src/constants.g.c
+src/constants.g.h
