@@ -292,42 +292,28 @@ final class PosixFileSystem extends FileSystem {
     }
   });
 
-  @override
-  void removeDirectoryTree(String path) => ffi.using((arena) {
-    _removeDirectoryTree(libc.AT_FDCWD, '.', path.toNativeUtf8());
-  });
-
   void _removeDirectoryTree(
     int parentfd,
     String parentPath,
     Pointer<ffi.Utf8> name,
   ) => ffi.using((arena) {
-    String childPath(Pointer<ffi.Utf8> child) =>
-        p.join(parentPath, name.toDartString(), child.toDartString());
+    late final path = p.join(parentPath, name.toDartString());
+    late final stat = arena<libc.Stat>();
 
     final fd = _tempFailureRetry(
       () => libc.openat(parentfd, name.cast(), libc.O_DIRECTORY, 0),
     );
     if (fd == -1) {
       final errno = libc.errno;
-      throw _getError(
-        errno,
-        'openat failed',
-        p.join(parentPath, name.toDartString()),
-      );
+      throw _getError(errno, 'openat failed', path);
     }
     try {
       final dir = libc.fdopendir(fd);
       if (dir == nullptr) {
         final errno = libc.errno;
-        throw _getError(
-          errno,
-          'fdopendir failed',
-          p.join(parentPath, name.toDartString()),
-        );
+        throw _getError(errno, 'fdopendir failed', path);
       }
       try {
-        Pointer<libc.Stat>? stat;
         // `readdir` returns `NULL` but leaves `errno` unchanged if the end of
         // the directory stream is reached.
         libc.errno = 0;
@@ -335,6 +321,12 @@ final class PosixFileSystem extends FileSystem {
 
         while (dirent != nullptr) {
           final child = libc.d_name_ptr(dirent);
+          late final childPath = p.join(
+            parentPath,
+            name.toDartString(),
+            child.cast<ffi.Utf8>().toDartString(),
+          );
+
           if (child[0] == 46 &&
               ((child[1] == 0) || (child[1] == 46 && child[2] == 0))) {
             // The child is '.' or '..' so just skip it.
@@ -343,38 +335,27 @@ final class PosixFileSystem extends FileSystem {
             continue;
           }
           var type = dirent.ref.d_type;
-          if (true) {
+          if (type == libc.DT_UNKNOWN) {
             /// From https://man7.org/linux/man-pages/man2/getdents.2.html:
             /// Currently, only some filesystems (among them: Btrfs, ext2, ext3,
             /// and ext4) have full support for returning the file type in
             /// d_type. All applications must properly handle a return of
             /// DT_UNKNOWN.
-            stat ??= arena<libc.Stat>();
             if (libc.fstatat(fd, child, stat, libc.AT_SYMLINK_NOFOLLOW) == -1) {
               final errno = libc.errno;
-              throw _getError(errno, 'fstatat failed', childPath(child.cast()));
+              throw _getError(errno, 'fstatat failed', childPath);
             }
-            if (stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR) {
-              type = libc.DT_DIR;
-            } else {
-              // Anything other than `DT_DIR` works.
-              type = libc.DT_REG;
-            }
+            type =
+                stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR
+                    ? libc.DT_DIR
+                    : libc.DT_REG;
           }
           if (type == libc.DT_DIR) {
-            _removeDirectoryTree(
-              fd,
-              p.join(parentPath, name.toDartString()),
-              child.cast(),
-            );
+            _removeDirectoryTree(fd, path, child.cast());
           } else {
             if (libc.unlinkat(fd, child, 0) == -1) {
               final errno = libc.errno;
-              throw _getError(
-                errno,
-                'unlinkat failed',
-                childPath(child.cast()),
-              );
+              throw _getError(errno, 'unlinkat failed', childPath);
             }
           }
           libc.errno = 0;
@@ -382,19 +363,11 @@ final class PosixFileSystem extends FileSystem {
         }
         if (libc.errno != 0) {
           final errno = libc.errno;
-          throw _getError(
-            errno,
-            'readdir failed',
-            p.join(parentPath, name.toDartString()),
-          );
+          throw _getError(errno, 'readdir failed', path);
         }
         if (libc.unlinkat(parentfd, name.cast(), libc.AT_REMOVEDIR) == -1) {
           final errno = libc.errno;
-          throw _getError(
-            errno,
-            'unlinkat failed',
-            p.join(parentPath, name.toDartString()),
-          );
+          throw _getError(errno, 'unlinkat failed', path);
         }
       } finally {
         libc.closedir(dir);
@@ -402,6 +375,11 @@ final class PosixFileSystem extends FileSystem {
     } finally {
       libc.close(fd);
     }
+  });
+
+  @override
+  void removeDirectoryTree(String path) => ffi.using((arena) {
+    _removeDirectoryTree(libc.AT_FDCWD, '.', path.toNativeUtf8());
   });
 
   @override

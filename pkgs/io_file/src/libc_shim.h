@@ -52,6 +52,7 @@ typedef struct {
   void *_dir;
 } libc_shim_DIR;
 
+// TODO(brianquinlan): Remove `libc_shim_d_name_ptr` when there is a fix for:
 // https://github.com/dart-lang/sdk/issues/41237
 LIBC_SHIM_EXPORT char *libc_shim_d_name_ptr(struct libc_shim_dirent *d);
 LIBC_SHIM_EXPORT int libc_shim_closedir(libc_shim_DIR *d);
