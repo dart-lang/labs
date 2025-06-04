@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library grpc_logging;
 
 import 'dart:async';
 import 'dart:io';
@@ -451,8 +450,7 @@ api.LogSeverity _severityFromLogLevel(LogLevel level) {
 ///
 /// See: https://cloud.google.com/error-reporting/docs/formatting-error-messages
 String _formatStackTrace(Object error, StackTrace stackTrace) =>
-    'Error: $error\n' +
-    Trace.from(stackTrace).frames.map((f) {
+    'Error: $error\n${Trace.from(stackTrace).frames.map((f) {
       // Find member
       String? member = f.member;
       if (member == '<fn>') {
@@ -468,4 +466,4 @@ String _formatStackTrace(Object error, StackTrace stackTrace) =>
       }
 
       return '    at $member ($loc)\n';
-    }).join('');
+    }).join('')}';

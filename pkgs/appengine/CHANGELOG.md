@@ -1,3 +1,7 @@
+## 0.13.11
+
+* Update dependency on `googleapis_auth` and `http`.
+
 ## 0.13.10
 
 * Upgrade `package:grpc` to `^4.0.1`.

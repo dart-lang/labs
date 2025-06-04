@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library raw_datastore_test_utils;
 
 import 'package:gcloud/datastore.dart';
 
@@ -55,7 +54,7 @@ List<Key> buildKeys(int from, int to,
 List<Entity> buildEntities(int from, int to,
     {Function? idFunction, String kind = TEST_KIND, Partition? partition}) {
   var entities = <Entity>[];
-  var unIndexedProperties = Set<String>();
+  var unIndexedProperties = <String>{};
   for (var i = from; i < to; i++) {
     var key = buildKey(i, idFunction: idFunction, kind: kind, p: partition!);
     var properties = buildProperties(i);
@@ -69,7 +68,7 @@ List<Entity> buildEntities(int from, int to,
 List<Entity> buildEntityWithAllProperties(int from, int to,
     {String kind = TEST_KIND, Partition? partition}) {
   var us42 = const Duration(microseconds: 42);
-  var unIndexed = Set<String>.from(['blobProperty']);
+  var unIndexed = <String>{'blobProperty'};
 
   Map<String, Object?> buildProperties(int i) {
     return {

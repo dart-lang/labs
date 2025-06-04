@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library appengine.internal;
 
 import 'dart:async';
 import 'dart:io';
@@ -33,7 +32,7 @@ bool _loggingPackageEnabled = false;
 
 /// Runs the given [callback] inside a new service scope and makes AppEngine
 /// services available within that scope.
-Future withAppEngineServices(Future callback()) =>
+Future withAppEngineServices(Future Function() callback) =>
     _withAppEngineServicesInternal((_) => callback());
 
 /// Runs the AppEngine http server and uses the given request [handler] to
@@ -42,11 +41,11 @@ Future withAppEngineServices(Future callback()) =>
 /// The given request [handler] is run inside a new service scope and has all
 /// AppEngine services available within that scope.
 Future runAppEngine(
-  void handler(HttpRequest request, ClientContext context),
-  void onError(Object e, StackTrace s)?, {
+  void Function(HttpRequest request, ClientContext context) handler,
+  void Function(Object e, StackTrace s)? onError, {
   int port = 8080,
   bool shared = false,
-  void onAcceptingConnections(InternetAddress address, int port)?,
+  void Function(InternetAddress address, int port)? onAcceptingConnections,
 }) {
   return _withAppEngineServicesInternal((ContextRegistry contextRegistry) {
     final appengineServer = AppEngineHttpServer(contextRegistry,
@@ -97,7 +96,7 @@ Future runAppEngine(
 }
 
 Future _withAppEngineServicesInternal(
-    Future callback(ContextRegistry contextRegistry)) {
+    Future Function(ContextRegistry contextRegistry) callback) {
   return ss.fork(() async {
     final ContextRegistry contextRegistry = await _initializeAppEngine();
     final bgServices = contextRegistry.newBackgroundServices();
@@ -130,7 +129,7 @@ Future<ContextRegistry> _initializeAppEngine() async {
   zoneId ??= 'dev-machine';
   final bool isProdEnvironment = !isDevEnvironment;
 
-  String? _findEnvironmentVariable(String name,
+  String? findEnvironmentVariable(String name,
       {bool onlyInProd = false, bool onlyInDev = false, bool needed = true}) {
     if (onlyInProd && !isProdEnvironment) return null;
     if (onlyInDev && !isDevEnvironment) return null;
@@ -142,23 +141,23 @@ Future<ContextRegistry> _initializeAppEngine() async {
     return value;
   }
 
-  final projectId = _findEnvironmentVariable(
+  final projectId = findEnvironmentVariable(
     'GOOGLE_CLOUD_PROJECT',
     needed: true,
   )!;
 
   // For local testing the gcloud sdk brings now a gRPC-ready datastore
   // emulator which will tell the user to use this environment variable.
-  final dbEmulatorHost = _findEnvironmentVariable('DATASTORE_EMULATOR_HOST',
+  final dbEmulatorHost = findEnvironmentVariable('DATASTORE_EMULATOR_HOST',
       onlyInDev: false, needed: false);
 
   final serviceId =
-      _findEnvironmentVariable('GAE_SERVICE', onlyInProd: true, needed: true) ??
+      findEnvironmentVariable('GAE_SERVICE', onlyInProd: true, needed: true) ??
           'dummy-service';
   final versionId =
-      _findEnvironmentVariable('GAE_VERSION', onlyInProd: true, needed: true) ??
+      findEnvironmentVariable('GAE_VERSION', onlyInProd: true, needed: true) ??
           'dummy-version';
-  final instance = _findEnvironmentVariable('GAE_INSTANCE',
+  final instance = findEnvironmentVariable('GAE_INSTANCE',
           onlyInProd: true, needed: true) ??
       'dummy-instance';
 

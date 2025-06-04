@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library db_impl_test;
 
 /// NOTE: In order to run these tests, the following datastore indices must
 /// exist:
@@ -43,6 +42,8 @@ library db_impl_test;
 /// $ gcloud preview datastore create-indexes .
 /// 02:19 PM Host: appengine.google.com
 /// 02:19 PM Uploading index definitions.
+library;
+
 
 import 'dart:async';
 
@@ -76,6 +77,7 @@ class Person extends db.Model {
   @override
   int get hashCode => Object.hash(name, age, wife);
 
+  @override
   String toString() => 'Person(id: $id, name: $name, age: $age)';
 }
 
@@ -106,6 +108,7 @@ class User extends Person {
   @db.StringListProperty(indexed: false)
   List<String> hobbies = const [];
 
+  @override
   sameAs(Object other) {
     if (!(super.sameAs(other) && other is User && nickname == other.nickname)) {
       return false;
@@ -116,6 +119,7 @@ class User extends Person {
         areStringListsEqual(hobbies, user.hobbies);
   }
 
+  @override
   String toString() => 'User(${super.toString()}, '
       'nickname: $nickname, '
       'languages: $languages, '
@@ -318,9 +322,9 @@ runTests(db.DatastoreDB store, String namespace) {
         persons[0].parentKey = users[0].key;
         users[1].parentKey = persons[1].key;
 
-        return testInsertLookupDelete([]
-          ..addAll(users)
-          ..addAll(persons));
+        return testInsertLookupDelete([...users, ...persons]
+          
+          );
       });
 
       test('auto_ids', () {
@@ -430,7 +434,7 @@ runTests(db.DatastoreDB store, String namespace) {
         expandoPersons.add(expandoPerson);
       }
 
-      const LOWER_BOUND = 'user2';
+      const lowerBound = 'user2';
 
       var usersSortedNameDescNicknameAsc = List<User>.from(users);
       usersSortedNameDescNicknameAsc.sort((User a, User b) {
@@ -448,12 +452,12 @@ runTests(db.DatastoreDB store, String namespace) {
 
       var usersSortedAndFilteredNameDescNicknameAsc =
           usersSortedNameDescNicknameAsc.where((User u) {
-        return LOWER_BOUND.compareTo(u.name!) <= 0;
+        return lowerBound.compareTo(u.name!) <= 0;
       }).toList();
 
       var usersSortedAndFilteredNameDescNicknameDesc =
           usersSortedNameDescNicknameDesc.where((User u) {
-        return LOWER_BOUND.compareTo(u.name!) <= 0;
+        return lowerBound.compareTo(u.name!) <= 0;
       }).toList();
 
       var fooUsers =
@@ -464,9 +468,9 @@ runTests(db.DatastoreDB store, String namespace) {
           .where((User u) => u.wife == root.append(User, id: 42 + 3))
           .toList();
 
-      var allInserts = <db.Model>[]
-        ..addAll(users)
-        ..addAll(expandoPersons);
+      var allInserts = <db.Model>[...users, ...expandoPersons]
+        
+        ;
       var allKeys = allInserts.map((model) => model.key).toList();
       List<db.Key> userKeys = users.map((model) => model.key).toList();
       List<db.Key> expandoPersonsKeys =
@@ -521,7 +525,7 @@ runTests(db.DatastoreDB store, String namespace) {
         // Sorted query with filter
         () async {
           var query = store.query<User>(partition: partition)
-            ..filter('name >=', LOWER_BOUND)
+            ..filter('name >=', lowerBound)
             ..order('-name')
             ..order('nickname');
           var models = await runQueryWithExponentialBackoff(
@@ -530,7 +534,7 @@ runTests(db.DatastoreDB store, String namespace) {
         },
         () async {
           var query = store.query<User>(partition: partition)
-            ..filter('name >=', LOWER_BOUND)
+            ..filter('name >=', lowerBound)
             ..order('-name')
             ..order('-nickname')
             ..run();
