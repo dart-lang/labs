@@ -23,8 +23,11 @@ const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
 
 const _nanosecondsPerSecond = 1000000000;
 
+bool _isDotOrDotDot(Pointer<Char> s) => // ord('.') == 46
+    s[0] == 46 && ((s[1] == 0) || (s[1] == 46 && s[2] == 0));
+
 Exception _getError(int err, String message, String path) {
-  //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
+  // TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
   // namespace?
   final osError = io.OSError(
@@ -327,9 +330,7 @@ final class PosixFileSystem extends FileSystem {
             child.cast<ffi.Utf8>().toDartString(),
           );
 
-          if (child[0] == 46 &&
-              ((child[1] == 0) || (child[1] == 46 && child[2] == 0))) {
-            // The child is '.' or '..' so just skip it.
+          if (_isDotOrDotDot(child)) {
             libc.errno = 0;
             dirent = libc.readdir(dir);
             continue;
@@ -379,7 +380,11 @@ final class PosixFileSystem extends FileSystem {
 
   @override
   void removeDirectoryTree(String path) => ffi.using((arena) {
-    _removeDirectoryTree(libc.AT_FDCWD, '.', path.toNativeUtf8());
+    _removeDirectoryTree(
+      libc.AT_FDCWD,
+      '.',
+      path.toNativeUtf8(allocator: arena),
+    );
   });
 
   @override
