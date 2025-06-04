@@ -1,5 +1,8 @@
 {
   "<sys/stat.h>": [
+    "AT_SYMLINK_NOFOLLOW",
+    "AT_RESOLVE_BENEATH",
+    "AT_EMPTY_PATH",
     "S_IEXEC",
     "S_IFBLK",
     "S_IFCHR",

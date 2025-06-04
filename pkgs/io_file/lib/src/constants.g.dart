@@ -212,6 +212,33 @@ int get O_WRONLY {
   }
 }
 
+int get AT_SYMLINK_NOFOLLOW {
+  final v = get_AT_SYMLINK_NOFOLLOW();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('AT_SYMLINK_NOFOLLOW');
+  } else {
+    return v;
+  }
+}
+
+int get AT_RESOLVE_BENEATH {
+  final v = get_AT_RESOLVE_BENEATH();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('AT_RESOLVE_BENEATH');
+  } else {
+    return v;
+  }
+}
+
+int get AT_EMPTY_PATH {
+  final v = get_AT_EMPTY_PATH();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('AT_EMPTY_PATH');
+  } else {
+    return v;
+  }
+}
+
 int get S_IEXEC {
   final v = get_S_IEXEC();
   if (v == libc_shim_UNDEFINED) {

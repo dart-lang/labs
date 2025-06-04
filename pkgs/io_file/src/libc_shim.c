@@ -16,9 +16,7 @@
 
 // <dirent.h>
 
-char* libc_shim_d_name_ptr(struct libc_shim_dirent *d) {
-  return d->d_name;
-}
+char *libc_shim_d_name_ptr(struct libc_shim_dirent *d) { return d->d_name; }
 
 int libc_shim_closedir(libc_shim_DIR *d) {
   int r = closedir(d->_dir);
@@ -114,6 +112,10 @@ static void _fill(struct libc_shim_Stat *buf, struct stat *s) {
 #endif
 }
 
+int libc_shim_chmod(const char *path, int mode) {
+  return chmod(path, mode);
+}
+
 int libc_shim_mkdir(const char *pathname, int mode) {
   return mkdir(pathname, mode);
 }
@@ -139,6 +141,16 @@ int libc_shim_lstat(const char *path, struct libc_shim_Stat *buf) {
 int libc_shim_fstat(int fd, struct libc_shim_Stat *buf) {
   struct stat s;
   int r = fstat(fd, &s);
+  if (r != -1) {
+    _fill(buf, &s);
+  }
+  return r;
+}
+
+int libc_shim_fstatat(int fd, char *path, struct libc_shim_Stat *buf,
+                      int flag) {
+  struct stat s;
+  int r = fstatat(fd, path, &s, flag);
   if (r != -1) {
     _fill(buf, &s);
   }

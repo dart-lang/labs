@@ -54,6 +54,11 @@ external int openat(
 );
 
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
+  symbol: 'libc_shim_chmod',
+)
+external int chmod(ffi.Pointer<ffi.Char> path, int mode);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
   symbol: 'libc_shim_mkdir',
 )
 external int mkdir(ffi.Pointer<ffi.Char> pathname, int mode);
@@ -72,6 +77,16 @@ external int lstat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
   symbol: 'libc_shim_fstat',
 )
 external int fstat(int fd, ffi.Pointer<Stat> buf);
+
+@ffi.Native<
+  ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>, ffi.Int)
+>(symbol: 'libc_shim_fstatat')
+external int fstatat(
+  int fd,
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<Stat> buf,
+  int flag,
+);
 
 /// <stdio.h>
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(

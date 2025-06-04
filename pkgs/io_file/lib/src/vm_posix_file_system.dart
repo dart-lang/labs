@@ -302,47 +302,79 @@ final class PosixFileSystem extends FileSystem {
     String parentPath,
     Pointer<ffi.Utf8> name,
   ) => ffi.using((arena) {
-    print(
-      '_removeDirectoryTree($parentfd, $parentPath, ${name.toDartString()})',
-    );
+    String childPath(Pointer<ffi.Utf8> child) =>
+        p.join(parentPath, name.toDartString(), child.toDartString());
+
     final fd = _tempFailureRetry(
       () => libc.openat(parentfd, name.cast(), libc.O_DIRECTORY, 0),
     );
     if (fd == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'openat failed', 'XXX');
+      throw _getError(
+        errno,
+        'openat failed',
+        p.join(parentPath, name.toDartString()),
+      );
     }
     try {
       final dir = libc.fdopendir(fd);
       if (dir == nullptr) {
         final errno = libc.errno;
-        throw _getError(errno, 'fdopendir failed', 'XXX');
+        throw _getError(
+          errno,
+          'fdopendir failed',
+          p.join(parentPath, name.toDartString()),
+        );
       }
       try {
+        Pointer<libc.Stat>? stat;
+        // `readdir` returns `NULL` but leaves `errno` unchanged if the end of
+        // the directory stream is reached.
         libc.errno = 0;
         var dirent = libc.readdir(dir);
+
         while (dirent != nullptr) {
           final child = libc.d_name_ptr(dirent);
-          if (dirent.ref.d_type == libc.DT_DIR) {
-            final childPath = child.cast<ffi.Utf8>().toDartString();
-            if (childPath == '.' || childPath == '..') {
-              libc.errno = 0;
-              dirent = libc.readdir(dir);
-              continue;
+          if (child[0] == 46 &&
+              ((child[1] == 0) || (child[1] == 46 && child[2] == 0))) {
+            // The child is '.' or '..' so just skip it.
+            libc.errno = 0;
+            dirent = libc.readdir(dir);
+            continue;
+          }
+          var type = dirent.ref.d_type;
+          if (true) {
+            /// From https://man7.org/linux/man-pages/man2/getdents.2.html:
+            /// Currently, only some filesystems (among them: Btrfs, ext2, ext3,
+            /// and ext4) have full support for returning the file type in
+            /// d_type. All applications must properly handle a return of
+            /// DT_UNKNOWN.
+            stat ??= arena<libc.Stat>();
+            if (libc.fstatat(fd, child, stat, libc.AT_SYMLINK_NOFOLLOW) == -1) {
+              final errno = libc.errno;
+              throw _getError(errno, 'fstatat failed', childPath(child.cast()));
             }
+            if (stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR) {
+              type = libc.DT_DIR;
+            } else {
+              // Anything other than `DT_DIR` works.
+              type = libc.DT_REG;
+            }
+          }
+          if (type == libc.DT_DIR) {
             _removeDirectoryTree(
               fd,
-              p.join(parentPath, childPath),
+              p.join(parentPath, name.toDartString()),
               child.cast(),
             );
-          } else if (dirent.ref.d_type == libc.DT_UNKNOWN) {
-            throw UnsupportedError('XXX');
           } else {
-            print('>> deleting: ${child.cast<ffi.Utf8>().toDartString()}');
-            libc.unlinkat(fd, child, 0);
-            if (libc.errno != 0) {
+            if (libc.unlinkat(fd, child, 0) == -1) {
               final errno = libc.errno;
-              throw _getError(errno, 'unlinkat failed', 'XXX');
+              throw _getError(
+                errno,
+                'unlinkat failed',
+                childPath(child.cast()),
+              );
             }
           }
           libc.errno = 0;
@@ -350,11 +382,19 @@ final class PosixFileSystem extends FileSystem {
         }
         if (libc.errno != 0) {
           final errno = libc.errno;
-          throw _getError(errno, 'readdir failed', 'XXX');
+          throw _getError(
+            errno,
+            'readdir failed',
+            p.join(parentPath, name.toDartString()),
+          );
         }
         if (libc.unlinkat(parentfd, name.cast(), libc.AT_REMOVEDIR) == -1) {
           final errno = libc.errno;
-          throw _getError(errno, 'remove directory failed', 'XXX');
+          throw _getError(
+            errno,
+            'unlinkat failed',
+            p.join(parentPath, name.toDartString()),
+          );
         }
       } finally {
         libc.closedir(dir);

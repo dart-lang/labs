@@ -56,6 +56,12 @@ int64_t libc_shim_get_O_TRUNC(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_O_WRONLY(void);
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_SYMLINK_NOFOLLOW(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_RESOLVE_BENEATH(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_AT_EMPTY_PATH(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_S_IEXEC(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_S_IFBLK(void);

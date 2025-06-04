@@ -170,6 +170,27 @@ int64_t libc_shim_get_O_WRONLY(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
+int64_t libc_shim_get_AT_SYMLINK_NOFOLLOW(void) {
+#ifdef AT_SYMLINK_NOFOLLOW
+  assert(AT_SYMLINK_NOFOLLOW != libc_shim_UNDEFINED);
+  return AT_SYMLINK_NOFOLLOW;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_AT_RESOLVE_BENEATH(void) {
+#ifdef AT_RESOLVE_BENEATH
+  assert(AT_RESOLVE_BENEATH != libc_shim_UNDEFINED);
+  return AT_RESOLVE_BENEATH;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_AT_EMPTY_PATH(void) {
+#ifdef AT_EMPTY_PATH
+  assert(AT_EMPTY_PATH != libc_shim_UNDEFINED);
+  return AT_EMPTY_PATH;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_S_IEXEC(void) {
 #ifdef S_IEXEC
   assert(S_IEXEC != libc_shim_UNDEFINED);
