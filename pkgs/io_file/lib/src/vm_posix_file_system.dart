@@ -23,8 +23,11 @@ const _defaultDirectoryMode = 511; // => 0777 => rwxrwxrwx
 
 const _nanosecondsPerSecond = 1000000000;
 
+bool _isDotOrDotDot(Pointer<Char> s) => // ord('.') == 46
+    s[0] == 46 && ((s[1] == 0) || (s[1] == 46 && s[2] == 0));
+
 Exception _getError(int err, String message, String path) {
-  //TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
+  // TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
   // namespace?
   final osError = io.OSError(
@@ -292,10 +295,97 @@ final class PosixFileSystem extends FileSystem {
     }
   });
 
+  void _removeDirectoryTree(
+    int parentfd,
+    String parentPath,
+    Pointer<ffi.Utf8> name,
+  ) => ffi.using((arena) {
+    late final path = p.join(parentPath, name.toDartString());
+    late final stat = arena<libc.Stat>();
+
+    final fd = _tempFailureRetry(
+      () => libc.openat(parentfd, name.cast(), libc.O_DIRECTORY, 0),
+    );
+    if (fd == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, 'openat failed', path);
+    }
+    try {
+      final dir = libc.fdopendir(fd);
+      if (dir == nullptr) {
+        final errno = libc.errno;
+        throw _getError(errno, 'fdopendir failed', path);
+      }
+      try {
+        // `readdir` returns `NULL` but leaves `errno` unchanged if the end of
+        // the directory stream is reached.
+        libc.errno = 0;
+        var dirent = libc.readdir(dir);
+
+        while (dirent != nullptr) {
+          final child = libc.d_name_ptr(dirent);
+          late final childPath = p.join(
+            parentPath,
+            name.toDartString(),
+            child.cast<ffi.Utf8>().toDartString(),
+          );
+
+          if (_isDotOrDotDot(child)) {
+            libc.errno = 0;
+            dirent = libc.readdir(dir);
+            continue;
+          }
+          var type = dirent.ref.d_type;
+          if (type == libc.DT_UNKNOWN) {
+            /// From https://man7.org/linux/man-pages/man2/getdents.2.html:
+            /// Currently, only some filesystems (among them: Btrfs, ext2, ext3,
+            /// and ext4) have full support for returning the file type in
+            /// d_type. All applications must properly handle a return of
+            /// DT_UNKNOWN.
+            if (libc.fstatat(fd, child, stat, libc.AT_SYMLINK_NOFOLLOW) == -1) {
+              final errno = libc.errno;
+              throw _getError(errno, 'fstatat failed', childPath);
+            }
+            type =
+                stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR
+                    ? libc.DT_DIR
+                    : libc.DT_REG;
+          }
+          if (type == libc.DT_DIR) {
+            _removeDirectoryTree(fd, path, child.cast());
+          } else {
+            if (libc.unlinkat(fd, child, 0) == -1) {
+              final errno = libc.errno;
+              throw _getError(errno, 'unlinkat failed', childPath);
+            }
+          }
+          libc.errno = 0;
+          dirent = libc.readdir(dir);
+        }
+        if (libc.errno != 0) {
+          final errno = libc.errno;
+          throw _getError(errno, 'readdir failed', path);
+        }
+        if (libc.unlinkat(parentfd, name.cast(), libc.AT_REMOVEDIR) == -1) {
+          final errno = libc.errno;
+          throw _getError(errno, 'unlinkat failed', path);
+        }
+      } finally {
+        libc.closedir(dir);
+      }
+    } finally {
+      libc.close(fd);
+    }
+  });
+
   @override
-  void removeDirectoryTree(String path) {
-    throw UnimplementedError();
-  }
+  void removeDirectoryTree(String path) => ffi.using((arena) {
+    _removeDirectoryTree(
+      libc.AT_FDCWD,
+      '.',
+      path.toNativeUtf8(allocator: arena),
+    );
+  });
 
   @override
   void rename(String oldPath, String newPath) => ffi.using((arena) {
