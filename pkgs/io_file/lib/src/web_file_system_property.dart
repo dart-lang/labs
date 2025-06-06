@@ -5,7 +5,7 @@
 import 'fake_posix_file_system.dart';
 import 'file_system.dart';
 
+FileSystem? _fileSystem;
+
 /// Return the default [FileSystem] for the current platform.
-FileSystem get fileSystem {
-  return FakePosixFileSystem();
-}
+FileSystem get fileSystem => _fileSystem ??= FakePosixFileSystem();
