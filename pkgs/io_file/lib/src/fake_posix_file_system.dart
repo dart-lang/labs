@@ -1,52 +1,52 @@
-// Copyright (c) 2025, the Dart project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'dart:convert';
+
 import 'dart:typed_data';
 
 import 'file_system.dart';
+import 'posix_file_system.dart';
 
-/// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
-/// macOS).
-final class PosixFileSystem extends FileSystem {
+final class FakePosixFileSystem extends PosixFileSystem {
   @override
   void createDirectory(String path) {
-    throw UnimplementedError();
+    // TODO: implement createDirectory
   }
 
   @override
   String createTemporaryDirectory({String? parent, String? prefix}) {
+    // TODO: implement createTemporaryDirectory
     throw UnimplementedError();
   }
 
   @override
   Metadata metadata(String path) {
+    // TODO: implement metadata
     throw UnimplementedError();
   }
 
   @override
   Uint8List readAsBytes(String path) {
+    // TODO: implement readAsBytes
     throw UnimplementedError();
   }
 
   @override
   void removeDirectory(String path) {
-    throw UnimplementedError();
+    // TODO: implement removeDirectory
   }
 
   @override
   void removeDirectoryTree(String path) {
-    throw UnimplementedError();
+    // TODO: implement removeDirectoryTree
   }
 
   @override
   void rename(String oldPath, String newPath) {
-    throw UnimplementedError();
+    // TODO: implement rename
   }
 
   @override
   bool same(String path1, String path2) {
+    // TODO: implement same
     throw UnimplementedError();
   }
 
@@ -56,7 +56,7 @@ final class PosixFileSystem extends FileSystem {
     Uint8List data, [
     WriteMode mode = WriteMode.failExisting,
   ]) {
-    throw UnimplementedError();
+    // TODO: implement writeAsBytes
   }
 
   @override
@@ -67,6 +67,6 @@ final class PosixFileSystem extends FileSystem {
     Encoding encoding = utf8,
     String? lineTerminator,
   ]) {
-    throw UnimplementedError();
+    // TODO: implement writeAsString
   }
 }

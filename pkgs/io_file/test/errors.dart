@@ -4,6 +4,7 @@
 
 import 'dart:io';
 import 'package:errno/errno.dart';
+import 'package:errno/errno.dart' show WindowsErrors;
 
 int get eaccess => Platform.isMacOS ? DarwinErrors.eacces : LinuxErrors.eacces;
 
