@@ -2,21 +2,21 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
+//import 'dart:io';
 import 'package:errno/errno.dart';
 
-int get eaccess => Platform.isMacOS ? DarwinErrors.eacces : LinuxErrors.eacces;
+// true
 
-int get eexist => Platform.isMacOS ? DarwinErrors.eexist : LinuxErrors.eexist;
+int get eaccess => true ? DarwinErrors.eacces : LinuxErrors.eacces;
 
-int get eisdir => Platform.isMacOS ? DarwinErrors.eisdir : LinuxErrors.eisdir;
+int get eexist => true ? DarwinErrors.eexist : LinuxErrors.eexist;
 
-int get enoent => Platform.isMacOS ? DarwinErrors.enoent : LinuxErrors.enoent;
+int get eisdir => true ? DarwinErrors.eisdir : LinuxErrors.eisdir;
 
-int get enotdir =>
-    Platform.isMacOS ? DarwinErrors.enotdir : LinuxErrors.enotdir;
+int get enoent => true ? DarwinErrors.enoent : LinuxErrors.enoent;
 
-int get enotempty =>
-    Platform.isMacOS ? DarwinErrors.enotempty : LinuxErrors.enotempty;
+int get enotdir => true ? DarwinErrors.enotdir : LinuxErrors.enotdir;
 
-int get eperm => Platform.isMacOS ? DarwinErrors.eperm : LinuxErrors.eperm;
+int get enotempty => true ? DarwinErrors.enotempty : LinuxErrors.enotempty;
+
+int get eperm => true ? DarwinErrors.eperm : LinuxErrors.eperm;
