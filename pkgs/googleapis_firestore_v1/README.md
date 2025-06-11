@@ -18,6 +18,10 @@ This package is a generated gRPC client used to access the Firestore API.
 
 ## Example
 
+See below for a hello-world example. For a more complete example, including
+use of `firestore.listen()`, see
+https://github.com/dart-lang/labs/blob/main/pkgs/googleapis_firestore_v1/example/example.dart.
+
 ```dart
 import 'package:googleapis_firestore_v1/google/firestore/v1/firestore.pbgrpc.dart';
 import 'package:grpc/grpc.dart' as grpc;
