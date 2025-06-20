@@ -18,12 +18,10 @@ class _Directory extends _Entity {
   final children = <String, _Entity>{};
 
   @override
-  String toString() {
-    return '<Directory children=$children>';
-  }
+  String toString() => '<Directory children=$children>';
 }
 
-class _FakeMetadata implements Metadata {
+class _FakeMetadata implements PosixMetadata {
   @override
   DateTime get access => throw UnimplementedError();
 
@@ -52,6 +50,15 @@ class _FakeMetadata implements Metadata {
   final FileSystemType type;
 
   _FakeMetadata(this.type);
+
+  @override
+  int get accessedTimeNanos => throw UnimplementedError();
+
+  @override
+  int? get creationTimeNanos => throw UnimplementedError();
+
+  @override
+  int get modificationTimeNanos => throw UnimplementedError();
 }
 
 final class FakePosixFileSystem extends PosixFileSystem {

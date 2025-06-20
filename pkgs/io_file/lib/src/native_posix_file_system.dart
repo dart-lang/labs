@@ -59,7 +59,7 @@ int _tempFailureRetry(int Function() f) {
 }
 
 /// Information about a directory, link, etc. stored in the [PosixFileSystem].
-final class PosixMetadata implements Metadata {
+final class NativePosixMetadata implements PosixMetadata {
   /// The `st_mode` field of the POSIX stat struct.
   ///
   /// See [stat.h](https://pubs.opengroup.org/onlinepubs/009696799/basedefs/sys/stat.h.html)
@@ -70,27 +70,13 @@ final class PosixMetadata implements Metadata {
   @override
   final int size;
 
-  /// The time that the file system object was last accessed in nanoseconds
-  /// since the epoch.
-  ///
-  /// Access time is updated when the object is read or modified.
-  ///
-  /// The resolution of the access time varies by platform and file system.
+  @override
   final int accessedTimeNanos;
 
-  /// The time that the file system object was created in nanoseconds since the
-  /// epoch.
-  ///
-  /// This will always be `null` on Android and Linux.
-  ///
-  /// The resolution of the creation time varies by platform and file system.
+  @override
   final int? creationTimeNanos;
 
-  /// The time that the file system object was last modified in nanoseconds
-  /// since the epoch.
-  ///
-  /// The resolution of the modification time varies by platform and file
-  /// system.
+  @override
   final int modificationTimeNanos;
 
   int get _fmt => mode & libc.S_IFMT;
@@ -152,7 +138,7 @@ final class PosixMetadata implements Metadata {
     return null;
   }
 
-  PosixMetadata._(
+  NativePosixMetadata._(
     this.mode,
     this._flags,
     this.size,
@@ -161,15 +147,15 @@ final class PosixMetadata implements Metadata {
     this.modificationTimeNanos,
   );
 
-  /// Construct [PosixMetadata] from data returned by the `stat` system call.
-  factory PosixMetadata.fromFileAttributes({
+  /// Construct [NativePosixMetadata] from data returned by the `stat` system call.
+  factory NativePosixMetadata.fromFileAttributes({
     required int mode,
     int flags = 0,
     int size = 0,
     int accessedTimeNanos = 0,
     int? creationTimeNanos,
     int modificationTimeNanos = 0,
-  }) => PosixMetadata._(
+  }) => NativePosixMetadata._(
     mode,
     flags,
     size,
@@ -180,7 +166,7 @@ final class PosixMetadata implements Metadata {
 
   @override
   bool operator ==(Object other) =>
-      other is PosixMetadata &&
+      other is NativePosixMetadata &&
       mode == other.mode &&
       _flags == other._flags &&
       size == other.size &&
@@ -261,7 +247,7 @@ final class NativePosixFileSystem extends PosixFileSystem {
       });
 
   @override
-  PosixMetadata metadata(String path) => ffi.using((arena) {
+  NativePosixMetadata metadata(String path) => ffi.using((arena) {
     final stat = arena<libc.Stat>();
 
     if (libc.lstat(path.toNativeUtf8(allocator: arena).cast(), stat) == -1) {
@@ -269,7 +255,7 @@ final class NativePosixFileSystem extends PosixFileSystem {
       throw _getError(errno, 'stat failed', path, 'lstat');
     }
 
-    return PosixMetadata.fromFileAttributes(
+    return NativePosixMetadata.fromFileAttributes(
       mode: stat.ref.st_mode,
       flags: stat.ref.st_flags,
       size: stat.ref.st_size,
