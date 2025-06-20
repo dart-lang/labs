@@ -4,7 +4,6 @@
 
 // TODO(kustermann): At some point we should integrate this library
 // into `package:googleapis_auth`.
-library auth_utils;
 
 import 'dart:async';
 

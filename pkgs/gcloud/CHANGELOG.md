@@ -1,5 +1,9 @@
+## 0.8.19
+
+- Support the latest `package:googleapis`.
+
 ## 0.8.18
- - Fix bug in `Bucket.updateMetadata` such that `acl: null` is allowed.
+- Fix bug in `Bucket.updateMetadata` such that `acl: null` is allowed.
    Since, this is the only valid value for buckets with uniform access policies.
 
 ## 0.8.17

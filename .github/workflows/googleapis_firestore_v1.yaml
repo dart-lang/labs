@@ -35,10 +35,9 @@ jobs:
           sdk: ${{ matrix.sdk }}
 
       - run: dart pub get
-
       - run: dart analyze --fatal-infos
-
-      - run: dart format --output=none --set-exit-if-changed .
-        if: ${{ matrix.sdk == 'stable' }}
-
-      # - run: dart test
+      # TODO(devoncarew): We should update protoc_plugin to generate formatted
+      # files.
+      # - run: dart format --output=none --set-exit-if-changed .
+      #   if: ${{ matrix.sdk == 'stable' }}
+      - run: dart test

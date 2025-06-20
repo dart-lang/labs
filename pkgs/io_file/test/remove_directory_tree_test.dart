@@ -2,15 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-@TestOn('windows')
+@TestOn('vm')
 library;
 
 import 'dart:io';
 
+import 'package:ffi/ffi.dart';
 import 'package:io_file/io_file.dart';
+import 'package:io_file/src/libc.dart' as libc;
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
-
 import 'errors.dart' as errors;
 import 'test_utils.dart';
 
@@ -94,6 +96,80 @@ void main() {
       expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
     });
 
+    test(
+      'unremoveable file',
+      () {
+        final path = '$tmp/dir';
+        final undeletablePath = p.join(path, 'subdir1', 'subdir2', 'file1');
+        Directory(path).createSync();
+        Directory('$path/subdir1/subdir2').createSync(recursive: true);
+        File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
+        // r-xr-x---
+        if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 360) ==
+            -1) {
+          assert(libc.errno == 0);
+        }
+        addTearDown(
+          // rwxrwxrwx
+          () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
+        );
+
+        expect(
+          () => fileSystem.removeDirectoryTree(path),
+          throwsA(
+            isA<PathAccessException>()
+                .having((e) => e.path, 'path', undeletablePath)
+                .having(
+                  (e) => e.osError?.errorCode,
+                  'errorCode',
+                  errors.eaccess,
+                ),
+          ),
+        );
+      },
+      skip:
+          Platform.isWindows
+              ? 'TODO(brianquinlan): make this work on Windows'
+              : false,
+    );
+
+    test(
+      'unreadable directory',
+      () {
+        final path = '$tmp/dir';
+        final unreadableDirectory = p.join(path, 'subdir1', 'subdir2');
+        Directory(path).createSync();
+        Directory('$path/subdir1/subdir2').createSync(recursive: true);
+        File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
+        // -wx-wx---
+        if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 216) ==
+            -1) {
+          assert(libc.errno == 0);
+        }
+        addTearDown(
+          // rwxrwxrwx
+          () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
+        );
+
+        expect(
+          () => fileSystem.removeDirectoryTree(path),
+          throwsA(
+            isA<PathAccessException>()
+                .having((e) => e.path, 'path', unreadableDirectory)
+                .having(
+                  (e) => e.osError?.errorCode,
+                  'errorCode',
+                  errors.eaccess,
+                ),
+          ),
+        );
+      },
+      skip:
+          Platform.isWindows
+              ? 'TODO(brianquinlan): make this work on Windows'
+              : false,
+    );
+
     test('non-existent directory', () {
       final path = '$tmp/foo/dir';
 
@@ -119,7 +195,7 @@ void main() {
           isA<FileSystemException>().having(
             (e) => e.osError?.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enoent,
+            Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enotdir,
           ),
         ),
       );

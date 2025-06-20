@@ -5,10 +5,67 @@
 
 #include "constants.g.h"
 
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <sys/stat.h>
+int64_t libc_shim_get_DT_BLK(void) {
+#ifdef DT_BLK
+  assert(DT_BLK != libc_shim_UNDEFINED);
+  return DT_BLK;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_CHR(void) {
+#ifdef DT_CHR
+  assert(DT_CHR != libc_shim_UNDEFINED);
+  return DT_CHR;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_DIR(void) {
+#ifdef DT_DIR
+  assert(DT_DIR != libc_shim_UNDEFINED);
+  return DT_DIR;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_FIFO(void) {
+#ifdef DT_FIFO
+  assert(DT_FIFO != libc_shim_UNDEFINED);
+  return DT_FIFO;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_LNK(void) {
+#ifdef DT_LNK
+  assert(DT_LNK != libc_shim_UNDEFINED);
+  return DT_LNK;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_REG(void) {
+#ifdef DT_REG
+  assert(DT_REG != libc_shim_UNDEFINED);
+  return DT_REG;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_SOCK(void) {
+#ifdef DT_SOCK
+  assert(DT_SOCK != libc_shim_UNDEFINED);
+  return DT_SOCK;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_DT_UNKNOWN(void) {
+#ifdef DT_UNKNOWN
+  assert(DT_UNKNOWN != libc_shim_UNDEFINED);
+  return DT_UNKNOWN;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_EACCES(void) {
 #ifdef EACCES
   assert(EACCES != libc_shim_UNDEFINED);
@@ -44,6 +101,20 @@ int64_t libc_shim_get_EPERM(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
+int64_t libc_shim_get_AT_FDCWD(void) {
+#ifdef AT_FDCWD
+  assert(AT_FDCWD != libc_shim_UNDEFINED);
+  return AT_FDCWD;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_AT_REMOVEDIR(void) {
+#ifdef AT_REMOVEDIR
+  assert(AT_REMOVEDIR != libc_shim_UNDEFINED);
+  return AT_REMOVEDIR;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_O_APPEND(void) {
 #ifdef O_APPEND
   assert(O_APPEND != libc_shim_UNDEFINED);
@@ -62,6 +133,13 @@ int64_t libc_shim_get_O_CREAT(void) {
 #ifdef O_CREAT
   assert(O_CREAT != libc_shim_UNDEFINED);
   return O_CREAT;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_O_DIRECTORY(void) {
+#ifdef O_DIRECTORY
+  assert(O_DIRECTORY != libc_shim_UNDEFINED);
+  return O_DIRECTORY;
 #endif
   return libc_shim_UNDEFINED;
 }
@@ -93,17 +171,24 @@ int64_t libc_shim_get_O_WRONLY(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
-int64_t libc_shim_get_AT_FDCWD(void) {
-#ifdef AT_FDCWD
-  assert(AT_FDCWD != libc_shim_UNDEFINED);
-  return AT_FDCWD;
+int64_t libc_shim_get_AT_SYMLINK_NOFOLLOW(void) {
+#ifdef AT_SYMLINK_NOFOLLOW
+  assert(AT_SYMLINK_NOFOLLOW != libc_shim_UNDEFINED);
+  return AT_SYMLINK_NOFOLLOW;
 #endif
   return libc_shim_UNDEFINED;
 }
-int64_t libc_shim_get_AT_REMOVEDIR(void) {
-#ifdef AT_REMOVEDIR
-  assert(AT_REMOVEDIR != libc_shim_UNDEFINED);
-  return AT_REMOVEDIR;
+int64_t libc_shim_get_AT_RESOLVE_BENEATH(void) {
+#ifdef AT_RESOLVE_BENEATH
+  assert(AT_RESOLVE_BENEATH != libc_shim_UNDEFINED);
+  return AT_RESOLVE_BENEATH;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_AT_EMPTY_PATH(void) {
+#ifdef AT_EMPTY_PATH
+  assert(AT_EMPTY_PATH != libc_shim_UNDEFINED);
+  return AT_EMPTY_PATH;
 #endif
   return libc_shim_UNDEFINED;
 }

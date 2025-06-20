@@ -7,6 +7,30 @@ library;
 
 import 'dart:ffi' as ffi;
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_BLK')
+external int get_DT_BLK();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_CHR')
+external int get_DT_CHR();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_DIR')
+external int get_DT_DIR();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_FIFO')
+external int get_DT_FIFO();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_LNK')
+external int get_DT_LNK();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_REG')
+external int get_DT_REG();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_SOCK')
+external int get_DT_SOCK();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_DT_UNKNOWN')
+external int get_DT_UNKNOWN();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EACCES')
 external int get_EACCES();
 
@@ -22,6 +46,12 @@ external int get_ENOENT();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EPERM')
 external int get_EPERM();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_FDCWD')
+external int get_AT_FDCWD();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_REMOVEDIR')
+external int get_AT_REMOVEDIR();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_O_APPEND')
 external int get_O_APPEND();
 
@@ -30,6 +60,9 @@ external int get_O_CLOEXEC();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_O_CREAT')
 external int get_O_CREAT();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_O_DIRECTORY')
+external int get_O_DIRECTORY();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_O_EXCL')
 external int get_O_EXCL();
@@ -43,11 +76,14 @@ external int get_O_TRUNC();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_O_WRONLY')
 external int get_O_WRONLY();
 
-@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_FDCWD')
-external int get_AT_FDCWD();
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_SYMLINK_NOFOLLOW')
+external int get_AT_SYMLINK_NOFOLLOW();
 
-@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_REMOVEDIR')
-external int get_AT_REMOVEDIR();
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_RESOLVE_BENEATH')
+external int get_AT_RESOLVE_BENEATH();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_EMPTY_PATH')
+external int get_AT_EMPTY_PATH();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PATH_MAX')
 external int get_PATH_MAX();

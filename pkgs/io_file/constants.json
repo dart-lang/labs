@@ -1,5 +1,8 @@
 {
   "<sys/stat.h>": [
+    "AT_SYMLINK_NOFOLLOW",
+    "AT_RESOLVE_BENEATH",
+    "AT_EMPTY_PATH",
     "S_IEXEC",
     "S_IFBLK",
     "S_IFCHR",
@@ -36,20 +39,31 @@
     "EEXIST",
     "EINTR",
     "ENOENT",
-    "EPERM",
+    "EPERM"
+  ],
+  "<fcntl.h>": [
+    "AT_FDCWD",
+    "AT_REMOVEDIR",
     "O_APPEND",
     "O_CLOEXEC",
     "O_CREAT",
+    "O_DIRECTORY",
     "O_EXCL",
     "O_RDONLY",
     "O_TRUNC",
     "O_WRONLY"
   ],
-  "<fcntl.h>": [
-    "AT_FDCWD",
-    "AT_REMOVEDIR"
-  ],
   "<limits.h>": [
     "PATH_MAX"
+  ],
+  "<dirent.h>" : [
+    "DT_BLK",
+    "DT_CHR",
+    "DT_DIR",
+    "DT_FIFO",
+    "DT_LNK",
+    "DT_REG",
+    "DT_SOCK",
+    "DT_UNKNOWN"
   ]
 }

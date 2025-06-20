@@ -16,6 +16,41 @@ See also:
 
 This package is a generated gRPC client used to access the Firestore API.
 
+## Example
+
+See below for a hello-world example. For a more complete example, including
+use of `firestore.listen()`, see
+https://github.com/dart-lang/labs/blob/main/pkgs/googleapis_firestore_v1/example/example.dart.
+
+```dart
+import 'package:googleapis_firestore_v1/google/firestore/v1/firestore.pbgrpc.dart';
+import 'package:grpc/grpc.dart' as grpc;
+
+void main(List<String> args) async {
+  final projectId = args[0];
+
+  // set up a connection
+  final channel = grpc.ClientChannel(FirestoreClient.defaultHost);
+  final auth = await grpc.applicationDefaultCredentialsAuthenticator(
+    FirestoreClient.oauthScopes,
+  );
+  final firestore = FirestoreClient(channel, options: auth.toCallOptions);
+
+  // make a request
+  final request = ListCollectionIdsRequest(
+    parent: 'projects/$projectId/databases/(default)/documents',
+  );
+  final result = await firestore.listCollectionIds(request);
+  print('collectionIds:');
+  for (var collectionId in result.collectionIds) {
+    print('- $collectionId');
+  }
+
+  // close the channel
+  await channel.shutdown();
+}
+```
+
 ## Status: Experimental
 
 **NOTE**: This package is currently experimental and published under the

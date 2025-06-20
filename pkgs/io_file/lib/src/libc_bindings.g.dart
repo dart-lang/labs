@@ -8,8 +8,20 @@ library;
 
 import 'dart:ffi' as ffi;
 
+/// Returns `libc_shim_dirent.d_name`.
+///
+/// TODO(brianquinlan): Remove `libc_shim_d_name_ptr` when there is a fix for:
+/// https://github.com/dart-lang/sdk/issues/41237
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<dirent>)>(
+  symbol: 'libc_shim_d_name_ptr',
+)
+external ffi.Pointer<ffi.Char> d_name_ptr(ffi.Pointer<dirent> d);
+
 @ffi.Native<ffi.Int Function(ffi.Pointer<DIR>)>(symbol: 'libc_shim_closedir')
 external int closedir(ffi.Pointer<DIR> d);
+
+@ffi.Native<ffi.Pointer<DIR> Function(ffi.Int)>(symbol: 'libc_shim_fdopendir')
+external ffi.Pointer<DIR> fdopendir(int fd);
 
 @ffi.Native<ffi.Pointer<DIR> Function(ffi.Pointer<ffi.Char>)>(
   symbol: 'libc_shim_opendir',
@@ -34,6 +46,21 @@ external int errno();
 )
 external int open(ffi.Pointer<ffi.Char> pathname, int flags, int mode);
 
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int)>(
+  symbol: 'libc_shim_openat',
+)
+external int openat(
+  int fd,
+  ffi.Pointer<ffi.Char> pathname,
+  int flags,
+  int mode,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
+  symbol: 'libc_shim_chmod',
+)
+external int chmod(ffi.Pointer<ffi.Char> path, int mode);
+
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
   symbol: 'libc_shim_mkdir',
 )
@@ -53,6 +80,16 @@ external int lstat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
   symbol: 'libc_shim_fstat',
 )
 external int fstat(int fd, ffi.Pointer<Stat> buf);
+
+@ffi.Native<
+  ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>, ffi.Int)
+>(symbol: 'libc_shim_fstatat')
+external int fstatat(
+  int fd,
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<Stat> buf,
+  int flag,
+);
 
 /// <stdio.h>
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
@@ -96,10 +133,16 @@ external int unlinkat(int dirfd, ffi.Pointer<ffi.Char> pathname, int flags);
 
 /// <dirent.h>
 final class dirent extends ffi.Struct {
+  /// POSIX
   @ffi.Int64()
   external int d_ino;
 
-  @ffi.Array.multi([512])
+  /// Linux, macOS/iOS
+  @ffi.Uint8()
+  external int d_type;
+
+  /// POSIX; __DARWIN_MAXNAMLEN = 1024
+  @ffi.Array.multi([1025])
   external ffi.Array<ffi.Char> d_name;
 }
 

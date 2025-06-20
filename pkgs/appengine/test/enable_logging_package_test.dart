@@ -17,10 +17,12 @@ class LoggingMock extends LoggingBase {
 
   LoggingMock();
 
+  @override
   void log(LogLevel level, String message, {DateTime? timestamp}) {
     _logFunctionMock(level, message, timestamp);
   }
 
+  @override
   void reportError(LogLevel level, Object error, StackTrace stackTrace,
       {DateTime? timestamp}) {
     _reportErrorFunctionMock(
@@ -32,8 +34,8 @@ class LoggingMock extends LoggingBase {
   }
 
   void expectReportError(
-      void func(
-          LogLevel level, Object error, StackTrace stackTrace, DateTime c)) {
+      void Function(
+          LogLevel level, Object error, StackTrace stackTrace, DateTime c) func) {
     _reportErrorFunctionMock = expectAsync4(func);
   }
 
@@ -43,7 +45,7 @@ class LoggingMock extends LoggingBase {
     };
   }
 
-  void expectLog(void func(LogLevel a, String b, DateTime c)) {
+  void expectLog(void Function(LogLevel a, String b, DateTime c) func) {
     _logFunctionMock = expectAsync3(func);
   }
 
@@ -53,12 +55,14 @@ class LoggingMock extends LoggingBase {
     };
   }
 
+  @override
   Future flush() {
     throw "Unexpected method call";
   }
 }
 
 class CustomStackTrace implements StackTrace {
+  @override
   String toString() => 'custom-stack-trace';
 }
 
