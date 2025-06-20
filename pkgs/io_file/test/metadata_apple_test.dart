@@ -9,7 +9,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
-import 'package:io_file/src/vm_posix_file_system.dart';
+import 'package:io_file/src/native_posix_file_system.dart';
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 

@@ -4,11 +4,13 @@
 
 import 'package:errno/errno.dart';
 import 'package:io_file/io_file.dart';
+import 'package:io_file/src/fake_posix_file_system.dart';
 import 'package:io_file/windows_file_system.dart';
 import 'package:test/test.dart';
 
 import 'errors.dart' as errors;
 import 'test_utils.dart';
+import 'test_utils_self.dart' show SelfTestUtils;
 
 void testDirectory(FileSystem fs, TestUtils testUtils) {
   group('createDirectory', () {
@@ -89,7 +91,12 @@ void testDirectory(FileSystem fs, TestUtils testUtils) {
 }
 
 void main() {
-  group('native', () {
+  group('default', () {
     testDirectory(fileSystem, testUtils());
+  });
+
+  group('fake', () {
+    final fs = FakePosixFileSystem();
+    testDirectory(fs, SelfTestUtils(fs));
   });
 }
