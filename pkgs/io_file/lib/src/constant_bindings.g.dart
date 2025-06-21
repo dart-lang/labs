@@ -85,6 +85,9 @@ external int get_AT_RESOLVE_BENEATH();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_EMPTY_PATH')
 external int get_AT_EMPTY_PATH();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PATH_MAX')
+external int get_PATH_MAX();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_S_IEXEC')
 external int get_S_IEXEC();
 

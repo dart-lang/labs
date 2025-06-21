@@ -175,7 +175,11 @@ char *libc_shim_strerror(int errnum) { return strerror(errnum); }
 
 // <unistd.h>
 
+int libc_shim_chdir(const char *path) { return chdir(path); }
+
 int libc_shim_close(int fd) { return close(fd); }
+
+char *libc_shim_getcwd(char *buf, int64_t size) { return getcwd(buf, size); }
 
 int libc_shim_unlinkat(int dirfd, const char *pathname, int flags) {
   return unlinkat(dirfd, pathname, flags);

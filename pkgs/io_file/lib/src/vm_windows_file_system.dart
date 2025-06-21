@@ -30,6 +30,57 @@ void _primeGetLastError() {
   win32.GetLastError();
 }
 
+///
+/// Pointer<Utf16> _apiPath(String path, Allocator a) =>
+///    (r'\\?\' + p.canonicalize(path)).toNativeUtf16(allocator: a);
+
+extension on Allocator {
+  Pointer<Utf16> duplicateUtf16(Pointer<Utf16> str) {
+    final s = str.cast<WChar>();
+    var length = 0;
+    while (s[length] != 0) {
+      length++;
+    }
+
+    final t = this<WChar>(length + 1);
+    for (var i = 0; i < length; ++i) {
+      t[i] = s[length];
+    }
+    t[length] = 0;
+    return t.cast();
+  }
+}
+
+/// Convert a
+Pointer<Utf16> _apiPath(String path, Allocator a) {
+  // The obvious
+  var length = 256;
+  var utf16Path = path.toNativeUtf16(allocator: a);
+  do {
+    final buffer = win32.wsalloc(length);
+    try {
+      final result = win32.GetFullPathName(utf16Path, length, buffer, nullptr);
+      if (result == 0) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFullPathName failed', path);
+      }
+      if (result < length) {
+        final canonicalPath = a<Pointer<Utf16>>();
+        win32.PathAllocCanonicalize(
+          buffer,
+          win32.PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH,
+          canonicalPath,
+        );
+        return a.duplicateUtf16(canonicalPath.value);
+      } else {
+        length = result;
+      }
+    } finally {
+      win32.free(buffer);
+    }
+  } while (true);
+}
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {
@@ -249,13 +300,57 @@ final class WindowsMetadata implements Metadata {
 }
 
 /// A [FileSystem] implementation for Windows systems.
-final class WindowsFileSystem extends FileSystem {
+base class WindowsFileSystem extends FileSystem {
+  @override
+  bool same(String path1, String path2) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
+    final info1 = _byHandleFileInformation(path1, arena);
+    final info2 = _byHandleFileInformation(path2, arena);
+
+    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
+        info1.nFileIndexHigh == info2.nFileIndexHigh &&
+        info1.nFileIndexLow == info2.nFileIndexLow;
+  });
+
+  // NOTE: the return value is allocated in the given arena!
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
+    String path,
+    ffi.Arena arena,
+  ) {
+    final h = win32.CreateFile(
+      path.toNativeUtf16(allocator: arena),
+      0,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS,
+      win32.NULL,
+    );
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'CreateFile failed', path);
+    }
+    try {
+      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
+      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
+      }
+      return info.ref;
+    } finally {
+      win32.CloseHandle(h);
+    }
+  }
+
   @override
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.CreateDirectory(path.toNativeUtf16(allocator: arena), nullptr) ==
-        win32.FALSE) {
+    if (win32.CreateDirectory(_apiPath(path, arena), nullptr) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'create directory failed', path);
     }
@@ -271,6 +366,44 @@ final class WindowsFileSystem extends FileSystem {
     createDirectory(path);
     return path;
   }
+
+  @override
+  set currentDirectory(String path) => using((arena) {
+    // XXX
+    // SetCurrentDirectory does not actually support paths larger than MAX_PATH,
+    // this limitation is due to the size of the internal buffer used for
+    // storing
+    // current directory. In Windows 10, version 1607, changes have been made
+    // to the OS to lift MAX_PATH limitations from file and directory management
+    // APIs, but both application and OS need to opt-in into new behavior.
+    // See https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
+
+    _primeGetLastError();
+    if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'SetCurrentDirectory failed', path);
+    }
+  });
+
+  @override
+  String get currentDirectory => using((arena) {
+    _primeGetLastError();
+
+    var length = 256;
+    do {
+      final buffer = win32.wsalloc(length);
+      try {
+        final result = win32.GetCurrentDirectory(length, buffer);
+        if (result < length) {
+          return buffer.toDartString();
+        } else {
+          length = result;
+        }
+      } finally {
+        win32.free(buffer);
+      }
+    } while (true);
+  });
 
   @override
   void removeDirectory(String path) => using((arena) {
@@ -520,7 +653,7 @@ final class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(),
+      _apiPath(path, arena),
       win32.GENERIC_READ | win32.FILE_SHARE_READ,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE,
       nullptr,
@@ -624,48 +757,6 @@ final class WindowsFileSystem extends FileSystem {
   }
 
   @override
-  bool same(String path1, String path2) => using((arena) {
-    _primeGetLastError();
-
-    final info1 = _byHandleFileInformation(path1, arena);
-    final info2 = _byHandleFileInformation(path2, arena);
-
-    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
-        info1.nFileIndexHigh == info2.nFileIndexHigh &&
-        info1.nFileIndexLow == info2.nFileIndexLow;
-  });
-
-  // NOTE: the return value is allocated in the given arena!
-  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
-    String path,
-    ffi.Arena arena,
-  ) {
-    final h = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
-      0,
-      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
-      nullptr,
-      win32.OPEN_EXISTING,
-      win32.FILE_FLAG_BACKUP_SEMANTICS,
-      win32.NULL,
-    );
-    if (h == win32.INVALID_HANDLE_VALUE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'CreateFile failed', path);
-    }
-    try {
-      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
-      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
-        final errorCode = win32.GetLastError();
-        throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
-      }
-      return info.ref;
-    } finally {
-      win32.CloseHandle(h);
-    }
-  }
-
-  @override
   String get temporaryDirectory {
     const maxLength = win32.MAX_PATH + 1;
     final buffer = win32.wsalloc(maxLength);
@@ -698,7 +789,7 @@ final class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
+      _apiPath(path, arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,

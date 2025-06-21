@@ -186,6 +186,24 @@ abstract class FileSystem {
   /// written to is to attempt to open it.
   Metadata metadata(String path);
 
+  /// The current
+  /// [working directory](https://en.wikipedia.org/wiki/Working_directory) of
+  /// the Dart process.
+  ///
+  /// Setting the value of this field will change the working directory for
+  /// *all* isolates.
+  ///
+  /// On Windows, unless
+  /// [long paths are enabled](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation),
+  /// the maximum length of the [currentDirectory] path is 260 characters.
+  String get currentDirectory {
+    throw UnsupportedError('currentDirectory');
+  }
+
+  set currentDirectory(String path) {
+    throw UnsupportedError('currentDirectory');
+  }
+
   /// Deletes the directory at the given path.
   ///
   /// If `path` is a directory but the directory is not empty, then

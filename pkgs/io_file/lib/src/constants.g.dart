@@ -239,6 +239,15 @@ int get AT_EMPTY_PATH {
   }
 }
 
+int get PATH_MAX {
+  final v = get_PATH_MAX();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PATH_MAX');
+  } else {
+    return v;
+  }
+}
+
 int get S_IEXEC {
   final v = get_S_IEXEC();
   if (v == libc_shim_UNDEFINED) {

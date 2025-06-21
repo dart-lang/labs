@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <sys/stat.h>
 int64_t libc_shim_get_DT_BLK(void) {
 #ifdef DT_BLK
@@ -188,6 +189,13 @@ int64_t libc_shim_get_AT_EMPTY_PATH(void) {
 #ifdef AT_EMPTY_PATH
   assert(AT_EMPTY_PATH != libc_shim_UNDEFINED);
   return AT_EMPTY_PATH;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_PATH_MAX(void) {
+#ifdef PATH_MAX
+  assert(PATH_MAX != libc_shim_UNDEFINED);
+  return PATH_MAX;
 #endif
   return libc_shim_UNDEFINED;
 }
