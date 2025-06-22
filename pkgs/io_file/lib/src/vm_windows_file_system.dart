@@ -30,10 +30,6 @@ void _primeGetLastError() {
   win32.GetLastError();
 }
 
-///
-/// Pointer<Utf16> _apiPath(String path, Allocator a) =>
-///    (r'\\?\' + p.canonicalize(path)).toNativeUtf16(allocator: a);
-
 extension on Allocator {
   Pointer<Utf16> duplicateUtf16(Pointer<Utf16> str) {
     final s = str.cast<WChar>();
