@@ -44,7 +44,7 @@ extension on Allocator {
 
     final t = this<WChar>(length + 1);
     for (var i = 0; i < length; ++i) {
-      t[i] = s[length];
+      t[i] = s[i];
     }
     t[length] = 0;
     return t.cast();
@@ -53,7 +53,14 @@ extension on Allocator {
 
 /// Convert a
 Pointer<Utf16> _apiPath(String path, Allocator a) {
+  // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+
+  if (path.startsWith(r'\\')) {
+    return path.toNativeUtf16(allocator: a);
+  }
+
   // The obvious
+  print('0. $path');
   var length = 256;
   var utf16Path = path.toNativeUtf16(allocator: a);
   do {
@@ -65,13 +72,17 @@ Pointer<Utf16> _apiPath(String path, Allocator a) {
         throw _getError(errorCode, 'GetFullPathName failed', path);
       }
       if (result < length) {
+        print('1. ${buffer.toDartString()}');
         final canonicalPath = a<Pointer<Utf16>>();
         win32.PathAllocCanonicalize(
           buffer,
           win32.PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH,
           canonicalPath,
         );
-        return a.duplicateUtf16(canonicalPath.value);
+        print('2. ${canonicalPath.value.toDartString()}');
+        final dup = a.duplicateUtf16(canonicalPath.value);
+        print('3. ${dup.toDartString()}');
+        return dup;
       } else {
         length = result;
       }
@@ -300,7 +311,16 @@ final class WindowsMetadata implements Metadata {
 }
 
 /// A [FileSystem] implementation for Windows systems.
-base class WindowsFileSystem extends FileSystem {
+///
+/// The Windows API
+/// [limits path lengths to 260 characters](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation).
+/// [WindowsFileSystem] will attempt to increase this limit to 32,767
+/// characters, unless the given path is a
+/// [UNC path](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#fully-qualified-vs-relative-paths)
+/// (starts with two backslash characters).
+///
+/// r'COM1', r'\\.\COM1'
+final class WindowsFileSystem extends FileSystem {
   @override
   bool same(String path1, String path2) => using((arena) {
     // Calling `GetLastError` for the first time causes the `GetLastError`
