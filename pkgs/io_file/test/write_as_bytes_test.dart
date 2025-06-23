@@ -213,12 +213,18 @@ void main() {
 
     test('absolute path, long file name', () {
       final data = randomUint8List(20);
-      final subdir = p.join(tmp, ''.padRight(255, 'f'));
-      final path = '$subdir/file';
-      Directory(subdir).createSync();
+      final path = p.join(tmp, ''.padRight(255, 'f'));
 
-      fileSystem.writeAsBytes(path, data, WriteMode.truncateExisting);
-      expect(File(path).readAsBytesSync(), data);
+      fileSystem.writeAsBytes(path, data);
+      expect(fileSystem.readAsBytes(path), data);
+    });
+
+    test('relative path, long file name', () {
+      final data = randomUint8List(20);
+      final path = ''.padRight(255, 'f');
+
+      fileSystem.writeAsBytes(path, data);
+      expect(fileSystem.readAsBytes(path), data);
     });
 
     group('regular files', () {

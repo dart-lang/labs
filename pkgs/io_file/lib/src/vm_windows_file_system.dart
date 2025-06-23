@@ -514,8 +514,8 @@ final class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     if (win32.MoveFileEx(
-          oldPath.toNativeUtf16(allocator: arena),
-          newPath.toNativeUtf16(allocator: arena),
+          _extendedPath(oldPath, arena),
+          _extendedPath(newPath, arena),
           win32.MOVEFILE_WRITE_THROUGH | win32.MOVEFILE_REPLACE_EXISTING,
         ) ==
         win32.FALSE) {
