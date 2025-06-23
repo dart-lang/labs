@@ -450,7 +450,7 @@ final class WindowsFileSystem extends FileSystem {
     final searchPath = p.join(path, '*');
 
     final findHandle = win32.FindFirstFile(
-      searchPath.toNativeUtf16(allocator: arena),
+      _extendedPath(searchPath, arena),
       findData,
     );
 
@@ -471,7 +471,7 @@ final class WindowsFileSystem extends FileSystem {
       if ((attributes & win32.FILE_ATTRIBUTE_REPARSE_POINT) != 0) {
         // Do not recurse into directory links.
         if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
-          if (win32.RemoveDirectory(fullPath.toNativeUtf16(allocator: arena)) ==
+          if (win32.RemoveDirectory(_extendedPath(fullPath, arena)) ==
               win32.FALSE) {
             final errorCode = win32.GetLastError();
             throw _getError(
@@ -481,8 +481,7 @@ final class WindowsFileSystem extends FileSystem {
             );
           }
         } else {
-          if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
-              win32.FALSE) {
+          if (win32.DeleteFile(_extendedPath(fullPath, arena)) == win32.FALSE) {
             final errorCode = win32.GetLastError();
             throw _getError(errorCode, 'DeleteFile failed for link', fullPath);
           }
@@ -490,8 +489,7 @@ final class WindowsFileSystem extends FileSystem {
       } else if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
         removeDirectoryTree(fullPath);
       } else {
-        if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
-            win32.FALSE) {
+        if (win32.DeleteFile(_extendedPath(fullPath, arena)) == win32.FALSE) {
           final errorCode = win32.GetLastError();
           throw _getError(errorCode, 'DeleteFile failed', fullPath);
         }
@@ -503,8 +501,7 @@ final class WindowsFileSystem extends FileSystem {
       throw _getError(errorCode, 'FindNextFile failed', path);
     }
 
-    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
-        win32.FALSE) {
+    if (win32.RemoveDirectory(_extendedPath(path, arena)) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'remove directory failed', path);
     }
