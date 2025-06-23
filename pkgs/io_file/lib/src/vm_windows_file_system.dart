@@ -48,7 +48,7 @@ extension on Allocator {
 }
 
 /// Convert a
-Pointer<Utf16> _apiPath(String path, Allocator a) {
+Pointer<Utf16> _extendedPath(String path, Allocator a) {
   // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
 
   if (path.startsWith(r'\\')) {
@@ -317,7 +317,7 @@ final class WindowsMetadata implements Metadata {
 /// [UNC path](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#fully-qualified-vs-relative-paths)
 /// (starts with two backslash characters). As a consequence, devices must be
 /// prefixed with the Win32 device namespace of `r'\\.\'`. For example, reading
-/// from `"COM1"` will not work, instead use `r"\\.\COM1"`.
+/// from `"COM1"` will not work; instead use `r"\\.\COM1"`.
 final class WindowsFileSystem extends FileSystem {
   @override
   bool same(String path1, String path2) => using((arena) {
@@ -368,7 +368,8 @@ final class WindowsFileSystem extends FileSystem {
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.CreateDirectory(_apiPath(path, arena), nullptr) == win32.FALSE) {
+    if (win32.CreateDirectory(_extendedPath(path, arena), nullptr) ==
+        win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'create directory failed', path);
     }
@@ -671,7 +672,7 @@ final class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     final f = win32.CreateFile(
-      _apiPath(path, arena),
+      _extendedPath(path, arena),
       win32.GENERIC_READ | win32.FILE_SHARE_READ,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE,
       nullptr,
@@ -807,7 +808,7 @@ final class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      _apiPath(path, arena),
+      _extendedPath(path, arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,
