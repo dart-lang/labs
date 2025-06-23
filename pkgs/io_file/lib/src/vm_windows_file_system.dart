@@ -435,8 +435,7 @@ final class WindowsFileSystem extends FileSystem {
   void removeDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
-        win32.FALSE) {
+    if (win32.RemoveDirectory(_extendedPath(path, arena)) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'remove directory failed', path);
     }
