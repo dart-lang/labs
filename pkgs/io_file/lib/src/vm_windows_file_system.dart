@@ -57,7 +57,9 @@ Pointer<Utf16> _apiPath(String path, Allocator a) {
 
   // The obvious
   print('0. $path');
-  var length = 256;
+  // Optimistically assume that the full path will be only slightly longer than
+  // the given path.
+  var length = path.length + 16;
   var utf16Path = path.toNativeUtf16(allocator: a);
   do {
     final buffer = win32.wsalloc(length);
@@ -313,9 +315,9 @@ final class WindowsMetadata implements Metadata {
 /// [WindowsFileSystem] will attempt to increase this limit to 32,767
 /// characters, unless the given path is a
 /// [UNC path](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#fully-qualified-vs-relative-paths)
-/// (starts with two backslash characters).
-///
-/// r'COM1', r'\\.\COM1'
+/// (starts with two backslash characters). As a consequence, devices must be
+/// prefixed with the Win32 device namespace of `r'\\.\'`. For example, reading
+/// from `"COM1"` will not work, instead use `r"\\.\COM1"`.
 final class WindowsFileSystem extends FileSystem {
   @override
   bool same(String path1, String path2) => using((arena) {
