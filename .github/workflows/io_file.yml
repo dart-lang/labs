@@ -119,7 +119,9 @@ jobs:
           disable-animations: true
           arch: x86_64
           target: default
-          script: flutter pub get && flutter test integration_test --reporter=failures-only --test-randomize-ordering-seed=random
+          script: 'cd pkgs/io_file/mobile_test &&
+            flutter pub get && 
+            flutter test integration_test --reporter=failures-only --test-randomize-ordering-seed=random'
 
   ios-vm-test:
     # TODO(brianquinlan): Disabled because native assets are not supported by
