@@ -355,7 +355,7 @@ final class WindowsFileSystem extends FileSystem {
     ffi.Arena arena,
   ) {
     final h = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
+      _extendedPath(path, arena),
       0,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
       nullptr,
@@ -622,7 +622,7 @@ final class WindowsFileSystem extends FileSystem {
   WindowsMetadata metadata(String path) => using((arena) {
     _primeGetLastError();
 
-    final pathUtf16 = path.toNativeUtf16(allocator: arena);
+    final pathUtf16 = _extendedPath(path, arena);
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
           pathUtf16,
