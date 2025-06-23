@@ -555,7 +555,7 @@ final class WindowsFileSystem extends FileSystem {
       return;
     }
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
-    final nativePath = path.toNativeUtf16(allocator: arena);
+    final nativePath = _extendedPath(path, arena);
     int attributes;
     if (original == null) {
       if (win32.GetFileAttributesEx(

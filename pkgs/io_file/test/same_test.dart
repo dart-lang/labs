@@ -8,6 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
@@ -247,6 +248,24 @@ void main() {
       final path1 = '$tmp/subdir/dir1';
       final path2 = '$tmp/link-to-subdir/dir1';
       Directory(path1).createSync();
+
+      expect(fileSystem.same(path1, path2), isTrue);
+    });
+
+    test('absolute path, long names', () {
+      final path1 = p.join(tmp, ''.padRight(255, '1'));
+      final path2 = p.join(tmp, ''.padRight(255, '2'));
+      File(path1).writeAsStringSync('Hello World');
+      Link(path2).createSync(path1);
+
+      expect(fileSystem.same(path1, path2), isTrue);
+    });
+
+    test('relative path, long names', () {
+      final path1 = ''.padRight(255, '1');
+      final path2 = ''.padRight(255, '2');
+      File(path1).writeAsStringSync('Hello World');
+      Link(path2).createSync(path1);
 
       expect(fileSystem.same(path1, path2), isTrue);
     });

@@ -8,6 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:io_file/src/vm_windows_file_system.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 import 'test_utils.dart';
@@ -210,10 +211,36 @@ void main() {
 
   group('set metadata', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('metadata'));
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = windowsFileSystem.currentDirectory;
+      windowsFileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      windowsFileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
+
+    test('absolute path, long name', () {
+      final path = p.join(tmp, ''.padRight(255, 'f'));
+      File(path).writeAsStringSync('Hello World');
+
+      windowsFileSystem.setMetadata(path, isReadOnly: true);
+
+      expect(windowsFileSystem.metadata(path).isReadOnly, isTrue);
+    });
+
+    test('relative path, long name', () {
+      final path = ''.padRight(255, 'f');
+      File(path).writeAsStringSync('Hello World');
+
+      windowsFileSystem.setMetadata(path, isReadOnly: true);
+
+      expect(windowsFileSystem.metadata(path).isReadOnly, isTrue);
+    });
 
     for (var includeOriginalMetadata in [true, false]) {
       group('(use original metadata: $includeOriginalMetadata)', () {
