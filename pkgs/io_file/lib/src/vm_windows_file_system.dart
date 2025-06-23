@@ -31,19 +31,20 @@ void _primeGetLastError() {
 }
 
 extension on Allocator {
+  /// Duplicate a `LPCWSTR` into the [Allocator]'s memory pool.
   Pointer<Utf16> duplicateUtf16(Pointer<Utf16> str) {
-    final s = str.cast<WChar>();
+    final wcharString = str.cast<WChar>();
     var length = 0;
-    while (s[length] != 0) {
+    while (wcharString[length] != 0) {
       length++;
     }
 
-    final t = this<WChar>(length + 1);
+    final duplicateString = this<WChar>(length + 1);
     for (var i = 0; i < length; ++i) {
-      t[i] = s[i];
+      duplicateString[i] = wcharString[i];
     }
-    t[length] = 0;
-    return t.cast();
+    duplicateString[length] = 0;
+    return duplicateString.cast();
   }
 }
 

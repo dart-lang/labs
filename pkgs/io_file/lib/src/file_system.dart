@@ -202,13 +202,8 @@ abstract class FileSystem {
   /// On Windows, unless
   /// [long paths are enabled](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation),
   /// the maximum length of the [currentDirectory] path is 260 characters.
-  String get currentDirectory {
-    throw UnsupportedError('currentDirectory');
-  }
-
-  set currentDirectory(String path) {
-    throw UnsupportedError('currentDirectory');
-  }
+  String get currentDirectory;
+  set currentDirectory(String path);
 
   /// Deletes the directory at the given path.
   ///

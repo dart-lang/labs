@@ -21,6 +21,16 @@ final class PosixFileSystem extends FileSystem {
   }
 
   @override
+  String get currentDirectory {
+    throw UnimplementedError();
+  }
+
+  @override
+  set currentDirectory(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
   Metadata metadata(String path) {
     throw UnimplementedError();
   }

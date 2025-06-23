@@ -150,8 +150,16 @@ void main() {
         final subdir = p.join(tmp, ''.padRight(255, 'f'));
         final path = '$subdir/file';
         Directory(subdir).createSync();
-
         File(path).writeAsBytesSync(data);
+
+        expect(fileSystem.readAsBytes(path), data);
+      });
+
+      test('relative path, long file name', () {
+        final data = randomUint8List(20);
+        final path = ''.padRight(255, 'f');
+        File(path).writeAsBytesSync(data);
+
         expect(fileSystem.readAsBytes(path), data);
       });
 
