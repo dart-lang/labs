@@ -147,9 +147,7 @@ void main() {
     group('regular files', () {
       test('absolute path, long file name', () {
         final data = randomUint8List(20);
-        final subdir = p.join(tmp, ''.padRight(255, 'f'));
-        final path = '$subdir/file';
-        Directory(subdir).createSync();
+        final path = p.join(tmp, ''.padRight(255, 'f'));
         File(path).writeAsBytesSync(data);
 
         expect(fileSystem.readAsBytes(path), data);

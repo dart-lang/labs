@@ -17,10 +17,18 @@ void main() {
 
   group('windows metadata', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('metadata'));
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = windowsFileSystem.currentDirectory;
+      windowsFileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      windowsFileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     group('isReadOnly', () {
       test('false', () {

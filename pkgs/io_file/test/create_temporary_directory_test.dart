@@ -94,6 +94,28 @@ void main() {
       expect(Directory(tmp2).existsSync(), isTrue);
     });
 
+    test('parent has a long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final dirname = ''.padLeft(
+        Platform.isWindows ? win32.MAX_PATH - 12 : 255,
+        'd',
+      );
+      final parent = p.join(tmp, dirname);
+      Directory(parent).createSync();
+
+      final tmp1 = fileSystem.createTemporaryDirectory(parent: parent);
+      final tmp2 = fileSystem.createTemporaryDirectory(parent: parent);
+
+      expect(tmp1, startsWith(tmp));
+      expect(tmp2, startsWith(tmp));
+      expect(fileSystem.same(tmp1, tmp2), isFalse);
+      expect(Directory(tmp1).existsSync(), isTrue);
+      expect(Directory(tmp2).existsSync(), isTrue);
+    });
+
     test('parent is empty string', () {
       final tmp1 = fileSystem.createTemporaryDirectory(parent: '');
       addTearDown(() => Directory(tmp1).deleteSync());
