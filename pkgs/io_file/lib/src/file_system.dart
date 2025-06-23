@@ -132,7 +132,13 @@ class WriteMode {
 ///
 /// TODO(brianquinlan): Far now, this class is not meant to be implemented,
 /// extended outside of this package. Clarify somewhere that people implementing
-/// this class should reach out to be.
+/// this class should reach out to me.
+///
+/// On Windows, paths refering to objects in the
+/// [win32 device namespace](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-device-namespaces),
+/// such as named pipes, physical disks, and serial comnmunications ports
+/// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'COM1'` would
+/// be refered to by the path `r'\\.\COM1'`.
 @sealed
 abstract class FileSystem {
   /// Create a directory at the given path.

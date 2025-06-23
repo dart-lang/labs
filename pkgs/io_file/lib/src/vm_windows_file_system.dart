@@ -47,20 +47,40 @@ extension on Allocator {
   }
 }
 
-/// Convert a
-Pointer<Utf16> _extendedPath(String path, Allocator a) {
-  // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
-
+/// Create a Windows `LPCWSTR` path from a Dart path, possibly with (`r'\\?\'`)
+/// prepended.
+///
+/// Prepending a path with `r'\\?\'` "...tells the Windows APIs to disable all
+/// string parsing and to send the string that follows it straight to the file
+/// system." This has several effects (for full details, see
+/// https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file):
+/// - the 260 character limit on paths no longer applies
+/// - files in the Win32 device namespace (e.g. "COM1" or named pipes) are not
+///   visible
+/// - special characters are no longer interpreted (e.g. "./foo" would refer to
+///   a file with that literal name)
+///
+/// In order to allow paths longer than 260 character, while still allowing
+/// virtual files to accessed, this function does not prepend `r'\\?\'` to UNC
+/// paths (paths starting with `r'\\'`). This means that, to open "COM1", the
+/// caller has to explicitly indicate that "COM1" is in the device namespace by
+/// adding the `r'\\.\'` prefix, i.e. `r'\\.\COM1'`. Note that for named pipes
+/// and serial communication ports greater than "COM9", the Windows API already
+/// requires that the device namespace prefix be used.
+///
+/// In order to continue to allow special characters in paths, this function
+/// converts the given path to an absolute path and then canonicalizes it before
+/// prepending `r'\\?\'`.
+Pointer<Utf16> _extendedPath(String path, Allocator allocator) {
   if (path.startsWith(r'\\')) {
-    return path.toNativeUtf16(allocator: a);
+    return path.toNativeUtf16(allocator: allocator);
   }
 
-  // The obvious
-  print('0. $path');
   // Optimistically assume that the full path will be only slightly longer than
-  // the given path.
+  // the given path. If that turns out to not to be enough, we will get the
+  // required size from `GetFullPathName` and try again.
   var length = path.length + 16;
-  var utf16Path = path.toNativeUtf16(allocator: a);
+  var utf16Path = path.toNativeUtf16(allocator: allocator);
   do {
     final buffer = win32.wsalloc(length);
     try {
@@ -70,16 +90,13 @@ Pointer<Utf16> _extendedPath(String path, Allocator a) {
         throw _getError(errorCode, 'GetFullPathName failed', path);
       }
       if (result < length) {
-        print('1. ${buffer.toDartString()}');
-        final canonicalPath = a<Pointer<Utf16>>();
+        final canonicalPath = allocator<Pointer<Utf16>>();
         win32.PathAllocCanonicalize(
           buffer,
           win32.PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH,
           canonicalPath,
         );
-        print('2. ${canonicalPath.value.toDartString()}');
-        final dup = a.duplicateUtf16(canonicalPath.value);
-        print('3. ${dup.toDartString()}');
+        final dup = allocator.duplicateUtf16(canonicalPath.value);
         return dup;
       } else {
         length = result;
@@ -310,14 +327,11 @@ final class WindowsMetadata implements Metadata {
 
 /// A [FileSystem] implementation for Windows systems.
 ///
-/// The Windows API
-/// [limits path lengths to 260 characters](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation).
-/// [WindowsFileSystem] will attempt to increase this limit to 32,767
-/// characters, unless the given path is a
-/// [UNC path](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#fully-qualified-vs-relative-paths)
-/// (starts with two backslash characters). As a consequence, devices must be
-/// prefixed with the Win32 device namespace of `r'\\.\'`. For example, reading
-/// from `"COM1"` will not work; instead use `r"\\.\COM1"`.
+/// On Windows, paths refering to objects in the
+/// [win32 device namespace](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-device-namespaces),
+/// such as named pipes, physical disks, and serial comnmunications ports
+/// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'COM1'` would
+/// be refered to by the path `r'\\.\COM1'`.
 final class WindowsFileSystem extends FileSystem {
   @override
   bool same(String path1, String path2) => using((arena) {
@@ -388,16 +402,8 @@ final class WindowsFileSystem extends FileSystem {
 
   @override
   set currentDirectory(String path) => using((arena) {
-    // XXX
-    // SetCurrentDirectory does not actually support paths larger than MAX_PATH,
-    // this limitation is due to the size of the internal buffer used for
-    // storing
-    // current directory. In Windows 10, version 1607, changes have been made
-    // to the OS to lift MAX_PATH limitations from file and directory management
-    // APIs, but both application and OS need to opt-in into new behavior.
-    // See https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
-
     _primeGetLastError();
+
     if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'SetCurrentDirectory failed', path);
