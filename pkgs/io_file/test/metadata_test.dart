@@ -8,6 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -18,10 +19,18 @@ import 'test_utils.dart';
 void main() {
   group('metadata', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('metadata'));
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     //TODO(brianquinlan): test with a very long path.
 
@@ -36,6 +45,22 @@ void main() {
           ),
         ),
       );
+    });
+
+    test('absolute path, long name', () {
+      final path = p.join(tmp, ''.padRight(255, 'f'));
+      File(path).writeAsStringSync('Hello World');
+
+      final data = fileSystem.metadata(path);
+      expect(data.isFile, isTrue);
+    });
+
+    test('relative path, long name', () {
+      final path = ''.padRight(255, 'f');
+      File(path).writeAsStringSync('Hello World');
+
+      final data = fileSystem.metadata(path);
+      expect(data.isFile, isTrue);
     });
 
     group('file types', () {

@@ -8,25 +8,52 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 import 'test_utils.dart';
 
 void main() {
-  group('move', () {
+  group('rename', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('move'));
+    setUp(() {
+      tmp = createTemp('rename');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
-
-    //TODO(brianquinlan): test with a very long path.
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('move file absolute path', () {
       final path1 = '$tmp/file1';
       final path2 = '$tmp/file2';
 
       File(path1).writeAsStringSync('Hello World');
+      fileSystem.rename(path1, path2);
+      expect(File(path1).existsSync(), isFalse);
+      expect(File(path2).existsSync(), isTrue);
+    });
+
+    test('move between absolute paths, long file names', () {
+      final path1 = p.join(tmp, ''.padRight(255, '1'));
+      final path2 = p.join(tmp, ''.padRight(255, '2'));
+      File(path1).writeAsStringSync('Hello World');
+
+      fileSystem.rename(path1, path2);
+      expect(File(path1).existsSync(), isFalse);
+      expect(File(path2).existsSync(), isTrue);
+    });
+
+    test('move between relative path, long file names', () {
+      final path1 = ''.padRight(255, '1');
+      final path2 = ''.padRight(255, '2');
+      File(path1).writeAsStringSync('Hello World');
+
       fileSystem.rename(path1, path2);
       expect(File(path1).existsSync(), isFalse);
       expect(File(path2).existsSync(), isTrue);

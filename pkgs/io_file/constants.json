@@ -53,6 +53,9 @@
     "O_TRUNC",
     "O_WRONLY"
   ],
+  "<limits.h>": [
+    "PATH_MAX"
+  ],
   "<dirent.h>" : [
     "DT_BLK",
     "DT_CHR",

@@ -26,7 +26,7 @@ const _nanosecondsPerSecond = 1000000000;
 bool _isDotOrDotDot(Pointer<Char> s) => // ord('.') == 46
     s[0] == 46 && ((s[1] == 0) || (s[1] == 46 && s[2] == 0));
 
-Exception _getError(int err, String message, String path) {
+Exception _getError(int err, String message, [String? path]) {
   // TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
   // are part of `dart:io`? Can we move those exceptions into a different
   // namespace?
@@ -35,12 +35,16 @@ Exception _getError(int err, String message, String path) {
     err,
   );
 
-  if (err == libc.EPERM || err == libc.EACCES) {
-    return io.PathAccessException(path, osError, message);
-  } else if (err == libc.EEXIST) {
-    return io.PathExistsException(path, osError, message);
-  } else if (err == libc.ENOENT) {
-    return io.PathNotFoundException(path, osError, message);
+  if (path != null) {
+    if (err == libc.EPERM || err == libc.EACCES) {
+      return io.PathAccessException(path, osError, message);
+    } else if (err == libc.EEXIST) {
+      return io.PathExistsException(path, osError, message);
+    } else if (err == libc.ENOENT) {
+      return io.PathNotFoundException(path, osError, message);
+    } else {
+      return io.FileSystemException(message, path, osError);
+    }
   } else {
     return io.FileSystemException(message, path, osError);
   }
@@ -239,6 +243,24 @@ final class PosixFileSystem extends FileSystem {
       final errno = libc.errno;
       throw _getError(errno, 'create directory failed', path);
     }
+  });
+
+  @override
+  set currentDirectory(String path) => ffi.using((arena) {
+    if (libc.chdir(path.toNativeUtf8(allocator: arena).cast()) == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, 'chdir failed', path);
+    }
+  });
+
+  @override
+  String get currentDirectory => ffi.using((arena) {
+    final buffer = arena<Char>(libc.PATH_MAX);
+    if (libc.getcwd(buffer, libc.PATH_MAX) == nullptr) {
+      final errno = libc.errno;
+      throw _getError(errno, 'getcwd failed', null);
+    }
+    return buffer.cast<ffi.Utf8>().toDartString();
   });
 
   @override

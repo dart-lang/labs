@@ -23,10 +23,18 @@ void main() {
 
   group('apple metadata', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('metadata'));
+    setUp(() {
+      tmp = createTemp('createDirectory');
+      cwd = posixFileSystem.currentDirectory;
+      posixFileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      posixFileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     group('isHidden', () {
       test('false', () {

@@ -212,6 +212,15 @@ int get O_WRONLY {
   }
 }
 
+int get PATH_MAX {
+  final v = get_PATH_MAX();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PATH_MAX');
+  } else {
+    return v;
+  }
+}
+
 int get AT_SYMLINK_NOFOLLOW {
   final v = get_AT_SYMLINK_NOFOLLOW();
   if (v == libc_shim_UNDEFINED) {
