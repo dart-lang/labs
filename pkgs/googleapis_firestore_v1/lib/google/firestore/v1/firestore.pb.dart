@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/firestore/v1/firestore.proto
-//
+// Generated from google/firestore/v1/firestore.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -15,16 +15,16 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../protobuf/timestamp.pb.dart' as $6;
-import '../../protobuf/wrappers.pb.dart' as $14;
-import '../../rpc/status.pb.dart' as $15;
-import 'aggregation_result.pb.dart' as $13;
-import 'common.pb.dart' as $9;
+import '../../protobuf/timestamp.pb.dart' as $4;
+import '../../protobuf/wrappers.pb.dart' as $9;
+import '../../rpc/status.pb.dart' as $10;
+import 'aggregation_result.pb.dart' as $8;
+import 'common.pb.dart' as $3;
 import 'document.pb.dart' as $1;
 import 'firestore.pbenum.dart';
-import 'query.pb.dart' as $11;
-import 'query_profile.pb.dart' as $12;
-import 'write.pb.dart' as $10;
+import 'query.pb.dart' as $6;
+import 'query_profile.pb.dart' as $7;
+import 'write.pb.dart' as $5;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -41,9 +41,9 @@ enum GetDocumentRequest_ConsistencySelector {
 class GetDocumentRequest extends $pb.GeneratedMessage {
   factory GetDocumentRequest({
     $core.String? name,
-    $9.DocumentMask? mask,
+    $3.DocumentMask? mask,
     $core.List<$core.int>? transaction,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
   }) {
     final result = create();
     if (name != null) result.name = name;
@@ -66,9 +66,9 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetDocumentRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..oo(0, [3, 5])
     ..aOS(1, _omitFieldNames ? '' : 'name')
-    ..aOM<$9.DocumentMask>(2, _omitFieldNames ? '' : 'mask', subBuilder: $9.DocumentMask.create)
+    ..aOM<$3.DocumentMask>(2, _omitFieldNames ? '' : 'mask', subBuilder: $3.DocumentMask.create)
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$6.Timestamp>(5, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(5, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -108,15 +108,15 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   /// If the document has a field that is not present in this mask, that field
   /// will not be returned in the response.
   @$pb.TagNumber(2)
-  $9.DocumentMask get mask => $_getN(1);
+  $3.DocumentMask get mask => $_getN(1);
   @$pb.TagNumber(2)
-  set mask($9.DocumentMask value) => $_setField(2, value);
+  set mask($3.DocumentMask value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasMask() => $_has(1);
   @$pb.TagNumber(2)
   void clearMask() => $_clearField(2);
   @$pb.TagNumber(2)
-  $9.DocumentMask ensureMask() => $_ensure(1);
+  $3.DocumentMask ensureMask() => $_ensure(1);
 
   /// Reads the document in a transaction.
   @$pb.TagNumber(3)
@@ -134,15 +134,15 @@ class GetDocumentRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(5)
-  $6.Timestamp get readTime => $_getN(3);
+  $4.Timestamp get readTime => $_getN(3);
   @$pb.TagNumber(5)
-  set readTime($6.Timestamp value) => $_setField(5, value);
+  set readTime($4.Timestamp value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasReadTime() => $_has(3);
   @$pb.TagNumber(5)
   void clearReadTime() => $_clearField(5);
   @$pb.TagNumber(5)
-  $6.Timestamp ensureReadTime() => $_ensure(3);
+  $4.Timestamp ensureReadTime() => $_ensure(3);
 }
 
 enum ListDocumentsRequest_ConsistencySelector {
@@ -160,9 +160,9 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
     $core.int? pageSize,
     $core.String? pageToken,
     $core.String? orderBy,
-    $9.DocumentMask? mask,
+    $3.DocumentMask? mask,
     $core.List<$core.int>? transaction,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
     $core.bool? showMissing,
   }) {
     final result = create();
@@ -195,9 +195,9 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(3, _omitFieldNames ? '' : 'pageSize', $pb.PbFieldType.O3)
     ..aOS(4, _omitFieldNames ? '' : 'pageToken')
     ..aOS(6, _omitFieldNames ? '' : 'orderBy')
-    ..aOM<$9.DocumentMask>(7, _omitFieldNames ? '' : 'mask', subBuilder: $9.DocumentMask.create)
+    ..aOM<$3.DocumentMask>(7, _omitFieldNames ? '' : 'mask', subBuilder: $3.DocumentMask.create)
     ..a<$core.List<$core.int>>(8, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$6.Timestamp>(10, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(10, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..aOB(12, _omitFieldNames ? '' : 'showMissing')
     ..hasRequiredFields = false
   ;
@@ -300,15 +300,15 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   /// If a document has a field that is not present in this mask, that field
   /// will not be returned in the response.
   @$pb.TagNumber(7)
-  $9.DocumentMask get mask => $_getN(5);
+  $3.DocumentMask get mask => $_getN(5);
   @$pb.TagNumber(7)
-  set mask($9.DocumentMask value) => $_setField(7, value);
+  set mask($3.DocumentMask value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasMask() => $_has(5);
   @$pb.TagNumber(7)
   void clearMask() => $_clearField(7);
   @$pb.TagNumber(7)
-  $9.DocumentMask ensureMask() => $_ensure(5);
+  $3.DocumentMask ensureMask() => $_ensure(5);
 
   /// Perform the read as part of an already active transaction.
   @$pb.TagNumber(8)
@@ -326,15 +326,15 @@ class ListDocumentsRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(10)
-  $6.Timestamp get readTime => $_getN(7);
+  $4.Timestamp get readTime => $_getN(7);
   @$pb.TagNumber(10)
-  set readTime($6.Timestamp value) => $_setField(10, value);
+  set readTime($4.Timestamp value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasReadTime() => $_has(7);
   @$pb.TagNumber(10)
   void clearReadTime() => $_clearField(10);
   @$pb.TagNumber(10)
-  $6.Timestamp ensureReadTime() => $_ensure(7);
+  $4.Timestamp ensureReadTime() => $_ensure(7);
 
   /// If the list should show missing documents.
   ///
@@ -421,7 +421,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
     $core.String? collectionId,
     $core.String? documentId,
     $1.Document? document,
-    $9.DocumentMask? mask,
+    $3.DocumentMask? mask,
   }) {
     final result = create();
     if (parent != null) result.parent = parent;
@@ -442,7 +442,7 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'collectionId')
     ..aOS(3, _omitFieldNames ? '' : 'documentId')
     ..aOM<$1.Document>(4, _omitFieldNames ? '' : 'document', subBuilder: $1.Document.create)
-    ..aOM<$9.DocumentMask>(5, _omitFieldNames ? '' : 'mask', subBuilder: $9.DocumentMask.create)
+    ..aOM<$3.DocumentMask>(5, _omitFieldNames ? '' : 'mask', subBuilder: $3.DocumentMask.create)
     ..hasRequiredFields = false
   ;
 
@@ -515,15 +515,15 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
   /// If the document has a field that is not present in this mask, that field
   /// will not be returned in the response.
   @$pb.TagNumber(5)
-  $9.DocumentMask get mask => $_getN(4);
+  $3.DocumentMask get mask => $_getN(4);
   @$pb.TagNumber(5)
-  set mask($9.DocumentMask value) => $_setField(5, value);
+  set mask($3.DocumentMask value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasMask() => $_has(4);
   @$pb.TagNumber(5)
   void clearMask() => $_clearField(5);
   @$pb.TagNumber(5)
-  $9.DocumentMask ensureMask() => $_ensure(4);
+  $3.DocumentMask ensureMask() => $_ensure(4);
 }
 
 /// The request for
@@ -531,9 +531,9 @@ class CreateDocumentRequest extends $pb.GeneratedMessage {
 class UpdateDocumentRequest extends $pb.GeneratedMessage {
   factory UpdateDocumentRequest({
     $1.Document? document,
-    $9.DocumentMask? updateMask,
-    $9.DocumentMask? mask,
-    $9.Precondition? currentDocument,
+    $3.DocumentMask? updateMask,
+    $3.DocumentMask? mask,
+    $3.Precondition? currentDocument,
   }) {
     final result = create();
     if (document != null) result.document = document;
@@ -550,9 +550,9 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'UpdateDocumentRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOM<$1.Document>(1, _omitFieldNames ? '' : 'document', subBuilder: $1.Document.create)
-    ..aOM<$9.DocumentMask>(2, _omitFieldNames ? '' : 'updateMask', subBuilder: $9.DocumentMask.create)
-    ..aOM<$9.DocumentMask>(3, _omitFieldNames ? '' : 'mask', subBuilder: $9.DocumentMask.create)
-    ..aOM<$9.Precondition>(4, _omitFieldNames ? '' : 'currentDocument', subBuilder: $9.Precondition.create)
+    ..aOM<$3.DocumentMask>(2, _omitFieldNames ? '' : 'updateMask', subBuilder: $3.DocumentMask.create)
+    ..aOM<$3.DocumentMask>(3, _omitFieldNames ? '' : 'mask', subBuilder: $3.DocumentMask.create)
+    ..aOM<$3.Precondition>(4, _omitFieldNames ? '' : 'currentDocument', subBuilder: $3.Precondition.create)
     ..hasRequiredFields = false
   ;
 
@@ -594,43 +594,43 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
   /// Fields referenced in the mask, but not present in the input document, are
   /// deleted from the document on the server.
   @$pb.TagNumber(2)
-  $9.DocumentMask get updateMask => $_getN(1);
+  $3.DocumentMask get updateMask => $_getN(1);
   @$pb.TagNumber(2)
-  set updateMask($9.DocumentMask value) => $_setField(2, value);
+  set updateMask($3.DocumentMask value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasUpdateMask() => $_has(1);
   @$pb.TagNumber(2)
   void clearUpdateMask() => $_clearField(2);
   @$pb.TagNumber(2)
-  $9.DocumentMask ensureUpdateMask() => $_ensure(1);
+  $3.DocumentMask ensureUpdateMask() => $_ensure(1);
 
   /// The fields to return. If not set, returns all fields.
   ///
   /// If the document has a field that is not present in this mask, that field
   /// will not be returned in the response.
   @$pb.TagNumber(3)
-  $9.DocumentMask get mask => $_getN(2);
+  $3.DocumentMask get mask => $_getN(2);
   @$pb.TagNumber(3)
-  set mask($9.DocumentMask value) => $_setField(3, value);
+  set mask($3.DocumentMask value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasMask() => $_has(2);
   @$pb.TagNumber(3)
   void clearMask() => $_clearField(3);
   @$pb.TagNumber(3)
-  $9.DocumentMask ensureMask() => $_ensure(2);
+  $3.DocumentMask ensureMask() => $_ensure(2);
 
   /// An optional precondition on the document.
   /// The request will fail if this is set and not met by the target document.
   @$pb.TagNumber(4)
-  $9.Precondition get currentDocument => $_getN(3);
+  $3.Precondition get currentDocument => $_getN(3);
   @$pb.TagNumber(4)
-  set currentDocument($9.Precondition value) => $_setField(4, value);
+  set currentDocument($3.Precondition value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCurrentDocument() => $_has(3);
   @$pb.TagNumber(4)
   void clearCurrentDocument() => $_clearField(4);
   @$pb.TagNumber(4)
-  $9.Precondition ensureCurrentDocument() => $_ensure(3);
+  $3.Precondition ensureCurrentDocument() => $_ensure(3);
 }
 
 /// The request for
@@ -638,7 +638,7 @@ class UpdateDocumentRequest extends $pb.GeneratedMessage {
 class DeleteDocumentRequest extends $pb.GeneratedMessage {
   factory DeleteDocumentRequest({
     $core.String? name,
-    $9.Precondition? currentDocument,
+    $3.Precondition? currentDocument,
   }) {
     final result = create();
     if (name != null) result.name = name;
@@ -653,7 +653,7 @@ class DeleteDocumentRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DeleteDocumentRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
-    ..aOM<$9.Precondition>(2, _omitFieldNames ? '' : 'currentDocument', subBuilder: $9.Precondition.create)
+    ..aOM<$3.Precondition>(2, _omitFieldNames ? '' : 'currentDocument', subBuilder: $3.Precondition.create)
     ..hasRequiredFields = false
   ;
 
@@ -688,15 +688,15 @@ class DeleteDocumentRequest extends $pb.GeneratedMessage {
   /// An optional precondition on the document.
   /// The request will fail if this is set and not met by the target document.
   @$pb.TagNumber(2)
-  $9.Precondition get currentDocument => $_getN(1);
+  $3.Precondition get currentDocument => $_getN(1);
   @$pb.TagNumber(2)
-  set currentDocument($9.Precondition value) => $_setField(2, value);
+  set currentDocument($3.Precondition value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasCurrentDocument() => $_has(1);
   @$pb.TagNumber(2)
   void clearCurrentDocument() => $_clearField(2);
   @$pb.TagNumber(2)
-  $9.Precondition ensureCurrentDocument() => $_ensure(1);
+  $3.Precondition ensureCurrentDocument() => $_ensure(1);
 }
 
 enum BatchGetDocumentsRequest_ConsistencySelector {
@@ -712,10 +712,10 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   factory BatchGetDocumentsRequest({
     $core.String? database,
     $core.Iterable<$core.String>? documents,
-    $9.DocumentMask? mask,
+    $3.DocumentMask? mask,
     $core.List<$core.int>? transaction,
-    $9.TransactionOptions? newTransaction,
-    $6.Timestamp? readTime,
+    $3.TransactionOptions? newTransaction,
+    $4.Timestamp? readTime,
   }) {
     final result = create();
     if (database != null) result.database = database;
@@ -742,10 +742,10 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
     ..oo(0, [4, 5, 7])
     ..aOS(1, _omitFieldNames ? '' : 'database')
     ..pPS(2, _omitFieldNames ? '' : 'documents')
-    ..aOM<$9.DocumentMask>(3, _omitFieldNames ? '' : 'mask', subBuilder: $9.DocumentMask.create)
+    ..aOM<$3.DocumentMask>(3, _omitFieldNames ? '' : 'mask', subBuilder: $3.DocumentMask.create)
     ..a<$core.List<$core.int>>(4, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$9.TransactionOptions>(5, _omitFieldNames ? '' : 'newTransaction', subBuilder: $9.TransactionOptions.create)
-    ..aOM<$6.Timestamp>(7, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$3.TransactionOptions>(5, _omitFieldNames ? '' : 'newTransaction', subBuilder: $3.TransactionOptions.create)
+    ..aOM<$4.Timestamp>(7, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -792,15 +792,15 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   /// If a document has a field that is not present in this mask, that field will
   /// not be returned in the response.
   @$pb.TagNumber(3)
-  $9.DocumentMask get mask => $_getN(2);
+  $3.DocumentMask get mask => $_getN(2);
   @$pb.TagNumber(3)
-  set mask($9.DocumentMask value) => $_setField(3, value);
+  set mask($3.DocumentMask value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasMask() => $_has(2);
   @$pb.TagNumber(3)
   void clearMask() => $_clearField(3);
   @$pb.TagNumber(3)
-  $9.DocumentMask ensureMask() => $_ensure(2);
+  $3.DocumentMask ensureMask() => $_ensure(2);
 
   /// Reads documents in a transaction.
   @$pb.TagNumber(4)
@@ -817,15 +817,15 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   /// The new transaction ID will be returned as the first response in the
   /// stream.
   @$pb.TagNumber(5)
-  $9.TransactionOptions get newTransaction => $_getN(4);
+  $3.TransactionOptions get newTransaction => $_getN(4);
   @$pb.TagNumber(5)
-  set newTransaction($9.TransactionOptions value) => $_setField(5, value);
+  set newTransaction($3.TransactionOptions value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasNewTransaction() => $_has(4);
   @$pb.TagNumber(5)
   void clearNewTransaction() => $_clearField(5);
   @$pb.TagNumber(5)
-  $9.TransactionOptions ensureNewTransaction() => $_ensure(4);
+  $3.TransactionOptions ensureNewTransaction() => $_ensure(4);
 
   /// Reads documents as they were at the given time.
   ///
@@ -833,15 +833,15 @@ class BatchGetDocumentsRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(7)
-  $6.Timestamp get readTime => $_getN(5);
+  $4.Timestamp get readTime => $_getN(5);
   @$pb.TagNumber(7)
-  set readTime($6.Timestamp value) => $_setField(7, value);
+  set readTime($4.Timestamp value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasReadTime() => $_has(5);
   @$pb.TagNumber(7)
   void clearReadTime() => $_clearField(7);
   @$pb.TagNumber(7)
-  $6.Timestamp ensureReadTime() => $_ensure(5);
+  $4.Timestamp ensureReadTime() => $_ensure(5);
 }
 
 enum BatchGetDocumentsResponse_Result {
@@ -857,7 +857,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
     $1.Document? found,
     $core.String? missing,
     $core.List<$core.int>? transaction,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
   }) {
     final result = create();
     if (found != null) result.found = found;
@@ -882,7 +882,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
     ..aOM<$1.Document>(1, _omitFieldNames ? '' : 'found', subBuilder: $1.Document.create)
     ..aOS(2, _omitFieldNames ? '' : 'missing')
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$6.Timestamp>(4, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -947,15 +947,15 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
   /// the result stream are guaranteed not to have changed between their
   /// read_time and this one.
   @$pb.TagNumber(4)
-  $6.Timestamp get readTime => $_getN(3);
+  $4.Timestamp get readTime => $_getN(3);
   @$pb.TagNumber(4)
-  set readTime($6.Timestamp value) => $_setField(4, value);
+  set readTime($4.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReadTime() => $_has(3);
   @$pb.TagNumber(4)
   void clearReadTime() => $_clearField(4);
   @$pb.TagNumber(4)
-  $6.Timestamp ensureReadTime() => $_ensure(3);
+  $4.Timestamp ensureReadTime() => $_ensure(3);
 }
 
 /// The request for
@@ -963,7 +963,7 @@ class BatchGetDocumentsResponse extends $pb.GeneratedMessage {
 class BeginTransactionRequest extends $pb.GeneratedMessage {
   factory BeginTransactionRequest({
     $core.String? database,
-    $9.TransactionOptions? options,
+    $3.TransactionOptions? options,
   }) {
     final result = create();
     if (database != null) result.database = database;
@@ -978,7 +978,7 @@ class BeginTransactionRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BeginTransactionRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
-    ..aOM<$9.TransactionOptions>(2, _omitFieldNames ? '' : 'options', subBuilder: $9.TransactionOptions.create)
+    ..aOM<$3.TransactionOptions>(2, _omitFieldNames ? '' : 'options', subBuilder: $3.TransactionOptions.create)
     ..hasRequiredFields = false
   ;
 
@@ -1013,15 +1013,15 @@ class BeginTransactionRequest extends $pb.GeneratedMessage {
   /// The options for the transaction.
   /// Defaults to a read-write transaction.
   @$pb.TagNumber(2)
-  $9.TransactionOptions get options => $_getN(1);
+  $3.TransactionOptions get options => $_getN(1);
   @$pb.TagNumber(2)
-  set options($9.TransactionOptions value) => $_setField(2, value);
+  set options($3.TransactionOptions value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOptions() => $_has(1);
   @$pb.TagNumber(2)
   void clearOptions() => $_clearField(2);
   @$pb.TagNumber(2)
-  $9.TransactionOptions ensureOptions() => $_ensure(1);
+  $3.TransactionOptions ensureOptions() => $_ensure(1);
 }
 
 /// The response for
@@ -1077,7 +1077,7 @@ class BeginTransactionResponse extends $pb.GeneratedMessage {
 class CommitRequest extends $pb.GeneratedMessage {
   factory CommitRequest({
     $core.String? database,
-    $core.Iterable<$10.Write>? writes,
+    $core.Iterable<$5.Write>? writes,
     $core.List<$core.int>? transaction,
   }) {
     final result = create();
@@ -1094,7 +1094,7 @@ class CommitRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CommitRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
-    ..pc<$10.Write>(2, _omitFieldNames ? '' : 'writes', $pb.PbFieldType.PM, subBuilder: $10.Write.create)
+    ..pc<$5.Write>(2, _omitFieldNames ? '' : 'writes', $pb.PbFieldType.PM, subBuilder: $5.Write.create)
     ..a<$core.List<$core.int>>(3, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
@@ -1131,7 +1131,7 @@ class CommitRequest extends $pb.GeneratedMessage {
   ///
   /// Always executed atomically and in order.
   @$pb.TagNumber(2)
-  $pb.PbList<$10.Write> get writes => $_getList(1);
+  $pb.PbList<$5.Write> get writes => $_getList(1);
 
   /// If set, applies all writes in this transaction, and commits it.
   @$pb.TagNumber(3)
@@ -1147,8 +1147,8 @@ class CommitRequest extends $pb.GeneratedMessage {
 /// The response for [Firestore.Commit][google.firestore.v1.Firestore.Commit].
 class CommitResponse extends $pb.GeneratedMessage {
   factory CommitResponse({
-    $core.Iterable<$10.WriteResult>? writeResults,
-    $6.Timestamp? commitTime,
+    $core.Iterable<$5.WriteResult>? writeResults,
+    $4.Timestamp? commitTime,
   }) {
     final result = create();
     if (writeResults != null) result.writeResults.addAll(writeResults);
@@ -1162,8 +1162,8 @@ class CommitResponse extends $pb.GeneratedMessage {
   factory CommitResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CommitResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..pc<$10.WriteResult>(1, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $10.WriteResult.create)
-    ..aOM<$6.Timestamp>(2, _omitFieldNames ? '' : 'commitTime', subBuilder: $6.Timestamp.create)
+    ..pc<$5.WriteResult>(1, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $5.WriteResult.create)
+    ..aOM<$4.Timestamp>(2, _omitFieldNames ? '' : 'commitTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -1189,20 +1189,20 @@ class CommitResponse extends $pb.GeneratedMessage {
   /// This i-th write result corresponds to the i-th write in the
   /// request.
   @$pb.TagNumber(1)
-  $pb.PbList<$10.WriteResult> get writeResults => $_getList(0);
+  $pb.PbList<$5.WriteResult> get writeResults => $_getList(0);
 
   /// The time at which the commit occurred. Any read with an equal or greater
   /// `read_time` is guaranteed to see the effects of the commit.
   @$pb.TagNumber(2)
-  $6.Timestamp get commitTime => $_getN(1);
+  $4.Timestamp get commitTime => $_getN(1);
   @$pb.TagNumber(2)
-  set commitTime($6.Timestamp value) => $_setField(2, value);
+  set commitTime($4.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasCommitTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearCommitTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $6.Timestamp ensureCommitTime() => $_ensure(1);
+  $4.Timestamp ensureCommitTime() => $_ensure(1);
 }
 
 /// The request for [Firestore.Rollback][google.firestore.v1.Firestore.Rollback].
@@ -1283,11 +1283,11 @@ enum RunQueryRequest_ConsistencySelector {
 class RunQueryRequest extends $pb.GeneratedMessage {
   factory RunQueryRequest({
     $core.String? parent,
-    $11.StructuredQuery? structuredQuery,
+    $6.StructuredQuery? structuredQuery,
     $core.List<$core.int>? transaction,
-    $9.TransactionOptions? newTransaction,
-    $6.Timestamp? readTime,
-    $12.ExplainOptions? explainOptions,
+    $3.TransactionOptions? newTransaction,
+    $4.Timestamp? readTime,
+    $7.ExplainOptions? explainOptions,
   }) {
     final result = create();
     if (parent != null) result.parent = parent;
@@ -1318,11 +1318,11 @@ class RunQueryRequest extends $pb.GeneratedMessage {
     ..oo(0, [2])
     ..oo(1, [5, 6, 7])
     ..aOS(1, _omitFieldNames ? '' : 'parent')
-    ..aOM<$11.StructuredQuery>(2, _omitFieldNames ? '' : 'structuredQuery', subBuilder: $11.StructuredQuery.create)
+    ..aOM<$6.StructuredQuery>(2, _omitFieldNames ? '' : 'structuredQuery', subBuilder: $6.StructuredQuery.create)
     ..a<$core.List<$core.int>>(5, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$9.TransactionOptions>(6, _omitFieldNames ? '' : 'newTransaction', subBuilder: $9.TransactionOptions.create)
-    ..aOM<$6.Timestamp>(7, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
-    ..aOM<$12.ExplainOptions>(10, _omitFieldNames ? '' : 'explainOptions', subBuilder: $12.ExplainOptions.create)
+    ..aOM<$3.TransactionOptions>(6, _omitFieldNames ? '' : 'newTransaction', subBuilder: $3.TransactionOptions.create)
+    ..aOM<$4.Timestamp>(7, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
+    ..aOM<$7.ExplainOptions>(10, _omitFieldNames ? '' : 'explainOptions', subBuilder: $7.ExplainOptions.create)
     ..hasRequiredFields = false
   ;
 
@@ -1366,15 +1366,15 @@ class RunQueryRequest extends $pb.GeneratedMessage {
 
   /// A structured query.
   @$pb.TagNumber(2)
-  $11.StructuredQuery get structuredQuery => $_getN(1);
+  $6.StructuredQuery get structuredQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredQuery($11.StructuredQuery value) => $_setField(2, value);
+  set structuredQuery($6.StructuredQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredQuery() => $_has(1);
   @$pb.TagNumber(2)
   void clearStructuredQuery() => $_clearField(2);
   @$pb.TagNumber(2)
-  $11.StructuredQuery ensureStructuredQuery() => $_ensure(1);
+  $6.StructuredQuery ensureStructuredQuery() => $_ensure(1);
 
   /// Run the query within an already active transaction.
   ///
@@ -1393,15 +1393,15 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   /// The new transaction ID will be returned as the first response in the
   /// stream.
   @$pb.TagNumber(6)
-  $9.TransactionOptions get newTransaction => $_getN(3);
+  $3.TransactionOptions get newTransaction => $_getN(3);
   @$pb.TagNumber(6)
-  set newTransaction($9.TransactionOptions value) => $_setField(6, value);
+  set newTransaction($3.TransactionOptions value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasNewTransaction() => $_has(3);
   @$pb.TagNumber(6)
   void clearNewTransaction() => $_clearField(6);
   @$pb.TagNumber(6)
-  $9.TransactionOptions ensureNewTransaction() => $_ensure(3);
+  $3.TransactionOptions ensureNewTransaction() => $_ensure(3);
 
   /// Reads documents as they were at the given time.
   ///
@@ -1409,28 +1409,28 @@ class RunQueryRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(7)
-  $6.Timestamp get readTime => $_getN(4);
+  $4.Timestamp get readTime => $_getN(4);
   @$pb.TagNumber(7)
-  set readTime($6.Timestamp value) => $_setField(7, value);
+  set readTime($4.Timestamp value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasReadTime() => $_has(4);
   @$pb.TagNumber(7)
   void clearReadTime() => $_clearField(7);
   @$pb.TagNumber(7)
-  $6.Timestamp ensureReadTime() => $_ensure(4);
+  $4.Timestamp ensureReadTime() => $_ensure(4);
 
   /// Optional. Explain options for the query. If set, additional query
   /// statistics will be returned. If not, only query results will be returned.
   @$pb.TagNumber(10)
-  $12.ExplainOptions get explainOptions => $_getN(5);
+  $7.ExplainOptions get explainOptions => $_getN(5);
   @$pb.TagNumber(10)
-  set explainOptions($12.ExplainOptions value) => $_setField(10, value);
+  set explainOptions($7.ExplainOptions value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasExplainOptions() => $_has(5);
   @$pb.TagNumber(10)
   void clearExplainOptions() => $_clearField(10);
   @$pb.TagNumber(10)
-  $12.ExplainOptions ensureExplainOptions() => $_ensure(5);
+  $7.ExplainOptions ensureExplainOptions() => $_ensure(5);
 }
 
 enum RunQueryResponse_ContinuationSelector {
@@ -1444,10 +1444,10 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   factory RunQueryResponse({
     $1.Document? document,
     $core.List<$core.int>? transaction,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
     $core.int? skippedResults,
     $core.bool? done,
-    $12.ExplainMetrics? explainMetrics,
+    $7.ExplainMetrics? explainMetrics,
   }) {
     final result = create();
     if (document != null) result.document = document;
@@ -1472,10 +1472,10 @@ class RunQueryResponse extends $pb.GeneratedMessage {
     ..oo(0, [6])
     ..aOM<$1.Document>(1, _omitFieldNames ? '' : 'document', subBuilder: $1.Document.create)
     ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$6.Timestamp>(3, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(3, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..a<$core.int>(4, _omitFieldNames ? '' : 'skippedResults', $pb.PbFieldType.O3)
     ..aOB(6, _omitFieldNames ? '' : 'done')
-    ..aOM<$12.ExplainMetrics>(11, _omitFieldNames ? '' : 'explainMetrics', subBuilder: $12.ExplainMetrics.create)
+    ..aOM<$7.ExplainMetrics>(11, _omitFieldNames ? '' : 'explainMetrics', subBuilder: $7.ExplainMetrics.create)
     ..hasRequiredFields = false
   ;
 
@@ -1533,15 +1533,15 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   /// `document` will be sent, and this represents the time at which the query
   /// was run.
   @$pb.TagNumber(3)
-  $6.Timestamp get readTime => $_getN(2);
+  $4.Timestamp get readTime => $_getN(2);
   @$pb.TagNumber(3)
-  set readTime($6.Timestamp value) => $_setField(3, value);
+  set readTime($4.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasReadTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearReadTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $6.Timestamp ensureReadTime() => $_ensure(2);
+  $4.Timestamp ensureReadTime() => $_ensure(2);
 
   /// The number of results that have been skipped due to an offset between
   /// the last response and the current response.
@@ -1569,15 +1569,15 @@ class RunQueryResponse extends $pb.GeneratedMessage {
   /// [RunQueryRequest.explain_options][google.firestore.v1.RunQueryRequest.explain_options]
   /// is provided, and it is sent only once with the last response in the stream.
   @$pb.TagNumber(11)
-  $12.ExplainMetrics get explainMetrics => $_getN(5);
+  $7.ExplainMetrics get explainMetrics => $_getN(5);
   @$pb.TagNumber(11)
-  set explainMetrics($12.ExplainMetrics value) => $_setField(11, value);
+  set explainMetrics($7.ExplainMetrics value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasExplainMetrics() => $_has(5);
   @$pb.TagNumber(11)
   void clearExplainMetrics() => $_clearField(11);
   @$pb.TagNumber(11)
-  $12.ExplainMetrics ensureExplainMetrics() => $_ensure(5);
+  $7.ExplainMetrics ensureExplainMetrics() => $_ensure(5);
 }
 
 enum RunAggregationQueryRequest_QueryType {
@@ -1597,11 +1597,11 @@ enum RunAggregationQueryRequest_ConsistencySelector {
 class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   factory RunAggregationQueryRequest({
     $core.String? parent,
-    $11.StructuredAggregationQuery? structuredAggregationQuery,
+    $6.StructuredAggregationQuery? structuredAggregationQuery,
     $core.List<$core.int>? transaction,
-    $9.TransactionOptions? newTransaction,
-    $6.Timestamp? readTime,
-    $12.ExplainOptions? explainOptions,
+    $3.TransactionOptions? newTransaction,
+    $4.Timestamp? readTime,
+    $7.ExplainOptions? explainOptions,
   }) {
     final result = create();
     if (parent != null) result.parent = parent;
@@ -1632,11 +1632,11 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
     ..oo(0, [2])
     ..oo(1, [4, 5, 6])
     ..aOS(1, _omitFieldNames ? '' : 'parent')
-    ..aOM<$11.StructuredAggregationQuery>(2, _omitFieldNames ? '' : 'structuredAggregationQuery', subBuilder: $11.StructuredAggregationQuery.create)
+    ..aOM<$6.StructuredAggregationQuery>(2, _omitFieldNames ? '' : 'structuredAggregationQuery', subBuilder: $6.StructuredAggregationQuery.create)
     ..a<$core.List<$core.int>>(4, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$9.TransactionOptions>(5, _omitFieldNames ? '' : 'newTransaction', subBuilder: $9.TransactionOptions.create)
-    ..aOM<$6.Timestamp>(6, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
-    ..aOM<$12.ExplainOptions>(8, _omitFieldNames ? '' : 'explainOptions', subBuilder: $12.ExplainOptions.create)
+    ..aOM<$3.TransactionOptions>(5, _omitFieldNames ? '' : 'newTransaction', subBuilder: $3.TransactionOptions.create)
+    ..aOM<$4.Timestamp>(6, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
+    ..aOM<$7.ExplainOptions>(8, _omitFieldNames ? '' : 'explainOptions', subBuilder: $7.ExplainOptions.create)
     ..hasRequiredFields = false
   ;
 
@@ -1680,15 +1680,15 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
 
   /// An aggregation query.
   @$pb.TagNumber(2)
-  $11.StructuredAggregationQuery get structuredAggregationQuery => $_getN(1);
+  $6.StructuredAggregationQuery get structuredAggregationQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredAggregationQuery($11.StructuredAggregationQuery value) => $_setField(2, value);
+  set structuredAggregationQuery($6.StructuredAggregationQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredAggregationQuery() => $_has(1);
   @$pb.TagNumber(2)
   void clearStructuredAggregationQuery() => $_clearField(2);
   @$pb.TagNumber(2)
-  $11.StructuredAggregationQuery ensureStructuredAggregationQuery() => $_ensure(1);
+  $6.StructuredAggregationQuery ensureStructuredAggregationQuery() => $_ensure(1);
 
   /// Run the aggregation within an already active transaction.
   ///
@@ -1707,15 +1707,15 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   /// The new transaction ID will be returned as the first response in the
   /// stream.
   @$pb.TagNumber(5)
-  $9.TransactionOptions get newTransaction => $_getN(3);
+  $3.TransactionOptions get newTransaction => $_getN(3);
   @$pb.TagNumber(5)
-  set newTransaction($9.TransactionOptions value) => $_setField(5, value);
+  set newTransaction($3.TransactionOptions value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasNewTransaction() => $_has(3);
   @$pb.TagNumber(5)
   void clearNewTransaction() => $_clearField(5);
   @$pb.TagNumber(5)
-  $9.TransactionOptions ensureNewTransaction() => $_ensure(3);
+  $3.TransactionOptions ensureNewTransaction() => $_ensure(3);
 
   /// Executes the query at the given timestamp.
   ///
@@ -1723,38 +1723,38 @@ class RunAggregationQueryRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(6)
-  $6.Timestamp get readTime => $_getN(4);
+  $4.Timestamp get readTime => $_getN(4);
   @$pb.TagNumber(6)
-  set readTime($6.Timestamp value) => $_setField(6, value);
+  set readTime($4.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasReadTime() => $_has(4);
   @$pb.TagNumber(6)
   void clearReadTime() => $_clearField(6);
   @$pb.TagNumber(6)
-  $6.Timestamp ensureReadTime() => $_ensure(4);
+  $4.Timestamp ensureReadTime() => $_ensure(4);
 
   /// Optional. Explain options for the query. If set, additional query
   /// statistics will be returned. If not, only query results will be returned.
   @$pb.TagNumber(8)
-  $12.ExplainOptions get explainOptions => $_getN(5);
+  $7.ExplainOptions get explainOptions => $_getN(5);
   @$pb.TagNumber(8)
-  set explainOptions($12.ExplainOptions value) => $_setField(8, value);
+  set explainOptions($7.ExplainOptions value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasExplainOptions() => $_has(5);
   @$pb.TagNumber(8)
   void clearExplainOptions() => $_clearField(8);
   @$pb.TagNumber(8)
-  $12.ExplainOptions ensureExplainOptions() => $_ensure(5);
+  $7.ExplainOptions ensureExplainOptions() => $_ensure(5);
 }
 
 /// The response for
 /// [Firestore.RunAggregationQuery][google.firestore.v1.Firestore.RunAggregationQuery].
 class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   factory RunAggregationQueryResponse({
-    $13.AggregationResult? result,
+    $8.AggregationResult? result,
     $core.List<$core.int>? transaction,
-    $6.Timestamp? readTime,
-    $12.ExplainMetrics? explainMetrics,
+    $4.Timestamp? readTime,
+    $7.ExplainMetrics? explainMetrics,
   }) {
     final result$ = create();
     if (result != null) result$.result = result;
@@ -1770,10 +1770,10 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   factory RunAggregationQueryResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RunAggregationQueryResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..aOM<$13.AggregationResult>(1, _omitFieldNames ? '' : 'result', subBuilder: $13.AggregationResult.create)
+    ..aOM<$8.AggregationResult>(1, _omitFieldNames ? '' : 'result', subBuilder: $8.AggregationResult.create)
     ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'transaction', $pb.PbFieldType.OY)
-    ..aOM<$6.Timestamp>(3, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
-    ..aOM<$12.ExplainMetrics>(10, _omitFieldNames ? '' : 'explainMetrics', subBuilder: $12.ExplainMetrics.create)
+    ..aOM<$4.Timestamp>(3, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
+    ..aOM<$7.ExplainMetrics>(10, _omitFieldNames ? '' : 'explainMetrics', subBuilder: $7.ExplainMetrics.create)
     ..hasRequiredFields = false
   ;
 
@@ -1798,15 +1798,15 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   ///
   /// Not present when reporting partial progress.
   @$pb.TagNumber(1)
-  $13.AggregationResult get result => $_getN(0);
+  $8.AggregationResult get result => $_getN(0);
   @$pb.TagNumber(1)
-  set result($13.AggregationResult value) => $_setField(1, value);
+  set result($8.AggregationResult value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasResult() => $_has(0);
   @$pb.TagNumber(1)
   void clearResult() => $_clearField(1);
   @$pb.TagNumber(1)
-  $13.AggregationResult ensureResult() => $_ensure(0);
+  $8.AggregationResult ensureResult() => $_ensure(0);
 
   /// The transaction that was started as part of this request.
   ///
@@ -1830,29 +1830,29 @@ class RunAggregationQueryResponse extends $pb.GeneratedMessage {
   /// `result` will be sent, and this represents the time at which the query
   /// was run.
   @$pb.TagNumber(3)
-  $6.Timestamp get readTime => $_getN(2);
+  $4.Timestamp get readTime => $_getN(2);
   @$pb.TagNumber(3)
-  set readTime($6.Timestamp value) => $_setField(3, value);
+  set readTime($4.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasReadTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearReadTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $6.Timestamp ensureReadTime() => $_ensure(2);
+  $4.Timestamp ensureReadTime() => $_ensure(2);
 
   /// Query explain metrics. This is only present when the
   /// [RunAggregationQueryRequest.explain_options][google.firestore.v1.RunAggregationQueryRequest.explain_options]
   /// is provided, and it is sent only once with the last response in the stream.
   @$pb.TagNumber(10)
-  $12.ExplainMetrics get explainMetrics => $_getN(3);
+  $7.ExplainMetrics get explainMetrics => $_getN(3);
   @$pb.TagNumber(10)
-  set explainMetrics($12.ExplainMetrics value) => $_setField(10, value);
+  set explainMetrics($7.ExplainMetrics value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasExplainMetrics() => $_has(3);
   @$pb.TagNumber(10)
   void clearExplainMetrics() => $_clearField(10);
   @$pb.TagNumber(10)
-  $12.ExplainMetrics ensureExplainMetrics() => $_ensure(3);
+  $7.ExplainMetrics ensureExplainMetrics() => $_ensure(3);
 }
 
 enum PartitionQueryRequest_QueryType {
@@ -1870,11 +1870,11 @@ enum PartitionQueryRequest_ConsistencySelector {
 class PartitionQueryRequest extends $pb.GeneratedMessage {
   factory PartitionQueryRequest({
     $core.String? parent,
-    $11.StructuredQuery? structuredQuery,
+    $6.StructuredQuery? structuredQuery,
     $fixnum.Int64? partitionCount,
     $core.String? pageToken,
     $core.int? pageSize,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
   }) {
     final result = create();
     if (parent != null) result.parent = parent;
@@ -1903,11 +1903,11 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
     ..oo(0, [2])
     ..oo(1, [6])
     ..aOS(1, _omitFieldNames ? '' : 'parent')
-    ..aOM<$11.StructuredQuery>(2, _omitFieldNames ? '' : 'structuredQuery', subBuilder: $11.StructuredQuery.create)
+    ..aOM<$6.StructuredQuery>(2, _omitFieldNames ? '' : 'structuredQuery', subBuilder: $6.StructuredQuery.create)
     ..aInt64(3, _omitFieldNames ? '' : 'partitionCount')
     ..aOS(4, _omitFieldNames ? '' : 'pageToken')
     ..a<$core.int>(5, _omitFieldNames ? '' : 'pageSize', $pb.PbFieldType.O3)
-    ..aOM<$6.Timestamp>(6, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(6, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -1952,15 +1952,15 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   /// ascending. Other filters, order bys, limits, offsets, and start/end
   /// cursors are not supported.
   @$pb.TagNumber(2)
-  $11.StructuredQuery get structuredQuery => $_getN(1);
+  $6.StructuredQuery get structuredQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredQuery($11.StructuredQuery value) => $_setField(2, value);
+  set structuredQuery($6.StructuredQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredQuery() => $_has(1);
   @$pb.TagNumber(2)
   void clearStructuredQuery() => $_clearField(2);
   @$pb.TagNumber(2)
-  $11.StructuredQuery ensureStructuredQuery() => $_ensure(1);
+  $6.StructuredQuery ensureStructuredQuery() => $_ensure(1);
 
   /// The desired maximum number of partition points.
   /// The partitions may be returned across multiple pages of results.
@@ -2023,22 +2023,22 @@ class PartitionQueryRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(6)
-  $6.Timestamp get readTime => $_getN(5);
+  $4.Timestamp get readTime => $_getN(5);
   @$pb.TagNumber(6)
-  set readTime($6.Timestamp value) => $_setField(6, value);
+  set readTime($4.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasReadTime() => $_has(5);
   @$pb.TagNumber(6)
   void clearReadTime() => $_clearField(6);
   @$pb.TagNumber(6)
-  $6.Timestamp ensureReadTime() => $_ensure(5);
+  $4.Timestamp ensureReadTime() => $_ensure(5);
 }
 
 /// The response for
 /// [Firestore.PartitionQuery][google.firestore.v1.Firestore.PartitionQuery].
 class PartitionQueryResponse extends $pb.GeneratedMessage {
   factory PartitionQueryResponse({
-    $core.Iterable<$11.Cursor>? partitions,
+    $core.Iterable<$6.Cursor>? partitions,
     $core.String? nextPageToken,
   }) {
     final result = create();
@@ -2053,7 +2053,7 @@ class PartitionQueryResponse extends $pb.GeneratedMessage {
   factory PartitionQueryResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PartitionQueryResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..pc<$11.Cursor>(1, _omitFieldNames ? '' : 'partitions', $pb.PbFieldType.PM, subBuilder: $11.Cursor.create)
+    ..pc<$6.Cursor>(1, _omitFieldNames ? '' : 'partitions', $pb.PbFieldType.PM, subBuilder: $6.Cursor.create)
     ..aOS(2, _omitFieldNames ? '' : 'nextPageToken')
     ..hasRequiredFields = false
   ;
@@ -2093,7 +2093,7 @@ class PartitionQueryResponse extends $pb.GeneratedMessage {
   /// An empty result may indicate that the query has too few results to be
   /// partitioned, or that the query is not yet supported for partitioning.
   @$pb.TagNumber(1)
-  $pb.PbList<$11.Cursor> get partitions => $_getList(0);
+  $pb.PbList<$6.Cursor> get partitions => $_getList(0);
 
   /// A page token that may be used to request an additional set of results, up
   /// to the number specified by `partition_count` in the PartitionQuery request.
@@ -2122,7 +2122,7 @@ class WriteRequest extends $pb.GeneratedMessage {
   factory WriteRequest({
     $core.String? database,
     $core.String? streamId,
-    $core.Iterable<$10.Write>? writes,
+    $core.Iterable<$5.Write>? writes,
     $core.List<$core.int>? streamToken,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? labels,
   }) {
@@ -2143,7 +2143,7 @@ class WriteRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WriteRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
     ..aOS(2, _omitFieldNames ? '' : 'streamId')
-    ..pc<$10.Write>(3, _omitFieldNames ? '' : 'writes', $pb.PbFieldType.PM, subBuilder: $10.Write.create)
+    ..pc<$5.Write>(3, _omitFieldNames ? '' : 'writes', $pb.PbFieldType.PM, subBuilder: $5.Write.create)
     ..a<$core.List<$core.int>>(4, _omitFieldNames ? '' : 'streamToken', $pb.PbFieldType.OY)
     ..m<$core.String, $core.String>(5, _omitFieldNames ? '' : 'labels', entryClassName: 'WriteRequest.LabelsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('google.firestore.v1'))
     ..hasRequiredFields = false
@@ -2197,7 +2197,7 @@ class WriteRequest extends $pb.GeneratedMessage {
   /// This may be empty on the last request.
   /// This must not be empty on all other requests.
   @$pb.TagNumber(3)
-  $pb.PbList<$10.Write> get writes => $_getList(2);
+  $pb.PbList<$5.Write> get writes => $_getList(2);
 
   /// A stream token that was previously sent by the server.
   ///
@@ -2232,8 +2232,8 @@ class WriteResponse extends $pb.GeneratedMessage {
   factory WriteResponse({
     $core.String? streamId,
     $core.List<$core.int>? streamToken,
-    $core.Iterable<$10.WriteResult>? writeResults,
-    $6.Timestamp? commitTime,
+    $core.Iterable<$5.WriteResult>? writeResults,
+    $4.Timestamp? commitTime,
   }) {
     final result = create();
     if (streamId != null) result.streamId = streamId;
@@ -2251,8 +2251,8 @@ class WriteResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'WriteResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'streamId')
     ..a<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'streamToken', $pb.PbFieldType.OY)
-    ..pc<$10.WriteResult>(3, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $10.WriteResult.create)
-    ..aOM<$6.Timestamp>(4, _omitFieldNames ? '' : 'commitTime', subBuilder: $6.Timestamp.create)
+    ..pc<$5.WriteResult>(3, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $5.WriteResult.create)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'commitTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -2302,20 +2302,20 @@ class WriteResponse extends $pb.GeneratedMessage {
   /// This i-th write result corresponds to the i-th write in the
   /// request.
   @$pb.TagNumber(3)
-  $pb.PbList<$10.WriteResult> get writeResults => $_getList(2);
+  $pb.PbList<$5.WriteResult> get writeResults => $_getList(2);
 
   /// The time at which the commit occurred. Any read with an equal or greater
   /// `read_time` is guaranteed to see the effects of the write.
   @$pb.TagNumber(4)
-  $6.Timestamp get commitTime => $_getN(3);
+  $4.Timestamp get commitTime => $_getN(3);
   @$pb.TagNumber(4)
-  set commitTime($6.Timestamp value) => $_setField(4, value);
+  set commitTime($4.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCommitTime() => $_has(3);
   @$pb.TagNumber(4)
   void clearCommitTime() => $_clearField(4);
   @$pb.TagNumber(4)
-  $6.Timestamp ensureCommitTime() => $_ensure(3);
+  $4.Timestamp ensureCommitTime() => $_ensure(3);
 }
 
 enum ListenRequest_TargetChange {
@@ -2430,10 +2430,10 @@ enum ListenResponse_ResponseType {
 class ListenResponse extends $pb.GeneratedMessage {
   factory ListenResponse({
     TargetChange? targetChange,
-    $10.DocumentChange? documentChange,
-    $10.DocumentDelete? documentDelete,
-    $10.ExistenceFilter? filter,
-    $10.DocumentRemove? documentRemove,
+    $5.DocumentChange? documentChange,
+    $5.DocumentDelete? documentDelete,
+    $5.ExistenceFilter? filter,
+    $5.DocumentRemove? documentRemove,
   }) {
     final result = create();
     if (targetChange != null) result.targetChange = targetChange;
@@ -2460,10 +2460,10 @@ class ListenResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ListenResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..oo(0, [2, 3, 4, 5, 6])
     ..aOM<TargetChange>(2, _omitFieldNames ? '' : 'targetChange', subBuilder: TargetChange.create)
-    ..aOM<$10.DocumentChange>(3, _omitFieldNames ? '' : 'documentChange', subBuilder: $10.DocumentChange.create)
-    ..aOM<$10.DocumentDelete>(4, _omitFieldNames ? '' : 'documentDelete', subBuilder: $10.DocumentDelete.create)
-    ..aOM<$10.ExistenceFilter>(5, _omitFieldNames ? '' : 'filter', subBuilder: $10.ExistenceFilter.create)
-    ..aOM<$10.DocumentRemove>(6, _omitFieldNames ? '' : 'documentRemove', subBuilder: $10.DocumentRemove.create)
+    ..aOM<$5.DocumentChange>(3, _omitFieldNames ? '' : 'documentChange', subBuilder: $5.DocumentChange.create)
+    ..aOM<$5.DocumentDelete>(4, _omitFieldNames ? '' : 'documentDelete', subBuilder: $5.DocumentDelete.create)
+    ..aOM<$5.ExistenceFilter>(5, _omitFieldNames ? '' : 'filter', subBuilder: $5.ExistenceFilter.create)
+    ..aOM<$5.DocumentRemove>(6, _omitFieldNames ? '' : 'documentRemove', subBuilder: $5.DocumentRemove.create)
     ..hasRequiredFields = false
   ;
 
@@ -2501,27 +2501,27 @@ class ListenResponse extends $pb.GeneratedMessage {
 
   /// A [Document][google.firestore.v1.Document] has changed.
   @$pb.TagNumber(3)
-  $10.DocumentChange get documentChange => $_getN(1);
+  $5.DocumentChange get documentChange => $_getN(1);
   @$pb.TagNumber(3)
-  set documentChange($10.DocumentChange value) => $_setField(3, value);
+  set documentChange($5.DocumentChange value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasDocumentChange() => $_has(1);
   @$pb.TagNumber(3)
   void clearDocumentChange() => $_clearField(3);
   @$pb.TagNumber(3)
-  $10.DocumentChange ensureDocumentChange() => $_ensure(1);
+  $5.DocumentChange ensureDocumentChange() => $_ensure(1);
 
   /// A [Document][google.firestore.v1.Document] has been deleted.
   @$pb.TagNumber(4)
-  $10.DocumentDelete get documentDelete => $_getN(2);
+  $5.DocumentDelete get documentDelete => $_getN(2);
   @$pb.TagNumber(4)
-  set documentDelete($10.DocumentDelete value) => $_setField(4, value);
+  set documentDelete($5.DocumentDelete value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasDocumentDelete() => $_has(2);
   @$pb.TagNumber(4)
   void clearDocumentDelete() => $_clearField(4);
   @$pb.TagNumber(4)
-  $10.DocumentDelete ensureDocumentDelete() => $_ensure(2);
+  $5.DocumentDelete ensureDocumentDelete() => $_ensure(2);
 
   /// A filter to apply to the set of documents previously returned for the
   /// given target.
@@ -2529,28 +2529,28 @@ class ListenResponse extends $pb.GeneratedMessage {
   /// Returned when documents may have been removed from the given target, but
   /// the exact documents are unknown.
   @$pb.TagNumber(5)
-  $10.ExistenceFilter get filter => $_getN(3);
+  $5.ExistenceFilter get filter => $_getN(3);
   @$pb.TagNumber(5)
-  set filter($10.ExistenceFilter value) => $_setField(5, value);
+  set filter($5.ExistenceFilter value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasFilter() => $_has(3);
   @$pb.TagNumber(5)
   void clearFilter() => $_clearField(5);
   @$pb.TagNumber(5)
-  $10.ExistenceFilter ensureFilter() => $_ensure(3);
+  $5.ExistenceFilter ensureFilter() => $_ensure(3);
 
   /// A [Document][google.firestore.v1.Document] has been removed from a target
   /// (because it is no longer relevant to that target).
   @$pb.TagNumber(6)
-  $10.DocumentRemove get documentRemove => $_getN(4);
+  $5.DocumentRemove get documentRemove => $_getN(4);
   @$pb.TagNumber(6)
-  set documentRemove($10.DocumentRemove value) => $_setField(6, value);
+  set documentRemove($5.DocumentRemove value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasDocumentRemove() => $_has(4);
   @$pb.TagNumber(6)
   void clearDocumentRemove() => $_clearField(6);
   @$pb.TagNumber(6)
-  $10.DocumentRemove ensureDocumentRemove() => $_ensure(4);
+  $5.DocumentRemove ensureDocumentRemove() => $_ensure(4);
 }
 
 /// A target specified by a set of documents names.
@@ -2607,7 +2607,7 @@ enum Target_QueryTarget_QueryType {
 class Target_QueryTarget extends $pb.GeneratedMessage {
   factory Target_QueryTarget({
     $core.String? parent,
-    $11.StructuredQuery? structuredQuery,
+    $6.StructuredQuery? structuredQuery,
   }) {
     final result = create();
     if (parent != null) result.parent = parent;
@@ -2627,7 +2627,7 @@ class Target_QueryTarget extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Target.QueryTarget', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..oo(0, [2])
     ..aOS(1, _omitFieldNames ? '' : 'parent')
-    ..aOM<$11.StructuredQuery>(2, _omitFieldNames ? '' : 'structuredQuery', subBuilder: $11.StructuredQuery.create)
+    ..aOM<$6.StructuredQuery>(2, _omitFieldNames ? '' : 'structuredQuery', subBuilder: $6.StructuredQuery.create)
     ..hasRequiredFields = false
   ;
 
@@ -2668,15 +2668,15 @@ class Target_QueryTarget extends $pb.GeneratedMessage {
 
   /// A structured query.
   @$pb.TagNumber(2)
-  $11.StructuredQuery get structuredQuery => $_getN(1);
+  $6.StructuredQuery get structuredQuery => $_getN(1);
   @$pb.TagNumber(2)
-  set structuredQuery($11.StructuredQuery value) => $_setField(2, value);
+  set structuredQuery($6.StructuredQuery value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasStructuredQuery() => $_has(1);
   @$pb.TagNumber(2)
   void clearStructuredQuery() => $_clearField(2);
   @$pb.TagNumber(2)
-  $11.StructuredQuery ensureStructuredQuery() => $_ensure(1);
+  $6.StructuredQuery ensureStructuredQuery() => $_ensure(1);
 }
 
 enum Target_TargetType {
@@ -2699,8 +2699,8 @@ class Target extends $pb.GeneratedMessage {
     $core.List<$core.int>? resumeToken,
     $core.int? targetId,
     $core.bool? once,
-    $6.Timestamp? readTime,
-    $14.Int32Value? expectedCount,
+    $4.Timestamp? readTime,
+    $9.Int32Value? expectedCount,
   }) {
     final result = create();
     if (query != null) result.query = query;
@@ -2736,8 +2736,8 @@ class Target extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(4, _omitFieldNames ? '' : 'resumeToken', $pb.PbFieldType.OY)
     ..a<$core.int>(5, _omitFieldNames ? '' : 'targetId', $pb.PbFieldType.O3)
     ..aOB(6, _omitFieldNames ? '' : 'once')
-    ..aOM<$6.Timestamp>(11, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
-    ..aOM<$14.Int32Value>(12, _omitFieldNames ? '' : 'expectedCount', subBuilder: $14.Int32Value.create)
+    ..aOM<$4.Timestamp>(11, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
+    ..aOM<$9.Int32Value>(12, _omitFieldNames ? '' : 'expectedCount', subBuilder: $9.Int32Value.create)
     ..hasRequiredFields = false
   ;
 
@@ -2841,15 +2841,15 @@ class Target extends $pb.GeneratedMessage {
   ///
   /// The client must know the state of matching documents at this time.
   @$pb.TagNumber(11)
-  $6.Timestamp get readTime => $_getN(5);
+  $4.Timestamp get readTime => $_getN(5);
   @$pb.TagNumber(11)
-  set readTime($6.Timestamp value) => $_setField(11, value);
+  set readTime($4.Timestamp value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasReadTime() => $_has(5);
   @$pb.TagNumber(11)
   void clearReadTime() => $_clearField(11);
   @$pb.TagNumber(11)
-  $6.Timestamp ensureReadTime() => $_ensure(5);
+  $4.Timestamp ensureReadTime() => $_ensure(5);
 
   /// The number of documents that last matched the query at the resume token or
   /// read time.
@@ -2858,15 +2858,15 @@ class Target extends $pb.GeneratedMessage {
   /// being present and greater than zero signals that the client wants
   /// `ExistenceFilter.unchanged_names` to be included in the response.
   @$pb.TagNumber(12)
-  $14.Int32Value get expectedCount => $_getN(6);
+  $9.Int32Value get expectedCount => $_getN(6);
   @$pb.TagNumber(12)
-  set expectedCount($14.Int32Value value) => $_setField(12, value);
+  set expectedCount($9.Int32Value value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasExpectedCount() => $_has(6);
   @$pb.TagNumber(12)
   void clearExpectedCount() => $_clearField(12);
   @$pb.TagNumber(12)
-  $14.Int32Value ensureExpectedCount() => $_ensure(6);
+  $9.Int32Value ensureExpectedCount() => $_ensure(6);
 }
 
 /// Targets being watched have changed.
@@ -2874,9 +2874,9 @@ class TargetChange extends $pb.GeneratedMessage {
   factory TargetChange({
     TargetChange_TargetChangeType? targetChangeType,
     $core.Iterable<$core.int>? targetIds,
-    $15.Status? cause,
+    $10.Status? cause,
     $core.List<$core.int>? resumeToken,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
   }) {
     final result = create();
     if (targetChangeType != null) result.targetChangeType = targetChangeType;
@@ -2895,9 +2895,9 @@ class TargetChange extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TargetChange', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..e<TargetChange_TargetChangeType>(1, _omitFieldNames ? '' : 'targetChangeType', $pb.PbFieldType.OE, defaultOrMaker: TargetChange_TargetChangeType.NO_CHANGE, valueOf: TargetChange_TargetChangeType.valueOf, enumValues: TargetChange_TargetChangeType.values)
     ..p<$core.int>(2, _omitFieldNames ? '' : 'targetIds', $pb.PbFieldType.K3)
-    ..aOM<$15.Status>(3, _omitFieldNames ? '' : 'cause', subBuilder: $15.Status.create)
+    ..aOM<$10.Status>(3, _omitFieldNames ? '' : 'cause', subBuilder: $10.Status.create)
     ..a<$core.List<$core.int>>(4, _omitFieldNames ? '' : 'resumeToken', $pb.PbFieldType.OY)
-    ..aOM<$6.Timestamp>(6, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(6, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -2938,15 +2938,15 @@ class TargetChange extends $pb.GeneratedMessage {
 
   /// The error that resulted in this change, if applicable.
   @$pb.TagNumber(3)
-  $15.Status get cause => $_getN(2);
+  $10.Status get cause => $_getN(2);
   @$pb.TagNumber(3)
-  set cause($15.Status value) => $_setField(3, value);
+  set cause($10.Status value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasCause() => $_has(2);
   @$pb.TagNumber(3)
   void clearCause() => $_clearField(3);
   @$pb.TagNumber(3)
-  $15.Status ensureCause() => $_ensure(2);
+  $10.Status ensureCause() => $_ensure(2);
 
   /// A token that can be used to resume the stream for the given `target_ids`,
   /// or all targets if `target_ids` is empty.
@@ -2972,15 +2972,15 @@ class TargetChange extends $pb.GeneratedMessage {
   /// For a given stream, `read_time` is guaranteed to be monotonically
   /// increasing.
   @$pb.TagNumber(6)
-  $6.Timestamp get readTime => $_getN(4);
+  $4.Timestamp get readTime => $_getN(4);
   @$pb.TagNumber(6)
-  set readTime($6.Timestamp value) => $_setField(6, value);
+  set readTime($4.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasReadTime() => $_has(4);
   @$pb.TagNumber(6)
   void clearReadTime() => $_clearField(6);
   @$pb.TagNumber(6)
-  $6.Timestamp ensureReadTime() => $_ensure(4);
+  $4.Timestamp ensureReadTime() => $_ensure(4);
 }
 
 enum ListCollectionIdsRequest_ConsistencySelector {
@@ -2995,7 +2995,7 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
     $core.String? parent,
     $core.int? pageSize,
     $core.String? pageToken,
-    $6.Timestamp? readTime,
+    $4.Timestamp? readTime,
   }) {
     final result = create();
     if (parent != null) result.parent = parent;
@@ -3019,7 +3019,7 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'parent')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'pageSize', $pb.PbFieldType.O3)
     ..aOS(3, _omitFieldNames ? '' : 'pageToken')
-    ..aOM<$6.Timestamp>(4, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'readTime', subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -3083,15 +3083,15 @@ class ListCollectionIdsRequest extends $pb.GeneratedMessage {
   /// or if Point-in-Time Recovery is enabled, can additionally be a whole
   /// minute timestamp within the past 7 days.
   @$pb.TagNumber(4)
-  $6.Timestamp get readTime => $_getN(3);
+  $4.Timestamp get readTime => $_getN(3);
   @$pb.TagNumber(4)
-  set readTime($6.Timestamp value) => $_setField(4, value);
+  set readTime($4.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReadTime() => $_has(3);
   @$pb.TagNumber(4)
   void clearReadTime() => $_clearField(4);
   @$pb.TagNumber(4)
-  $6.Timestamp ensureReadTime() => $_ensure(3);
+  $4.Timestamp ensureReadTime() => $_ensure(3);
 }
 
 /// The response from
@@ -3155,7 +3155,7 @@ class ListCollectionIdsResponse extends $pb.GeneratedMessage {
 class BatchWriteRequest extends $pb.GeneratedMessage {
   factory BatchWriteRequest({
     $core.String? database,
-    $core.Iterable<$10.Write>? writes,
+    $core.Iterable<$5.Write>? writes,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? labels,
   }) {
     final result = create();
@@ -3172,7 +3172,7 @@ class BatchWriteRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BatchWriteRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'database')
-    ..pc<$10.Write>(2, _omitFieldNames ? '' : 'writes', $pb.PbFieldType.PM, subBuilder: $10.Write.create)
+    ..pc<$5.Write>(2, _omitFieldNames ? '' : 'writes', $pb.PbFieldType.PM, subBuilder: $5.Write.create)
     ..m<$core.String, $core.String>(3, _omitFieldNames ? '' : 'labels', entryClassName: 'BatchWriteRequest.LabelsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('google.firestore.v1'))
     ..hasRequiredFields = false
   ;
@@ -3211,7 +3211,7 @@ class BatchWriteRequest extends $pb.GeneratedMessage {
   /// Each write succeeds or fails independently. You cannot write to the same
   /// document more than once per request.
   @$pb.TagNumber(2)
-  $pb.PbList<$10.Write> get writes => $_getList(1);
+  $pb.PbList<$5.Write> get writes => $_getList(1);
 
   /// Labels associated with this batch write.
   @$pb.TagNumber(3)
@@ -3222,8 +3222,8 @@ class BatchWriteRequest extends $pb.GeneratedMessage {
 /// [Firestore.BatchWrite][google.firestore.v1.Firestore.BatchWrite].
 class BatchWriteResponse extends $pb.GeneratedMessage {
   factory BatchWriteResponse({
-    $core.Iterable<$10.WriteResult>? writeResults,
-    $core.Iterable<$15.Status>? status,
+    $core.Iterable<$5.WriteResult>? writeResults,
+    $core.Iterable<$10.Status>? status,
   }) {
     final result = create();
     if (writeResults != null) result.writeResults.addAll(writeResults);
@@ -3237,8 +3237,8 @@ class BatchWriteResponse extends $pb.GeneratedMessage {
   factory BatchWriteResponse.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BatchWriteResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..pc<$10.WriteResult>(1, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $10.WriteResult.create)
-    ..pc<$15.Status>(2, _omitFieldNames ? '' : 'status', $pb.PbFieldType.PM, subBuilder: $15.Status.create)
+    ..pc<$5.WriteResult>(1, _omitFieldNames ? '' : 'writeResults', $pb.PbFieldType.PM, subBuilder: $5.WriteResult.create)
+    ..pc<$10.Status>(2, _omitFieldNames ? '' : 'status', $pb.PbFieldType.PM, subBuilder: $10.Status.create)
     ..hasRequiredFields = false
   ;
 
@@ -3264,14 +3264,14 @@ class BatchWriteResponse extends $pb.GeneratedMessage {
   /// This i-th write result corresponds to the i-th write in the
   /// request.
   @$pb.TagNumber(1)
-  $pb.PbList<$10.WriteResult> get writeResults => $_getList(0);
+  $pb.PbList<$5.WriteResult> get writeResults => $_getList(0);
 
   /// The status of applying the writes.
   ///
   /// This i-th write status corresponds to the i-th write in the
   /// request.
   @$pb.TagNumber(2)
-  $pb.PbList<$15.Status> get status => $_getList(1);
+  $pb.PbList<$10.Status> get status => $_getList(1);
 }
 
 

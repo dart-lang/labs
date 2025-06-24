@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/firestore/v1/common.proto
-//
+// Generated from google/firestore/v1/common.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../protobuf/timestamp.pb.dart' as $6;
+import '../../protobuf/timestamp.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -77,7 +77,7 @@ enum Precondition_ConditionType {
 class Precondition extends $pb.GeneratedMessage {
   factory Precondition({
     $core.bool? exists,
-    $6.Timestamp? updateTime,
+    $0.Timestamp? updateTime,
   }) {
     final result = create();
     if (exists != null) result.exists = exists;
@@ -98,7 +98,7 @@ class Precondition extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Precondition', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..oo(0, [1, 2])
     ..aOB(1, _omitFieldNames ? '' : 'exists')
-    ..aOM<$6.Timestamp>(2, _omitFieldNames ? '' : 'updateTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'updateTime', subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -136,15 +136,15 @@ class Precondition extends $pb.GeneratedMessage {
   /// When set, the target document must exist and have been last updated at
   /// that time. Timestamp must be microsecond aligned.
   @$pb.TagNumber(2)
-  $6.Timestamp get updateTime => $_getN(1);
+  $0.Timestamp get updateTime => $_getN(1);
   @$pb.TagNumber(2)
-  set updateTime($6.Timestamp value) => $_setField(2, value);
+  set updateTime($0.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasUpdateTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearUpdateTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $6.Timestamp ensureUpdateTime() => $_ensure(1);
+  $0.Timestamp ensureUpdateTime() => $_ensure(1);
 }
 
 /// Options for a transaction that can be used to read and write documents.
@@ -206,7 +206,7 @@ enum TransactionOptions_ReadOnly_ConsistencySelector {
 /// Options for a transaction that can only be used to read documents.
 class TransactionOptions_ReadOnly extends $pb.GeneratedMessage {
   factory TransactionOptions_ReadOnly({
-    $6.Timestamp? readTime,
+    $0.Timestamp? readTime,
   }) {
     final result = create();
     if (readTime != null) result.readTime = readTime;
@@ -224,7 +224,7 @@ class TransactionOptions_ReadOnly extends $pb.GeneratedMessage {
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TransactionOptions.ReadOnly', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..oo(0, [2])
-    ..aOM<$6.Timestamp>(2, _omitFieldNames ? '' : 'readTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'readTime', subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -254,15 +254,15 @@ class TransactionOptions_ReadOnly extends $pb.GeneratedMessage {
   /// hour, or if Point-in-Time Recovery is enabled, can additionally be a
   /// whole minute timestamp within the past 7 days.
   @$pb.TagNumber(2)
-  $6.Timestamp get readTime => $_getN(0);
+  $0.Timestamp get readTime => $_getN(0);
   @$pb.TagNumber(2)
-  set readTime($6.Timestamp value) => $_setField(2, value);
+  set readTime($0.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasReadTime() => $_has(0);
   @$pb.TagNumber(2)
   void clearReadTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $6.Timestamp ensureReadTime() => $_ensure(0);
+  $0.Timestamp ensureReadTime() => $_ensure(0);
 }
 
 enum TransactionOptions_Mode {
