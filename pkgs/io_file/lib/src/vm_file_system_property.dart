@@ -5,9 +5,9 @@
 import 'dart:io';
 
 import 'file_system.dart';
-import 'vm_posix_file_system.dart';
+import 'native_posix_file_system.dart';
 import 'vm_windows_file_system.dart';
 
 /// Return the default [FileSystem] for the current platform.
 FileSystem get fileSystem =>
-    Platform.isWindows ? WindowsFileSystem() : PosixFileSystem();
+    Platform.isWindows ? WindowsFileSystem() : NativePosixFileSystem();

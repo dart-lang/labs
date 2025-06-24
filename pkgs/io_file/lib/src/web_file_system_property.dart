@@ -2,9 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'fake_posix_file_system.dart';
 import 'file_system.dart';
 
+FileSystem? _fileSystem;
+
 /// Return the default [FileSystem] for the current platform.
-FileSystem get fileSystem {
-  throw UnsupportedError('fileSystem');
-}
+FileSystem get fileSystem => _fileSystem ??= FakePosixFileSystem();

@@ -132,7 +132,7 @@ class WriteMode {
 ///
 /// TODO(brianquinlan): Far now, this class is not meant to be implemented,
 /// extended outside of this package. Clarify somewhere that people implementing
-/// this class should reach out to be.
+/// this class should reach out to me.
 @sealed
 abstract class FileSystem {
   /// Create a directory at the given path.
