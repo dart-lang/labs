@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/firestore/v1/firestore.proto
-//
+// Generated from google/firestore/v1/firestore.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -41,90 +41,25 @@ class FirestoreClient extends $grpc.Client {
     'https://www.googleapis.com/auth/datastore',
   ];
 
-  static final _$getDocument = $grpc.ClientMethod<$0.GetDocumentRequest, $1.Document>(
-      '/google.firestore.v1.Firestore/GetDocument',
-      ($0.GetDocumentRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.Document.fromBuffer(value));
-  static final _$listDocuments = $grpc.ClientMethod<$0.ListDocumentsRequest, $0.ListDocumentsResponse>(
-      '/google.firestore.v1.Firestore/ListDocuments',
-      ($0.ListDocumentsRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.ListDocumentsResponse.fromBuffer(value));
-  static final _$updateDocument = $grpc.ClientMethod<$0.UpdateDocumentRequest, $1.Document>(
-      '/google.firestore.v1.Firestore/UpdateDocument',
-      ($0.UpdateDocumentRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.Document.fromBuffer(value));
-  static final _$deleteDocument = $grpc.ClientMethod<$0.DeleteDocumentRequest, $2.Empty>(
-      '/google.firestore.v1.Firestore/DeleteDocument',
-      ($0.DeleteDocumentRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.Empty.fromBuffer(value));
-  static final _$batchGetDocuments = $grpc.ClientMethod<$0.BatchGetDocumentsRequest, $0.BatchGetDocumentsResponse>(
-      '/google.firestore.v1.Firestore/BatchGetDocuments',
-      ($0.BatchGetDocumentsRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.BatchGetDocumentsResponse.fromBuffer(value));
-  static final _$beginTransaction = $grpc.ClientMethod<$0.BeginTransactionRequest, $0.BeginTransactionResponse>(
-      '/google.firestore.v1.Firestore/BeginTransaction',
-      ($0.BeginTransactionRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.BeginTransactionResponse.fromBuffer(value));
-  static final _$commit = $grpc.ClientMethod<$0.CommitRequest, $0.CommitResponse>(
-      '/google.firestore.v1.Firestore/Commit',
-      ($0.CommitRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.CommitResponse.fromBuffer(value));
-  static final _$rollback = $grpc.ClientMethod<$0.RollbackRequest, $2.Empty>(
-      '/google.firestore.v1.Firestore/Rollback',
-      ($0.RollbackRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $2.Empty.fromBuffer(value));
-  static final _$runQuery = $grpc.ClientMethod<$0.RunQueryRequest, $0.RunQueryResponse>(
-      '/google.firestore.v1.Firestore/RunQuery',
-      ($0.RunQueryRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.RunQueryResponse.fromBuffer(value));
-  static final _$runAggregationQuery = $grpc.ClientMethod<$0.RunAggregationQueryRequest, $0.RunAggregationQueryResponse>(
-      '/google.firestore.v1.Firestore/RunAggregationQuery',
-      ($0.RunAggregationQueryRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.RunAggregationQueryResponse.fromBuffer(value));
-  static final _$partitionQuery = $grpc.ClientMethod<$0.PartitionQueryRequest, $0.PartitionQueryResponse>(
-      '/google.firestore.v1.Firestore/PartitionQuery',
-      ($0.PartitionQueryRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.PartitionQueryResponse.fromBuffer(value));
-  static final _$write = $grpc.ClientMethod<$0.WriteRequest, $0.WriteResponse>(
-      '/google.firestore.v1.Firestore/Write',
-      ($0.WriteRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.WriteResponse.fromBuffer(value));
-  static final _$listen = $grpc.ClientMethod<$0.ListenRequest, $0.ListenResponse>(
-      '/google.firestore.v1.Firestore/Listen',
-      ($0.ListenRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.ListenResponse.fromBuffer(value));
-  static final _$listCollectionIds = $grpc.ClientMethod<$0.ListCollectionIdsRequest, $0.ListCollectionIdsResponse>(
-      '/google.firestore.v1.Firestore/ListCollectionIds',
-      ($0.ListCollectionIdsRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.ListCollectionIdsResponse.fromBuffer(value));
-  static final _$batchWrite = $grpc.ClientMethod<$0.BatchWriteRequest, $0.BatchWriteResponse>(
-      '/google.firestore.v1.Firestore/BatchWrite',
-      ($0.BatchWriteRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.BatchWriteResponse.fromBuffer(value));
-  static final _$createDocument = $grpc.ClientMethod<$0.CreateDocumentRequest, $1.Document>(
-      '/google.firestore.v1.Firestore/CreateDocument',
-      ($0.CreateDocumentRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $1.Document.fromBuffer(value));
-
   FirestoreClient(super.channel, {super.options, super.interceptors});
 
   /// Gets a single document.
-  $grpc.ResponseFuture<$1.Document> getDocument($0.GetDocumentRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.Document> getDocument($0.GetDocumentRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$getDocument, request, options: options);
   }
 
   /// Lists documents.
-  $grpc.ResponseFuture<$0.ListDocumentsResponse> listDocuments($0.ListDocumentsRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.ListDocumentsResponse> listDocuments($0.ListDocumentsRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$listDocuments, request, options: options);
   }
 
   /// Updates or inserts a document.
-  $grpc.ResponseFuture<$1.Document> updateDocument($0.UpdateDocumentRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.Document> updateDocument($0.UpdateDocumentRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$updateDocument, request, options: options);
   }
 
   /// Deletes a document.
-  $grpc.ResponseFuture<$2.Empty> deleteDocument($0.DeleteDocumentRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$2.Empty> deleteDocument($0.DeleteDocumentRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$deleteDocument, request, options: options);
   }
 
@@ -132,27 +67,27 @@ class FirestoreClient extends $grpc.Client {
   ///
   /// Documents returned by this method are not guaranteed to be returned in the
   /// same order that they were requested.
-  $grpc.ResponseStream<$0.BatchGetDocumentsResponse> batchGetDocuments($0.BatchGetDocumentsRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseStream<$0.BatchGetDocumentsResponse> batchGetDocuments($0.BatchGetDocumentsRequest request, {$grpc.CallOptions? options,}) {
     return $createStreamingCall(_$batchGetDocuments, $async.Stream.fromIterable([request]), options: options);
   }
 
   /// Starts a new transaction.
-  $grpc.ResponseFuture<$0.BeginTransactionResponse> beginTransaction($0.BeginTransactionRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.BeginTransactionResponse> beginTransaction($0.BeginTransactionRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$beginTransaction, request, options: options);
   }
 
   /// Commits a transaction, while optionally updating documents.
-  $grpc.ResponseFuture<$0.CommitResponse> commit($0.CommitRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.CommitResponse> commit($0.CommitRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$commit, request, options: options);
   }
 
   /// Rolls back a transaction.
-  $grpc.ResponseFuture<$2.Empty> rollback($0.RollbackRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$2.Empty> rollback($0.RollbackRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$rollback, request, options: options);
   }
 
   /// Runs a query.
-  $grpc.ResponseStream<$0.RunQueryResponse> runQuery($0.RunQueryRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseStream<$0.RunQueryResponse> runQuery($0.RunQueryRequest request, {$grpc.CallOptions? options,}) {
     return $createStreamingCall(_$runQuery, $async.Stream.fromIterable([request]), options: options);
   }
 
@@ -169,31 +104,31 @@ class FirestoreClient extends $grpc.Client {
   /// -- Return the number of documents in table given a filter.
   /// SELECT COUNT(*) FROM ( SELECT * FROM k where a = true );
   /// ```
-  $grpc.ResponseStream<$0.RunAggregationQueryResponse> runAggregationQuery($0.RunAggregationQueryRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseStream<$0.RunAggregationQueryResponse> runAggregationQuery($0.RunAggregationQueryRequest request, {$grpc.CallOptions? options,}) {
     return $createStreamingCall(_$runAggregationQuery, $async.Stream.fromIterable([request]), options: options);
   }
 
   /// Partitions a query by returning partition cursors that can be used to run
   /// the query in parallel. The returned partition cursors are split points that
   /// can be used by RunQuery as starting/end points for the query results.
-  $grpc.ResponseFuture<$0.PartitionQueryResponse> partitionQuery($0.PartitionQueryRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.PartitionQueryResponse> partitionQuery($0.PartitionQueryRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$partitionQuery, request, options: options);
   }
 
   /// Streams batches of document updates and deletes, in order. This method is
   /// only available via gRPC or WebChannel (not REST).
-  $grpc.ResponseStream<$0.WriteResponse> write($async.Stream<$0.WriteRequest> request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseStream<$0.WriteResponse> write($async.Stream<$0.WriteRequest> request, {$grpc.CallOptions? options,}) {
     return $createStreamingCall(_$write, request, options: options);
   }
 
   /// Listens to changes. This method is only available via gRPC or WebChannel
   /// (not REST).
-  $grpc.ResponseStream<$0.ListenResponse> listen($async.Stream<$0.ListenRequest> request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseStream<$0.ListenResponse> listen($async.Stream<$0.ListenRequest> request, {$grpc.CallOptions? options,}) {
     return $createStreamingCall(_$listen, request, options: options);
   }
 
   /// Lists all the collection IDs underneath a document.
-  $grpc.ResponseFuture<$0.ListCollectionIdsResponse> listCollectionIds($0.ListCollectionIdsRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.ListCollectionIdsResponse> listCollectionIds($0.ListCollectionIdsRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$listCollectionIds, request, options: options);
   }
 
@@ -207,14 +142,81 @@ class FirestoreClient extends $grpc.Client {
   ///
   /// If you require an atomically applied set of writes, use
   /// [Commit][google.firestore.v1.Firestore.Commit] instead.
-  $grpc.ResponseFuture<$0.BatchWriteResponse> batchWrite($0.BatchWriteRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.BatchWriteResponse> batchWrite($0.BatchWriteRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$batchWrite, request, options: options);
   }
 
   /// Creates a new document.
-  $grpc.ResponseFuture<$1.Document> createDocument($0.CreateDocumentRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$1.Document> createDocument($0.CreateDocumentRequest request, {$grpc.CallOptions? options,}) {
     return $createUnaryCall(_$createDocument, request, options: options);
   }
+
+    // method descriptors
+
+  static final _$getDocument = $grpc.ClientMethod<$0.GetDocumentRequest, $1.Document>(
+      '/google.firestore.v1.Firestore/GetDocument',
+      ($0.GetDocumentRequest value) => value.writeToBuffer(),
+      $1.Document.fromBuffer);
+  static final _$listDocuments = $grpc.ClientMethod<$0.ListDocumentsRequest, $0.ListDocumentsResponse>(
+      '/google.firestore.v1.Firestore/ListDocuments',
+      ($0.ListDocumentsRequest value) => value.writeToBuffer(),
+      $0.ListDocumentsResponse.fromBuffer);
+  static final _$updateDocument = $grpc.ClientMethod<$0.UpdateDocumentRequest, $1.Document>(
+      '/google.firestore.v1.Firestore/UpdateDocument',
+      ($0.UpdateDocumentRequest value) => value.writeToBuffer(),
+      $1.Document.fromBuffer);
+  static final _$deleteDocument = $grpc.ClientMethod<$0.DeleteDocumentRequest, $2.Empty>(
+      '/google.firestore.v1.Firestore/DeleteDocument',
+      ($0.DeleteDocumentRequest value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$batchGetDocuments = $grpc.ClientMethod<$0.BatchGetDocumentsRequest, $0.BatchGetDocumentsResponse>(
+      '/google.firestore.v1.Firestore/BatchGetDocuments',
+      ($0.BatchGetDocumentsRequest value) => value.writeToBuffer(),
+      $0.BatchGetDocumentsResponse.fromBuffer);
+  static final _$beginTransaction = $grpc.ClientMethod<$0.BeginTransactionRequest, $0.BeginTransactionResponse>(
+      '/google.firestore.v1.Firestore/BeginTransaction',
+      ($0.BeginTransactionRequest value) => value.writeToBuffer(),
+      $0.BeginTransactionResponse.fromBuffer);
+  static final _$commit = $grpc.ClientMethod<$0.CommitRequest, $0.CommitResponse>(
+      '/google.firestore.v1.Firestore/Commit',
+      ($0.CommitRequest value) => value.writeToBuffer(),
+      $0.CommitResponse.fromBuffer);
+  static final _$rollback = $grpc.ClientMethod<$0.RollbackRequest, $2.Empty>(
+      '/google.firestore.v1.Firestore/Rollback',
+      ($0.RollbackRequest value) => value.writeToBuffer(),
+      $2.Empty.fromBuffer);
+  static final _$runQuery = $grpc.ClientMethod<$0.RunQueryRequest, $0.RunQueryResponse>(
+      '/google.firestore.v1.Firestore/RunQuery',
+      ($0.RunQueryRequest value) => value.writeToBuffer(),
+      $0.RunQueryResponse.fromBuffer);
+  static final _$runAggregationQuery = $grpc.ClientMethod<$0.RunAggregationQueryRequest, $0.RunAggregationQueryResponse>(
+      '/google.firestore.v1.Firestore/RunAggregationQuery',
+      ($0.RunAggregationQueryRequest value) => value.writeToBuffer(),
+      $0.RunAggregationQueryResponse.fromBuffer);
+  static final _$partitionQuery = $grpc.ClientMethod<$0.PartitionQueryRequest, $0.PartitionQueryResponse>(
+      '/google.firestore.v1.Firestore/PartitionQuery',
+      ($0.PartitionQueryRequest value) => value.writeToBuffer(),
+      $0.PartitionQueryResponse.fromBuffer);
+  static final _$write = $grpc.ClientMethod<$0.WriteRequest, $0.WriteResponse>(
+      '/google.firestore.v1.Firestore/Write',
+      ($0.WriteRequest value) => value.writeToBuffer(),
+      $0.WriteResponse.fromBuffer);
+  static final _$listen = $grpc.ClientMethod<$0.ListenRequest, $0.ListenResponse>(
+      '/google.firestore.v1.Firestore/Listen',
+      ($0.ListenRequest value) => value.writeToBuffer(),
+      $0.ListenResponse.fromBuffer);
+  static final _$listCollectionIds = $grpc.ClientMethod<$0.ListCollectionIdsRequest, $0.ListCollectionIdsResponse>(
+      '/google.firestore.v1.Firestore/ListCollectionIds',
+      ($0.ListCollectionIdsRequest value) => value.writeToBuffer(),
+      $0.ListCollectionIdsResponse.fromBuffer);
+  static final _$batchWrite = $grpc.ClientMethod<$0.BatchWriteRequest, $0.BatchWriteResponse>(
+      '/google.firestore.v1.Firestore/BatchWrite',
+      ($0.BatchWriteRequest value) => value.writeToBuffer(),
+      $0.BatchWriteResponse.fromBuffer);
+  static final _$createDocument = $grpc.ClientMethod<$0.CreateDocumentRequest, $1.Document>(
+      '/google.firestore.v1.Firestore/CreateDocument',
+      ($0.CreateDocumentRequest value) => value.writeToBuffer(),
+      $1.Document.fromBuffer);
 }
 
 @$pb.GrpcServiceName('google.firestore.v1.Firestore')
@@ -340,72 +342,88 @@ abstract class FirestoreServiceBase extends $grpc.Service {
     return getDocument($call, await $request);
   }
 
+  $async.Future<$1.Document> getDocument($grpc.ServiceCall call, $0.GetDocumentRequest request);
+
   $async.Future<$0.ListDocumentsResponse> listDocuments_Pre($grpc.ServiceCall $call, $async.Future<$0.ListDocumentsRequest> $request) async {
     return listDocuments($call, await $request);
   }
+
+  $async.Future<$0.ListDocumentsResponse> listDocuments($grpc.ServiceCall call, $0.ListDocumentsRequest request);
 
   $async.Future<$1.Document> updateDocument_Pre($grpc.ServiceCall $call, $async.Future<$0.UpdateDocumentRequest> $request) async {
     return updateDocument($call, await $request);
   }
 
+  $async.Future<$1.Document> updateDocument($grpc.ServiceCall call, $0.UpdateDocumentRequest request);
+
   $async.Future<$2.Empty> deleteDocument_Pre($grpc.ServiceCall $call, $async.Future<$0.DeleteDocumentRequest> $request) async {
     return deleteDocument($call, await $request);
   }
+
+  $async.Future<$2.Empty> deleteDocument($grpc.ServiceCall call, $0.DeleteDocumentRequest request);
 
   $async.Stream<$0.BatchGetDocumentsResponse> batchGetDocuments_Pre($grpc.ServiceCall $call, $async.Future<$0.BatchGetDocumentsRequest> $request) async* {
     yield* batchGetDocuments($call, await $request);
   }
 
+  $async.Stream<$0.BatchGetDocumentsResponse> batchGetDocuments($grpc.ServiceCall call, $0.BatchGetDocumentsRequest request);
+
   $async.Future<$0.BeginTransactionResponse> beginTransaction_Pre($grpc.ServiceCall $call, $async.Future<$0.BeginTransactionRequest> $request) async {
     return beginTransaction($call, await $request);
   }
+
+  $async.Future<$0.BeginTransactionResponse> beginTransaction($grpc.ServiceCall call, $0.BeginTransactionRequest request);
 
   $async.Future<$0.CommitResponse> commit_Pre($grpc.ServiceCall $call, $async.Future<$0.CommitRequest> $request) async {
     return commit($call, await $request);
   }
 
+  $async.Future<$0.CommitResponse> commit($grpc.ServiceCall call, $0.CommitRequest request);
+
   $async.Future<$2.Empty> rollback_Pre($grpc.ServiceCall $call, $async.Future<$0.RollbackRequest> $request) async {
     return rollback($call, await $request);
   }
+
+  $async.Future<$2.Empty> rollback($grpc.ServiceCall call, $0.RollbackRequest request);
 
   $async.Stream<$0.RunQueryResponse> runQuery_Pre($grpc.ServiceCall $call, $async.Future<$0.RunQueryRequest> $request) async* {
     yield* runQuery($call, await $request);
   }
 
+  $async.Stream<$0.RunQueryResponse> runQuery($grpc.ServiceCall call, $0.RunQueryRequest request);
+
   $async.Stream<$0.RunAggregationQueryResponse> runAggregationQuery_Pre($grpc.ServiceCall $call, $async.Future<$0.RunAggregationQueryRequest> $request) async* {
     yield* runAggregationQuery($call, await $request);
   }
+
+  $async.Stream<$0.RunAggregationQueryResponse> runAggregationQuery($grpc.ServiceCall call, $0.RunAggregationQueryRequest request);
 
   $async.Future<$0.PartitionQueryResponse> partitionQuery_Pre($grpc.ServiceCall $call, $async.Future<$0.PartitionQueryRequest> $request) async {
     return partitionQuery($call, await $request);
   }
 
+  $async.Future<$0.PartitionQueryResponse> partitionQuery($grpc.ServiceCall call, $0.PartitionQueryRequest request);
+
+  $async.Stream<$0.WriteResponse> write($grpc.ServiceCall call, $async.Stream<$0.WriteRequest> request);
+
+  $async.Stream<$0.ListenResponse> listen($grpc.ServiceCall call, $async.Stream<$0.ListenRequest> request);
+
   $async.Future<$0.ListCollectionIdsResponse> listCollectionIds_Pre($grpc.ServiceCall $call, $async.Future<$0.ListCollectionIdsRequest> $request) async {
     return listCollectionIds($call, await $request);
   }
+
+  $async.Future<$0.ListCollectionIdsResponse> listCollectionIds($grpc.ServiceCall call, $0.ListCollectionIdsRequest request);
 
   $async.Future<$0.BatchWriteResponse> batchWrite_Pre($grpc.ServiceCall $call, $async.Future<$0.BatchWriteRequest> $request) async {
     return batchWrite($call, await $request);
   }
 
+  $async.Future<$0.BatchWriteResponse> batchWrite($grpc.ServiceCall call, $0.BatchWriteRequest request);
+
   $async.Future<$1.Document> createDocument_Pre($grpc.ServiceCall $call, $async.Future<$0.CreateDocumentRequest> $request) async {
     return createDocument($call, await $request);
   }
 
-  $async.Future<$1.Document> getDocument($grpc.ServiceCall call, $0.GetDocumentRequest request);
-  $async.Future<$0.ListDocumentsResponse> listDocuments($grpc.ServiceCall call, $0.ListDocumentsRequest request);
-  $async.Future<$1.Document> updateDocument($grpc.ServiceCall call, $0.UpdateDocumentRequest request);
-  $async.Future<$2.Empty> deleteDocument($grpc.ServiceCall call, $0.DeleteDocumentRequest request);
-  $async.Stream<$0.BatchGetDocumentsResponse> batchGetDocuments($grpc.ServiceCall call, $0.BatchGetDocumentsRequest request);
-  $async.Future<$0.BeginTransactionResponse> beginTransaction($grpc.ServiceCall call, $0.BeginTransactionRequest request);
-  $async.Future<$0.CommitResponse> commit($grpc.ServiceCall call, $0.CommitRequest request);
-  $async.Future<$2.Empty> rollback($grpc.ServiceCall call, $0.RollbackRequest request);
-  $async.Stream<$0.RunQueryResponse> runQuery($grpc.ServiceCall call, $0.RunQueryRequest request);
-  $async.Stream<$0.RunAggregationQueryResponse> runAggregationQuery($grpc.ServiceCall call, $0.RunAggregationQueryRequest request);
-  $async.Future<$0.PartitionQueryResponse> partitionQuery($grpc.ServiceCall call, $0.PartitionQueryRequest request);
-  $async.Stream<$0.WriteResponse> write($grpc.ServiceCall call, $async.Stream<$0.WriteRequest> request);
-  $async.Stream<$0.ListenResponse> listen($grpc.ServiceCall call, $async.Stream<$0.ListenRequest> request);
-  $async.Future<$0.ListCollectionIdsResponse> listCollectionIds($grpc.ServiceCall call, $0.ListCollectionIdsRequest request);
-  $async.Future<$0.BatchWriteResponse> batchWrite($grpc.ServiceCall call, $0.BatchWriteRequest request);
   $async.Future<$1.Document> createDocument($grpc.ServiceCall call, $0.CreateDocumentRequest request);
+
 }
