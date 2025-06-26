@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/firestore/v1/document.proto
-//
+// Generated from google/firestore/v1/document.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -15,9 +15,9 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../protobuf/struct.pbenum.dart' as $8;
-import '../../protobuf/timestamp.pb.dart' as $6;
-import '../../type/latlng.pb.dart' as $7;
+import '../../protobuf/struct.pbenum.dart' as $2;
+import '../../protobuf/timestamp.pb.dart' as $0;
+import '../../type/latlng.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -28,8 +28,8 @@ class Document extends $pb.GeneratedMessage {
   factory Document({
     $core.String? name,
     $core.Iterable<$core.MapEntry<$core.String, Value>>? fields,
-    $6.Timestamp? createTime,
-    $6.Timestamp? updateTime,
+    $0.Timestamp? createTime,
+    $0.Timestamp? updateTime,
   }) {
     final result = create();
     if (name != null) result.name = name;
@@ -47,8 +47,8 @@ class Document extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Document', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..m<$core.String, Value>(2, _omitFieldNames ? '' : 'fields', entryClassName: 'Document.FieldsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: Value.create, valueDefaultOrMaker: Value.getDefault, packageName: const $pb.PackageName('google.firestore.v1'))
-    ..aOM<$6.Timestamp>(3, _omitFieldNames ? '' : 'createTime', subBuilder: $6.Timestamp.create)
-    ..aOM<$6.Timestamp>(4, _omitFieldNames ? '' : 'updateTime', subBuilder: $6.Timestamp.create)
+    ..aOM<$0.Timestamp>(3, _omitFieldNames ? '' : 'createTime', subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(4, _omitFieldNames ? '' : 'updateTime', subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -113,15 +113,15 @@ class Document extends $pb.GeneratedMessage {
   /// recreated. It can also be compared to values from other documents and
   /// the `read_time` of a query.
   @$pb.TagNumber(3)
-  $6.Timestamp get createTime => $_getN(2);
+  $0.Timestamp get createTime => $_getN(2);
   @$pb.TagNumber(3)
-  set createTime($6.Timestamp value) => $_setField(3, value);
+  set createTime($0.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasCreateTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearCreateTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $6.Timestamp ensureCreateTime() => $_ensure(2);
+  $0.Timestamp ensureCreateTime() => $_ensure(2);
 
   /// Output only. The time at which the document was last changed.
   ///
@@ -129,15 +129,15 @@ class Document extends $pb.GeneratedMessage {
   /// monotonically with each change to the document. It can also be
   /// compared to values from other documents and the `read_time` of a query.
   @$pb.TagNumber(4)
-  $6.Timestamp get updateTime => $_getN(3);
+  $0.Timestamp get updateTime => $_getN(3);
   @$pb.TagNumber(4)
-  set updateTime($6.Timestamp value) => $_setField(4, value);
+  set updateTime($0.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasUpdateTime() => $_has(3);
   @$pb.TagNumber(4)
   void clearUpdateTime() => $_clearField(4);
   @$pb.TagNumber(4)
-  $6.Timestamp ensureUpdateTime() => $_ensure(3);
+  $0.Timestamp ensureUpdateTime() => $_ensure(3);
 }
 
 enum Value_ValueType {
@@ -163,10 +163,10 @@ class Value extends $pb.GeneratedMessage {
     $core.double? doubleValue,
     $core.String? referenceValue,
     MapValue? mapValue,
-    $7.LatLng? geoPointValue,
+    $1.LatLng? geoPointValue,
     ArrayValue? arrayValue,
-    $6.Timestamp? timestampValue,
-    $8.NullValue? nullValue,
+    $0.Timestamp? timestampValue,
+    $2.NullValue? nullValue,
     $core.String? stringValue,
     $core.List<$core.int>? bytesValue,
   }) {
@@ -211,10 +211,10 @@ class Value extends $pb.GeneratedMessage {
     ..a<$core.double>(3, _omitFieldNames ? '' : 'doubleValue', $pb.PbFieldType.OD)
     ..aOS(5, _omitFieldNames ? '' : 'referenceValue')
     ..aOM<MapValue>(6, _omitFieldNames ? '' : 'mapValue', subBuilder: MapValue.create)
-    ..aOM<$7.LatLng>(8, _omitFieldNames ? '' : 'geoPointValue', subBuilder: $7.LatLng.create)
+    ..aOM<$1.LatLng>(8, _omitFieldNames ? '' : 'geoPointValue', subBuilder: $1.LatLng.create)
     ..aOM<ArrayValue>(9, _omitFieldNames ? '' : 'arrayValue', subBuilder: ArrayValue.create)
-    ..aOM<$6.Timestamp>(10, _omitFieldNames ? '' : 'timestampValue', subBuilder: $6.Timestamp.create)
-    ..e<$8.NullValue>(11, _omitFieldNames ? '' : 'nullValue', $pb.PbFieldType.OE, defaultOrMaker: $8.NullValue.NULL_VALUE, valueOf: $8.NullValue.valueOf, enumValues: $8.NullValue.values)
+    ..aOM<$0.Timestamp>(10, _omitFieldNames ? '' : 'timestampValue', subBuilder: $0.Timestamp.create)
+    ..e<$2.NullValue>(11, _omitFieldNames ? '' : 'nullValue', $pb.PbFieldType.OE, defaultOrMaker: $2.NullValue.NULL_VALUE, valueOf: $2.NullValue.valueOf, enumValues: $2.NullValue.values)
     ..aOS(17, _omitFieldNames ? '' : 'stringValue')
     ..a<$core.List<$core.int>>(18, _omitFieldNames ? '' : 'bytesValue', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
@@ -295,15 +295,15 @@ class Value extends $pb.GeneratedMessage {
 
   /// A geo point value representing a point on the surface of Earth.
   @$pb.TagNumber(8)
-  $7.LatLng get geoPointValue => $_getN(5);
+  $1.LatLng get geoPointValue => $_getN(5);
   @$pb.TagNumber(8)
-  set geoPointValue($7.LatLng value) => $_setField(8, value);
+  set geoPointValue($1.LatLng value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasGeoPointValue() => $_has(5);
   @$pb.TagNumber(8)
   void clearGeoPointValue() => $_clearField(8);
   @$pb.TagNumber(8)
-  $7.LatLng ensureGeoPointValue() => $_ensure(5);
+  $1.LatLng ensureGeoPointValue() => $_ensure(5);
 
   /// An array value.
   ///
@@ -325,21 +325,21 @@ class Value extends $pb.GeneratedMessage {
   /// Precise only to microseconds. When stored, any additional precision is
   /// rounded down.
   @$pb.TagNumber(10)
-  $6.Timestamp get timestampValue => $_getN(7);
+  $0.Timestamp get timestampValue => $_getN(7);
   @$pb.TagNumber(10)
-  set timestampValue($6.Timestamp value) => $_setField(10, value);
+  set timestampValue($0.Timestamp value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasTimestampValue() => $_has(7);
   @$pb.TagNumber(10)
   void clearTimestampValue() => $_clearField(10);
   @$pb.TagNumber(10)
-  $6.Timestamp ensureTimestampValue() => $_ensure(7);
+  $0.Timestamp ensureTimestampValue() => $_ensure(7);
 
   /// A null value.
   @$pb.TagNumber(11)
-  $8.NullValue get nullValue => $_getN(8);
+  $2.NullValue get nullValue => $_getN(8);
   @$pb.TagNumber(11)
-  set nullValue($8.NullValue value) => $_setField(11, value);
+  set nullValue($2.NullValue value) => $_setField(11, value);
   @$pb.TagNumber(11)
   $core.bool hasNullValue() => $_has(8);
   @$pb.TagNumber(11)

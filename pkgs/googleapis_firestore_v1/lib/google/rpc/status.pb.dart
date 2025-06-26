@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/rpc/status.proto
-//
+// Generated from google/rpc/status.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../protobuf/any.pb.dart' as $17;
+import '../protobuf/any.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -29,7 +29,7 @@ class Status extends $pb.GeneratedMessage {
   factory Status({
     $core.int? code,
     $core.String? message,
-    $core.Iterable<$17.Any>? details,
+    $core.Iterable<$0.Any>? details,
   }) {
     final result = create();
     if (code != null) result.code = code;
@@ -46,7 +46,7 @@ class Status extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Status', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.rpc'), createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'code', $pb.PbFieldType.O3)
     ..aOS(2, _omitFieldNames ? '' : 'message')
-    ..pc<$17.Any>(3, _omitFieldNames ? '' : 'details', $pb.PbFieldType.PM, subBuilder: $17.Any.create)
+    ..pc<$0.Any>(3, _omitFieldNames ? '' : 'details', $pb.PbFieldType.PM, subBuilder: $0.Any.create)
     ..hasRequiredFields = false
   ;
 
@@ -94,7 +94,7 @@ class Status extends $pb.GeneratedMessage {
   /// A list of messages that carry the error details.  There is a common set of
   /// message types for APIs to use.
   @$pb.TagNumber(3)
-  $pb.PbList<$17.Any> get details => $_getList(2);
+  $pb.PbList<$0.Any> get details => $_getList(2);
 }
 
 

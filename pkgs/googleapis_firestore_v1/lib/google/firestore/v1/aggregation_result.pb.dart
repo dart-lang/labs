@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/firestore/v1/aggregation_result.proto
-//
+// Generated from google/firestore/v1/aggregation_result.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -14,7 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'document.pb.dart' as $1;
+import 'document.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -25,7 +25,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// each result.
 class AggregationResult extends $pb.GeneratedMessage {
   factory AggregationResult({
-    $core.Iterable<$core.MapEntry<$core.String, $1.Value>>? aggregateFields,
+    $core.Iterable<$core.MapEntry<$core.String, $0.Value>>? aggregateFields,
   }) {
     final result = create();
     if (aggregateFields != null) result.aggregateFields.addEntries(aggregateFields);
@@ -38,7 +38,7 @@ class AggregationResult extends $pb.GeneratedMessage {
   factory AggregationResult.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AggregationResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..m<$core.String, $1.Value>(2, _omitFieldNames ? '' : 'aggregateFields', entryClassName: 'AggregationResult.AggregateFieldsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: $1.Value.create, valueDefaultOrMaker: $1.Value.getDefault, packageName: const $pb.PackageName('google.firestore.v1'))
+    ..m<$core.String, $0.Value>(2, _omitFieldNames ? '' : 'aggregateFields', entryClassName: 'AggregationResult.AggregateFieldsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: $0.Value.create, valueDefaultOrMaker: $0.Value.getDefault, packageName: const $pb.PackageName('google.firestore.v1'))
     ..hasRequiredFields = false
   ;
 
@@ -66,7 +66,7 @@ class AggregationResult extends $pb.GeneratedMessage {
   /// assigned to the aggregation function on input and the size of this map
   /// equals the number of aggregation functions in the query.
   @$pb.TagNumber(2)
-  $pb.PbMap<$core.String, $1.Value> get aggregateFields => $_getMap(0);
+  $pb.PbMap<$core.String, $0.Value> get aggregateFields => $_getMap(0);
 }
 
 

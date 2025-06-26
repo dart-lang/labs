@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/firestore/v1/query_profile.proto
-//
+// Generated from google/firestore/v1/query_profile.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -15,8 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../protobuf/duration.pb.dart' as $4;
-import '../../protobuf/struct.pb.dart' as $8;
+import '../../protobuf/duration.pb.dart' as $1;
+import '../../protobuf/struct.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -144,7 +144,7 @@ class ExplainMetrics extends $pb.GeneratedMessage {
 /// Planning phase information for the query.
 class PlanSummary extends $pb.GeneratedMessage {
   factory PlanSummary({
-    $core.Iterable<$8.Struct>? indexesUsed,
+    $core.Iterable<$0.Struct>? indexesUsed,
   }) {
     final result = create();
     if (indexesUsed != null) result.indexesUsed.addAll(indexesUsed);
@@ -157,7 +157,7 @@ class PlanSummary extends $pb.GeneratedMessage {
   factory PlanSummary.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PlanSummary', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..pc<$8.Struct>(1, _omitFieldNames ? '' : 'indexesUsed', $pb.PbFieldType.PM, subBuilder: $8.Struct.create)
+    ..pc<$0.Struct>(1, _omitFieldNames ? '' : 'indexesUsed', $pb.PbFieldType.PM, subBuilder: $0.Struct.create)
     ..hasRequiredFields = false
   ;
 
@@ -184,16 +184,16 @@ class PlanSummary extends $pb.GeneratedMessage {
   ///    {"query_scope": "Collection", "properties": "(bar ASC, __name__ ASC)"}
   ///  ]
   @$pb.TagNumber(1)
-  $pb.PbList<$8.Struct> get indexesUsed => $_getList(0);
+  $pb.PbList<$0.Struct> get indexesUsed => $_getList(0);
 }
 
 /// Execution statistics for the query.
 class ExecutionStats extends $pb.GeneratedMessage {
   factory ExecutionStats({
     $fixnum.Int64? resultsReturned,
-    $4.Duration? executionDuration,
+    $1.Duration? executionDuration,
     $fixnum.Int64? readOperations,
-    $8.Struct? debugStats,
+    $0.Struct? debugStats,
   }) {
     final result = create();
     if (resultsReturned != null) result.resultsReturned = resultsReturned;
@@ -210,9 +210,9 @@ class ExecutionStats extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExecutionStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'resultsReturned')
-    ..aOM<$4.Duration>(3, _omitFieldNames ? '' : 'executionDuration', subBuilder: $4.Duration.create)
+    ..aOM<$1.Duration>(3, _omitFieldNames ? '' : 'executionDuration', subBuilder: $1.Duration.create)
     ..aInt64(4, _omitFieldNames ? '' : 'readOperations')
-    ..aOM<$8.Struct>(5, _omitFieldNames ? '' : 'debugStats', subBuilder: $8.Struct.create)
+    ..aOM<$0.Struct>(5, _omitFieldNames ? '' : 'debugStats', subBuilder: $0.Struct.create)
     ..hasRequiredFields = false
   ;
 
@@ -246,15 +246,15 @@ class ExecutionStats extends $pb.GeneratedMessage {
 
   /// Total time to execute the query in the backend.
   @$pb.TagNumber(3)
-  $4.Duration get executionDuration => $_getN(1);
+  $1.Duration get executionDuration => $_getN(1);
   @$pb.TagNumber(3)
-  set executionDuration($4.Duration value) => $_setField(3, value);
+  set executionDuration($1.Duration value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasExecutionDuration() => $_has(1);
   @$pb.TagNumber(3)
   void clearExecutionDuration() => $_clearField(3);
   @$pb.TagNumber(3)
-  $4.Duration ensureExecutionDuration() => $_ensure(1);
+  $1.Duration ensureExecutionDuration() => $_ensure(1);
 
   /// Total billable read operations.
   @$pb.TagNumber(4)
@@ -279,15 +279,15 @@ class ExecutionStats extends $pb.GeneratedMessage {
   ///    }
   ///  }
   @$pb.TagNumber(5)
-  $8.Struct get debugStats => $_getN(3);
+  $0.Struct get debugStats => $_getN(3);
   @$pb.TagNumber(5)
-  set debugStats($8.Struct value) => $_setField(5, value);
+  set debugStats($0.Struct value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasDebugStats() => $_has(3);
   @$pb.TagNumber(5)
   void clearDebugStats() => $_clearField(5);
   @$pb.TagNumber(5)
-  $8.Struct ensureDebugStats() => $_ensure(3);
+  $0.Struct ensureDebugStats() => $_ensure(3);
 }
 
 

@@ -1,7 +1,7 @@
+// This is a generated file - do not edit.
 //
-//  Generated code. Do not modify.
-//  source: google/api/client.proto
-//
+// Generated from google/api/client.proto.
+
 // @dart = 3.3
 
 // ignore_for_file: annotate_overrides, camel_case_types, comment_references
@@ -14,9 +14,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../protobuf/duration.pb.dart' as $4;
+import '../protobuf/duration.pb.dart' as $0;
 import 'client.pbenum.dart';
-import 'launch_stage.pbenum.dart' as $5;
+import 'launch_stage.pbenum.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -102,7 +102,7 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
 class ClientLibrarySettings extends $pb.GeneratedMessage {
   factory ClientLibrarySettings({
     $core.String? version,
-    $5.LaunchStage? launchStage,
+    $1.LaunchStage? launchStage,
     $core.bool? restNumericEnums,
     JavaSettings? javaSettings,
     CppSettings? cppSettings,
@@ -135,7 +135,7 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ClientLibrarySettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'version')
-    ..e<$5.LaunchStage>(2, _omitFieldNames ? '' : 'launchStage', $pb.PbFieldType.OE, defaultOrMaker: $5.LaunchStage.LAUNCH_STAGE_UNSPECIFIED, valueOf: $5.LaunchStage.valueOf, enumValues: $5.LaunchStage.values)
+    ..e<$1.LaunchStage>(2, _omitFieldNames ? '' : 'launchStage', $pb.PbFieldType.OE, defaultOrMaker: $1.LaunchStage.LAUNCH_STAGE_UNSPECIFIED, valueOf: $1.LaunchStage.valueOf, enumValues: $1.LaunchStage.values)
     ..aOB(3, _omitFieldNames ? '' : 'restNumericEnums')
     ..aOM<JavaSettings>(21, _omitFieldNames ? '' : 'javaSettings', subBuilder: JavaSettings.create)
     ..aOM<CppSettings>(22, _omitFieldNames ? '' : 'cppSettings', subBuilder: CppSettings.create)
@@ -179,9 +179,9 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
 
   /// Launch stage of this version of the API.
   @$pb.TagNumber(2)
-  $5.LaunchStage get launchStage => $_getN(1);
+  $1.LaunchStage get launchStage => $_getN(1);
   @$pb.TagNumber(2)
-  set launchStage($5.LaunchStage value) => $_setField(2, value);
+  set launchStage($1.LaunchStage value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasLaunchStage() => $_has(1);
   @$pb.TagNumber(2)
@@ -1082,10 +1082,10 @@ class GoSettings extends $pb.GeneratedMessage {
 /// [Java](https://github.com/googleapis/gapic-generator-java/blob/04c2faa191a9b5a10b92392fe8482279c4404803/src/main/java/com/google/api/generator/gapic/composer/common/RetrySettingsComposer.java)).
 class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   factory MethodSettings_LongRunning({
-    $4.Duration? initialPollDelay,
+    $0.Duration? initialPollDelay,
     $core.double? pollDelayMultiplier,
-    $4.Duration? maxPollDelay,
-    $4.Duration? totalPollTimeout,
+    $0.Duration? maxPollDelay,
+    $0.Duration? totalPollTimeout,
   }) {
     final result = create();
     if (initialPollDelay != null) result.initialPollDelay = initialPollDelay;
@@ -1101,10 +1101,10 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   factory MethodSettings_LongRunning.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MethodSettings.LongRunning', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<$4.Duration>(1, _omitFieldNames ? '' : 'initialPollDelay', subBuilder: $4.Duration.create)
+    ..aOM<$0.Duration>(1, _omitFieldNames ? '' : 'initialPollDelay', subBuilder: $0.Duration.create)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'pollDelayMultiplier', $pb.PbFieldType.OF)
-    ..aOM<$4.Duration>(3, _omitFieldNames ? '' : 'maxPollDelay', subBuilder: $4.Duration.create)
-    ..aOM<$4.Duration>(4, _omitFieldNames ? '' : 'totalPollTimeout', subBuilder: $4.Duration.create)
+    ..aOM<$0.Duration>(3, _omitFieldNames ? '' : 'maxPollDelay', subBuilder: $0.Duration.create)
+    ..aOM<$0.Duration>(4, _omitFieldNames ? '' : 'totalPollTimeout', subBuilder: $0.Duration.create)
     ..hasRequiredFields = false
   ;
 
@@ -1128,15 +1128,15 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   /// Initial delay after which the first poll request will be made.
   /// Default value: 5 seconds.
   @$pb.TagNumber(1)
-  $4.Duration get initialPollDelay => $_getN(0);
+  $0.Duration get initialPollDelay => $_getN(0);
   @$pb.TagNumber(1)
-  set initialPollDelay($4.Duration value) => $_setField(1, value);
+  set initialPollDelay($0.Duration value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasInitialPollDelay() => $_has(0);
   @$pb.TagNumber(1)
   void clearInitialPollDelay() => $_clearField(1);
   @$pb.TagNumber(1)
-  $4.Duration ensureInitialPollDelay() => $_ensure(0);
+  $0.Duration ensureInitialPollDelay() => $_ensure(0);
 
   /// Multiplier to gradually increase delay between subsequent polls until it
   /// reaches max_poll_delay.
@@ -1153,28 +1153,28 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   /// Maximum time between two subsequent poll requests.
   /// Default value: 45 seconds.
   @$pb.TagNumber(3)
-  $4.Duration get maxPollDelay => $_getN(2);
+  $0.Duration get maxPollDelay => $_getN(2);
   @$pb.TagNumber(3)
-  set maxPollDelay($4.Duration value) => $_setField(3, value);
+  set maxPollDelay($0.Duration value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasMaxPollDelay() => $_has(2);
   @$pb.TagNumber(3)
   void clearMaxPollDelay() => $_clearField(3);
   @$pb.TagNumber(3)
-  $4.Duration ensureMaxPollDelay() => $_ensure(2);
+  $0.Duration ensureMaxPollDelay() => $_ensure(2);
 
   /// Total polling timeout.
   /// Default value: 5 minutes.
   @$pb.TagNumber(4)
-  $4.Duration get totalPollTimeout => $_getN(3);
+  $0.Duration get totalPollTimeout => $_getN(3);
   @$pb.TagNumber(4)
-  set totalPollTimeout($4.Duration value) => $_setField(4, value);
+  set totalPollTimeout($0.Duration value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTotalPollTimeout() => $_has(3);
   @$pb.TagNumber(4)
   void clearTotalPollTimeout() => $_clearField(4);
   @$pb.TagNumber(4)
-  $4.Duration ensureTotalPollTimeout() => $_ensure(3);
+  $0.Duration ensureTotalPollTimeout() => $_ensure(3);
 }
 
 /// Describes the generator configuration for a method.
