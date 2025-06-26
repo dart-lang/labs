@@ -60,7 +60,7 @@ void main() {
           'cannot rename file',
           path1: '/foo/baz',
           path2: '/foo/bar',
-          systemCall: SystemCallError('open', 13, 'permission denied'),
+          systemCall: SystemCallError('rename', 13, 'permission denied'),
         ).toString(),
         'IOFileException: cannot rename file, '
         'path1="/foo/baz", path2="/foo/bar" '
