@@ -180,6 +180,16 @@ void main() {
         expect(File(path).readAsBytesSync(), [1, 2, 3] + data);
       });
 
+      test('null file', () {
+        final data = randomUint8List(20);
+
+        fileSystem.writeAsBytes(
+          Platform.isWindows ? r'\\.\NUL' : '/dev/null',
+          Uint8List.fromList(data),
+          WriteMode.appendExisting,
+        );
+      });
+
       test('failExisting', () {
         final data = randomUint8List(20);
         final path = '$tmp/file';
