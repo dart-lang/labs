@@ -10,6 +10,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -17,14 +18,20 @@ import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
-  //TODO(brianquinlan): test with a very long path.
-
   group('writeAsString', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('writeAsString'));
+    setUp(() {
+      tmp = createTemp('writeAsString');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('directory', () {
       expect(
@@ -202,6 +209,20 @@ void main() {
 
         expect(File(path).readAsStringSync(), 'Hello World!');
       });
+    });
+
+    test('absolute path, long file name', () {
+      final path = p.join(tmp, 'f' * 255);
+
+      fileSystem.writeAsString(path, 'Hello World!');
+      expect(File(path).readAsStringSync(), 'Hello World!');
+    });
+
+    test('relative path, long file name', () {
+      final path = 'f' * 255;
+
+      fileSystem.writeAsString(path, 'Hello World!');
+      expect(File(path).readAsStringSync(), 'Hello World!');
     });
 
     group('encoding', () {

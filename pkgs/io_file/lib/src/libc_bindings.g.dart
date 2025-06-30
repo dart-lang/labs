@@ -115,8 +115,16 @@ external ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> template);
 external ffi.Pointer<ffi.Char> strerror(int errnum);
 
 /// <unistd.h>
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_chdir')
+external int chdir(ffi.Pointer<ffi.Char> path);
+
 @ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_close')
 external int close(int fd);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int64)>(
+  symbol: 'libc_shim_getcwd',
+)
+external ffi.Pointer<ffi.Char> getcwd(ffi.Pointer<ffi.Char> buf, int size);
 
 @ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>(
   symbol: 'libc_shim_unlinkat',

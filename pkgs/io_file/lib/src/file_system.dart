@@ -132,7 +132,13 @@ class WriteMode {
 ///
 /// TODO(brianquinlan): Far now, this class is not meant to be implemented,
 /// extended outside of this package. Clarify somewhere that people implementing
-/// this class should reach out to be.
+/// this class should reach out to me.
+///
+/// On Windows, paths refering to objects in the
+/// [win32 device namespace](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-device-namespaces),
+/// such as named pipes, physical disks, and serial comnmunications ports
+/// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'COM1'` would
+/// be refered to by the path `r'\\.\COM1'`.
 @sealed
 abstract class FileSystem {
   /// Create a directory at the given path.
@@ -185,6 +191,19 @@ abstract class FileSystem {
   /// The most reliable way to determine if a file system object can be read or
   /// written to is to attempt to open it.
   Metadata metadata(String path);
+
+  /// The current
+  /// [working directory](https://en.wikipedia.org/wiki/Working_directory) of
+  /// the Dart process.
+  ///
+  /// Setting the value of this field will change the working directory for
+  /// *all* isolates.
+  ///
+  /// On Windows, unless
+  /// [long paths are enabled](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation),
+  /// the maximum length of the [currentDirectory] path is 260 characters.
+  String get currentDirectory;
+  set currentDirectory(String path);
 
   /// Deletes the directory at the given path.
   ///

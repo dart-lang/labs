@@ -10,6 +10,7 @@ import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
 import 'package:io_file/src/internal_constants.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -22,10 +23,18 @@ void main() {
 
   group('readAsBytes', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('readAsBytes'));
+    setUp(() {
+      tmp = createTemp('readAsBytes');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('non-existant file', () {
       expect(
@@ -136,6 +145,22 @@ void main() {
       }
     });
     group('regular files', () {
+      test('absolute path, long file name', () {
+        final data = randomUint8List(20);
+        final path = p.join(tmp, 'f' * 255);
+        File(path).writeAsBytesSync(data);
+
+        expect(fileSystem.readAsBytes(path), data);
+      });
+
+      test('relative path, long file name', () {
+        final data = randomUint8List(20);
+        final path = 'f' * 255;
+        File(path).writeAsBytesSync(data);
+
+        expect(fileSystem.readAsBytes(path), data);
+      });
+
       for (var i = 0; i <= 1024; ++i) {
         test('Read small file: $i bytes', () {
           final data = randomUint8List(i);

@@ -18,12 +18,18 @@ import 'test_utils.dart';
 void main() {
   group('createTemporaryDirectory', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('createTemporaryDirectory'));
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
-
-    //TODO(brianquinlan): test with a very long path.
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('no arguments', () {
       final tmp1 = fileSystem.createTemporaryDirectory();
@@ -80,6 +86,25 @@ void main() {
     test('parent', () {
       final tmp1 = fileSystem.createTemporaryDirectory(parent: tmp);
       final tmp2 = fileSystem.createTemporaryDirectory(parent: tmp);
+
+      expect(tmp1, startsWith(tmp));
+      expect(tmp2, startsWith(tmp));
+      expect(fileSystem.same(tmp1, tmp2), isFalse);
+      expect(Directory(tmp1).existsSync(), isTrue);
+      expect(Directory(tmp2).existsSync(), isTrue);
+    });
+
+    test('parent has a long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final dirname = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final parent = p.join(tmp, dirname);
+      Directory(parent).createSync();
+
+      final tmp1 = fileSystem.createTemporaryDirectory(parent: parent);
+      final tmp2 = fileSystem.createTemporaryDirectory(parent: parent);
 
       expect(tmp1, startsWith(tmp));
       expect(tmp2, startsWith(tmp));

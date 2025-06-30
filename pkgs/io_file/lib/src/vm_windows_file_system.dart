@@ -30,6 +30,84 @@ void _primeGetLastError() {
   win32.GetLastError();
 }
 
+extension on Allocator {
+  /// Duplicate a `LPCWSTR` into the [Allocator]'s memory pool.
+  Pointer<Utf16> duplicateUtf16(Pointer<Utf16> str) {
+    final wcharString = str.cast<WChar>();
+    var length = 0;
+    while (wcharString[length] != 0) {
+      length++;
+    }
+
+    final duplicateString = this<WChar>(length + 1);
+    for (var i = 0; i < length; ++i) {
+      duplicateString[i] = wcharString[i];
+    }
+    duplicateString[length] = 0;
+    return duplicateString.cast();
+  }
+}
+
+/// Create a Windows `LPCWSTR` path from a Dart path, possibly with (`r'\\?\'`)
+/// prepended.
+///
+/// Prepending a path with `r'\\?\'` "...tells the Windows APIs to disable all
+/// string parsing and to send the string that follows it straight to the file
+/// system." This has several effects (for full details, see
+/// https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file):
+/// - the 260 character limit on paths no longer applies
+/// - files in the Win32 device namespace (e.g. "COM1" or named pipes) are not
+///   visible
+/// - special characters are no longer interpreted (e.g. "./foo" would refer to
+///   a file with that literal name)
+///
+/// In order to allow paths longer than 260 character, while still allowing
+/// virtual files to accessed, this function does not prepend `r'\\?\'` to UNC
+/// paths (paths starting with `r'\\'`). This means that, to open "COM1", the
+/// caller has to explicitly indicate that "COM1" is in the device namespace by
+/// adding the `r'\\.\'` prefix, i.e. `r'\\.\COM1'`. Note that for named pipes
+/// and serial communication ports greater than "COM9", the Windows API already
+/// requires that the device namespace prefix be used.
+///
+/// In order to continue to allow special characters in paths, this function
+/// converts the given path to an absolute path and then canonicalizes it before
+/// prepending `r'\\?\'`.
+Pointer<Utf16> _extendedPath(String path, Allocator allocator) {
+  if (path.startsWith(r'\\')) {
+    return path.toNativeUtf16(allocator: allocator);
+  }
+
+  // Optimistically assume that the full path will be only slightly longer than
+  // the given path. If that turns out to not to be enough, we will get the
+  // required size from `GetFullPathName` and try again.
+  var length = path.length + 16;
+  var utf16Path = path.toNativeUtf16(allocator: allocator);
+  do {
+    final buffer = win32.wsalloc(length);
+    try {
+      final result = win32.GetFullPathName(utf16Path, length, buffer, nullptr);
+      if (result == 0) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFullPathName failed', path);
+      }
+      if (result < length) {
+        final canonicalPath = allocator<Pointer<Utf16>>();
+        win32.PathAllocCanonicalize(
+          buffer,
+          win32.PATHCCH_ENSURE_IS_EXTENDED_LENGTH_PATH,
+          canonicalPath,
+        );
+        final dup = allocator.duplicateUtf16(canonicalPath.value);
+        return dup;
+      } else {
+        length = result;
+      }
+    } finally {
+      win32.free(buffer);
+    }
+  } while (true);
+}
+
 String _formatMessage(int errorCode) {
   final buffer = win32.wsalloc(1024);
   try {
@@ -249,12 +327,63 @@ final class WindowsMetadata implements Metadata {
 }
 
 /// A [FileSystem] implementation for Windows systems.
+///
+/// On Windows, paths refering to objects in the
+/// [win32 device namespace](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-device-namespaces),
+/// such as named pipes, physical disks, and serial comnmunications ports
+/// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'COM1'` would
+/// be refered to by the path `r'\\.\COM1'`.
 final class WindowsFileSystem extends FileSystem {
+  @override
+  bool same(String path1, String path2) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
+    final info1 = _byHandleFileInformation(path1, arena);
+    final info2 = _byHandleFileInformation(path2, arena);
+
+    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
+        info1.nFileIndexHigh == info2.nFileIndexHigh &&
+        info1.nFileIndexLow == info2.nFileIndexLow;
+  });
+
+  // NOTE: the return value is allocated in the given arena!
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
+    String path,
+    ffi.Arena arena,
+  ) {
+    final h = win32.CreateFile(
+      _extendedPath(path, arena),
+      0,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS,
+      win32.NULL,
+    );
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'CreateFile failed', path);
+    }
+    try {
+      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
+      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
+      }
+      return info.ref;
+    } finally {
+      win32.CloseHandle(h);
+    }
+  }
+
   @override
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.CreateDirectory(path.toNativeUtf16(allocator: arena), nullptr) ==
+    if (win32.CreateDirectory(_extendedPath(path, arena), nullptr) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'create directory failed', path);
@@ -273,11 +402,40 @@ final class WindowsFileSystem extends FileSystem {
   }
 
   @override
+  set currentDirectory(String path) => using((arena) {
+    _primeGetLastError();
+
+    if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, 'SetCurrentDirectory failed', path);
+    }
+  });
+
+  @override
+  String get currentDirectory => using((arena) {
+    _primeGetLastError();
+
+    var length = 256;
+    do {
+      final buffer = win32.wsalloc(length);
+      try {
+        final result = win32.GetCurrentDirectory(length, buffer);
+        if (result < length) {
+          return buffer.toDartString();
+        } else {
+          length = result;
+        }
+      } finally {
+        win32.free(buffer);
+      }
+    } while (true);
+  });
+
+  @override
   void removeDirectory(String path) => using((arena) {
     _primeGetLastError();
 
-    if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
-        win32.FALSE) {
+    if (win32.RemoveDirectory(_extendedPath(path, arena)) == win32.FALSE) {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, 'remove directory failed', path);
     }
@@ -356,8 +514,8 @@ final class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     if (win32.MoveFileEx(
-          oldPath.toNativeUtf16(allocator: arena),
-          newPath.toNativeUtf16(allocator: arena),
+          _extendedPath(oldPath, arena),
+          _extendedPath(newPath, arena),
           win32.MOVEFILE_WRITE_THROUGH | win32.MOVEFILE_REPLACE_EXISTING,
         ) ==
         win32.FALSE) {
@@ -397,7 +555,7 @@ final class WindowsFileSystem extends FileSystem {
       return;
     }
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
-    final nativePath = path.toNativeUtf16(allocator: arena);
+    final nativePath = _extendedPath(path, arena);
     int attributes;
     if (original == null) {
       if (win32.GetFileAttributesEx(
@@ -464,7 +622,7 @@ final class WindowsFileSystem extends FileSystem {
   WindowsMetadata metadata(String path) => using((arena) {
     _primeGetLastError();
 
-    final pathUtf16 = path.toNativeUtf16(allocator: arena);
+    final pathUtf16 = _extendedPath(path, arena);
     final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
     if (win32.GetFileAttributesEx(
           pathUtf16,
@@ -520,7 +678,7 @@ final class WindowsFileSystem extends FileSystem {
     _primeGetLastError();
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(),
+      _extendedPath(path, arena),
       win32.GENERIC_READ | win32.FILE_SHARE_READ,
       win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE,
       nullptr,
@@ -624,48 +782,6 @@ final class WindowsFileSystem extends FileSystem {
   }
 
   @override
-  bool same(String path1, String path2) => using((arena) {
-    _primeGetLastError();
-
-    final info1 = _byHandleFileInformation(path1, arena);
-    final info2 = _byHandleFileInformation(path2, arena);
-
-    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
-        info1.nFileIndexHigh == info2.nFileIndexHigh &&
-        info1.nFileIndexLow == info2.nFileIndexLow;
-  });
-
-  // NOTE: the return value is allocated in the given arena!
-  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
-    String path,
-    ffi.Arena arena,
-  ) {
-    final h = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
-      0,
-      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
-      nullptr,
-      win32.OPEN_EXISTING,
-      win32.FILE_FLAG_BACKUP_SEMANTICS,
-      win32.NULL,
-    );
-    if (h == win32.INVALID_HANDLE_VALUE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'CreateFile failed', path);
-    }
-    try {
-      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
-      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
-        final errorCode = win32.GetLastError();
-        throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
-      }
-      return info.ref;
-    } finally {
-      win32.CloseHandle(h);
-    }
-  }
-
-  @override
   String get temporaryDirectory {
     const maxLength = win32.MAX_PATH + 1;
     final buffer = win32.wsalloc(maxLength);
@@ -698,7 +814,7 @@ final class WindowsFileSystem extends FileSystem {
     };
 
     final f = win32.CreateFile(
-      path.toNativeUtf16(allocator: arena),
+      _extendedPath(path, arena),
       mode == WriteMode.appendExisting
           ? win32.FILE_APPEND_DATA
           : win32.FILE_GENERIC_WRITE,

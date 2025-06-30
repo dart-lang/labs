@@ -8,6 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -17,12 +18,18 @@ import 'test_utils.dart';
 void main() {
   group('removeDirectory', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('removeDirectory'));
+    setUp(() {
+      tmp = createTemp('removeDirectory');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
-
-    //TODO(brianquinlan): test with a very long path.
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('success', () {
       final path = '$tmp/dir';
@@ -30,6 +37,31 @@ void main() {
 
       fileSystem.removeDirectory(path);
 
+      expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
+    });
+
+    test('absolute path, long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final dirname = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final path = p.join(tmp, dirname);
+      Directory(path).createSync();
+
+      fileSystem.removeDirectory(path);
+      expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
+    });
+
+    test('relative path, long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the directory
+      // name cannot exceed MAX_PATH minus 12).
+      final path = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      Directory(path).createSync();
+
+      fileSystem.removeDirectory(path);
       expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
     });
 

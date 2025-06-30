@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
@@ -16,14 +17,20 @@ import 'errors.dart' as errors;
 import 'test_utils.dart';
 
 void main() {
-  //TODO(brianquinlan): test with a very long path.
-
   group('writeAsBytes', () {
     late String tmp;
+    late String cwd;
 
-    setUp(() => tmp = createTemp('writeAsBytes'));
+    setUp(() {
+      tmp = createTemp('writeAsBytes');
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
+    });
 
-    tearDown(() => deleteTemp(tmp));
+    tearDown(() {
+      fileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
 
     test('directory', () {
       expect(
@@ -202,6 +209,22 @@ void main() {
 
         expect(File(path).readAsBytesSync(), data);
       });
+    });
+
+    test('absolute path, long file name', () {
+      final data = randomUint8List(20);
+      final path = p.join(tmp, 'f' * 255);
+
+      fileSystem.writeAsBytes(path, data);
+      expect(fileSystem.readAsBytes(path), data);
+    });
+
+    test('relative path, long file name', () {
+      final data = randomUint8List(20);
+      final path = 'f' * 255;
+
+      fileSystem.writeAsBytes(path, data);
+      expect(fileSystem.readAsBytes(path), data);
     });
 
     group('regular files', () {

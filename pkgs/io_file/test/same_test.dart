@@ -8,6 +8,7 @@ library;
 import 'dart:io';
 
 import 'package:io_file/io_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:stdlibc/stdlibc.dart' as stdlibc;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
@@ -18,19 +19,18 @@ import 'test_utils.dart';
 void main() {
   group('same', () {
     late String tmp;
-    late Directory cwd;
+    late String cwd;
 
     setUp(() {
       tmp = createTemp('same');
-      cwd = Directory.current;
+      cwd = fileSystem.currentDirectory;
+      fileSystem.currentDirectory = tmp;
     });
 
     tearDown(() {
-      Directory.current = cwd;
+      fileSystem.currentDirectory = cwd;
       deleteTemp(tmp);
     });
-
-    //TODO(brianquinlan): test with a very long path.
 
     test('path1 does not exist', () {
       final path1 = '$tmp/file1';
@@ -157,7 +157,7 @@ void main() {
     });
 
     test('same file, absolute and relative paths', () {
-      Directory.current = tmp;
+      fileSystem.currentDirectory = tmp;
       final path1 = '$tmp/file1';
       const path2 = 'file1';
       File(path1).writeAsStringSync('Hello World');
@@ -216,7 +216,6 @@ void main() {
     });
 
     test('same directory, absolute and relative paths', () {
-      Directory.current = tmp;
       final path1 = '$tmp/dir1';
       const path2 = 'dir1';
       Directory(path1).createSync();
@@ -249,6 +248,24 @@ void main() {
       final path1 = '$tmp/subdir/dir1';
       final path2 = '$tmp/link-to-subdir/dir1';
       Directory(path1).createSync();
+
+      expect(fileSystem.same(path1, path2), isTrue);
+    });
+
+    test('absolute path, long names', () {
+      final path1 = p.join(tmp, '1' * 255);
+      final path2 = p.join(tmp, '2' * 255);
+      File(path1).writeAsStringSync('Hello World');
+      Link(path2).createSync(path1);
+
+      expect(fileSystem.same(path1, path2), isTrue);
+    });
+
+    test('relative path, long names', () {
+      final path1 = '1' * 255;
+      final path2 = '2' * 255;
+      File(path1).writeAsStringSync('Hello World');
+      Link(path2).createSync(path1);
 
       expect(fileSystem.same(path1, path2), isTrue);
     });
