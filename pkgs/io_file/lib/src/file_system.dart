@@ -137,8 +137,8 @@ class WriteMode {
 /// On Windows, paths refering to objects in the
 /// [win32 device namespace](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#win32-device-namespaces),
 /// such as named pipes, physical disks, and serial comnmunications ports
-/// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'COM1'` would
-/// be refered to by the path `r'\\.\COM1'`.
+/// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'NUL'` would
+/// be refered to by the path `r'\\.\NUL'`.
 @sealed
 abstract class FileSystem {
   /// Create a directory at the given path.
