@@ -253,8 +253,8 @@ void main() {
     });
 
     test('absolute path, long names', () {
-      final path1 = p.join(tmp, ''.padRight(255, '1'));
-      final path2 = p.join(tmp, ''.padRight(255, '2'));
+      final path1 = p.join(tmp, '1' * 255);
+      final path2 = p.join(tmp, '2' * 255);
       File(path1).writeAsStringSync('Hello World');
       Link(path2).createSync(path1);
 
@@ -262,8 +262,8 @@ void main() {
     });
 
     test('relative path, long names', () {
-      final path1 = ''.padRight(255, '1');
-      final path2 = ''.padRight(255, '2');
+      final path1 = '1' * 255;
+      final path2 = '2' * 255;
       File(path1).writeAsStringSync('Hello World');
       Link(path2).createSync(path1);
 

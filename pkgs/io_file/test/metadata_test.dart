@@ -48,7 +48,7 @@ void main() {
     });
 
     test('absolute path, long name', () {
-      final path = p.join(tmp, ''.padRight(255, 'f'));
+      final path = p.join(tmp, 'f' * 255);
       File(path).writeAsStringSync('Hello World');
 
       final data = fileSystem.metadata(path);
@@ -56,7 +56,7 @@ void main() {
     });
 
     test('relative path, long name', () {
-      final path = ''.padRight(255, 'f');
+      final path = 'f' * 255;
       File(path).writeAsStringSync('Hello World');
 
       final data = fileSystem.metadata(path);

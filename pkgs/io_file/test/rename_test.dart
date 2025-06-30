@@ -40,8 +40,8 @@ void main() {
     });
 
     test('move between absolute paths, long file names', () {
-      final path1 = p.join(tmp, ''.padRight(255, '1'));
-      final path2 = p.join(tmp, ''.padRight(255, '2'));
+      final path1 = p.join(tmp, '1' * 255);
+      final path2 = p.join(tmp, '2' * 255);
       File(path1).writeAsStringSync('Hello World');
 
       fileSystem.rename(path1, path2);
@@ -50,8 +50,8 @@ void main() {
     });
 
     test('move between relative path, long file names', () {
-      final path1 = ''.padRight(255, '1');
-      final path2 = ''.padRight(255, '2');
+      final path1 = '1' * 255;
+      final path2 = '2' * 255;
       File(path1).writeAsStringSync('Hello World');
 
       fileSystem.rename(path1, path2);

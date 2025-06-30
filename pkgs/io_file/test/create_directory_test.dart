@@ -43,10 +43,7 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final dirname = ''.padLeft(
-        Platform.isWindows ? win32.MAX_PATH - 12 : 255,
-        'd',
-      );
+      final dirname = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
       final path = p.join(tmp, dirname);
 
       fileSystem.createDirectory(path);
@@ -54,7 +51,7 @@ void main() {
     });
 
     test('absolute path, too long directory name', () {
-      final path = p.join(tmp, ''.padRight(256, 'd'));
+      final path = p.join(tmp, 'd' * 256);
 
       expect(
         () => fileSystem.createDirectory(path),
@@ -78,17 +75,14 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final path = ''.padLeft(
-        Platform.isWindows ? win32.MAX_PATH - 12 : 255,
-        'd',
-      );
+      final path = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
       fileSystem.createDirectory(path);
 
       expect(FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
     test('relative path, too long directory name', () {
-      final path = ''.padRight(256, 'd');
+      final path = 'd' * 256;
 
       expect(
         () => fileSystem.createDirectory(path),

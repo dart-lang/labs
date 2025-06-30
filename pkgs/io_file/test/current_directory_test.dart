@@ -54,7 +54,7 @@ void main() {
 
     test('absolute path, too long path', () {
       // On Windows, limited to MAX_PATH (260) characters.
-      final path = p.join(tmp, ''.padLeft(200, 'a'), ''.padLeft(200, 'b'));
+      final path = p.join(tmp, 'a' * 200, 'b' * 200);
       Directory(path).createSync(recursive: true);
       final oldCurrentDirectory = fileSystem.currentDirectory;
 

@@ -212,14 +212,14 @@ void main() {
     });
 
     test('absolute path, long file name', () {
-      final path = p.join(tmp, ''.padRight(255, 'f'));
+      final path = p.join(tmp, 'f' * 255);
 
       fileSystem.writeAsString(path, 'Hello World!');
       expect(File(path).readAsStringSync(), 'Hello World!');
     });
 
     test('relative path, long file name', () {
-      final path = ''.padRight(255, 'f');
+      final path = 'f' * 255;
 
       fileSystem.writeAsString(path, 'Hello World!');
       expect(File(path).readAsStringSync(), 'Hello World!');

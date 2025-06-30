@@ -147,7 +147,7 @@ void main() {
     group('regular files', () {
       test('absolute path, long file name', () {
         final data = randomUint8List(20);
-        final path = p.join(tmp, ''.padRight(255, 'f'));
+        final path = p.join(tmp, 'f' * 255);
         File(path).writeAsBytesSync(data);
 
         expect(fileSystem.readAsBytes(path), data);
@@ -155,7 +155,7 @@ void main() {
 
       test('relative path, long file name', () {
         final data = randomUint8List(20);
-        final path = ''.padRight(255, 'f');
+        final path = 'f' * 255;
         File(path).writeAsBytesSync(data);
 
         expect(fileSystem.readAsBytes(path), data);
