@@ -32,7 +32,15 @@ int64_t libc_shim_get_EEXIST(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EINTR(void);
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_EMFILE(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_ENOENT(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_ENOSPC(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_ENOTDIR(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_ENOTEMPTY(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EPERM(void);
 __attribute__((visibility("default"))) __attribute__((used))

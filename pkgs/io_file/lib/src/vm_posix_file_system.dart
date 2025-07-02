@@ -11,6 +11,7 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart' as ffi;
 import 'package:path/path.dart' as p;
 
+import 'exceptions.dart';
 import 'file_system.dart';
 import 'internal_constants.dart';
 import 'libc.dart' as libc;
@@ -26,28 +27,82 @@ const _nanosecondsPerSecond = 1000000000;
 bool _isDotOrDotDot(Pointer<Char> s) => // ord('.') == 46
     s[0] == 46 && ((s[1] == 0) || (s[1] == 46 && s[2] == 0));
 
-Exception _getError(int err, String message, [String? path]) {
-  // TODO(brianquinlan): In the long-term, do we need to avoid exceptions that
-  // are part of `dart:io`? Can we move those exceptions into a different
-  // namespace?
-  final osError = io.OSError(
-    libc.strerror(err).cast<ffi.Utf8>().toDartString(),
-    err,
-  );
+Exception _getError(
+  int errorCode, {
+  required String systemCall,
+  String? path1,
+  String? path2,
+}) {
+  final strError = libc.strerror(errorCode);
+  final message =
+      strError == nullptr
+          ? 'unknown error'
+          : strError.cast<ffi.Utf8>().toDartString();
 
-  if (path != null) {
-    if (err == libc.EPERM || err == libc.EACCES) {
-      return io.PathAccessException(path, osError, message);
-    } else if (err == libc.EEXIST) {
-      return io.PathExistsException(path, osError, message);
-    } else if (err == libc.ENOENT) {
-      return io.PathNotFoundException(path, osError, message);
-    } else {
-      return io.FileSystemException(message, path, osError);
-    }
-  } else {
-    return io.FileSystemException(message, path, osError);
+  if (errorCode == libc.ENOTEMPTY) {
+    return DirectoryNotEmptyException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
+  } else if (errorCode == libc.ENOSPC) {
+    return DiskFullException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
+  } else if (errorCode == libc.ENOTDIR) {
+    return NotADirectoryException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
+  } else if (errorCode == libc.EPERM || errorCode == libc.EACCES) {
+    return PathAccessException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
+  } else if (errorCode == libc.EEXIST) {
+    return PathExistsException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
+  } else if (errorCode == libc.ENOENT) {
+    return PathNotFoundException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
+  } else if (errorCode == libc.EMFILE) {
+    return TooManyOpenFilesException(
+      message,
+      errorCode: errorCode,
+      path1: path1,
+      path2: path2,
+      systemCall: systemCall,
+    );
   }
+  return IOFileException(
+    message,
+    errorCode: errorCode,
+    path1: path1,
+    path2: path2,
+    systemCall: systemCall,
+  );
 }
 
 /// Return the given function until the result is not `EINTR`.
@@ -220,13 +275,13 @@ final class PosixFileSystem extends FileSystem {
     final stat1 = arena<libc.Stat>();
     if (libc.stat(path1.toNativeUtf8(allocator: arena).cast(), stat1) == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'stat failed', path1);
+      throw _getError(errno, systemCall: 'stat', path1: path1);
     }
 
     final stat2 = arena<libc.Stat>();
     if (libc.stat(path2.toNativeUtf8(allocator: arena).cast(), stat2) == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'stat failed', path2);
+      throw _getError(errno, systemCall: 'stat', path1: path2);
     }
 
     return (stat1.ref.st_ino == stat2.ref.st_ino) &&
@@ -241,7 +296,7 @@ final class PosixFileSystem extends FileSystem {
         ) ==
         -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'create directory failed', path);
+      throw _getError(errno, systemCall: 'mkdir', path1: path);
     }
   });
 
@@ -249,7 +304,7 @@ final class PosixFileSystem extends FileSystem {
   set currentDirectory(String path) => ffi.using((arena) {
     if (libc.chdir(path.toNativeUtf8(allocator: arena).cast()) == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'chdir failed', path);
+      throw _getError(errno, systemCall: 'chdir', path1: path);
     }
   });
 
@@ -258,7 +313,7 @@ final class PosixFileSystem extends FileSystem {
     final buffer = arena<Char>(libc.PATH_MAX);
     if (libc.getcwd(buffer, libc.PATH_MAX) == nullptr) {
       final errno = libc.errno;
-      throw _getError(errno, 'getcwd failed', null);
+      throw _getError(errno, systemCall: 'getcwd');
     }
     return buffer.cast<ffi.Utf8>().toDartString();
   });
@@ -274,7 +329,7 @@ final class PosixFileSystem extends FileSystem {
         );
         if (path == nullptr) {
           final errno = libc.errno;
-          throw _getError(errno, 'mkdtemp failed', template);
+          throw _getError(errno, systemCall: 'mkdtemp', path1: template);
         }
         return path.cast<ffi.Utf8>().toDartString();
       });
@@ -285,7 +340,7 @@ final class PosixFileSystem extends FileSystem {
 
     if (libc.lstat(path.toNativeUtf8(allocator: arena).cast(), stat) == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'stat failed', path);
+      throw _getError(errno, systemCall: 'lstat', path1: path);
     }
 
     return PosixMetadata.fromFileAttributes(
@@ -313,7 +368,7 @@ final class PosixFileSystem extends FileSystem {
         ) ==
         -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'remove directory failed', path);
+      throw _getError(errno, systemCall: 'unlinkat', path1: path);
     }
   });
 
@@ -330,13 +385,13 @@ final class PosixFileSystem extends FileSystem {
     );
     if (fd == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'openat failed', path);
+      throw _getError(errno, systemCall: 'openat', path1: path);
     }
     try {
       final dir = libc.fdopendir(fd);
       if (dir == nullptr) {
         final errno = libc.errno;
-        throw _getError(errno, 'fdopendir failed', path);
+        throw _getError(errno, systemCall: 'fdopendir', path1: path);
       }
       try {
         // `readdir` returns `NULL` but leaves `errno` unchanged if the end of
@@ -366,7 +421,7 @@ final class PosixFileSystem extends FileSystem {
             /// DT_UNKNOWN.
             if (libc.fstatat(fd, child, stat, libc.AT_SYMLINK_NOFOLLOW) == -1) {
               final errno = libc.errno;
-              throw _getError(errno, 'fstatat failed', childPath);
+              throw _getError(errno, systemCall: 'fstatat', path1: childPath);
             }
             type =
                 stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR
@@ -378,7 +433,7 @@ final class PosixFileSystem extends FileSystem {
           } else {
             if (libc.unlinkat(fd, child, 0) == -1) {
               final errno = libc.errno;
-              throw _getError(errno, 'unlinkat failed', childPath);
+              throw _getError(errno, systemCall: 'unlinkat', path1: childPath);
             }
           }
           libc.errno = 0;
@@ -386,11 +441,11 @@ final class PosixFileSystem extends FileSystem {
         }
         if (libc.errno != 0) {
           final errno = libc.errno;
-          throw _getError(errno, 'readdir failed', path);
+          throw _getError(errno, systemCall: 'readdir', path1: path);
         }
         if (libc.unlinkat(parentfd, name.cast(), libc.AT_REMOVEDIR) == -1) {
           final errno = libc.errno;
-          throw _getError(errno, 'unlinkat failed', path);
+          throw _getError(errno, systemCall: 'unlinkat', path1: path);
         }
       } finally {
         libc.closedir(dir);
@@ -418,7 +473,12 @@ final class PosixFileSystem extends FileSystem {
         ) !=
         0) {
       final errno = libc.errno;
-      throw _getError(errno, 'rename failed', oldPath);
+      throw _getError(
+        errno,
+        systemCall: 'rename',
+        path1: oldPath,
+        path2: newPath,
+      );
     }
   });
 
@@ -433,7 +493,7 @@ final class PosixFileSystem extends FileSystem {
     );
     if (fd == -1) {
       final errno = libc.errno;
-      throw _getError(errno, 'open failed', path);
+      throw _getError(errno, systemCall: 'open', path1: path);
     }
     try {
       final stat = arena<libc.Stat>();
@@ -461,7 +521,7 @@ final class PosixFileSystem extends FileSystem {
       switch (r) {
         case -1:
           final errno = libc.errno;
-          throw _getError(errno, 'read failed', path);
+          throw _getError(errno, systemCall: 'read', path1: path);
         case 0:
           return builder.takeBytes();
         default:
@@ -489,7 +549,7 @@ final class PosixFileSystem extends FileSystem {
         switch (r) {
           case -1:
             final errno = libc.errno;
-            throw _getError(errno, 'read failed', path);
+            throw _getError(errno, systemCall: 'read', path1: path);
           case 0:
             return buffer.asTypedList(
               bufferOffset,
@@ -546,7 +606,7 @@ final class PosixFileSystem extends FileSystem {
     try {
       if (fd == -1) {
         final errno = libc.errno;
-        throw _getError(errno, 'open failed', path);
+        throw _getError(errno, systemCall: 'open', path1: path);
       }
 
       ffi.using((arena) {
@@ -563,7 +623,7 @@ final class PosixFileSystem extends FileSystem {
           );
           if (w == -1) {
             final errno = libc.errno;
-            throw _getError(errno, 'write failed', path);
+            throw _getError(errno, systemCall: 'write', path1: path);
           }
           remaining -= w;
           buffer += w;

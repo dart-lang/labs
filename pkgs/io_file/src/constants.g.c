@@ -87,10 +87,38 @@ int64_t libc_shim_get_EINTR(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
+int64_t libc_shim_get_EMFILE(void) {
+#ifdef EMFILE
+  assert(EMFILE != libc_shim_UNDEFINED);
+  return EMFILE;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_ENOENT(void) {
 #ifdef ENOENT
   assert(ENOENT != libc_shim_UNDEFINED);
   return ENOENT;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_ENOSPC(void) {
+#ifdef ENOSPC
+  assert(ENOSPC != libc_shim_UNDEFINED);
+  return ENOSPC;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_ENOTDIR(void) {
+#ifdef ENOTDIR
+  assert(ENOTDIR != libc_shim_UNDEFINED);
+  return ENOTDIR;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_ENOTEMPTY(void) {
+#ifdef ENOTEMPTY
+  assert(ENOTEMPTY != libc_shim_UNDEFINED);
+  return ENOTEMPTY;
 #endif
   return libc_shim_UNDEFINED;
 }

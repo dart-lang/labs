@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
@@ -33,54 +33,54 @@ void main() {
 
     test('no arguments', () {
       final tmp1 = fileSystem.createTemporaryDirectory();
-      addTearDown(() => Directory(tmp1).deleteSync());
+      addTearDown(() => io.Directory(tmp1).deleteSync());
       final tmp2 = fileSystem.createTemporaryDirectory();
-      addTearDown(() => Directory(tmp2).deleteSync());
+      addTearDown(() => io.Directory(tmp2).deleteSync());
 
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('prefix', () {
       final tmp1 = fileSystem.createTemporaryDirectory(prefix: 'myprefix');
-      addTearDown(() => Directory(tmp1).deleteSync());
+      addTearDown(() => io.Directory(tmp1).deleteSync());
       final tmp2 = fileSystem.createTemporaryDirectory(prefix: 'myprefix');
-      addTearDown(() => Directory(tmp2).deleteSync());
+      addTearDown(() => io.Directory(tmp2).deleteSync());
 
       expect(tmp1, contains('myprefix'));
       expect(tmp2, contains('myprefix'));
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('prefix is empty string', () {
       final tmp1 = fileSystem.createTemporaryDirectory(prefix: '');
-      addTearDown(() => Directory(tmp1).deleteSync());
+      addTearDown(() => io.Directory(tmp1).deleteSync());
       final tmp2 = fileSystem.createTemporaryDirectory(prefix: '');
-      addTearDown(() => Directory(tmp2).deleteSync());
+      addTearDown(() => io.Directory(tmp2).deleteSync());
 
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('prefix contains XXXXXX', () {
       final tmp1 = fileSystem.createTemporaryDirectory(
         prefix: 'myprefix-XXXXXX',
       );
-      addTearDown(() => Directory(tmp1).deleteSync());
+      addTearDown(() => io.Directory(tmp1).deleteSync());
       final tmp2 = fileSystem.createTemporaryDirectory(
         prefix: 'myprefix-XXXXXX',
       );
-      addTearDown(() => Directory(tmp2).deleteSync());
+      addTearDown(() => io.Directory(tmp2).deleteSync());
 
       expect(tmp1, contains('myprefix-'));
       expect(tmp2, contains('myprefix-'));
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('parent', () {
@@ -90,8 +90,8 @@ void main() {
       expect(tmp1, startsWith(tmp));
       expect(tmp2, startsWith(tmp));
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('parent has a long directory name', () {
@@ -99,9 +99,9 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final dirname = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final dirname = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
       final parent = p.join(tmp, dirname);
-      Directory(parent).createSync();
+      io.Directory(parent).createSync();
 
       final tmp1 = fileSystem.createTemporaryDirectory(parent: parent);
       final tmp2 = fileSystem.createTemporaryDirectory(parent: parent);
@@ -109,21 +109,21 @@ void main() {
       expect(tmp1, startsWith(tmp));
       expect(tmp2, startsWith(tmp));
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('parent is empty string', () {
       final tmp1 = fileSystem.createTemporaryDirectory(parent: '');
-      addTearDown(() => Directory(tmp1).deleteSync());
+      addTearDown(() => io.Directory(tmp1).deleteSync());
       final tmp2 = fileSystem.createTemporaryDirectory(parent: '');
-      addTearDown(() => Directory(tmp2).deleteSync());
+      addTearDown(() => io.Directory(tmp2).deleteSync());
 
       expect(p.isRelative(tmp1), isTrue);
       expect(p.isRelative(tmp2), isTrue);
       expect(fileSystem.same(tmp1, tmp2), isFalse);
-      expect(Directory(tmp1).existsSync(), isTrue);
-      expect(Directory(tmp2).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp2).existsSync(), isTrue);
     });
 
     test('parent does not exist', () {
@@ -131,9 +131,9 @@ void main() {
         () => fileSystem.createTemporaryDirectory(parent: '/foo/bar/baz'),
         throwsA(
           isA<PathNotFoundException>().having(
-            (e) => e.osError?.errorCode,
+            (e) => e.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
+            io.Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
           ),
         ),
       );
@@ -141,7 +141,7 @@ void main() {
 
     test('prefix is absolute path inside of parent', () {
       final subdir1 = '$tmp/dir1';
-      Directory(subdir1).createSync();
+      io.Directory(subdir1).createSync();
 
       final tmp1 = fileSystem.createTemporaryDirectory(
         parent: subdir1,
@@ -154,8 +154,8 @@ void main() {
     test('prefix is absolute path outside of parent', () {
       final subdir1 = '$tmp/dir1';
       final subdir2 = '$tmp/dir2';
-      Directory(subdir1).createSync();
-      Directory(subdir2).createSync();
+      io.Directory(subdir1).createSync();
+      io.Directory(subdir2).createSync();
 
       final tmp1 = fileSystem.createTemporaryDirectory(
         parent: subdir1,
@@ -170,9 +170,9 @@ void main() {
         () => fileSystem.createTemporaryDirectory(prefix: 'subdir/file'),
         throwsA(
           isA<PathNotFoundException>().having(
-            (e) => e.osError?.errorCode,
+            (e) => e.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
+            io.Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
           ),
         ),
       );
@@ -180,14 +180,14 @@ void main() {
 
     test('prefix is existant path inside temp directory', () {
       final subdir1 = '$tmp/dir1';
-      Directory(subdir1).createSync();
+      io.Directory(subdir1).createSync();
 
       final tmp1 = fileSystem.createTemporaryDirectory(
         parent: tmp,
         prefix: 'dir1/file',
       );
       expect(p.canonicalize(tmp1), startsWith(p.canonicalize(subdir1)));
-      expect(Directory(tmp1).existsSync(), isTrue);
+      expect(io.Directory(tmp1).existsSync(), isTrue);
     });
   });
 }

@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
@@ -33,11 +33,14 @@ void main() {
 
     test('success', () {
       final path = '$tmp/dir';
-      Directory(path).createSync();
+      io.Directory(path).createSync();
 
       fileSystem.removeDirectory(path);
 
-      expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
     });
 
     test('absolute path, long directory name', () {
@@ -45,12 +48,15 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final dirname = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final dirname = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
       final path = p.join(tmp, dirname);
-      Directory(path).createSync();
+      io.Directory(path).createSync();
 
       fileSystem.removeDirectory(path);
-      expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
     });
 
     test('relative path, long directory name', () {
@@ -58,30 +64,31 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final path = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
-      Directory(path).createSync();
+      final path = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      io.Directory(path).createSync();
 
       fileSystem.removeDirectory(path);
-      expect(FileSystemEntity.typeSync(path), FileSystemEntityType.notFound);
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
     });
 
     test('non-empty directory', () {
       final path = '$tmp/dir';
-      Directory(path).createSync();
-      File('$tmp/dir/file').writeAsStringSync('Hello World!');
+      io.Directory(path).createSync();
+      io.File('$tmp/dir/file').writeAsStringSync('Hello World!');
 
       expect(
         () => fileSystem.removeDirectory(path),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'remove directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows
-                    ? win32.ERROR_DIR_NOT_EMPTY
-                    : errors.enotempty,
-              ),
+          isA<IOFileException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            io.Platform.isWindows
+                ? win32.ERROR_DIR_NOT_EMPTY
+                : errors.enotempty,
+          ),
         ),
       );
     });
@@ -92,31 +99,27 @@ void main() {
       expect(
         () => fileSystem.removeDirectory(path),
         throwsA(
-          isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'remove directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
-              ),
+          isA<PathNotFoundException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            io.Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
+          ),
         ),
       );
     });
 
     test('file', () {
       final path = '$tmp/file';
-      File(path).writeAsStringSync('Hello World!');
+      io.File(path).writeAsStringSync('Hello World!');
 
       expect(
         () => fileSystem.removeDirectory(path),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'remove directory failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enotdir,
-              ),
+          isA<IOFileException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            io.Platform.isWindows ? win32.ERROR_DIRECTORY : errors.enotdir,
+          ),
         ),
       );
     });
@@ -124,32 +127,30 @@ void main() {
     test('link', () {
       final dirPath = '$tmp/dir';
       final linkPath = '$tmp/link';
-      Directory(dirPath).createSync();
-      Link(linkPath).createSync(dirPath);
+      io.Directory(dirPath).createSync();
+      io.Link(linkPath).createSync(dirPath);
 
-      if (Platform.isWindows) {
+      if (io.Platform.isWindows) {
         fileSystem.removeDirectory(linkPath);
         expect(
-          FileSystemEntity.typeSync(dirPath),
-          FileSystemEntityType.directory,
+          io.FileSystemEntity.typeSync(dirPath),
+          io.FileSystemEntityType.directory,
         );
         expect(
-          FileSystemEntity.typeSync(linkPath),
-          FileSystemEntityType.notFound,
+          io.FileSystemEntity.typeSync(linkPath),
+          io.FileSystemEntityType.notFound,
         );
       } else {
         expect(
           () => fileSystem.removeDirectory(linkPath),
           throwsA(
-            isA<FileSystemException>()
-                .having((e) => e.message, 'message', 'remove directory failed')
-                .having(
-                  (e) => e.osError?.errorCode,
-                  'errorCode',
-                  Platform.isWindows
-                      ? win32.ERROR_PATH_NOT_FOUND
-                      : errors.enotdir,
-                ),
+            isA<IOFileException>().having(
+              (e) => e.errorCode,
+              'errorCode',
+              io.Platform.isWindows
+                  ? win32.ERROR_PATH_NOT_FOUND
+                  : errors.enotdir,
+            ),
           ),
         );
       }

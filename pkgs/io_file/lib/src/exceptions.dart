@@ -12,27 +12,15 @@ import 'file_system.dart';
 // There is no exception corresponding to the POSIX `EISDIR` error code because
 // there is no corresponding Windows error code.
 
-/// An error related to call to the operating system or an intermediary library,
-/// such as libc.
-class SystemCallError {
-  /// The name of the system call, such as `open` or `CreateFile`.
-  final String systemCall;
+/// Exception thrown when a file operation fails.
+class IOFileException implements Exception {
+  // A description of the failed operation, such as
+  //`'No such file or directory'`.
+  final String message;
 
   /// The operating-system defined code for the error, such as 2 for
   /// `ERROR_FILE_NOT_FOUND` on Windows.
-  final int errorCode;
-
-  /// The operating-system description of the error, such as
-  /// "The system cannot find the file specified."
-  final String message;
-
-  const SystemCallError(this.systemCall, this.errorCode, this.message);
-}
-
-/// Exception thrown when a file operation fails.
-class IOFileException implements Exception {
-  // A description of the failed operation.
-  final String message;
+  final int? errorCode;
 
   /// A path provided in a failed file operation.
   ///
@@ -60,28 +48,37 @@ class IOFileException implements Exception {
   /// The underlying system call that failed.
   ///
   /// Can be `null` if the exception is not raised due to a failed system call.
-  final SystemCallError? systemCall;
+  final String? systemCall;
 
   const IOFileException(
     this.message, {
     this.path1,
     this.path2,
     this.systemCall,
+    this.errorCode,
   });
 
   String _toStringHelper(String className) {
     final sb = StringBuffer('$className: $message');
+    // IOFileException: No such file or directory
     if (path1 != null) {
-      sb.write(', path1="$path1"');
+      // IOFileException: No such file or directory: "a"
+      sb.write(': "$path1"');
     }
     if (path2 != null) {
-      sb.write(', path2="$path2"');
+      // IOFileException: No such file or directory: "a" -> "b"
+      sb.write(' -> "$path2"');
     }
-    if (systemCall case final call?) {
-      sb.write(
-        ' (${call.systemCall}: ${call.message}, errorCode=${call.errorCode})',
-      );
-    }
+    sb.write(switch ((systemCall, errorCode)) {
+      // ... or directory: "a" -> "b"
+      (null, null) => '',
+      // ... or directory: "a" -> "b" [errorCode: 2]
+      (null, final error?) => ' [errorCode: $error]',
+      // ... or directory: "a" -> "b" [renameat failed]
+      (final call?, null) => ' [$call failed]',
+      // ... or directory: "a" -> "b" [renameat failed with errorCode: 2]
+      (final error?, final call?) => ' [$error failed with errorCode: $call]',
+    });
     return sb.toString();
   }
 
@@ -101,6 +98,7 @@ class DirectoryNotEmptyException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override
@@ -119,27 +117,11 @@ class DiskFullException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override
   String toString() => _toStringHelper('DiskFullException');
-}
-
-/// Exception thrown when a file operation (such as
-/// `FileSystem.remove`) is requested on directory.
-///
-/// This exception corresponds to errors such as `EISDIR` on POSIX systems and
-/// `ERROR_DIRECTORY` on Windows.
-class IsADirectoryException extends IOFileException {
-  const IsADirectoryException(
-    super.message, {
-    super.path1,
-    super.path2,
-    super.systemCall,
-  });
-
-  @override
-  String toString() => _toStringHelper('IsADirectoryException');
 }
 
 /// Exception thrown when a directory operation (such as
@@ -153,6 +135,7 @@ class NotADirectoryException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override
@@ -170,6 +153,7 @@ class PathAccessException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override
@@ -187,6 +171,7 @@ class PathExistsException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override
@@ -204,6 +189,7 @@ class PathNotFoundException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override
@@ -220,6 +206,7 @@ class TooManyOpenFilesException extends IOFileException {
     super.path1,
     super.path2,
     super.systemCall,
+    super.errorCode,
   });
 
   @override

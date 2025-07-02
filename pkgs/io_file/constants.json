@@ -38,7 +38,11 @@
     "EACCES",
     "EEXIST",
     "EINTR",
+    "EMFILE",
     "ENOENT",
+    "ENOSPC",
+    "ENOTDIR",
+    "ENOTEMPTY",
     "EPERM"
   ],
   "<fcntl.h>": [

@@ -6,7 +6,7 @@
 library;
 
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
@@ -41,14 +41,15 @@ void main() {
           WriteMode.truncateExisting,
         ),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'open failed')
+          isA<IOFileException>()
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : errors.eisdir,
+                io.Platform.isWindows
+                    ? win32.ERROR_ACCESS_DENIED
+                    : errors.eisdir,
               )
-              .having((e) => e.path, 'path', tmp),
+              .having((e) => e.path1, 'path1', tmp),
         ),
       );
     });
@@ -56,8 +57,8 @@ void main() {
     test('symlink', () {
       final filePath = '$tmp/file1';
       final symlinkPath = '$tmp/file2';
-      File(filePath).writeAsBytesSync(Uint8List(0));
-      Link(symlinkPath).createSync(filePath);
+      io.File(filePath).writeAsBytesSync(Uint8List(0));
+      io.Link(symlinkPath).createSync(filePath);
 
       fileSystem.writeAsString(
         symlinkPath,
@@ -65,18 +66,18 @@ void main() {
         WriteMode.truncateExisting,
       );
 
-      expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
+      expect(io.File(symlinkPath).readAsStringSync(), 'Hello World!');
     });
 
     group('broken symlink', () {
       test('failExisting', () {
         final filePath = '$tmp/file1';
         final symlinkPath = '$tmp/file2';
-        File(filePath).writeAsBytesSync(Uint8List(0));
-        Link(symlinkPath).createSync(filePath);
-        File(filePath).deleteSync();
+        io.File(filePath).writeAsBytesSync(Uint8List(0));
+        io.Link(symlinkPath).createSync(filePath);
+        io.File(filePath).deleteSync();
 
-        if (Platform.isWindows) {
+        if (io.Platform.isWindows) {
           // Windows considers a broken symlink to not be an existing file.
           fileSystem.writeAsString(
             symlinkPath,
@@ -86,8 +87,8 @@ void main() {
 
           // Should write at the symlink target, which should also mean that the
           // symlink is no longer broken.
-          expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
-          expect(File(filePath).readAsStringSync(), 'Hello World!');
+          expect(io.File(symlinkPath).readAsStringSync(), 'Hello World!');
+          expect(io.File(filePath).readAsStringSync(), 'Hello World!');
         } else {
           expect(
             () => fileSystem.writeAsString(
@@ -97,15 +98,14 @@ void main() {
             ),
             throwsA(
               isA<PathExistsException>()
-                  .having((e) => e.message, 'message', 'open failed')
                   .having(
-                    (e) => e.osError?.errorCode,
+                    (e) => e.errorCode,
                     'errorCode',
-                    Platform.isWindows
+                    io.Platform.isWindows
                         ? win32.ERROR_FILE_EXISTS
                         : errors.eexist,
                   )
-                  .having((e) => e.path, 'path', symlinkPath),
+                  .having((e) => e.path1, 'path1', symlinkPath),
             ),
           );
         }
@@ -113,9 +113,9 @@ void main() {
       test('truncateExisting', () {
         final filePath = '$tmp/file1';
         final symlinkPath = '$tmp/file2';
-        File(filePath).writeAsBytesSync(Uint8List(0));
-        Link(symlinkPath).createSync(filePath);
-        File(filePath).deleteSync();
+        io.File(filePath).writeAsBytesSync(Uint8List(0));
+        io.Link(symlinkPath).createSync(filePath);
+        io.File(filePath).deleteSync();
 
         fileSystem.writeAsString(
           symlinkPath,
@@ -125,8 +125,8 @@ void main() {
 
         // Should write at the symlink target, which should also mean that the
         // symlink is no longer broken.
-        expect(File(symlinkPath).readAsStringSync(), 'Hello World!');
-        expect(File(filePath).readAsStringSync(), 'Hello World!');
+        expect(io.File(symlinkPath).readAsStringSync(), 'Hello World!');
+        expect(io.File(filePath).readAsStringSync(), 'Hello World!');
       });
     });
 
@@ -136,7 +136,7 @@ void main() {
 
         fileSystem.writeAsString(path, 'Hello World', WriteMode.appendExisting);
 
-        expect(File(path).readAsStringSync(), 'Hello World');
+        expect(io.File(path).readAsStringSync(), 'Hello World');
       });
 
       test('failExisting', () {
@@ -144,7 +144,7 @@ void main() {
 
         fileSystem.writeAsString(path, 'Hello World', WriteMode.failExisting);
 
-        expect(File(path).readAsStringSync(), 'Hello World');
+        expect(io.File(path).readAsStringSync(), 'Hello World');
       });
 
       test('truncateExisting', () {
@@ -156,14 +156,14 @@ void main() {
           WriteMode.truncateExisting,
         );
 
-        expect(File(path).readAsStringSync(), 'Hello World');
+        expect(io.File(path).readAsStringSync(), 'Hello World');
       });
     });
 
     group('existing file', () {
       test('appendExisting', () {
         final path = '$tmp/file';
-        File(path).writeAsStringSync('message: ');
+        io.File(path).writeAsStringSync('message: ');
 
         fileSystem.writeAsString(
           path,
@@ -171,12 +171,12 @@ void main() {
           WriteMode.appendExisting,
         );
 
-        expect(File(path).readAsStringSync(), 'message: Hello World!');
+        expect(io.File(path).readAsStringSync(), 'message: Hello World!');
       });
 
       test('failExisting', () {
         final path = '$tmp/file';
-        File(path).writeAsBytesSync([1, 2, 3]);
+        io.File(path).writeAsBytesSync([1, 2, 3]);
 
         expect(
           () => fileSystem.writeAsString(
@@ -186,20 +186,21 @@ void main() {
           ),
           throwsA(
             isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'open failed')
                 .having(
-                  (e) => e.osError?.errorCode,
+                  (e) => e.errorCode,
                   'errorCode',
-                  Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eexist,
+                  io.Platform.isWindows
+                      ? win32.ERROR_FILE_EXISTS
+                      : errors.eexist,
                 )
-                .having((e) => e.path, 'path', path),
+                .having((e) => e.path1, 'path1', path),
           ),
         );
       });
 
       test('truncateExisting', () {
         final path = '$tmp/file';
-        File(path).writeAsBytesSync([1, 2, 3]);
+        io.File(path).writeAsBytesSync([1, 2, 3]);
 
         fileSystem.writeAsString(
           path,
@@ -207,7 +208,7 @@ void main() {
           WriteMode.truncateExisting,
         );
 
-        expect(File(path).readAsStringSync(), 'Hello World!');
+        expect(io.File(path).readAsStringSync(), 'Hello World!');
       });
     });
 
@@ -215,14 +216,14 @@ void main() {
       final path = p.join(tmp, 'f' * 255);
 
       fileSystem.writeAsString(path, 'Hello World!');
-      expect(File(path).readAsStringSync(), 'Hello World!');
+      expect(io.File(path).readAsStringSync(), 'Hello World!');
     });
 
     test('relative path, long file name', () {
       final path = 'f' * 255;
 
       fileSystem.writeAsString(path, 'Hello World!');
-      expect(File(path).readAsStringSync(), 'Hello World!');
+      expect(io.File(path).readAsStringSync(), 'Hello World!');
     });
 
     group('encoding', () {
@@ -235,7 +236,7 @@ void main() {
           WriteMode.failExisting,
           utf8,
         );
-        expect(File(path).readAsStringSync(), 'Γειά σου!');
+        expect(io.File(path).readAsStringSync(), 'Γειά σου!');
       });
 
       test('unencodable', () {
@@ -281,8 +282,8 @@ void main() {
         );
 
         expect(
-          File(path).readAsStringSync(),
-          Platform.isWindows
+          io.File(path).readAsStringSync(),
+          io.Platform.isWindows
               ? 'Greeting:\r\nHello World!\rHi!\r\r\n'
               : 'Greeting:\nHello World!\rHi!\r\n',
         );
@@ -300,7 +301,7 @@ void main() {
         );
 
         expect(
-          File(path).readAsStringSync(),
+          io.File(path).readAsStringSync(),
           'Greeting:\nHello World!\rHi!\r\n',
         );
       });
@@ -317,7 +318,7 @@ void main() {
         );
 
         expect(
-          File(path).readAsStringSync(),
+          io.File(path).readAsStringSync(),
           'Greeting:\r\nHello World!\rHi!\r\r\n',
         );
       });

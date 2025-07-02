@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
@@ -32,16 +32,14 @@ void main() {
       deleteTemp(tmp);
     });
 
-    //TODO(brianquinlan): test with a very long path.
-
     test('path does not exist', () {
       expect(
         () => fileSystem.metadata('$tmp/file1'),
         throwsA(
           isA<PathNotFoundException>().having(
-            (e) => e.osError?.errorCode,
+            (e) => e.errorCode,
             'errorCode',
-            Platform.isWindows ? win32.ERROR_FILE_NOT_FOUND : errors.enoent,
+            io.Platform.isWindows ? win32.ERROR_FILE_NOT_FOUND : errors.enoent,
           ),
         ),
       );
@@ -49,7 +47,7 @@ void main() {
 
     test('absolute path, long name', () {
       final path = p.join(tmp, 'f' * 255);
-      File(path).writeAsStringSync('Hello World');
+      io.File(path).writeAsStringSync('Hello World');
 
       final data = fileSystem.metadata(path);
       expect(data.isFile, isTrue);
@@ -57,7 +55,7 @@ void main() {
 
     test('relative path, long name', () {
       final path = 'f' * 255;
-      File(path).writeAsStringSync('Hello World');
+      io.File(path).writeAsStringSync('Hello World');
 
       final data = fileSystem.metadata(path);
       expect(data.isFile, isTrue);
@@ -81,16 +79,16 @@ void main() {
           expect(data.type, FileSystemType.character);
         },
         skip:
-            !(Platform.isAndroid |
-                    Platform.isIOS |
-                    Platform.isLinux |
-                    Platform.isIOS)
+            !(io.Platform.isAndroid |
+                    io.Platform.isIOS |
+                    io.Platform.isLinux |
+                    io.Platform.isIOS)
                 ? 'no /dev/tty'
                 : false,
       );
       test('file', () {
         final path = '$tmp/file1';
-        File(path).writeAsStringSync('Hello World');
+        io.File(path).writeAsStringSync('Hello World');
 
         final data = fileSystem.metadata(path);
         expect(data.isDirectory, isFalse);
@@ -107,7 +105,7 @@ void main() {
         expect(data.isLink, isFalse);
         expect(
           data.type,
-          Platform.isWindows ? FileSystemType.unknown : FileSystemType.pipe,
+          io.Platform.isWindows ? FileSystemType.unknown : FileSystemType.pipe,
         );
 
         try {
@@ -117,9 +115,9 @@ void main() {
         } catch (_) {}
       });
       test('file link', () {
-        File('$tmp/file1').writeAsStringSync('Hello World');
+        io.File('$tmp/file1').writeAsStringSync('Hello World');
         final path = '$tmp/link';
-        Link(path).createSync('$tmp/file1');
+        io.Link(path).createSync('$tmp/file1');
 
         final data = fileSystem.metadata(path);
         expect(data.isDirectory, isFalse);
@@ -128,9 +126,9 @@ void main() {
         expect(data.type, FileSystemType.link);
       });
       test('directory link', () {
-        Directory('$tmp/dir').createSync();
+        io.Directory('$tmp/dir').createSync();
         final path = '$tmp/link';
-        Link(path).createSync('$tmp/dir');
+        io.Link(path).createSync('$tmp/dir');
 
         final data = fileSystem.metadata(path);
         expect(data.isDirectory, isFalse);
@@ -147,27 +145,27 @@ void main() {
         // Tested on Windows at: metadata_windows_test.dart
 
         final path = '$tmp/file1';
-        File(path).writeAsStringSync('Hello World!');
+        io.File(path).writeAsStringSync('Hello World!');
 
         final data = fileSystem.metadata(path);
         expect(data.isHidden, isNull);
       },
       skip:
-          (Platform.isIOS || Platform.isMacOS || Platform.isWindows)
+          (io.Platform.isIOS || io.Platform.isMacOS || io.Platform.isWindows)
               ? 'does not support hidden file metadata'
               : false,
     );
     group('size', () {
       test('empty file', () {
         final path = '$tmp/file1';
-        File(path).writeAsStringSync('');
+        io.File(path).writeAsStringSync('');
 
         final data = fileSystem.metadata(path);
         expect(data.size, 0);
       });
       test('non-empty file', () {
         final path = '$tmp/file1';
-        File(path).writeAsStringSync('Hello World!');
+        io.File(path).writeAsStringSync('Hello World!');
 
         final data = fileSystem.metadata(path);
         expect(data.size, 12);
@@ -179,7 +177,7 @@ void main() {
       () {
         test('newly created', () {
           final path = '$tmp/file1';
-          File(path).writeAsStringSync('');
+          io.File(path).writeAsStringSync('');
 
           final data = fileSystem.metadata(path);
           expect(
@@ -189,7 +187,7 @@ void main() {
         });
       },
       skip:
-          !(Platform.isIOS || Platform.isMacOS || Platform.isWindows)
+          !(io.Platform.isIOS || io.Platform.isMacOS || io.Platform.isWindows)
               ? 'creation not supported'
               : false,
     );
@@ -197,7 +195,7 @@ void main() {
     group('modification', () {
       test('newly created', () {
         final path = '$tmp/file1';
-        File(path).writeAsStringSync('Hello World!');
+        io.File(path).writeAsStringSync('Hello World!');
 
         final data = fileSystem.metadata(path);
         expect(
@@ -207,11 +205,11 @@ void main() {
       });
       test('modified after creation', () async {
         final path = '$tmp/file1';
-        File(path).writeAsStringSync('Hello World!');
+        io.File(path).writeAsStringSync('Hello World!');
         final data1 = fileSystem.metadata(path);
 
         await Future<void>.delayed(const Duration(milliseconds: 1000));
-        File(path).writeAsStringSync('Hello World!');
+        io.File(path).writeAsStringSync('Hello World!');
         final data2 = fileSystem.metadata(path);
 
         expect(
