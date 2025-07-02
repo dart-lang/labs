@@ -20,14 +20,14 @@ void main() {
     test('with path1', () {
       expect(
         const IOFileException('cannot open file', path1: '/foo/bar').toString(),
-        'IOFileException: cannot open file, path1="/foo/bar"',
+        'IOFileException: cannot open file: "/foo/bar"',
       );
     });
 
     test('with path2', () {
       expect(
         const IOFileException('cannot open file', path2: '/foo/bar').toString(),
-        'IOFileException: cannot open file, path2="/foo/bar"',
+        'IOFileException: cannot open file -> "/foo/bar"',
       );
     });
 
@@ -38,19 +38,27 @@ void main() {
           path1: '/foo/baz',
           path2: '/foo/bar',
         ).toString(),
-        'IOFileException: cannot rename file, '
-        'path1="/foo/baz", path2="/foo/bar"',
+        'IOFileException: cannot rename file: '
+        '"/foo/baz" -> "/foo/bar"',
       );
     });
 
-    test('system call', () {
+    test('systemCall', () {
       expect(
         const IOFileException(
           'cannot open file',
-          systemCall: SystemCallError('open', 13, 'permission denied'),
+          systemCall: 'open',
         ).toString(),
         'IOFileException: cannot open file '
-        '(open: permission denied, errorCode=13)',
+        '[open failed]',
+      );
+    });
+
+    test('errorCode', () {
+      expect(
+        const IOFileException('cannot open file', errorCode: 2).toString(),
+        'IOFileException: cannot open file '
+        '[errorCode: 2]',
       );
     });
 
@@ -60,11 +68,12 @@ void main() {
           'cannot rename file',
           path1: '/foo/baz',
           path2: '/foo/bar',
-          systemCall: SystemCallError('rename', 13, 'permission denied'),
+          systemCall: 'renameat',
+          errorCode: 13,
         ).toString(),
-        'IOFileException: cannot rename file, '
-        'path1="/foo/baz", path2="/foo/bar" '
-        '(rename: permission denied, errorCode=13)',
+        'IOFileException: cannot rename file: '
+        '"/foo/baz" -> "/foo/bar" '
+        '[renameat failed with errorCode: 13]',
       );
     });
   });

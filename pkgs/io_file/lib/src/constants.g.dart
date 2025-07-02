@@ -104,10 +104,46 @@ int get EINTR {
   }
 }
 
+int get EMFILE {
+  final v = get_EMFILE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('EMFILE');
+  } else {
+    return v;
+  }
+}
+
 int get ENOENT {
   final v = get_ENOENT();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('ENOENT');
+  } else {
+    return v;
+  }
+}
+
+int get ENOSPC {
+  final v = get_ENOSPC();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('ENOSPC');
+  } else {
+    return v;
+  }
+}
+
+int get ENOTDIR {
+  final v = get_ENOTDIR();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('ENOTDIR');
+  } else {
+    return v;
+  }
+}
+
+int get ENOTEMPTY {
+  final v = get_ENOTEMPTY();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('ENOTEMPTY');
   } else {
     return v;
   }

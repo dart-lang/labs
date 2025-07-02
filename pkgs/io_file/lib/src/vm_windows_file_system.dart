@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 import 'dart:ffi';
-import 'dart:io' as io;
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -13,6 +12,7 @@ import 'package:ffi/ffi.dart' as ffi;
 import 'package:path/path.dart' as p;
 import 'package:win32/win32.dart' as win32;
 
+import 'exceptions.dart';
 import 'file_system.dart';
 import 'internal_constants.dart';
 
@@ -88,7 +88,7 @@ Pointer<Utf16> _extendedPath(String path, Allocator allocator) {
       final result = win32.GetFullPathName(utf16Path, length, buffer, nullptr);
       if (result == 0) {
         final errorCode = win32.GetLastError();
-        throw _getError(errorCode, 'GetFullPathName failed', path);
+        throw _getError(errorCode, systemCall: 'GetFullPathName', path1: path);
       }
       if (result < length) {
         final canonicalPath = allocator<Pointer<Utf16>>();
@@ -130,37 +130,94 @@ String _formatMessage(int errorCode) {
   }
 }
 
-Exception _getError(int errorCode, String message, [String? path]) {
-  final osError = io.OSError(_formatMessage(errorCode), errorCode);
+Exception _getError(
+  int errorCode, {
+  required String systemCall,
+  String? path1,
+  String? path2,
+}) {
+  final message = _formatMessage(errorCode);
 
-  if (path != null) {
-    switch (errorCode) {
-      case win32.ERROR_ACCESS_DENIED:
-      case win32.ERROR_CURRENT_DIRECTORY:
-      case win32.ERROR_WRITE_PROTECT:
-      case win32.ERROR_BAD_LENGTH:
-      case win32.ERROR_SHARING_VIOLATION:
-      case win32.ERROR_LOCK_VIOLATION:
-      case win32.ERROR_NETWORK_ACCESS_DENIED:
-      case win32.ERROR_DRIVE_LOCKED:
-        return io.PathAccessException(path, osError, message);
-      case win32.ERROR_FILE_EXISTS:
-      case win32.ERROR_ALREADY_EXISTS:
-        return io.PathExistsException(path, osError, message);
-      case win32.ERROR_FILE_NOT_FOUND:
-      case win32.ERROR_PATH_NOT_FOUND:
-      case win32.ERROR_INVALID_DRIVE:
-      case win32.ERROR_INVALID_NAME:
-      case win32.ERROR_NO_MORE_FILES:
-      case win32.ERROR_BAD_NETPATH:
-      case win32.ERROR_BAD_NET_NAME:
-      case win32.ERROR_BAD_PATHNAME:
-        return io.PathNotFoundException(path, osError, message);
-      default:
-        return io.FileSystemException(message, path, osError);
-    }
-  } else {
-    return io.FileSystemException(message, path, osError);
+  switch (errorCode) {
+    case win32.ERROR_DIR_NOT_EMPTY:
+      return DirectoryNotEmptyException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    case win32.ERROR_DISK_FULL:
+      return DiskFullException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    case win32.ERROR_DIRECTORY:
+      return NotADirectoryException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    case win32.ERROR_ACCESS_DENIED:
+    case win32.ERROR_CURRENT_DIRECTORY:
+    case win32.ERROR_WRITE_PROTECT:
+    case win32.ERROR_BAD_LENGTH:
+    case win32.ERROR_SHARING_VIOLATION:
+    case win32.ERROR_LOCK_VIOLATION:
+    case win32.ERROR_NETWORK_ACCESS_DENIED:
+    case win32.ERROR_DRIVE_LOCKED:
+      return PathAccessException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    case win32.ERROR_FILE_EXISTS:
+    case win32.ERROR_ALREADY_EXISTS:
+      return PathExistsException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    case win32.ERROR_FILE_NOT_FOUND:
+    case win32.ERROR_PATH_NOT_FOUND:
+    case win32.ERROR_INVALID_DRIVE:
+    case win32.ERROR_INVALID_NAME:
+    case win32.ERROR_NO_MORE_FILES:
+    case win32.ERROR_BAD_NETPATH:
+    case win32.ERROR_BAD_NET_NAME:
+    case win32.ERROR_BAD_PATHNAME:
+      return PathNotFoundException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    case win32.ERROR_TOO_MANY_OPEN_FILES:
+      return TooManyOpenFilesException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
+    default:
+      return IOFileException(
+        message,
+        errorCode: errorCode,
+        path1: path1,
+        path2: path2,
+        systemCall: systemCall,
+      );
   }
 }
 
@@ -365,13 +422,17 @@ final class WindowsFileSystem extends FileSystem {
     );
     if (h == win32.INVALID_HANDLE_VALUE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'CreateFile failed', path);
+      throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
     }
     try {
       final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
       if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
         final errorCode = win32.GetLastError();
-        throw _getError(errorCode, 'GetFileInformationByHandle failed', path);
+        throw _getError(
+          errorCode,
+          systemCall: 'GetFileInformationByHandle',
+          path1: path,
+        );
       }
       return info.ref;
     } finally {
@@ -386,7 +447,7 @@ final class WindowsFileSystem extends FileSystem {
     if (win32.CreateDirectory(_extendedPath(path, arena), nullptr) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'create directory failed', path);
+      throw _getError(errorCode, systemCall: 'CreateDirectory', path1: path);
     }
   });
 
@@ -407,7 +468,11 @@ final class WindowsFileSystem extends FileSystem {
 
     if (win32.SetCurrentDirectory(path.toNativeUtf16()) == win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'SetCurrentDirectory failed', path);
+      throw _getError(
+        errorCode,
+        systemCall: 'SetCurrentDirectory',
+        path1: path,
+      );
     }
   });
 
@@ -437,7 +502,7 @@ final class WindowsFileSystem extends FileSystem {
 
     if (win32.RemoveDirectory(_extendedPath(path, arena)) == win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'remove directory failed', path);
+      throw _getError(errorCode, systemCall: 'RemoveDirectory', path1: path);
     }
   });
 
@@ -455,7 +520,7 @@ final class WindowsFileSystem extends FileSystem {
 
     if (findHandle == win32.INVALID_HANDLE_VALUE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'FindFirstFile failed', path);
+      throw _getError(errorCode, systemCall: 'FindFirstFile', path1: path);
     }
 
     do {
@@ -475,15 +540,19 @@ final class WindowsFileSystem extends FileSystem {
             final errorCode = win32.GetLastError();
             throw _getError(
               errorCode,
-              'RemoveDirectory failed for link',
-              fullPath,
+              systemCall: 'RemoveDirectory',
+              path1: fullPath,
             );
           }
         } else {
           if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
               win32.FALSE) {
             final errorCode = win32.GetLastError();
-            throw _getError(errorCode, 'DeleteFile failed for link', fullPath);
+            throw _getError(
+              errorCode,
+              systemCall: 'DeleteFile',
+              path1: fullPath,
+            );
           }
         }
       } else if ((attributes & win32.FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -492,20 +561,20 @@ final class WindowsFileSystem extends FileSystem {
         if (win32.DeleteFile(fullPath.toNativeUtf16(allocator: arena)) ==
             win32.FALSE) {
           final errorCode = win32.GetLastError();
-          throw _getError(errorCode, 'DeleteFile failed', fullPath);
+          throw _getError(errorCode, systemCall: 'DeleteFile', path1: fullPath);
         }
       }
     } while (win32.FindNextFile(findHandle, findData) != win32.FALSE);
 
     final errorCode = win32.GetLastError();
     if (errorCode != win32.ERROR_NO_MORE_FILES) {
-      throw _getError(errorCode, 'FindNextFile failed', path);
+      throw _getError(errorCode, systemCall: 'FindNextFile', path1: path);
     }
 
     if (win32.RemoveDirectory(path.toNativeUtf16(allocator: arena)) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'remove directory failed', path);
+      throw _getError(errorCode, systemCall: 'RemoveDirectory', path1: path);
     }
   });
 
@@ -520,7 +589,12 @@ final class WindowsFileSystem extends FileSystem {
         ) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'rename failed', oldPath);
+      throw _getError(
+        errorCode,
+        systemCall: 'MoveFileEx',
+        path1: oldPath,
+        path2: newPath,
+      );
     }
   });
 
@@ -565,7 +639,11 @@ final class WindowsFileSystem extends FileSystem {
           ) ==
           win32.FALSE) {
         final errorCode = win32.GetLastError();
-        throw _getError(errorCode, 'set metadata failed', path);
+        throw _getError(
+          errorCode,
+          systemCall: 'GetFileAttributesEx',
+          path1: path,
+        );
       }
       attributes = fileInfo.ref.dwFileAttributes;
     } else {
@@ -614,7 +692,7 @@ final class WindowsFileSystem extends FileSystem {
     }
     if (win32.SetFileAttributes(nativePath, attributes) == win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'set metadata failed', path);
+      throw _getError(errorCode, systemCall: 'SetFileAttributes', path1: path);
     }
   });
 
@@ -631,7 +709,11 @@ final class WindowsFileSystem extends FileSystem {
         ) ==
         win32.FALSE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'metadata failed', path);
+      throw _getError(
+        errorCode,
+        systemCall: 'GetFileAttributesEx',
+        path1: path,
+      );
     }
     final info = fileInfo.ref;
     final attributes = info.dwFileAttributes;
@@ -688,7 +770,7 @@ final class WindowsFileSystem extends FileSystem {
     );
     if (f == win32.INVALID_HANDLE_VALUE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'open failed', path);
+      throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
     }
     try {
       // The result of `GetFileSize` is not defined for non-seeking devices
@@ -732,7 +814,7 @@ final class WindowsFileSystem extends FileSystem {
             errorCode == win32.ERROR_SUCCESS) {
           return builder.takeBytes();
         }
-        throw _getError(errorCode, 'read failed', path);
+        throw _getError(errorCode, systemCall: 'ReadFile', path1: path);
       }
 
       if (bytesRead.value == 0) {
@@ -763,7 +845,7 @@ final class WindowsFileSystem extends FileSystem {
               ) ==
               win32.FALSE) {
             final errorCode = win32.GetLastError();
-            throw _getError(errorCode, 'read failed', path);
+            throw _getError(errorCode, systemCall: 'ReadFile', path1: path);
           }
           bufferOffset += bytesRead.value;
           if (bytesRead.value == 0) {
@@ -789,7 +871,7 @@ final class WindowsFileSystem extends FileSystem {
       final length = win32.GetTempPath2(maxLength, buffer);
       if (length == 0) {
         final errorCode = win32.GetLastError();
-        throw _getError(errorCode, 'GetTempPath failed');
+        throw _getError(errorCode, systemCall: 'GetTempPath2');
       }
       return p.canonicalize(buffer.toDartString());
     } finally {
@@ -826,7 +908,7 @@ final class WindowsFileSystem extends FileSystem {
     );
     if (f == win32.INVALID_HANDLE_VALUE) {
       final errorCode = win32.GetLastError();
-      throw _getError(errorCode, 'open failed', path);
+      throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
     }
 
     try {
@@ -847,7 +929,7 @@ final class WindowsFileSystem extends FileSystem {
             ) ==
             win32.FALSE) {
           final errorCode = win32.GetLastError();
-          throw _getError(errorCode, 'write failed', path);
+          throw _getError(errorCode, systemCall: 'WriteFile', path1: path);
         }
 
         remaining -= bytesWritten.value;

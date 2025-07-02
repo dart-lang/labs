@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
@@ -40,14 +40,15 @@ void main() {
           WriteMode.truncateExisting,
         ),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'open failed')
+          isA<IOFileException>()
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : errors.eisdir,
+                io.Platform.isWindows
+                    ? win32.ERROR_ACCESS_DENIED
+                    : errors.eisdir,
               )
-              .having((e) => e.path, 'path', tmp),
+              .having((e) => e.path1, 'path1', tmp),
         ),
       );
     });
@@ -56,8 +57,8 @@ void main() {
       final filePath = '$tmp/file1';
       final symlinkPath = '$tmp/file2';
       final data = randomUint8List(20);
-      File(filePath).writeAsBytesSync(Uint8List(0));
-      Link(symlinkPath).createSync(filePath);
+      io.File(filePath).writeAsBytesSync(Uint8List(0));
+      io.Link(symlinkPath).createSync(filePath);
 
       fileSystem.writeAsBytes(symlinkPath, data, WriteMode.truncateExisting);
 
@@ -69,11 +70,11 @@ void main() {
         final filePath = '$tmp/file1';
         final symlinkPath = '$tmp/file2';
         final data = randomUint8List(20);
-        File(filePath).writeAsBytesSync(Uint8List(0));
-        Link(symlinkPath).createSync(filePath);
-        File(filePath).deleteSync();
+        io.File(filePath).writeAsBytesSync(Uint8List(0));
+        io.Link(symlinkPath).createSync(filePath);
+        io.File(filePath).deleteSync();
 
-        if (Platform.isWindows) {
+        if (io.Platform.isWindows) {
           // Windows considers a broken symlink to not be an existing file.
           fileSystem.writeAsBytes(
             symlinkPath,
@@ -94,15 +95,14 @@ void main() {
             ),
             throwsA(
               isA<PathExistsException>()
-                  .having((e) => e.message, 'message', 'open failed')
                   .having(
-                    (e) => e.osError?.errorCode,
+                    (e) => e.errorCode,
                     'errorCode',
-                    Platform.isWindows
+                    io.Platform.isWindows
                         ? win32.ERROR_FILE_EXISTS
                         : errors.eexist,
                   )
-                  .having((e) => e.path, 'path', symlinkPath),
+                  .having((e) => e.path1, 'path1', symlinkPath),
             ),
           );
         }
@@ -111,9 +111,9 @@ void main() {
         final filePath = '$tmp/file1';
         final symlinkPath = '$tmp/file2';
         final data = randomUint8List(20);
-        File(filePath).writeAsBytesSync(Uint8List(0));
-        Link(symlinkPath).createSync(filePath);
-        File(filePath).deleteSync();
+        io.File(filePath).writeAsBytesSync(Uint8List(0));
+        io.Link(symlinkPath).createSync(filePath);
+        io.File(filePath).deleteSync();
 
         fileSystem.writeAsBytes(symlinkPath, data, WriteMode.truncateExisting);
 
@@ -135,7 +135,7 @@ void main() {
           WriteMode.appendExisting,
         );
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(io.File(path).readAsBytesSync(), data);
       });
 
       test('failExisting', () {
@@ -148,7 +148,7 @@ void main() {
           WriteMode.failExisting,
         );
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(io.File(path).readAsBytesSync(), data);
       });
 
       test('truncateExisting', () {
@@ -161,7 +161,7 @@ void main() {
           WriteMode.truncateExisting,
         );
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(io.File(path).readAsBytesSync(), data);
       });
     });
 
@@ -169,7 +169,7 @@ void main() {
       test('appendExisting', () {
         final data = randomUint8List(20);
         final path = '$tmp/file';
-        File(path).writeAsBytesSync([1, 2, 3]);
+        io.File(path).writeAsBytesSync([1, 2, 3]);
 
         fileSystem.writeAsBytes(
           path,
@@ -177,14 +177,14 @@ void main() {
           WriteMode.appendExisting,
         );
 
-        expect(File(path).readAsBytesSync(), [1, 2, 3] + data);
+        expect(io.File(path).readAsBytesSync(), [1, 2, 3] + data);
       });
 
       test('null file', () {
         final data = randomUint8List(20);
 
         fileSystem.writeAsBytes(
-          Platform.isWindows ? r'\\.\NUL' : '/dev/null',
+          io.Platform.isWindows ? r'\\.\NUL' : '/dev/null',
           Uint8List.fromList(data),
           WriteMode.appendExisting,
         );
@@ -193,19 +193,20 @@ void main() {
       test('failExisting', () {
         final data = randomUint8List(20);
         final path = '$tmp/file';
-        File(path).writeAsBytesSync([1, 2, 3]);
+        io.File(path).writeAsBytesSync([1, 2, 3]);
 
         expect(
           () => fileSystem.writeAsBytes(path, data, WriteMode.failExisting),
           throwsA(
             isA<PathExistsException>()
-                .having((e) => e.message, 'message', 'open failed')
                 .having(
-                  (e) => e.osError?.errorCode,
+                  (e) => e.errorCode,
                   'errorCode',
-                  Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eexist,
+                  io.Platform.isWindows
+                      ? win32.ERROR_FILE_EXISTS
+                      : errors.eexist,
                 )
-                .having((e) => e.path, 'path', path),
+                .having((e) => e.path1, 'path1', path),
           ),
         );
       });
@@ -213,11 +214,11 @@ void main() {
       test('truncateExisting', () {
         final data = randomUint8List(20);
         final path = '$tmp/file';
-        File(path).writeAsBytesSync([1, 2, 3]);
+        io.File(path).writeAsBytesSync([1, 2, 3]);
 
         fileSystem.writeAsBytes(path, data, WriteMode.truncateExisting);
 
-        expect(File(path).readAsBytesSync(), data);
+        expect(io.File(path).readAsBytesSync(), data);
       });
     });
 

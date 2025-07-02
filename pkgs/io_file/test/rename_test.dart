@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
@@ -33,51 +33,51 @@ void main() {
       final path1 = '$tmp/file1';
       final path2 = '$tmp/file2';
 
-      File(path1).writeAsStringSync('Hello World');
+      io.File(path1).writeAsStringSync('Hello World');
       fileSystem.rename(path1, path2);
-      expect(File(path1).existsSync(), isFalse);
-      expect(File(path2).existsSync(), isTrue);
+      expect(io.File(path1).existsSync(), isFalse);
+      expect(io.File(path2).existsSync(), isTrue);
     });
 
     test('move between absolute paths, long file names', () {
       final path1 = p.join(tmp, '1' * 255);
       final path2 = p.join(tmp, '2' * 255);
-      File(path1).writeAsStringSync('Hello World');
+      io.File(path1).writeAsStringSync('Hello World');
 
       fileSystem.rename(path1, path2);
-      expect(File(path1).existsSync(), isFalse);
-      expect(File(path2).existsSync(), isTrue);
+      expect(io.File(path1).existsSync(), isFalse);
+      expect(io.File(path2).existsSync(), isTrue);
     });
 
     test('move between relative path, long file names', () {
       final path1 = '1' * 255;
       final path2 = '2' * 255;
-      File(path1).writeAsStringSync('Hello World');
+      io.File(path1).writeAsStringSync('Hello World');
 
       fileSystem.rename(path1, path2);
-      expect(File(path1).existsSync(), isFalse);
-      expect(File(path2).existsSync(), isTrue);
+      expect(io.File(path1).existsSync(), isFalse);
+      expect(io.File(path2).existsSync(), isTrue);
     });
 
     test('move file to existing', () {
       final path1 = '$tmp/file1';
       final path2 = '$tmp/file2';
 
-      File(path1).writeAsStringSync('Hello World #1');
-      File(path2).writeAsStringSync('Hello World #2');
+      io.File(path1).writeAsStringSync('Hello World #1');
+      io.File(path2).writeAsStringSync('Hello World #2');
       fileSystem.rename(path1, path2);
-      expect(File(path1).existsSync(), isFalse);
-      expect(File(path2).readAsStringSync(), 'Hello World #1');
+      expect(io.File(path1).existsSync(), isFalse);
+      expect(io.File(path2).readAsStringSync(), 'Hello World #1');
     });
 
     test('move directory absolute path', () {
       final path1 = '$tmp/dir1';
       final path2 = '$tmp/dir2';
 
-      Directory(path1).createSync(recursive: true);
+      io.Directory(path1).createSync(recursive: true);
       fileSystem.rename(path1, path2);
-      expect(Directory(path1).existsSync(), isFalse);
-      expect(Directory(path2).existsSync(), isTrue);
+      expect(io.Directory(path1).existsSync(), isFalse);
+      expect(io.Directory(path2).existsSync(), isTrue);
     });
 
     test('move non-existant', () {
@@ -87,13 +87,11 @@ void main() {
       expect(
         () => fileSystem.rename(path1, path2),
         throwsA(
-          isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'rename failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                2, // ENOENT, ERROR_FILE_NOT_FOUND
-              ),
+          isA<PathNotFoundException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            2, // ENOENT, ERROR_FILE_NOT_FOUND
+          ),
         ),
       );
     });
@@ -102,21 +100,19 @@ void main() {
       final path1 = '$tmp/file1';
       final path2 = '$tmp/dir1';
 
-      File(path1).writeAsStringSync('Hello World');
-      Directory(path2).createSync(recursive: true);
+      io.File(path1).writeAsStringSync('Hello World');
+      io.Directory(path2).createSync(recursive: true);
 
       expect(
         () => fileSystem.rename(path1, path2),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'rename failed')
-              .having(
-                (e) => e.osError?.errorCode,
-                'errorCode',
-                Platform.isWindows
-                    ? 5 // ERROR_ACCESS_DENIED
-                    : 21, // EISDIR
-              ),
+          isA<IOFileException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            io.Platform.isWindows
+                ? 5 // ERROR_ACCESS_DENIED
+                : 21, // EISDIR
+          ),
         ),
       );
     });
