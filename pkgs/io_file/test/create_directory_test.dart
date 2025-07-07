@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
@@ -35,7 +35,7 @@ void main() {
       final path = '$tmp/dir';
 
       fileSystem.createDirectory(path);
-      expect(FileSystemEntity.isDirectorySync(path), isTrue);
+      expect(io.FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
     test('absolute path, long directory name', () {
@@ -43,11 +43,11 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final dirname = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final dirname = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
       final path = p.join(tmp, dirname);
 
       fileSystem.createDirectory(path);
-      expect(FileSystemEntity.isDirectorySync(path), isTrue);
+      expect(io.FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
     test('absolute path, too long directory name', () {
@@ -56,13 +56,12 @@ void main() {
       expect(
         () => fileSystem.createDirectory(path),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+          isA<IOFileException>()
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows
+                io.Platform.isWindows
                     ? win32.ERROR_INVALID_NAME
                     : errors.enametoolong,
               ),
@@ -75,10 +74,10 @@ void main() {
       // When using an API to create a directory, the specified path cannot be
       // so long that you cannot append an 8.3 file name (that is, the directory
       // name cannot exceed MAX_PATH minus 12).
-      final path = 'd' * (Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final path = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
       fileSystem.createDirectory(path);
 
-      expect(FileSystemEntity.isDirectorySync(path), isTrue);
+      expect(io.FileSystemEntity.isDirectorySync(path), isTrue);
     });
 
     test('relative path, too long directory name', () {
@@ -87,13 +86,12 @@ void main() {
       expect(
         () => fileSystem.createDirectory(path),
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+          isA<IOFileException>()
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows
+                io.Platform.isWindows
                     ? win32.ERROR_INVALID_NAME
                     : errors.enametoolong,
               ),
@@ -108,12 +106,13 @@ void main() {
         () => fileSystem.createDirectory(path),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+              .having((e) => e.path1, 'path', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_PATH_NOT_FOUND : errors.enoent,
+                io.Platform.isWindows
+                    ? win32.ERROR_PATH_NOT_FOUND
+                    : errors.enoent,
               ),
         ),
       );
@@ -121,18 +120,19 @@ void main() {
 
     test('create over existing directory', () {
       final path = '$tmp/dir';
-      Directory(path).createSync();
+      io.Directory(path).createSync();
 
       expect(
         () => fileSystem.createDirectory(path),
         throwsA(
           isA<PathExistsException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
               ),
         ),
       );
@@ -144,12 +144,13 @@ void main() {
         () => fileSystem.createDirectory(path),
         throwsA(
           isA<PathExistsException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
               ),
         ),
       );
@@ -161,12 +162,13 @@ void main() {
         () => fileSystem.createDirectory(path),
         throwsA(
           isA<PathExistsException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
               ),
         ),
       );
@@ -174,18 +176,19 @@ void main() {
 
     test('create over existing file', () {
       final path = '$tmp/file';
-      File(path).createSync();
+      io.File(path).createSync();
 
       expect(
         () => fileSystem.createDirectory(path),
         throwsA(
           isA<PathExistsException>()
-              .having((e) => e.message, 'message', 'create directory failed')
-              .having((e) => e.path, 'path', path)
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ALREADY_EXISTS : errors.eexist,
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
               ),
         ),
       );

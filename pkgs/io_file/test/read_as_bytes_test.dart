@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:io_file/io_file.dart';
@@ -41,13 +41,14 @@ void main() {
         () => fileSystem.readAsBytes('doesnotexist'),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'open failed')
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_FILE_NOT_FOUND : errors.enoent,
+                io.Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : errors.enoent,
               )
-              .having((e) => e.path, 'path', 'doesnotexist'),
+              .having((e) => e.path1, 'path1', 'doesnotexist'),
         ),
       );
     });
@@ -56,18 +57,15 @@ void main() {
       expect(
         () => fileSystem.readAsBytes(tmp),
         throwsA(
-          isA<FileSystemException>()
+          isA<IOFileException>()
               .having(
-                (e) => e.message,
-                'message',
-                Platform.isWindows ? 'open failed' : 'read failed',
-              )
-              .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
-                Platform.isWindows ? win32.ERROR_ACCESS_DENIED : errors.eisdir,
+                io.Platform.isWindows
+                    ? win32.ERROR_ACCESS_DENIED
+                    : errors.eisdir,
               )
-              .having((e) => e.path, 'path', tmp),
+              .having((e) => e.path1, 'path1', tmp),
         ),
       );
     });
@@ -77,8 +75,8 @@ void main() {
       final path2 = '$tmp/file2';
 
       final data = randomUint8List(20);
-      File(path1).writeAsBytesSync(data);
-      Link(path2).createSync(path1);
+      io.File(path1).writeAsBytesSync(data);
+      io.Link(path2).createSync(path1);
 
       expect(fileSystem.readAsBytes(path2), data);
     });
@@ -88,17 +86,16 @@ void main() {
       final path2 = '$tmp/file2';
 
       final data = randomUint8List(20);
-      File(path1).writeAsBytesSync(data);
-      Link(path2).createSync(path1);
-      File(path1).deleteSync();
+      io.File(path1).writeAsBytesSync(data);
+      io.Link(path2).createSync(path1);
+      io.File(path1).deleteSync();
 
       expect(
         () => fileSystem.readAsBytes(path2),
         throwsA(
           isA<PathNotFoundException>()
-              .having((e) => e.message, 'message', 'open failed')
-              .having((e) => e.osError?.errorCode, 'errorCode', errors.enoent)
-              .having((e) => e.path, 'path', path2),
+              .having((e) => e.errorCode, 'errorCode', errors.enoent)
+              .having((e) => e.path1, 'path1', path2),
         ),
       );
     });
@@ -148,7 +145,7 @@ void main() {
       test('absolute path, long file name', () {
         final data = randomUint8List(20);
         final path = p.join(tmp, 'f' * 255);
-        File(path).writeAsBytesSync(data);
+        io.File(path).writeAsBytesSync(data);
 
         expect(fileSystem.readAsBytes(path), data);
       });
@@ -156,7 +153,7 @@ void main() {
       test('relative path, long file name', () {
         final data = randomUint8List(20);
         final path = 'f' * 255;
-        File(path).writeAsBytesSync(data);
+        io.File(path).writeAsBytesSync(data);
 
         expect(fileSystem.readAsBytes(path), data);
       });
@@ -166,7 +163,7 @@ void main() {
           final data = randomUint8List(i);
           final path = '$tmp/file';
 
-          File(path).writeAsBytesSync(data);
+          io.File(path).writeAsBytesSync(data);
           expect(fileSystem.readAsBytes(path), data);
         });
       }
@@ -176,7 +173,7 @@ void main() {
           final data = randomUint8List(i);
           final path = '$tmp/file1';
 
-          File(path).writeAsBytesSync(data);
+          io.File(path).writeAsBytesSync(data);
           expect(fileSystem.readAsBytes(path), data);
         });
       }
@@ -187,7 +184,7 @@ void main() {
         final data = randomUint8List(1 << 31);
         final path = '$tmp/file';
 
-        File(path).writeAsBytesSync(data);
+        io.File(path).writeAsBytesSync(data);
         expect(fileSystem.readAsBytes(path), data);
       }, skip: 'very slow');
     });

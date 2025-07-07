@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:io_file/io_file.dart';
 import 'package:path/path.dart' as p;
@@ -30,11 +30,9 @@ void main() {
       deleteTemp(tmp);
     });
 
-    //TODO(brianquinlan): test with a very long path.
-
     test('absolute path', () {
       final path = '$tmp/dir';
-      Directory(path).createSync(recursive: true);
+      io.Directory(path).createSync(recursive: true);
 
       fileSystem.currentDirectory = path;
 
@@ -55,27 +53,27 @@ void main() {
     test('absolute path, too long path', () {
       // On Windows, limited to MAX_PATH (260) characters.
       final path = p.join(tmp, 'a' * 200, 'b' * 200);
-      Directory(path).createSync(recursive: true);
+      io.Directory(path).createSync(recursive: true);
       final oldCurrentDirectory = fileSystem.currentDirectory;
 
       expect(
         () => fileSystem.currentDirectory = path,
         throwsA(
-          isA<FileSystemException>()
-              .having((e) => e.path, 'path', path)
+          isA<IOFileException>()
+              .having((e) => e.path1, 'path1', path)
               .having(
-                (e) => e.osError?.errorCode,
+                (e) => e.errorCode,
                 'errorCode',
                 win32.ERROR_FILENAME_EXCED_RANGE,
               ),
         ),
       );
       expect(fileSystem.currentDirectory, oldCurrentDirectory);
-    }, skip: !Platform.isWindows);
+    }, skip: !io.Platform.isWindows);
 
     test('relative path', () {
       final path = '$tmp/dir';
-      Directory(path).createSync(recursive: true);
+      io.Directory(path).createSync(recursive: true);
 
       fileSystem.currentDirectory = 'dir';
 

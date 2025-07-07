@@ -40,8 +40,20 @@ external int get_EEXIST();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EINTR')
 external int get_EINTR();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EMFILE')
+external int get_EMFILE();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOENT')
 external int get_ENOENT();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOSPC')
+external int get_ENOSPC();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOTDIR')
+external int get_ENOTDIR();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOTEMPTY')
+external int get_ENOTEMPTY();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EPERM')
 external int get_EPERM();
