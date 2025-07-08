@@ -6,7 +6,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-export 'test_utils_self.dart'
+export 'file_system_file_utils.dart'
     if (dart.library.io) 'dart_io_file_utils.dart'
     show fileUtils;
 
