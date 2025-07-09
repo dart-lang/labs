@@ -6,6 +6,10 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+export 'file_system_file_utils.dart'
+    if (dart.library.io) 'dart_io_file_utils.dart'
+    show fileUtils;
+
 String createTemp(String testName) =>
     Directory.systemTemp.createTempSync(testName).absolute.path;
 void deleteTemp(String path) => Directory(path).deleteSync(recursive: true);
@@ -17,4 +21,15 @@ Uint8List randomUint8List(int length, {int? seed}) {
     l[i] = random.nextInt(255);
   }
   return l;
+}
+
+abstract interface class FileUtils {
+  String createTestDirectory(String testName);
+  void deleteDirectoryTree(String path);
+
+  bool isDirectory(String path);
+
+  void createDirectory(String path);
+
+  void createTextFile(String path, String s);
 }
