@@ -147,6 +147,38 @@ void main() {
       );
     });
 
+    test('complex tree of long paths', () {
+      void createTree(String path, int depth) {
+        io.Directory(path).createSync();
+
+        final filePath = 'f' * 255;
+        final fileLinkPath = 'l' * 255;
+        final directoryPath =
+            'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+        final directoryLinkPath =
+            's' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+
+        io.File('$path/$filePath').writeAsStringSync('Hello World');
+        io.Link('$path/$fileLinkPath').createSync('$path/file1');
+        io.Link('$path/$directoryLinkPath').createSync(path);
+
+        if (depth > 0) {
+          createTree('$path/$directoryPath', depth - 1);
+        }
+      }
+
+      final path = '$tmp/dir';
+      // macOS has a maximum path length of 1024 characters.
+      createTree(path, 2);
+
+      fileSystem.removeDirectoryTree(path);
+
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
+    });
+
     test(
       'unremoveable file',
       () {
