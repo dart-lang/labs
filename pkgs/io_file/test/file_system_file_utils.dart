@@ -17,6 +17,11 @@ class FileSystemFileUtils implements FileUtils {
   }
 
   @override
+  void deleteDirectory(String path) {
+    // TODO: implement deleteDirectory
+  }
+
+  @override
   String createTestDirectory(String testName) =>
       fs.createTemporaryDirectory(prefix: testName);
 

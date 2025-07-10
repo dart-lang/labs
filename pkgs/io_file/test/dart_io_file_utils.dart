@@ -21,6 +21,9 @@ class DartIOFileUtils implements FileUtils {
   void createDirectory(String path) => Directory(path).createSync();
 
   @override
+  void deleteDirectory(String path) => Directory(path).deleteSync();
+
+  @override
   void createTextFile(String path, String s) => File(path).writeAsStringSync(s);
 }
 

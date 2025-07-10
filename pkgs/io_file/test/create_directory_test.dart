@@ -21,14 +21,14 @@ void tests(FileUtils utils, FileSystem fs) {
   late String cwd;
 
   setUp(() {
-    tmp = createTemp('createDirectory');
+    tmp = utils.createTestDirectory('createDirectory');
     cwd = fs.currentDirectory;
     fs.currentDirectory = tmp;
   });
 
   tearDown(() {
     fs.currentDirectory = cwd;
-    deleteTemp(tmp);
+    utils.deleteDirectoryTree(tmp);
   });
 
   test('success', () {
