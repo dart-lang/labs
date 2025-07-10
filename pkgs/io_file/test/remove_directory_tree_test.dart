@@ -189,38 +189,31 @@ void main() {
               : false,
     );
 
-    test(
-      'unreadable directory',
-      () {
-        final path = '$tmp/dir';
-        final unreadableDirectory = p.join(path, 'subdir1', 'subdir2');
-        io.Directory(path).createSync();
-        io.Directory('$path/subdir1/subdir2').createSync(recursive: true);
-        io.File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
-        // -wx-wx---
-        if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 216) ==
-            -1) {
-          assert(libc.errno == 0);
-        }
-        addTearDown(
-          // rwxrwxrwx
-          () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
-        );
+    test('unreadable directory', () {
+      final path = '$tmp/dir';
+      final unreadableDirectory = p.join(path, 'subdir1', 'subdir2');
+      io.Directory(path).createSync();
+      io.Directory('$path/subdir1/subdir2').createSync(recursive: true);
+      io.File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
+      // -wx-wx---
+      if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 216) ==
+          -1) {
+        assert(libc.errno == 0);
+      }
+      addTearDown(
+        // rwxrwxrwx
+        () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
+      );
 
-        expect(
-          () => fileSystem.removeDirectoryTree(path),
-          throwsA(
-            isA<PathAccessException>()
-                .having((e) => e.path1, 'path1', unreadableDirectory)
-                .having((e) => e.errorCode, 'errorCode', errors.eaccess),
-          ),
-        );
-      },
-      skip:
-          io.Platform.isWindows
-              ? 'TODO(brianquinlan): make this work on Windows'
-              : false,
-    );
+      expect(
+        () => fileSystem.removeDirectoryTree(path),
+        throwsA(
+          isA<PathAccessException>()
+              .having((e) => e.path1, 'path1', unreadableDirectory)
+              .having((e) => e.errorCode, 'errorCode', errors.eaccess),
+        ),
+      );
+    });
 
     test('non-existent directory', () {
       final path = '$tmp/foo/dir';

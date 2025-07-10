@@ -510,6 +510,7 @@ final class WindowsFileSystem extends FileSystem {
   void removeDirectoryTree(String path) => using((arena) {
     _primeGetLastError();
 
+    path = _extendedPath(path, arena).toDartString();
     final findData = arena<win32.WIN32_FIND_DATA>();
     final searchPath = p.join(path, '*');
 
