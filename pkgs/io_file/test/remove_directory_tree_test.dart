@@ -44,49 +44,40 @@ void main() {
       );
     });
 
-    test(
-      'absolute path, long directory name',
-      () {
-        // On Windows:
-        // When using an API to create a directory, the specified path cannot be
-        // so long that you cannot append an 8.3 file name (that is, the
-        // directory name cannot exceed MAX_PATH minus 12).
-        final dirname =
-            'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
-        final path = p.join(tmp, dirname);
-        io.Directory(path).createSync();
-        io.File('$path/file').writeAsStringSync('Hello World!');
+    test('absolute path, long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the
+      // directory name cannot exceed MAX_PATH minus 12).
+      final dirname = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final path = p.join(tmp, dirname);
+      io.Directory(path).createSync();
+      io.File('$path/file').writeAsStringSync('Hello World!');
 
-        fileSystem.removeDirectoryTree(path);
+      fileSystem.removeDirectoryTree(path);
 
-        expect(
-          io.FileSystemEntity.typeSync(path),
-          io.FileSystemEntityType.notFound,
-        );
-      },
-      skip: io.Platform.isWindows ? 'TODO(bquinlan): make this pass' : false,
-    );
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
+    });
 
-    test(
-      'relative path, long directory name',
-      () {
-        // On Windows:
-        // When using an API to create a directory, the specified path cannot be
-        // so long that you cannot append an 8.3 file name (that is, the
-        // directory name cannot exceed MAX_PATH minus 12).
-        final path = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
-        io.Directory(path).createSync();
-        io.File('$path/file').writeAsStringSync('Hello World!');
+    test('relative path, long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the
+      // directory name cannot exceed MAX_PATH minus 12).
+      final path = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      io.Directory(path).createSync();
+      io.File('$path/file').writeAsStringSync('Hello World!');
 
-        fileSystem.removeDirectoryTree(path);
+      fileSystem.removeDirectoryTree(path);
 
-        expect(
-          io.FileSystemEntity.typeSync(path),
-          io.FileSystemEntityType.notFound,
-        );
-      },
-      skip: io.Platform.isWindows ? 'TODO(bquinlan) make this pass' : false,
-    );
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
+    });
 
     test('contains single file', () {
       final path = '$tmp/dir';
@@ -189,31 +180,38 @@ void main() {
               : false,
     );
 
-    test('unreadable directory', () {
-      final path = '$tmp/dir';
-      final unreadableDirectory = p.join(path, 'subdir1', 'subdir2');
-      io.Directory(path).createSync();
-      io.Directory('$path/subdir1/subdir2').createSync(recursive: true);
-      io.File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
-      // -wx-wx---
-      if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 216) ==
-          -1) {
-        assert(libc.errno == 0);
-      }
-      addTearDown(
-        // rwxrwxrwx
-        () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
-      );
+    test(
+      'unreadable directory',
+      () {
+        final path = '$tmp/dir';
+        final unreadableDirectory = p.join(path, 'subdir1', 'subdir2');
+        io.Directory(path).createSync();
+        io.Directory('$path/subdir1/subdir2').createSync(recursive: true);
+        io.File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
+        // -wx-wx---
+        if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 216) ==
+            -1) {
+          assert(libc.errno == 0);
+        }
+        addTearDown(
+          // rwxrwxrwx
+          () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
+        );
 
-      expect(
-        () => fileSystem.removeDirectoryTree(path),
-        throwsA(
-          isA<PathAccessException>()
-              .having((e) => e.path1, 'path1', unreadableDirectory)
-              .having((e) => e.errorCode, 'errorCode', errors.eaccess),
-        ),
-      );
-    });
+        expect(
+          () => fileSystem.removeDirectoryTree(path),
+          throwsA(
+            isA<PathAccessException>()
+                .having((e) => e.path1, 'path1', unreadableDirectory)
+                .having((e) => e.errorCode, 'errorCode', errors.eaccess),
+          ),
+        );
+      },
+      skip:
+          io.Platform.isWindows
+              ? 'TODO(brianquinlan): make this work on Windows'
+              : false,
+    );
 
     test('non-existent directory', () {
       final path = '$tmp/foo/dir';
