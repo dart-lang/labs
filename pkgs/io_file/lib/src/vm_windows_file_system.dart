@@ -392,6 +392,9 @@ final class WindowsMetadata implements Metadata {
 /// be refered to by the path `r'\\.\NUL'`.
 final class WindowsFileSystem extends FileSystem {
   @override
+  void copyFile(String oldPath, String newPath) {}
+
+  @override
   bool same(String path1, String path2) => using((arena) {
     // Calling `GetLastError` for the first time causes the `GetLastError`
     // symbol to be loaded, which resets `GetLastError`. So make a harmless

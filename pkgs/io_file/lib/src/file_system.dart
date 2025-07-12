@@ -141,6 +141,8 @@ class WriteMode {
 /// be refered to by the path `r'\\.\NUL'`.
 @sealed
 abstract class FileSystem {
+  void copyFile(String oldPath, String newPath);
+
   /// Create a directory at the given path.
   ///
   /// If the directory already exists, then `PathExistsException` is thrown.

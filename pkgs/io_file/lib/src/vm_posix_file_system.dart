@@ -270,6 +270,83 @@ external int write(int fd, Pointer<Uint8> buf, int count);
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
 final class PosixFileSystem extends FileSystem {
+  void _slowCopy(
+    String oldPath,
+    String newPath,
+    int fromFd,
+    int toFd,
+    Allocator arena,
+  ) {
+    final buffer = arena<Uint8>(blockSize);
+
+    while (true) {
+      final r = _tempFailureRetry(() => read(fromFd, buffer, blockSize));
+      switch (r) {
+        case -1:
+          final errno = libc.errno;
+          throw _getError(errno, systemCall: 'read', path1: oldPath);
+        case 0:
+          return;
+      }
+
+      var writeRemaining = r;
+      var writeBuffer = buffer;
+      while (writeRemaining > 0) {
+        final w = _tempFailureRetry(
+          () => write(toFd, writeBuffer, writeRemaining),
+        );
+        if (w == -1) {
+          final errno = libc.errno;
+          throw _getError(errno, systemCall: 'write', path1: newPath);
+        }
+        writeRemaining -= w;
+        writeBuffer += w;
+      }
+    }
+  }
+
+  @override
+  void copyFile(String oldPath, String newPath) => ffi.using((arena) {
+    final oldFd = _tempFailureRetry(
+      () => libc.open(
+        oldPath.toNativeUtf8(allocator: arena).cast(),
+        libc.O_RDONLY | libc.O_CLOEXEC,
+        0,
+      ),
+    );
+    if (oldFd == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, systemCall: 'open', path1: oldPath);
+    }
+    try {
+      final stat = arena<libc.Stat>();
+      if (libc.fstat(oldFd, stat) == -1) {
+        final errno = libc.errno;
+        throw _getError(errno, systemCall: 'fstat', path1: oldPath);
+      }
+
+      final newFd = _tempFailureRetry(
+        () => libc.open(
+          newPath.toNativeUtf8(allocator: arena).cast(),
+          libc.O_WRONLY | libc.O_TRUNC | libc.O_CREAT | libc.O_CLOEXEC,
+          stat.ref.st_mode,
+        ),
+      );
+      if (newFd == -1) {
+        final errno = libc.errno;
+        throw _getError(errno, systemCall: 'open', path1: newPath);
+      }
+
+      try {
+        _slowCopy(oldPath, newPath, oldFd, newFd, arena);
+      } finally {
+        libc.close(newFd);
+      }
+    } finally {
+      libc.close(oldFd);
+    }
+  });
+
   @override
   bool same(String path1, String path2) => ffi.using((arena) {
     final stat1 = arena<libc.Stat>();

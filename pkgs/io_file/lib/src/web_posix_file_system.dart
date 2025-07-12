@@ -11,6 +11,11 @@ import 'file_system.dart';
 /// macOS).
 final class PosixFileSystem extends FileSystem {
   @override
+  void copyFile(String oldPath, String newPath) {
+    throw UnimplementedError();
+  }
+
+  @override
   void createDirectory(String path) {
     throw UnimplementedError();
   }
