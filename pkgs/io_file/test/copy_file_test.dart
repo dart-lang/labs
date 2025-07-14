@@ -71,14 +71,35 @@ void main() {
 
     test('copy file to existing', () {
       final data = randomUint8List(1024);
-      final oldPath = '1' * 255;
-      final newPath = '2' * 255;
+      final oldPath = '$tmp/file1';
+      final newPath = '$tmp/file2';
       io.File(oldPath).writeAsBytesSync(data);
       io.File(newPath).writeAsStringSync('Hello World!');
 
       fileSystem.copyFile(oldPath, newPath);
 
       expect(io.File(newPath).readAsBytesSync(), data);
+    });
+
+    test('copy to existant directory', () {
+      final data = randomUint8List(1024);
+      final oldPath = '$tmp/file1';
+      final newPath = '$tmp/file2';
+      io.File(oldPath).writeAsBytesSync(data);
+      io.Directory(newPath).createSync();
+
+      expect(
+        () => fileSystem.copyFile(oldPath, newPath),
+        throwsA(
+          isA<IOFileException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            io.Platform.isWindows
+                ? 5 // ERROR_ACCESS_DENIED
+                : 21, // EISDIR
+          ),
+        ),
+      );
     });
 
     test('copy non-existent', () {

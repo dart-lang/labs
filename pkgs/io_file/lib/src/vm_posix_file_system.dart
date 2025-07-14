@@ -319,17 +319,11 @@ final class PosixFileSystem extends FileSystem {
       throw _getError(errno, systemCall: 'open', path1: oldPath);
     }
     try {
-      final stat = arena<libc.Stat>();
-      if (libc.fstat(oldFd, stat) == -1) {
-        final errno = libc.errno;
-        throw _getError(errno, systemCall: 'fstat', path1: oldPath);
-      }
-
       final newFd = _tempFailureRetry(
         () => libc.open(
           newPath.toNativeUtf8(allocator: arena).cast(),
           libc.O_WRONLY | libc.O_TRUNC | libc.O_CREAT | libc.O_CLOEXEC,
-          stat.ref.st_mode,
+          _defaultMode,
         ),
       );
       if (newFd == -1) {

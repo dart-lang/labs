@@ -7,6 +7,8 @@ import 'dart:typed_data';
 
 import 'package:meta/meta.dart' show sealed;
 
+import 'exceptions.dart';
+
 // TODO(brianquinlan): When we switch to using exception types outside of
 // `dart:io` then change the doc strings to use reference syntax rather than
 // code syntax e.g. `PathExistsException` => [PathExistsException].
@@ -141,6 +143,14 @@ class WriteMode {
 /// be refered to by the path `r'\\.\NUL'`.
 @sealed
 abstract class FileSystem {
+  /// Copy the data from the file at `oldPath` to  a new file at `newPath`.
+  ///
+  /// If `newPath` identifies an existing file or link, that entity is removed
+  /// first. If `newPath` identifies an existing directory, the operation
+  /// fails and throws [IOFileException].
+  ///
+  /// The metadata associated with `oldPath` (such as permissions, visibility,
+  /// and creation time) is not copied to `newPath`.
   void copyFile(String oldPath, String newPath);
 
   /// Create a directory at the given path.
@@ -239,9 +249,9 @@ abstract class FileSystem {
   /// different file systems. If that is the case, instead copy the file to the
   /// new location and then remove the original.
   ///
-  // If `newPath` identifies an existing file or link, that entity is removed
-  // first. If `newPath` identifies an existing directory, the operation
-  // fails and raises [PathExistsException].
+  /// If `newPath` identifies an existing file or link, that entity is removed
+  /// first. If `newPath` identifies an existing directory, the operation
+  /// fails and raises [PathExistsException].
   void rename(String oldPath, String newPath);
 
   /// Reads the entire file contents as a list of bytes.
