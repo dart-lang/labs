@@ -200,14 +200,17 @@ void main() {
               -1) {
             assert(libc.errno == 0);
           }
-          addTearDown(
-            // rwxrwxrwx
-            () => libc.chmod(
+        });
+
+        addTearDown(
+          // rwxrwxrwx
+          () => using(
+            (arena) => libc.chmod(
               '$path/subdir1/subdir2'.toNativeUtf8(allocator: arena).cast(),
               511,
             ),
-          );
-        });
+          ),
+        );
 
         expect(
           () => fileSystem.removeDirectoryTree(path),
