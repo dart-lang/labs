@@ -8,8 +8,12 @@ library;
 import 'dart:io' as io;
 import 'dart:typed_data';
 
+import 'package:ffi/ffi.dart';
 import 'package:io_file/io_file.dart';
+import 'package:io_file/posix_file_system.dart';
 import 'package:io_file/src/internal_constants.dart' show blockSize;
+import 'package:io_file/src/libc.dart' as libc;
+import 'package:io_file/src/vm_windows_file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
@@ -35,6 +39,44 @@ void main() {
       fileSystem.currentDirectory = cwd;
       deleteTemp(tmp);
     });
+
+    test('copy does not preserve permissions', () {
+      final data = randomUint8List(1024);
+      final oldPath = '$tmp/file1';
+      final newPath = '$tmp/file2';
+      io.File(oldPath).writeAsBytesSync(data);
+
+      // Give "other users" write permissions.
+      using((arena) {
+        // rw-rw-rw-
+        if (libc.chmod(oldPath.toNativeUtf8(allocator: arena).cast(), 438) ==
+            -1) {
+          assert(false, 'libc.errno: ${libc.errno}');
+        }
+        final metadata = fileSystem.metadata(oldPath);
+        assert((metadata as PosixMetadata).mode & libc.S_IWOTH != 0);
+      });
+
+      fileSystem.copyFile(oldPath, newPath);
+
+      // Ensure that "other users" do not have write permissions on the copied
+      // file.
+      final metadata = fileSystem.metadata(newPath);
+      expect((metadata as PosixMetadata).mode & libc.S_IWOTH, 0);
+    }, skip: io.Platform.isWindows);
+
+    test('copy does not preserve file attributes', () {
+      final data = randomUint8List(1024);
+      final oldPath = '$tmp/file1';
+      final newPath = '$tmp/file2';
+      io.File(oldPath).writeAsBytesSync(data);
+      (fileSystem as WindowsFileSystem).setMetadata(oldPath, isReadOnly: true);
+
+      fileSystem.copyFile(oldPath, newPath);
+
+      final metadata = fileSystem.metadata(newPath);
+      expect((metadata as WindowsMetadata).isReadOnly, isFalse);
+    }, skip: !io.Platform.isWindows);
 
     test('copy file absolute path', () {
       final data = randomUint8List(1024);

@@ -192,14 +192,22 @@ void main() {
         io.Directory('$path/subdir1/subdir2').createSync(recursive: true);
         io.File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
         // r-xr-x---
-        if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 360) ==
-            -1) {
-          assert(libc.errno == 0);
-        }
-        addTearDown(
-          // rwxrwxrwx
-          () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
-        );
+        using((arena) {
+          if (libc.chmod(
+                '$path/subdir1/subdir2'.toNativeUtf8(allocator: arena).cast(),
+                360,
+              ) ==
+              -1) {
+            assert(libc.errno == 0);
+          }
+          addTearDown(
+            // rwxrwxrwx
+            () => libc.chmod(
+              '$path/subdir1/subdir2'.toNativeUtf8(allocator: arena).cast(),
+              511,
+            ),
+          );
+        });
 
         expect(
           () => fileSystem.removeDirectoryTree(path),
