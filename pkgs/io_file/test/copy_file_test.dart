@@ -23,8 +23,6 @@ import 'fifo.dart';
 import 'test_utils.dart';
 
 void main() {
-  /// XXX check metadata
-
   group('copyFile', () {
     late String tmp;
     late String cwd;
@@ -40,7 +38,7 @@ void main() {
       deleteTemp(tmp);
     });
 
-    test('copy does not preserve permissions', () {
+    test('copy does not preserve source permissions', () {
       final data = randomUint8List(1024);
       final oldPath = '$tmp/file1';
       final newPath = '$tmp/file2';
@@ -65,18 +63,25 @@ void main() {
       expect((metadata as PosixMetadata).mode & libc.S_IWOTH, 0);
     }, skip: io.Platform.isWindows);
 
-    test('copy does not preserve file attributes', () {
-      final data = randomUint8List(1024);
-      final oldPath = '$tmp/file1';
-      final newPath = '$tmp/file2';
-      io.File(oldPath).writeAsBytesSync(data);
-      (fileSystem as WindowsFileSystem).setMetadata(oldPath, isReadOnly: true);
+    test(
+      'copy does not preserve source file attributes',
+      () {
+        final data = randomUint8List(1024);
+        final oldPath = '$tmp/file1';
+        final newPath = '$tmp/file2';
+        io.File(oldPath).writeAsBytesSync(data);
+        (fileSystem as WindowsFileSystem).setMetadata(
+          oldPath,
+          isReadOnly: true,
+        );
 
-      fileSystem.copyFile(oldPath, newPath);
+        fileSystem.copyFile(oldPath, newPath);
 
-      final metadata = fileSystem.metadata(newPath);
-      expect((metadata as WindowsMetadata).isReadOnly, isFalse);
-    }, skip: !io.Platform.isWindows);
+        final metadata = fileSystem.metadata(newPath);
+        expect((metadata as WindowsMetadata).isReadOnly, isFalse);
+      },
+      skip: !io.Platform.isWindows,
+    );
 
     test('copy file absolute path', () {
       final data = randomUint8List(1024);
