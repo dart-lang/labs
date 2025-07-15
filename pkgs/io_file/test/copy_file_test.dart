@@ -111,19 +111,55 @@ void main() {
       expect(io.File(newPath).readAsBytesSync(), data);
     });
 
-    test('copy file to existing', () {
+    test('copy file to existing file', () {
       final data = randomUint8List(1024);
       final oldPath = '$tmp/file1';
       final newPath = '$tmp/file2';
       io.File(oldPath).writeAsBytesSync(data);
       io.File(newPath).writeAsStringSync('Hello World!');
 
-      fileSystem.copyFile(oldPath, newPath);
-
-      expect(io.File(newPath).readAsBytesSync(), data);
+      expect(
+        () => fileSystem.copyFile(oldPath, newPath),
+        throwsA(
+          isA<PathExistsException>()
+              .having((e) => e.path1, 'path1', newPath)
+              .having(
+                (e) => e.errorCode,
+                'errorCode',
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
+              ),
+        ),
+      );
     });
 
-    test('copy to existant directory', () {
+    test('copy file to existing link', () {
+      final data = randomUint8List(1024);
+      final oldPath = '$tmp/file1';
+      final linkedFile = '$tmp/file2';
+      final newPath = '$tmp/link';
+      io.File(oldPath).writeAsBytesSync(data);
+      io.File(linkedFile).writeAsStringSync('Hello World');
+      io.Link(newPath).createSync(linkedFile);
+
+      expect(
+        () => fileSystem.copyFile(oldPath, newPath),
+        throwsA(
+          isA<PathExistsException>()
+              .having((e) => e.path1, 'path1', newPath)
+              .having(
+                (e) => e.errorCode,
+                'errorCode',
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
+              ),
+        ),
+      );
+    });
+
+    test('copy to existing directory', () {
       final data = randomUint8List(1024);
       final oldPath = '$tmp/file1';
       final newPath = '$tmp/file2';
@@ -133,13 +169,15 @@ void main() {
       expect(
         () => fileSystem.copyFile(oldPath, newPath),
         throwsA(
-          isA<IOFileException>().having(
-            (e) => e.errorCode,
-            'errorCode',
-            io.Platform.isWindows
-                ? 5 // ERROR_ACCESS_DENIED
-                : 21, // EISDIR
-          ),
+          isA<PathExistsException>()
+              .having((e) => e.path1, 'path1', newPath)
+              .having(
+                (e) => e.errorCode,
+                'errorCode',
+                io.Platform.isWindows
+                    ? win32.ERROR_ALREADY_EXISTS
+                    : errors.eexist,
+              ),
         ),
       );
     });

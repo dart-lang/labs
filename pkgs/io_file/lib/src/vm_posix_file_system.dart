@@ -322,7 +322,7 @@ final class PosixFileSystem extends FileSystem {
       final newFd = _tempFailureRetry(
         () => libc.open(
           newPath.toNativeUtf8(allocator: arena).cast(),
-          libc.O_WRONLY | libc.O_TRUNC | libc.O_CREAT | libc.O_CLOEXEC,
+          libc.O_WRONLY | libc.O_CREAT | libc.O_EXCL | libc.O_CLOEXEC,
           _defaultMode,
         ),
       );

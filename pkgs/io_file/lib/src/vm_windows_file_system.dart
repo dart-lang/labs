@@ -462,8 +462,8 @@ final class WindowsFileSystem extends FileSystem {
         win32.FILE_GENERIC_WRITE,
         0,
         nullptr,
-        win32.CREATE_ALWAYS,
-        win32.FILE_ATTRIBUTE_NORMAL,
+        win32.CREATE_NEW,
+        win32.FILE_ATTRIBUTE_NORMAL & win32.FILE_FLAG_OPEN_REPARSE_POINT,
         0,
       );
       if (newHandle == win32.INVALID_HANDLE_VALUE) {
