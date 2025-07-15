@@ -54,8 +54,11 @@ void main() {
     });
 
     test('directory', () {
+      final path = '$tmp/dir';
+      io.Directory(path).createSync();
+
       expect(
-        () => fileSystem.readAsBytes(tmp),
+        () => fileSystem.readAsBytes(path),
         throwsA(
           isA<IOFileException>()
               .having(
