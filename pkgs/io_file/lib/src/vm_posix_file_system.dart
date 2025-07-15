@@ -624,13 +624,13 @@ final class PosixFileSystem extends FileSystem {
           case 0:
             return buffer.asTypedList(
               bufferOffset,
-              finalizer: ffi.calloc.nativeFree,
+              finalizer: ffi.malloc.nativeFree,
             );
           default:
             bufferOffset += r;
         }
       }
-      return buffer.asTypedList(length, finalizer: ffi.calloc.nativeFree);
+      return buffer.asTypedList(length, finalizer: ffi.malloc.nativeFree);
     } on Exception {
       ffi.malloc.free(buffer);
       rethrow;
