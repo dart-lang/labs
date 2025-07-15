@@ -129,7 +129,9 @@ void main() {
               .having(
                 (e) => e.errorCode,
                 'errorCode',
-                io.Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eisdir,
+                io.Platform.isWindows
+                    ? win32.ERROR_ACCESS_DENIED
+                    : errors.eisdir,
               ),
         ),
       );
@@ -250,7 +252,7 @@ void main() {
                 (e) => e.errorCode,
                 'errorCode',
                 io.Platform.isWindows
-                    ? win32.ERROR_FILE_NOT_FOUND
+                    ? win32.ERROR_PATH_NOT_FOUND
                     : errors.enoent,
               ),
         ),
