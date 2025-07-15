@@ -68,7 +68,7 @@ void main() {
                     ? win32.ERROR_ACCESS_DENIED
                     : errors.eisdir,
               )
-              .having((e) => e.path1, 'path1', tmp),
+              .having((e) => e.path1, 'path1', path),
         ),
       );
     });
