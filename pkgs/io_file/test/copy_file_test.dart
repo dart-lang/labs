@@ -116,6 +116,38 @@ void main() {
       expect(io.File(newPath).readAsBytesSync(), data);
     });
 
+    test('copy directory', () {
+      final oldPath = '$tmp/dir1';
+      final newPath = '$tmp/dir2';
+      io.Directory(oldPath).createSync();
+
+      expect(
+        () => fileSystem.copyFile(oldPath, newPath),
+        throwsA(
+          isA<IOFileException>()
+              .having((e) => e.path1, 'path1', oldPath)
+              .having(
+                (e) => e.errorCode,
+                'errorCode',
+                io.Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eisdir,
+              ),
+        ),
+      );
+    });
+
+    test('copy link', () {
+      final data = randomUint8List(1024);
+      final oldPath = '$tmp/link';
+      final linkedFile = '$tmp/file1';
+      final newPath = '$tmp/file2';
+      io.File(linkedFile).writeAsBytesSync(data);
+      io.Link(oldPath).createSync(linkedFile);
+
+      fileSystem.copyFile(oldPath, newPath);
+
+      expect(io.File(newPath).readAsBytesSync(), data);
+    });
+
     test('copy file to existing file', () {
       final data = randomUint8List(1024);
       final oldPath = '$tmp/file1';
@@ -192,6 +224,28 @@ void main() {
         throwsA(
           isA<PathNotFoundException>()
               .having((e) => e.path1, 'path1', oldPath)
+              .having(
+                (e) => e.errorCode,
+                'errorCode',
+                io.Platform.isWindows
+                    ? win32.ERROR_FILE_NOT_FOUND
+                    : errors.enoent,
+              ),
+        ),
+      );
+    });
+
+    test('copy to non-existent directory', () {
+      final data = randomUint8List(1024);
+      final oldPath = '$tmp/file1';
+      final newPath = '$tmp/foo/file2';
+      io.File(oldPath).writeAsBytesSync(data);
+
+      expect(
+        () => fileSystem.copyFile(oldPath, newPath),
+        throwsA(
+          isA<PathNotFoundException>()
+              .having((e) => e.path1, 'path1', newPath)
               .having(
                 (e) => e.errorCode,
                 'errorCode',

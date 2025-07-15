@@ -145,7 +145,11 @@ class WriteMode {
 abstract class FileSystem {
   /// Copy the data from the file at `oldPath` to  a new file at `newPath`.
   ///
-  /// If `newPath` identifies an existing file system object then the operation
+  /// If `oldPath` is a directory, then `copyFile` throws [IOFileException]. If
+  /// `oldPath` is a symbolic link to a file, then the contents of the file are
+  /// copied.
+  ///
+  /// If `newPath` identifies an existing file system object, then `copyFile`
   /// throws [IOFileException].
   ///
   /// The metadata associated with `oldPath` (such as permissions, visibility,
