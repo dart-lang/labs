@@ -126,9 +126,7 @@ void main() {
               .having(
                 (e) => e.errorCode,
                 'errorCode',
-                io.Platform.isWindows
-                    ? win32.ERROR_ALREADY_EXISTS
-                    : errors.eexist,
+                io.Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eexist,
               ),
         ),
       );
@@ -151,9 +149,7 @@ void main() {
               .having(
                 (e) => e.errorCode,
                 'errorCode',
-                io.Platform.isWindows
-                    ? win32.ERROR_ALREADY_EXISTS
-                    : errors.eexist,
+                io.Platform.isWindows ? win32.ERROR_FILE_EXISTS : errors.eexist,
               ),
         ),
       );
@@ -169,13 +165,13 @@ void main() {
       expect(
         () => fileSystem.copyFile(oldPath, newPath),
         throwsA(
-          isA<PathExistsException>()
+          isA<IOFileException>()
               .having((e) => e.path1, 'path1', newPath)
               .having(
                 (e) => e.errorCode,
                 'errorCode',
                 io.Platform.isWindows
-                    ? win32.ERROR_ALREADY_EXISTS
+                    ? win32.ERROR_ACCESS_DENIED
                     : errors.eexist,
               ),
         ),
