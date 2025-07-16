@@ -7,6 +7,8 @@ import 'dart:typed_data';
 
 import 'package:meta/meta.dart' show sealed;
 
+import 'exceptions.dart';
+
 // TODO(brianquinlan): When we switch to using exception types outside of
 // `dart:io` then change the doc strings to use reference syntax rather than
 // code syntax e.g. `PathExistsException` => [PathExistsException].
@@ -141,6 +143,36 @@ class WriteMode {
 /// be refered to by the path `r'\\.\NUL'`.
 @sealed
 abstract class FileSystem {
+  /// Copy the data from the file at `oldPath` to  a new file at `newPath`.
+  ///
+  /// If `oldPath` is a directory, then `copyFile` throws [IOFileException]. If
+  /// `oldPath` is a symbolic link to a file, then the contents of the file are
+  /// copied.
+  ///
+  /// If `newPath` identifies an existing file system object, then `copyFile`
+  /// throws [IOFileException].
+  ///
+  /// The metadata associated with `oldPath` (such as permissions, visibility,
+  /// and creation time) is not copied to `newPath`.
+  ///
+  /// This operation is not atomic; if `copyFile` throws then a partial copy of
+  /// `oldPath` may exist at `newPath`.
+  // DESIGN NOTES:
+  //
+  // Metadata preservation:
+  // Preserving all metadata from `oldPath` is very difficult. Languages that
+  // offer metadata preservation on copy (Python, Java) make no guarantees as to
+  // what metadata is preserved. The most principled approach is to leave
+  // metadata preservation up to the application.
+  //
+  // Existing `newPath`:
+  // If `newPath` exists then Rust opens the existing file and truncates it.
+  // This has the effect of preserving the metadata of the **destination file**.
+  // Python first removes the file at `newPath`. Java fails by default if
+  // `newPath` exists. The most principled approach is to fail if `newPath`
+  // exists and let the application deal with it.
+  void copyFile(String oldPath, String newPath);
+
   /// Create a directory at the given path.
   ///
   /// If the directory already exists, then `PathExistsException` is thrown.
@@ -237,9 +269,9 @@ abstract class FileSystem {
   /// different file systems. If that is the case, instead copy the file to the
   /// new location and then remove the original.
   ///
-  // If `newPath` identifies an existing file or link, that entity is removed
-  // first. If `newPath` identifies an existing directory, the operation
-  // fails and raises [PathExistsException].
+  /// If `newPath` identifies an existing file or link, that entity is removed
+  /// first. If `newPath` identifies an existing directory, the operation
+  /// fails and raises [PathExistsException].
   void rename(String oldPath, String newPath);
 
   /// Reads the entire file contents as a list of bytes.

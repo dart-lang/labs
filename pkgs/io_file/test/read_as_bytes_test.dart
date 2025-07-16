@@ -54,8 +54,11 @@ void main() {
     });
 
     test('directory', () {
+      final path = '$tmp/dir';
+      io.Directory(path).createSync();
+
       expect(
-        () => fileSystem.readAsBytes(tmp),
+        () => fileSystem.readAsBytes(path),
         throwsA(
           isA<IOFileException>()
               .having(
@@ -63,9 +66,13 @@ void main() {
                 'errorCode',
                 io.Platform.isWindows
                     ? win32.ERROR_ACCESS_DENIED
-                    : errors.eisdir,
+                    : (io.Platform.isIOS
+                        // It seems like an iOS but that ENOENT can be
+                        // returned when attempting to read a directory.
+                        ? anyOf(errors.enoent, errors.eisdir)
+                        : errors.eisdir),
               )
-              .having((e) => e.path1, 'path1', tmp),
+              .having((e) => e.path1, 'path1', path),
         ),
       );
     });
