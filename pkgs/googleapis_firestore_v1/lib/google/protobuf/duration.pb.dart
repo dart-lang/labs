@@ -90,19 +90,29 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
 
   Duration._();
 
-  factory Duration.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory Duration.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory Duration.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Duration.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Duration', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'), createEmptyInstance: create, toProto3Json: $mixin.DurationMixin.toProto3JsonHelper, fromProto3Json: $mixin.DurationMixin.fromProto3JsonHelper)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Duration',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'),
+      createEmptyInstance: create,
+      toProto3Json: $mixin.DurationMixin.toProto3JsonHelper,
+      fromProto3Json: $mixin.DurationMixin.fromProto3JsonHelper)
     ..aInt64(1, _omitFieldNames ? '' : 'seconds')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'nanos', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Duration clone() => Duration()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Duration copyWith(void Function(Duration) updates) => super.copyWith((message) => updates(message as Duration)) as Duration;
+  Duration copyWith(void Function(Duration) updates) =>
+      super.copyWith((message) => updates(message as Duration)) as Duration;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -113,7 +123,8 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
   Duration createEmptyInstance() => create();
   static $pb.PbList<Duration> createRepeated() => $pb.PbList<Duration>();
   @$core.pragma('dart2js:noInline')
-  static Duration getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Duration>(create);
+  static Duration getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Duration>(create);
   static Duration? _defaultInstance;
 
   /// Signed seconds of the span of time. Must be from -315,576,000,000
@@ -142,23 +153,24 @@ class Duration extends $pb.GeneratedMessage with $mixin.DurationMixin {
   $core.bool hasNanos() => $_has(1);
   @$pb.TagNumber(2)
   void clearNanos() => $_clearField(2);
+
   /// Converts the [Duration] to [$core.Duration].
   ///
   /// This is a lossy conversion, as [$core.Duration] is limited to [int]
   /// microseconds and also does not support nanosecond precision.
-  $core.Duration toDart() =>
-    $core.Duration(
-      seconds: seconds.toInt(),
-      microseconds: nanos ~/ 1000,
-    );
+  $core.Duration toDart() => $core.Duration(
+        seconds: seconds.toInt(),
+        microseconds: nanos ~/ 1000,
+      );
 
   /// Creates a new instance from [$core.Duration].
   static Duration fromDart($core.Duration duration) => Duration()
     ..seconds = $fixnum.Int64(duration.inSeconds)
-    ..nanos = (duration.inMicroseconds % $core.Duration.microsecondsPerSecond) * 1000;
-
+    ..nanos =
+        (duration.inMicroseconds % $core.Duration.microsecondsPerSecond) * 1000;
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

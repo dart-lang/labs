@@ -121,19 +121,29 @@ class Timestamp extends $pb.GeneratedMessage with $mixin.TimestampMixin {
 
   Timestamp._();
 
-  factory Timestamp.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory Timestamp.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory Timestamp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Timestamp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Timestamp', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'), createEmptyInstance: create, toProto3Json: $mixin.TimestampMixin.toProto3JsonHelper, fromProto3Json: $mixin.TimestampMixin.fromProto3JsonHelper)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Timestamp',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.protobuf'),
+      createEmptyInstance: create,
+      toProto3Json: $mixin.TimestampMixin.toProto3JsonHelper,
+      fromProto3Json: $mixin.TimestampMixin.fromProto3JsonHelper)
     ..aInt64(1, _omitFieldNames ? '' : 'seconds')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'nanos', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Timestamp clone() => Timestamp()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Timestamp copyWith(void Function(Timestamp) updates) => super.copyWith((message) => updates(message as Timestamp)) as Timestamp;
+  Timestamp copyWith(void Function(Timestamp) updates) =>
+      super.copyWith((message) => updates(message as Timestamp)) as Timestamp;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -144,7 +154,8 @@ class Timestamp extends $pb.GeneratedMessage with $mixin.TimestampMixin {
   Timestamp createEmptyInstance() => create();
   static $pb.PbList<Timestamp> createRepeated() => $pb.PbList<Timestamp>();
   @$core.pragma('dart2js:noInline')
-  static Timestamp getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Timestamp>(create);
+  static Timestamp getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Timestamp>(create);
   static Timestamp? _defaultInstance;
 
   /// Represents seconds of UTC time since Unix epoch
@@ -171,6 +182,7 @@ class Timestamp extends $pb.GeneratedMessage with $mixin.TimestampMixin {
   $core.bool hasNanos() => $_has(1);
   @$pb.TagNumber(2)
   void clearNanos() => $_clearField(2);
+
   /// Creates a new instance from [dateTime].
   ///
   /// Time zone information will not be preserved.
@@ -181,6 +193,7 @@ class Timestamp extends $pb.GeneratedMessage with $mixin.TimestampMixin {
   }
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

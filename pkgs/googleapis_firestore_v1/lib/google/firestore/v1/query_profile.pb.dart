@@ -32,18 +32,27 @@ class ExplainOptions extends $pb.GeneratedMessage {
 
   ExplainOptions._();
 
-  factory ExplainOptions.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory ExplainOptions.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory ExplainOptions.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExplainOptions.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExplainOptions', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExplainOptions',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'analyze')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExplainOptions clone() => ExplainOptions()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ExplainOptions copyWith(void Function(ExplainOptions) updates) => super.copyWith((message) => updates(message as ExplainOptions)) as ExplainOptions;
+  ExplainOptions copyWith(void Function(ExplainOptions) updates) =>
+      super.copyWith((message) => updates(message as ExplainOptions))
+          as ExplainOptions;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -52,9 +61,11 @@ class ExplainOptions extends $pb.GeneratedMessage {
   static ExplainOptions create() => ExplainOptions._();
   @$core.override
   ExplainOptions createEmptyInstance() => create();
-  static $pb.PbList<ExplainOptions> createRepeated() => $pb.PbList<ExplainOptions>();
+  static $pb.PbList<ExplainOptions> createRepeated() =>
+      $pb.PbList<ExplainOptions>();
   @$core.pragma('dart2js:noInline')
-  static ExplainOptions getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExplainOptions>(create);
+  static ExplainOptions getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExplainOptions>(create);
   static ExplainOptions? _defaultInstance;
 
   /// Optional. Whether to execute this query.
@@ -88,19 +99,30 @@ class ExplainMetrics extends $pb.GeneratedMessage {
 
   ExplainMetrics._();
 
-  factory ExplainMetrics.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory ExplainMetrics.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory ExplainMetrics.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExplainMetrics.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExplainMetrics', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..aOM<PlanSummary>(1, _omitFieldNames ? '' : 'planSummary', subBuilder: PlanSummary.create)
-    ..aOM<ExecutionStats>(2, _omitFieldNames ? '' : 'executionStats', subBuilder: ExecutionStats.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExplainMetrics',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
+    ..aOM<PlanSummary>(1, _omitFieldNames ? '' : 'planSummary',
+        subBuilder: PlanSummary.create)
+    ..aOM<ExecutionStats>(2, _omitFieldNames ? '' : 'executionStats',
+        subBuilder: ExecutionStats.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExplainMetrics clone() => ExplainMetrics()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ExplainMetrics copyWith(void Function(ExplainMetrics) updates) => super.copyWith((message) => updates(message as ExplainMetrics)) as ExplainMetrics;
+  ExplainMetrics copyWith(void Function(ExplainMetrics) updates) =>
+      super.copyWith((message) => updates(message as ExplainMetrics))
+          as ExplainMetrics;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -109,9 +131,11 @@ class ExplainMetrics extends $pb.GeneratedMessage {
   static ExplainMetrics create() => ExplainMetrics._();
   @$core.override
   ExplainMetrics createEmptyInstance() => create();
-  static $pb.PbList<ExplainMetrics> createRepeated() => $pb.PbList<ExplainMetrics>();
+  static $pb.PbList<ExplainMetrics> createRepeated() =>
+      $pb.PbList<ExplainMetrics>();
   @$core.pragma('dart2js:noInline')
-  static ExplainMetrics getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExplainMetrics>(create);
+  static ExplainMetrics getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExplainMetrics>(create);
   static ExplainMetrics? _defaultInstance;
 
   /// Planning phase information for the query.
@@ -153,18 +177,28 @@ class PlanSummary extends $pb.GeneratedMessage {
 
   PlanSummary._();
 
-  factory PlanSummary.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory PlanSummary.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory PlanSummary.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PlanSummary.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PlanSummary', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..pc<$0.Struct>(1, _omitFieldNames ? '' : 'indexesUsed', $pb.PbFieldType.PM, subBuilder: $0.Struct.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PlanSummary',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
+    ..pc<$0.Struct>(1, _omitFieldNames ? '' : 'indexesUsed', $pb.PbFieldType.PM,
+        subBuilder: $0.Struct.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PlanSummary clone() => PlanSummary()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PlanSummary copyWith(void Function(PlanSummary) updates) => super.copyWith((message) => updates(message as PlanSummary)) as PlanSummary;
+  PlanSummary copyWith(void Function(PlanSummary) updates) =>
+      super.copyWith((message) => updates(message as PlanSummary))
+          as PlanSummary;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -175,7 +209,8 @@ class PlanSummary extends $pb.GeneratedMessage {
   PlanSummary createEmptyInstance() => create();
   static $pb.PbList<PlanSummary> createRepeated() => $pb.PbList<PlanSummary>();
   @$core.pragma('dart2js:noInline')
-  static PlanSummary getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PlanSummary>(create);
+  static PlanSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PlanSummary>(create);
   static PlanSummary? _defaultInstance;
 
   /// The indexes selected for the query. For example:
@@ -205,21 +240,32 @@ class ExecutionStats extends $pb.GeneratedMessage {
 
   ExecutionStats._();
 
-  factory ExecutionStats.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory ExecutionStats.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory ExecutionStats.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExecutionStats.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ExecutionStats', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExecutionStats',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'resultsReturned')
-    ..aOM<$1.Duration>(3, _omitFieldNames ? '' : 'executionDuration', subBuilder: $1.Duration.create)
+    ..aOM<$1.Duration>(3, _omitFieldNames ? '' : 'executionDuration',
+        subBuilder: $1.Duration.create)
     ..aInt64(4, _omitFieldNames ? '' : 'readOperations')
-    ..aOM<$0.Struct>(5, _omitFieldNames ? '' : 'debugStats', subBuilder: $0.Struct.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<$0.Struct>(5, _omitFieldNames ? '' : 'debugStats',
+        subBuilder: $0.Struct.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ExecutionStats clone() => ExecutionStats()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ExecutionStats copyWith(void Function(ExecutionStats) updates) => super.copyWith((message) => updates(message as ExecutionStats)) as ExecutionStats;
+  ExecutionStats copyWith(void Function(ExecutionStats) updates) =>
+      super.copyWith((message) => updates(message as ExecutionStats))
+          as ExecutionStats;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -228,9 +274,11 @@ class ExecutionStats extends $pb.GeneratedMessage {
   static ExecutionStats create() => ExecutionStats._();
   @$core.override
   ExecutionStats createEmptyInstance() => create();
-  static $pb.PbList<ExecutionStats> createRepeated() => $pb.PbList<ExecutionStats>();
+  static $pb.PbList<ExecutionStats> createRepeated() =>
+      $pb.PbList<ExecutionStats>();
   @$core.pragma('dart2js:noInline')
-  static ExecutionStats getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExecutionStats>(create);
+  static ExecutionStats getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExecutionStats>(create);
   static ExecutionStats? _defaultInstance;
 
   /// Total number of results returned, including documents, projections,
@@ -290,6 +338,7 @@ class ExecutionStats extends $pb.GeneratedMessage {
   $0.Struct ensureDebugStats() => $_ensure(3);
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -17,11 +17,17 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// The type of change.
 class TargetChange_TargetChangeType extends $pb.ProtobufEnum {
   /// No change has occurred. Used only to send an updated `resume_token`.
-  static const TargetChange_TargetChangeType NO_CHANGE = TargetChange_TargetChangeType._(0, _omitEnumNames ? '' : 'NO_CHANGE');
+  static const TargetChange_TargetChangeType NO_CHANGE =
+      TargetChange_TargetChangeType._(0, _omitEnumNames ? '' : 'NO_CHANGE');
+
   /// The targets have been added.
-  static const TargetChange_TargetChangeType ADD = TargetChange_TargetChangeType._(1, _omitEnumNames ? '' : 'ADD');
+  static const TargetChange_TargetChangeType ADD =
+      TargetChange_TargetChangeType._(1, _omitEnumNames ? '' : 'ADD');
+
   /// The targets have been removed.
-  static const TargetChange_TargetChangeType REMOVE = TargetChange_TargetChangeType._(2, _omitEnumNames ? '' : 'REMOVE');
+  static const TargetChange_TargetChangeType REMOVE =
+      TargetChange_TargetChangeType._(2, _omitEnumNames ? '' : 'REMOVE');
+
   /// The targets reflect all changes committed before the targets were added
   /// to the stream.
   ///
@@ -30,15 +36,19 @@ class TargetChange_TargetChangeType extends $pb.ProtobufEnum {
   ///
   /// Listeners can wait for this change if read-after-write semantics
   /// are desired.
-  static const TargetChange_TargetChangeType CURRENT = TargetChange_TargetChangeType._(3, _omitEnumNames ? '' : 'CURRENT');
+  static const TargetChange_TargetChangeType CURRENT =
+      TargetChange_TargetChangeType._(3, _omitEnumNames ? '' : 'CURRENT');
+
   /// The targets have been reset, and a new initial state for the targets
   /// will be returned in subsequent changes.
   ///
   /// After the initial state is complete, `CURRENT` will be returned even
   /// if the target was previously indicated to be `CURRENT`.
-  static const TargetChange_TargetChangeType RESET = TargetChange_TargetChangeType._(4, _omitEnumNames ? '' : 'RESET');
+  static const TargetChange_TargetChangeType RESET =
+      TargetChange_TargetChangeType._(4, _omitEnumNames ? '' : 'RESET');
 
-  static const $core.List<TargetChange_TargetChangeType> values = <TargetChange_TargetChangeType> [
+  static const $core.List<TargetChange_TargetChangeType> values =
+      <TargetChange_TargetChangeType>[
     NO_CHANGE,
     ADD,
     REMOVE,
@@ -46,11 +56,13 @@ class TargetChange_TargetChangeType extends $pb.ProtobufEnum {
     RESET,
   ];
 
-  static final $core.List<TargetChange_TargetChangeType?> _byValue = $pb.ProtobufEnum.$_initByValueList(values, 4);
-  static TargetChange_TargetChangeType? valueOf($core.int value) =>  value < 0 || value >= _byValue.length ? null : _byValue[value];
+  static final $core.List<TargetChange_TargetChangeType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static TargetChange_TargetChangeType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const TargetChange_TargetChangeType._(super.value, super.name);
 }
 
-
-const $core.bool _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');
+const $core.bool _omitEnumNames =
+    $core.bool.fromEnvironment('protobuf.omit_enum_names');
