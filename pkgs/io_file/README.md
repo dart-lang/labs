@@ -11,7 +11,7 @@ See
 | Feature               | Android | Linux | iOS   | macOS | Windows | Fake POSIX | Fake Windows |
 | :---                  |  :---:  | :---: | :---: | :---: | :----:  | :--------: | :----------: | 
 |  canonicalize path    |         |       |       |       |         |            |              |
-|  copy file            |         |       |       |       |         |            |              |
+|  copy file            |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create directory     |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create hard link     |         |       |       |       |        |            |              |
 |  create symbolic link |         |       |       |       |        |            |              |

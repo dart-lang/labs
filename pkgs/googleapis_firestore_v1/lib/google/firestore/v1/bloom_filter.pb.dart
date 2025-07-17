@@ -44,19 +44,29 @@ class BitSequence extends $pb.GeneratedMessage {
 
   BitSequence._();
 
-  factory BitSequence.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory BitSequence.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory BitSequence.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BitSequence.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BitSequence', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(1, _omitFieldNames ? '' : 'bitmap', $pb.PbFieldType.OY)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BitSequence',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'bitmap', $pb.PbFieldType.OY)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'padding', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BitSequence clone() => BitSequence()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BitSequence copyWith(void Function(BitSequence) updates) => super.copyWith((message) => updates(message as BitSequence)) as BitSequence;
+  BitSequence copyWith(void Function(BitSequence) updates) =>
+      super.copyWith((message) => updates(message as BitSequence))
+          as BitSequence;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -67,7 +77,8 @@ class BitSequence extends $pb.GeneratedMessage {
   BitSequence createEmptyInstance() => create();
   static $pb.PbList<BitSequence> createRepeated() => $pb.PbList<BitSequence>();
   @$core.pragma('dart2js:noInline')
-  static BitSequence getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BitSequence>(create);
+  static BitSequence getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BitSequence>(create);
   static BitSequence? _defaultInstance;
 
   /// The bytes that encode the bit sequence.
@@ -120,19 +131,29 @@ class BloomFilter extends $pb.GeneratedMessage {
 
   BloomFilter._();
 
-  factory BloomFilter.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory BloomFilter.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory BloomFilter.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BloomFilter.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'BloomFilter', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..aOM<BitSequence>(1, _omitFieldNames ? '' : 'bits', subBuilder: BitSequence.create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BloomFilter',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
+    ..aOM<BitSequence>(1, _omitFieldNames ? '' : 'bits',
+        subBuilder: BitSequence.create)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'hashCount', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   BloomFilter clone() => BloomFilter()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  BloomFilter copyWith(void Function(BloomFilter) updates) => super.copyWith((message) => updates(message as BloomFilter)) as BloomFilter;
+  BloomFilter copyWith(void Function(BloomFilter) updates) =>
+      super.copyWith((message) => updates(message as BloomFilter))
+          as BloomFilter;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -143,7 +164,8 @@ class BloomFilter extends $pb.GeneratedMessage {
   BloomFilter createEmptyInstance() => create();
   static $pb.PbList<BloomFilter> createRepeated() => $pb.PbList<BloomFilter>();
   @$core.pragma('dart2js:noInline')
-  static BloomFilter getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BloomFilter>(create);
+  static BloomFilter getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BloomFilter>(create);
   static BloomFilter? _defaultInstance;
 
   /// The bloom filter data.
@@ -169,6 +191,7 @@ class BloomFilter extends $pb.GeneratedMessage {
   void clearHashCount() => $_clearField(2);
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

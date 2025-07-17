@@ -10,6 +10,11 @@ import 'file_system.dart';
 /// A [FileSystem] implementation for Windows systems.
 base class WindowsFileSystem extends FileSystem {
   @override
+  void copyFile(String oldPath, String newPath) {
+    throw UnimplementedError();
+  }
+
+  @override
   void createDirectory(String path) {
     throw UnimplementedError();
   }
