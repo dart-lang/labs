@@ -35,18 +35,27 @@ class DocumentMask extends $pb.GeneratedMessage {
 
   DocumentMask._();
 
-  factory DocumentMask.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory DocumentMask.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory DocumentMask.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DocumentMask.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DocumentMask', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DocumentMask',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'fieldPaths')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DocumentMask clone() => DocumentMask()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DocumentMask copyWith(void Function(DocumentMask) updates) => super.copyWith((message) => updates(message as DocumentMask)) as DocumentMask;
+  DocumentMask copyWith(void Function(DocumentMask) updates) =>
+      super.copyWith((message) => updates(message as DocumentMask))
+          as DocumentMask;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -55,9 +64,11 @@ class DocumentMask extends $pb.GeneratedMessage {
   static DocumentMask create() => DocumentMask._();
   @$core.override
   DocumentMask createEmptyInstance() => create();
-  static $pb.PbList<DocumentMask> createRepeated() => $pb.PbList<DocumentMask>();
+  static $pb.PbList<DocumentMask> createRepeated() =>
+      $pb.PbList<DocumentMask>();
   @$core.pragma('dart2js:noInline')
-  static DocumentMask getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DocumentMask>(create);
+  static DocumentMask getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DocumentMask>(create);
   static DocumentMask? _defaultInstance;
 
   /// The list of field paths in the mask. See
@@ -67,11 +78,7 @@ class DocumentMask extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get fieldPaths => $_getList(0);
 }
 
-enum Precondition_ConditionType {
-  exists, 
-  updateTime, 
-  notSet
-}
+enum Precondition_ConditionType { exists, updateTime, notSet }
 
 /// A precondition on a document, used for conditional operations.
 class Precondition extends $pb.GeneratedMessage {
@@ -87,25 +94,36 @@ class Precondition extends $pb.GeneratedMessage {
 
   Precondition._();
 
-  factory Precondition.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory Precondition.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory Precondition.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Precondition.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, Precondition_ConditionType> _Precondition_ConditionTypeByTag = {
-    1 : Precondition_ConditionType.exists,
-    2 : Precondition_ConditionType.updateTime,
-    0 : Precondition_ConditionType.notSet
+  static const $core.Map<$core.int, Precondition_ConditionType>
+      _Precondition_ConditionTypeByTag = {
+    1: Precondition_ConditionType.exists,
+    2: Precondition_ConditionType.updateTime,
+    0: Precondition_ConditionType.notSet
   };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Precondition', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Precondition',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
     ..oo(0, [1, 2])
     ..aOB(1, _omitFieldNames ? '' : 'exists')
-    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'updateTime', subBuilder: $0.Timestamp.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'updateTime',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Precondition clone() => Precondition()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Precondition copyWith(void Function(Precondition) updates) => super.copyWith((message) => updates(message as Precondition)) as Precondition;
+  Precondition copyWith(void Function(Precondition) updates) =>
+      super.copyWith((message) => updates(message as Precondition))
+          as Precondition;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -114,12 +132,15 @@ class Precondition extends $pb.GeneratedMessage {
   static Precondition create() => Precondition._();
   @$core.override
   Precondition createEmptyInstance() => create();
-  static $pb.PbList<Precondition> createRepeated() => $pb.PbList<Precondition>();
+  static $pb.PbList<Precondition> createRepeated() =>
+      $pb.PbList<Precondition>();
   @$core.pragma('dart2js:noInline')
-  static Precondition getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Precondition>(create);
+  static Precondition getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Precondition>(create);
   static Precondition? _defaultInstance;
 
-  Precondition_ConditionType whichConditionType() => _Precondition_ConditionTypeByTag[$_whichOneof(0)]!;
+  Precondition_ConditionType whichConditionType() =>
+      _Precondition_ConditionTypeByTag[$_whichOneof(0)]!;
   void clearConditionType() => $_clearField($_whichOneof(0));
 
   /// When set to `true`, the target document must exist.
@@ -162,29 +183,45 @@ class TransactionOptions_ReadWrite extends $pb.GeneratedMessage {
 
   TransactionOptions_ReadWrite._();
 
-  factory TransactionOptions_ReadWrite.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory TransactionOptions_ReadWrite.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory TransactionOptions_ReadWrite.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TransactionOptions_ReadWrite.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TransactionOptions.ReadWrite', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(1, _omitFieldNames ? '' : 'retryTransaction', $pb.PbFieldType.OY)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TransactionOptions.ReadWrite',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'retryTransaction', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransactionOptions_ReadWrite clone() => TransactionOptions_ReadWrite()..mergeFromMessage(this);
+  TransactionOptions_ReadWrite clone() =>
+      TransactionOptions_ReadWrite()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransactionOptions_ReadWrite copyWith(void Function(TransactionOptions_ReadWrite) updates) => super.copyWith((message) => updates(message as TransactionOptions_ReadWrite)) as TransactionOptions_ReadWrite;
+  TransactionOptions_ReadWrite copyWith(
+          void Function(TransactionOptions_ReadWrite) updates) =>
+      super.copyWith(
+              (message) => updates(message as TransactionOptions_ReadWrite))
+          as TransactionOptions_ReadWrite;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TransactionOptions_ReadWrite create() => TransactionOptions_ReadWrite._();
+  static TransactionOptions_ReadWrite create() =>
+      TransactionOptions_ReadWrite._();
   @$core.override
   TransactionOptions_ReadWrite createEmptyInstance() => create();
-  static $pb.PbList<TransactionOptions_ReadWrite> createRepeated() => $pb.PbList<TransactionOptions_ReadWrite>();
+  static $pb.PbList<TransactionOptions_ReadWrite> createRepeated() =>
+      $pb.PbList<TransactionOptions_ReadWrite>();
   @$core.pragma('dart2js:noInline')
-  static TransactionOptions_ReadWrite getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TransactionOptions_ReadWrite>(create);
+  static TransactionOptions_ReadWrite getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TransactionOptions_ReadWrite>(create);
   static TransactionOptions_ReadWrite? _defaultInstance;
 
   /// An optional transaction to retry.
@@ -198,10 +235,7 @@ class TransactionOptions_ReadWrite extends $pb.GeneratedMessage {
   void clearRetryTransaction() => $_clearField(1);
 }
 
-enum TransactionOptions_ReadOnly_ConsistencySelector {
-  readTime, 
-  notSet
-}
+enum TransactionOptions_ReadOnly_ConsistencySelector { readTime, notSet }
 
 /// Options for a transaction that can only be used to read documents.
 class TransactionOptions_ReadOnly extends $pb.GeneratedMessage {
@@ -215,37 +249,56 @@ class TransactionOptions_ReadOnly extends $pb.GeneratedMessage {
 
   TransactionOptions_ReadOnly._();
 
-  factory TransactionOptions_ReadOnly.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory TransactionOptions_ReadOnly.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory TransactionOptions_ReadOnly.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TransactionOptions_ReadOnly.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, TransactionOptions_ReadOnly_ConsistencySelector> _TransactionOptions_ReadOnly_ConsistencySelectorByTag = {
-    2 : TransactionOptions_ReadOnly_ConsistencySelector.readTime,
-    0 : TransactionOptions_ReadOnly_ConsistencySelector.notSet
+  static const $core
+      .Map<$core.int, TransactionOptions_ReadOnly_ConsistencySelector>
+      _TransactionOptions_ReadOnly_ConsistencySelectorByTag = {
+    2: TransactionOptions_ReadOnly_ConsistencySelector.readTime,
+    0: TransactionOptions_ReadOnly_ConsistencySelector.notSet
   };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TransactionOptions.ReadOnly', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TransactionOptions.ReadOnly',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
     ..oo(0, [2])
-    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'readTime', subBuilder: $0.Timestamp.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'readTime',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransactionOptions_ReadOnly clone() => TransactionOptions_ReadOnly()..mergeFromMessage(this);
+  TransactionOptions_ReadOnly clone() =>
+      TransactionOptions_ReadOnly()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransactionOptions_ReadOnly copyWith(void Function(TransactionOptions_ReadOnly) updates) => super.copyWith((message) => updates(message as TransactionOptions_ReadOnly)) as TransactionOptions_ReadOnly;
+  TransactionOptions_ReadOnly copyWith(
+          void Function(TransactionOptions_ReadOnly) updates) =>
+      super.copyWith(
+              (message) => updates(message as TransactionOptions_ReadOnly))
+          as TransactionOptions_ReadOnly;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TransactionOptions_ReadOnly create() => TransactionOptions_ReadOnly._();
+  static TransactionOptions_ReadOnly create() =>
+      TransactionOptions_ReadOnly._();
   @$core.override
   TransactionOptions_ReadOnly createEmptyInstance() => create();
-  static $pb.PbList<TransactionOptions_ReadOnly> createRepeated() => $pb.PbList<TransactionOptions_ReadOnly>();
+  static $pb.PbList<TransactionOptions_ReadOnly> createRepeated() =>
+      $pb.PbList<TransactionOptions_ReadOnly>();
   @$core.pragma('dart2js:noInline')
-  static TransactionOptions_ReadOnly getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TransactionOptions_ReadOnly>(create);
+  static TransactionOptions_ReadOnly getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TransactionOptions_ReadOnly>(create);
   static TransactionOptions_ReadOnly? _defaultInstance;
 
-  TransactionOptions_ReadOnly_ConsistencySelector whichConsistencySelector() => _TransactionOptions_ReadOnly_ConsistencySelectorByTag[$_whichOneof(0)]!;
+  TransactionOptions_ReadOnly_ConsistencySelector whichConsistencySelector() =>
+      _TransactionOptions_ReadOnly_ConsistencySelectorByTag[$_whichOneof(0)]!;
   void clearConsistencySelector() => $_clearField($_whichOneof(0));
 
   /// Reads documents at the given time.
@@ -265,11 +318,7 @@ class TransactionOptions_ReadOnly extends $pb.GeneratedMessage {
   $0.Timestamp ensureReadTime() => $_ensure(0);
 }
 
-enum TransactionOptions_Mode {
-  readOnly, 
-  readWrite, 
-  notSet
-}
+enum TransactionOptions_Mode { readOnly, readWrite, notSet }
 
 /// Options for creating a new transaction.
 class TransactionOptions extends $pb.GeneratedMessage {
@@ -285,25 +334,37 @@ class TransactionOptions extends $pb.GeneratedMessage {
 
   TransactionOptions._();
 
-  factory TransactionOptions.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory TransactionOptions.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory TransactionOptions.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TransactionOptions.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, TransactionOptions_Mode> _TransactionOptions_ModeByTag = {
-    2 : TransactionOptions_Mode.readOnly,
-    3 : TransactionOptions_Mode.readWrite,
-    0 : TransactionOptions_Mode.notSet
+  static const $core.Map<$core.int, TransactionOptions_Mode>
+      _TransactionOptions_ModeByTag = {
+    2: TransactionOptions_Mode.readOnly,
+    3: TransactionOptions_Mode.readWrite,
+    0: TransactionOptions_Mode.notSet
   };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'TransactionOptions', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TransactionOptions',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
     ..oo(0, [2, 3])
-    ..aOM<TransactionOptions_ReadOnly>(2, _omitFieldNames ? '' : 'readOnly', subBuilder: TransactionOptions_ReadOnly.create)
-    ..aOM<TransactionOptions_ReadWrite>(3, _omitFieldNames ? '' : 'readWrite', subBuilder: TransactionOptions_ReadWrite.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<TransactionOptions_ReadOnly>(2, _omitFieldNames ? '' : 'readOnly',
+        subBuilder: TransactionOptions_ReadOnly.create)
+    ..aOM<TransactionOptions_ReadWrite>(3, _omitFieldNames ? '' : 'readWrite',
+        subBuilder: TransactionOptions_ReadWrite.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   TransactionOptions clone() => TransactionOptions()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TransactionOptions copyWith(void Function(TransactionOptions) updates) => super.copyWith((message) => updates(message as TransactionOptions)) as TransactionOptions;
+  TransactionOptions copyWith(void Function(TransactionOptions) updates) =>
+      super.copyWith((message) => updates(message as TransactionOptions))
+          as TransactionOptions;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -312,12 +373,15 @@ class TransactionOptions extends $pb.GeneratedMessage {
   static TransactionOptions create() => TransactionOptions._();
   @$core.override
   TransactionOptions createEmptyInstance() => create();
-  static $pb.PbList<TransactionOptions> createRepeated() => $pb.PbList<TransactionOptions>();
+  static $pb.PbList<TransactionOptions> createRepeated() =>
+      $pb.PbList<TransactionOptions>();
   @$core.pragma('dart2js:noInline')
-  static TransactionOptions getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TransactionOptions>(create);
+  static TransactionOptions getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TransactionOptions>(create);
   static TransactionOptions? _defaultInstance;
 
-  TransactionOptions_Mode whichMode() => _TransactionOptions_ModeByTag[$_whichOneof(0)]!;
+  TransactionOptions_Mode whichMode() =>
+      _TransactionOptions_ModeByTag[$_whichOneof(0)]!;
   void clearMode() => $_clearField($_whichOneof(0));
 
   /// The transaction can only be used for read operations.
@@ -345,6 +409,7 @@ class TransactionOptions extends $pb.GeneratedMessage {
   TransactionOptions_ReadWrite ensureReadWrite() => $_ensure(1);
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

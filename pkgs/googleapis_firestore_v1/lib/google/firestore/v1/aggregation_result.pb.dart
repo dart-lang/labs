@@ -28,24 +28,40 @@ class AggregationResult extends $pb.GeneratedMessage {
     $core.Iterable<$core.MapEntry<$core.String, $0.Value>>? aggregateFields,
   }) {
     final result = create();
-    if (aggregateFields != null) result.aggregateFields.addEntries(aggregateFields);
+    if (aggregateFields != null)
+      result.aggregateFields.addEntries(aggregateFields);
     return result;
   }
 
   AggregationResult._();
 
-  factory AggregationResult.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory AggregationResult.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory AggregationResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AggregationResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AggregationResult', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'), createEmptyInstance: create)
-    ..m<$core.String, $0.Value>(2, _omitFieldNames ? '' : 'aggregateFields', entryClassName: 'AggregationResult.AggregateFieldsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: $0.Value.create, valueDefaultOrMaker: $0.Value.getDefault, packageName: const $pb.PackageName('google.firestore.v1'))
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AggregationResult',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'google.firestore.v1'),
+      createEmptyInstance: create)
+    ..m<$core.String, $0.Value>(2, _omitFieldNames ? '' : 'aggregateFields',
+        entryClassName: 'AggregationResult.AggregateFieldsEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: $0.Value.create,
+        valueDefaultOrMaker: $0.Value.getDefault,
+        packageName: const $pb.PackageName('google.firestore.v1'))
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   AggregationResult clone() => AggregationResult()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AggregationResult copyWith(void Function(AggregationResult) updates) => super.copyWith((message) => updates(message as AggregationResult)) as AggregationResult;
+  AggregationResult copyWith(void Function(AggregationResult) updates) =>
+      super.copyWith((message) => updates(message as AggregationResult))
+          as AggregationResult;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -54,9 +70,11 @@ class AggregationResult extends $pb.GeneratedMessage {
   static AggregationResult create() => AggregationResult._();
   @$core.override
   AggregationResult createEmptyInstance() => create();
-  static $pb.PbList<AggregationResult> createRepeated() => $pb.PbList<AggregationResult>();
+  static $pb.PbList<AggregationResult> createRepeated() =>
+      $pb.PbList<AggregationResult>();
   @$core.pragma('dart2js:noInline')
-  static AggregationResult getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AggregationResult>(create);
+  static AggregationResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AggregationResult>(create);
   static AggregationResult? _defaultInstance;
 
   /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
@@ -69,6 +87,7 @@ class AggregationResult extends $pb.GeneratedMessage {
   $pb.PbMap<$core.String, $0.Value> get aggregateFields => $_getMap(0);
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

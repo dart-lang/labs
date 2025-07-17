@@ -380,24 +380,35 @@ class RoutingRule extends $pb.GeneratedMessage {
     $core.Iterable<RoutingParameter>? routingParameters,
   }) {
     final result = create();
-    if (routingParameters != null) result.routingParameters.addAll(routingParameters);
+    if (routingParameters != null)
+      result.routingParameters.addAll(routingParameters);
     return result;
   }
 
   RoutingRule._();
 
-  factory RoutingRule.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory RoutingRule.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory RoutingRule.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoutingRule.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RoutingRule', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..pc<RoutingParameter>(2, _omitFieldNames ? '' : 'routingParameters', $pb.PbFieldType.PM, subBuilder: RoutingParameter.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoutingRule',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..pc<RoutingParameter>(
+        2, _omitFieldNames ? '' : 'routingParameters', $pb.PbFieldType.PM,
+        subBuilder: RoutingParameter.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RoutingRule clone() => RoutingRule()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RoutingRule copyWith(void Function(RoutingRule) updates) => super.copyWith((message) => updates(message as RoutingRule)) as RoutingRule;
+  RoutingRule copyWith(void Function(RoutingRule) updates) =>
+      super.copyWith((message) => updates(message as RoutingRule))
+          as RoutingRule;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -408,7 +419,8 @@ class RoutingRule extends $pb.GeneratedMessage {
   RoutingRule createEmptyInstance() => create();
   static $pb.PbList<RoutingRule> createRepeated() => $pb.PbList<RoutingRule>();
   @$core.pragma('dart2js:noInline')
-  static RoutingRule getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RoutingRule>(create);
+  static RoutingRule getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoutingRule>(create);
   static RoutingRule? _defaultInstance;
 
   /// A collection of Routing Parameter specifications.
@@ -435,19 +447,27 @@ class RoutingParameter extends $pb.GeneratedMessage {
 
   RoutingParameter._();
 
-  factory RoutingParameter.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory RoutingParameter.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory RoutingParameter.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoutingParameter.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RoutingParameter', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoutingParameter',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'field')
     ..aOS(2, _omitFieldNames ? '' : 'pathTemplate')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RoutingParameter clone() => RoutingParameter()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RoutingParameter copyWith(void Function(RoutingParameter) updates) => super.copyWith((message) => updates(message as RoutingParameter)) as RoutingParameter;
+  RoutingParameter copyWith(void Function(RoutingParameter) updates) =>
+      super.copyWith((message) => updates(message as RoutingParameter))
+          as RoutingParameter;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -456,9 +476,11 @@ class RoutingParameter extends $pb.GeneratedMessage {
   static RoutingParameter create() => RoutingParameter._();
   @$core.override
   RoutingParameter createEmptyInstance() => create();
-  static $pb.PbList<RoutingParameter> createRepeated() => $pb.PbList<RoutingParameter>();
+  static $pb.PbList<RoutingParameter> createRepeated() =>
+      $pb.PbList<RoutingParameter>();
   @$core.pragma('dart2js:noInline')
-  static RoutingParameter getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RoutingParameter>(create);
+  static RoutingParameter getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoutingParameter>(create);
   static RoutingParameter? _defaultInstance;
 
   /// A request field to extract the header key-value pair from.
@@ -536,12 +558,19 @@ class RoutingParameter extends $pb.GeneratedMessage {
 }
 
 class Routing {
-  static final routing = $pb.Extension<RoutingRule>(_omitMessageNames ? '' : 'google.protobuf.MethodOptions', _omitFieldNames ? '' : 'routing', 72295729, $pb.PbFieldType.OM, defaultOrMaker: RoutingRule.getDefault, subBuilder: RoutingRule.create);
+  static final routing = $pb.Extension<RoutingRule>(
+      _omitMessageNames ? '' : 'google.protobuf.MethodOptions',
+      _omitFieldNames ? '' : 'routing',
+      72295729,
+      $pb.PbFieldType.OM,
+      defaultOrMaker: RoutingRule.getDefault,
+      subBuilder: RoutingRule.create);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
     registry.add(routing);
   }
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');
