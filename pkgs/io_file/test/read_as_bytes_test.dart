@@ -54,8 +54,11 @@ void main() {
     });
 
     test('directory', () {
+      final path = '$tmp/dir';
+      io.Directory(path).createSync();
+
       expect(
-        () => fileSystem.readAsBytes(tmp),
+        () => fileSystem.readAsBytes(path),
         throwsA(
           isA<IOFileException>()
               .having(
@@ -63,9 +66,13 @@ void main() {
                 'errorCode',
                 io.Platform.isWindows
                     ? win32.ERROR_ACCESS_DENIED
-                    : errors.eisdir,
+                    // iOS and Android can fail with ENOENT when calling
+                    // `open` on a directory. This may be due to
+                    // file system sandboxing.
+                    // TODO(bquinlan): Clarify this.
+                    : anyOf(errors.enoent, errors.eisdir),
               )
-              .having((e) => e.path1, 'path1', tmp),
+              .having((e) => e.path1, 'path1', path),
         ),
       );
     });

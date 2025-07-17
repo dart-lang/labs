@@ -18,23 +18,40 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// Affects the url where generated docs are published, etc.
 class ClientLibraryOrganization extends $pb.ProtobufEnum {
   /// Not useful.
-  static const ClientLibraryOrganization CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED = ClientLibraryOrganization._(0, _omitEnumNames ? '' : 'CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED');
-  /// Google Cloud Platform Org.
-  static const ClientLibraryOrganization CLOUD = ClientLibraryOrganization._(1, _omitEnumNames ? '' : 'CLOUD');
-  /// Ads (Advertising) Org.
-  static const ClientLibraryOrganization ADS = ClientLibraryOrganization._(2, _omitEnumNames ? '' : 'ADS');
-  /// Photos Org.
-  static const ClientLibraryOrganization PHOTOS = ClientLibraryOrganization._(3, _omitEnumNames ? '' : 'PHOTOS');
-  /// Street View Org.
-  static const ClientLibraryOrganization STREET_VIEW = ClientLibraryOrganization._(4, _omitEnumNames ? '' : 'STREET_VIEW');
-  /// Shopping Org.
-  static const ClientLibraryOrganization SHOPPING = ClientLibraryOrganization._(5, _omitEnumNames ? '' : 'SHOPPING');
-  /// Geo Org.
-  static const ClientLibraryOrganization GEO = ClientLibraryOrganization._(6, _omitEnumNames ? '' : 'GEO');
-  /// Generative AI - https://developers.generativeai.google
-  static const ClientLibraryOrganization GENERATIVE_AI = ClientLibraryOrganization._(7, _omitEnumNames ? '' : 'GENERATIVE_AI');
+  static const ClientLibraryOrganization
+      CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED = ClientLibraryOrganization._(
+          0, _omitEnumNames ? '' : 'CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED');
 
-  static const $core.List<ClientLibraryOrganization> values = <ClientLibraryOrganization> [
+  /// Google Cloud Platform Org.
+  static const ClientLibraryOrganization CLOUD =
+      ClientLibraryOrganization._(1, _omitEnumNames ? '' : 'CLOUD');
+
+  /// Ads (Advertising) Org.
+  static const ClientLibraryOrganization ADS =
+      ClientLibraryOrganization._(2, _omitEnumNames ? '' : 'ADS');
+
+  /// Photos Org.
+  static const ClientLibraryOrganization PHOTOS =
+      ClientLibraryOrganization._(3, _omitEnumNames ? '' : 'PHOTOS');
+
+  /// Street View Org.
+  static const ClientLibraryOrganization STREET_VIEW =
+      ClientLibraryOrganization._(4, _omitEnumNames ? '' : 'STREET_VIEW');
+
+  /// Shopping Org.
+  static const ClientLibraryOrganization SHOPPING =
+      ClientLibraryOrganization._(5, _omitEnumNames ? '' : 'SHOPPING');
+
+  /// Geo Org.
+  static const ClientLibraryOrganization GEO =
+      ClientLibraryOrganization._(6, _omitEnumNames ? '' : 'GEO');
+
+  /// Generative AI - https://developers.generativeai.google
+  static const ClientLibraryOrganization GENERATIVE_AI =
+      ClientLibraryOrganization._(7, _omitEnumNames ? '' : 'GENERATIVE_AI');
+
+  static const $core.List<ClientLibraryOrganization> values =
+      <ClientLibraryOrganization>[
     CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED,
     CLOUD,
     ADS,
@@ -45,8 +62,10 @@ class ClientLibraryOrganization extends $pb.ProtobufEnum {
     GENERATIVE_AI,
   ];
 
-  static final $core.List<ClientLibraryOrganization?> _byValue = $pb.ProtobufEnum.$_initByValueList(values, 7);
-  static ClientLibraryOrganization? valueOf($core.int value) =>  value < 0 || value >= _byValue.length ? null : _byValue[value];
+  static final $core.List<ClientLibraryOrganization?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
+  static ClientLibraryOrganization? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const ClientLibraryOrganization._(super.value, super.name);
 }
@@ -55,24 +74,32 @@ class ClientLibraryOrganization extends $pb.ProtobufEnum {
 class ClientLibraryDestination extends $pb.ProtobufEnum {
   /// Client libraries will neither be generated nor published to package
   /// managers.
-  static const ClientLibraryDestination CLIENT_LIBRARY_DESTINATION_UNSPECIFIED = ClientLibraryDestination._(0, _omitEnumNames ? '' : 'CLIENT_LIBRARY_DESTINATION_UNSPECIFIED');
+  static const ClientLibraryDestination CLIENT_LIBRARY_DESTINATION_UNSPECIFIED =
+      ClientLibraryDestination._(
+          0, _omitEnumNames ? '' : 'CLIENT_LIBRARY_DESTINATION_UNSPECIFIED');
+
   /// Generate the client library in a repo under github.com/googleapis,
   /// but don't publish it to package managers.
-  static const ClientLibraryDestination GITHUB = ClientLibraryDestination._(10, _omitEnumNames ? '' : 'GITHUB');
-  /// Publish the library to package managers like nuget.org and npmjs.com.
-  static const ClientLibraryDestination PACKAGE_MANAGER = ClientLibraryDestination._(20, _omitEnumNames ? '' : 'PACKAGE_MANAGER');
+  static const ClientLibraryDestination GITHUB =
+      ClientLibraryDestination._(10, _omitEnumNames ? '' : 'GITHUB');
 
-  static const $core.List<ClientLibraryDestination> values = <ClientLibraryDestination> [
+  /// Publish the library to package managers like nuget.org and npmjs.com.
+  static const ClientLibraryDestination PACKAGE_MANAGER =
+      ClientLibraryDestination._(20, _omitEnumNames ? '' : 'PACKAGE_MANAGER');
+
+  static const $core.List<ClientLibraryDestination> values =
+      <ClientLibraryDestination>[
     CLIENT_LIBRARY_DESTINATION_UNSPECIFIED,
     GITHUB,
     PACKAGE_MANAGER,
   ];
 
-  static final $core.Map<$core.int, ClientLibraryDestination> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static final $core.Map<$core.int, ClientLibraryDestination> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
   static ClientLibraryDestination? valueOf($core.int value) => _byValue[value];
 
   const ClientLibraryDestination._(super.value, super.name);
 }
 
-
-const $core.bool _omitEnumNames = $core.bool.fromEnvironment('protobuf.omit_enum_names');
+const $core.bool _omitEnumNames =
+    $core.bool.fromEnvironment('protobuf.omit_enum_names');

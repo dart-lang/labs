@@ -44,49 +44,40 @@ void main() {
       );
     });
 
-    test(
-      'absolute path, long directory name',
-      () {
-        // On Windows:
-        // When using an API to create a directory, the specified path cannot be
-        // so long that you cannot append an 8.3 file name (that is, the
-        // directory name cannot exceed MAX_PATH minus 12).
-        final dirname =
-            'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
-        final path = p.join(tmp, dirname);
-        io.Directory(path).createSync();
-        io.File('$path/file').writeAsStringSync('Hello World!');
+    test('absolute path, long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the
+      // directory name cannot exceed MAX_PATH minus 12).
+      final dirname = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      final path = p.join(tmp, dirname);
+      io.Directory(path).createSync();
+      io.File('$path/file').writeAsStringSync('Hello World!');
 
-        fileSystem.removeDirectoryTree(path);
+      fileSystem.removeDirectoryTree(path);
 
-        expect(
-          io.FileSystemEntity.typeSync(path),
-          io.FileSystemEntityType.notFound,
-        );
-      },
-      skip: io.Platform.isWindows ? 'TODO(bquinlan): make this pass' : false,
-    );
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
+    });
 
-    test(
-      'relative path, long directory name',
-      () {
-        // On Windows:
-        // When using an API to create a directory, the specified path cannot be
-        // so long that you cannot append an 8.3 file name (that is, the
-        // directory name cannot exceed MAX_PATH minus 12).
-        final path = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
-        io.Directory(path).createSync();
-        io.File('$path/file').writeAsStringSync('Hello World!');
+    test('relative path, long directory name', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the
+      // directory name cannot exceed MAX_PATH minus 12).
+      final path = 'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+      io.Directory(path).createSync();
+      io.File('$path/file').writeAsStringSync('Hello World!');
 
-        fileSystem.removeDirectoryTree(path);
+      fileSystem.removeDirectoryTree(path);
 
-        expect(
-          io.FileSystemEntity.typeSync(path),
-          io.FileSystemEntityType.notFound,
-        );
-      },
-      skip: io.Platform.isWindows ? 'TODO(bquinlan) make this pass' : false,
-    );
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
+    });
 
     test('contains single file', () {
       final path = '$tmp/dir';
@@ -156,6 +147,42 @@ void main() {
       );
     });
 
+    test('complex tree of long paths', () {
+      // On Windows:
+      // When using an API to create a directory, the specified path cannot be
+      // so long that you cannot append an 8.3 file name (that is, the
+      // directory name cannot exceed MAX_PATH minus 12).
+      void createTree(String path, int depth) {
+        io.Directory(path).createSync();
+
+        final filePath = 'f' * 255;
+        final fileLinkPath = 'l' * 255;
+        final directoryPath =
+            'd' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+        final directoryLinkPath =
+            's' * (io.Platform.isWindows ? win32.MAX_PATH - 12 : 255);
+
+        io.File('$path/$filePath').writeAsStringSync('Hello World');
+        io.Link('$path/$fileLinkPath').createSync('$path/file1');
+        io.Link('$path/$directoryLinkPath').createSync(path);
+
+        if (depth > 0) {
+          createTree('$path/$directoryPath', depth - 1);
+        }
+      }
+
+      final path = '$tmp/dir';
+      // macOS has a maximum path length of 1024 characters.
+      createTree(path, 2);
+
+      fileSystem.removeDirectoryTree(path);
+
+      expect(
+        io.FileSystemEntity.typeSync(path),
+        io.FileSystemEntityType.notFound,
+      );
+    });
+
     test(
       'unremoveable file',
       () {
@@ -165,13 +192,24 @@ void main() {
         io.Directory('$path/subdir1/subdir2').createSync(recursive: true);
         io.File('$path/subdir1/subdir2/file1').writeAsStringSync('Hello World');
         // r-xr-x---
-        if (libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 360) ==
-            -1) {
-          assert(libc.errno == 0);
-        }
+        using((arena) {
+          if (libc.chmod(
+                '$path/subdir1/subdir2'.toNativeUtf8(allocator: arena).cast(),
+                360,
+              ) ==
+              -1) {
+            assert(libc.errno == 0);
+          }
+        });
+
         addTearDown(
           // rwxrwxrwx
-          () => libc.chmod('$path/subdir1/subdir2'.toNativeUtf8().cast(), 511),
+          () => using(
+            (arena) => libc.chmod(
+              '$path/subdir1/subdir2'.toNativeUtf8(allocator: arena).cast(),
+              511,
+            ),
+          ),
         );
 
         expect(

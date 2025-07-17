@@ -25,7 +25,7 @@ export 'client.pbenum.dart';
 /// Required information for every language.
 class CommonLanguageSettings extends $pb.GeneratedMessage {
   factory CommonLanguageSettings({
-  @$core.Deprecated('This field is deprecated.')
+    @$core.Deprecated('This field is deprecated.')
     $core.String? referenceDocsUri,
     $core.Iterable<ClientLibraryDestination>? destinations,
     SelectiveGapicGeneration? selectiveGapicGeneration,
@@ -33,26 +33,44 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
     final result = create();
     if (referenceDocsUri != null) result.referenceDocsUri = referenceDocsUri;
     if (destinations != null) result.destinations.addAll(destinations);
-    if (selectiveGapicGeneration != null) result.selectiveGapicGeneration = selectiveGapicGeneration;
+    if (selectiveGapicGeneration != null)
+      result.selectiveGapicGeneration = selectiveGapicGeneration;
     return result;
   }
 
   CommonLanguageSettings._();
 
-  factory CommonLanguageSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory CommonLanguageSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory CommonLanguageSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CommonLanguageSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CommonLanguageSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CommonLanguageSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'referenceDocsUri')
-    ..pc<ClientLibraryDestination>(2, _omitFieldNames ? '' : 'destinations', $pb.PbFieldType.KE, valueOf: ClientLibraryDestination.valueOf, enumValues: ClientLibraryDestination.values, defaultEnumValue: ClientLibraryDestination.CLIENT_LIBRARY_DESTINATION_UNSPECIFIED)
-    ..aOM<SelectiveGapicGeneration>(3, _omitFieldNames ? '' : 'selectiveGapicGeneration', subBuilder: SelectiveGapicGeneration.create)
-    ..hasRequiredFields = false
-  ;
+    ..pc<ClientLibraryDestination>(
+        2, _omitFieldNames ? '' : 'destinations', $pb.PbFieldType.KE,
+        valueOf: ClientLibraryDestination.valueOf,
+        enumValues: ClientLibraryDestination.values,
+        defaultEnumValue:
+            ClientLibraryDestination.CLIENT_LIBRARY_DESTINATION_UNSPECIFIED)
+    ..aOM<SelectiveGapicGeneration>(
+        3, _omitFieldNames ? '' : 'selectiveGapicGeneration',
+        subBuilder: SelectiveGapicGeneration.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CommonLanguageSettings clone() => CommonLanguageSettings()..mergeFromMessage(this);
+  CommonLanguageSettings clone() =>
+      CommonLanguageSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CommonLanguageSettings copyWith(void Function(CommonLanguageSettings) updates) => super.copyWith((message) => updates(message as CommonLanguageSettings)) as CommonLanguageSettings;
+  CommonLanguageSettings copyWith(
+          void Function(CommonLanguageSettings) updates) =>
+      super.copyWith((message) => updates(message as CommonLanguageSettings))
+          as CommonLanguageSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -61,9 +79,11 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
   static CommonLanguageSettings create() => CommonLanguageSettings._();
   @$core.override
   CommonLanguageSettings createEmptyInstance() => create();
-  static $pb.PbList<CommonLanguageSettings> createRepeated() => $pb.PbList<CommonLanguageSettings>();
+  static $pb.PbList<CommonLanguageSettings> createRepeated() =>
+      $pb.PbList<CommonLanguageSettings>();
   @$core.pragma('dart2js:noInline')
-  static CommonLanguageSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CommonLanguageSettings>(create);
+  static CommonLanguageSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CommonLanguageSettings>(create);
   static CommonLanguageSettings? _defaultInstance;
 
   /// Link to automatically generated reference documentation.  Example:
@@ -89,7 +109,8 @@ class CommonLanguageSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   SelectiveGapicGeneration get selectiveGapicGeneration => $_getN(2);
   @$pb.TagNumber(3)
-  set selectiveGapicGeneration(SelectiveGapicGeneration value) => $_setField(3, value);
+  set selectiveGapicGeneration(SelectiveGapicGeneration value) =>
+      $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasSelectiveGapicGeneration() => $_has(2);
   @$pb.TagNumber(3)
@@ -130,28 +151,50 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
 
   ClientLibrarySettings._();
 
-  factory ClientLibrarySettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory ClientLibrarySettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory ClientLibrarySettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClientLibrarySettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ClientLibrarySettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClientLibrarySettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'version')
-    ..e<$1.LaunchStage>(2, _omitFieldNames ? '' : 'launchStage', $pb.PbFieldType.OE, defaultOrMaker: $1.LaunchStage.LAUNCH_STAGE_UNSPECIFIED, valueOf: $1.LaunchStage.valueOf, enumValues: $1.LaunchStage.values)
+    ..e<$1.LaunchStage>(
+        2, _omitFieldNames ? '' : 'launchStage', $pb.PbFieldType.OE,
+        defaultOrMaker: $1.LaunchStage.LAUNCH_STAGE_UNSPECIFIED,
+        valueOf: $1.LaunchStage.valueOf,
+        enumValues: $1.LaunchStage.values)
     ..aOB(3, _omitFieldNames ? '' : 'restNumericEnums')
-    ..aOM<JavaSettings>(21, _omitFieldNames ? '' : 'javaSettings', subBuilder: JavaSettings.create)
-    ..aOM<CppSettings>(22, _omitFieldNames ? '' : 'cppSettings', subBuilder: CppSettings.create)
-    ..aOM<PhpSettings>(23, _omitFieldNames ? '' : 'phpSettings', subBuilder: PhpSettings.create)
-    ..aOM<PythonSettings>(24, _omitFieldNames ? '' : 'pythonSettings', subBuilder: PythonSettings.create)
-    ..aOM<NodeSettings>(25, _omitFieldNames ? '' : 'nodeSettings', subBuilder: NodeSettings.create)
-    ..aOM<DotnetSettings>(26, _omitFieldNames ? '' : 'dotnetSettings', subBuilder: DotnetSettings.create)
-    ..aOM<RubySettings>(27, _omitFieldNames ? '' : 'rubySettings', subBuilder: RubySettings.create)
-    ..aOM<GoSettings>(28, _omitFieldNames ? '' : 'goSettings', subBuilder: GoSettings.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<JavaSettings>(21, _omitFieldNames ? '' : 'javaSettings',
+        subBuilder: JavaSettings.create)
+    ..aOM<CppSettings>(22, _omitFieldNames ? '' : 'cppSettings',
+        subBuilder: CppSettings.create)
+    ..aOM<PhpSettings>(23, _omitFieldNames ? '' : 'phpSettings',
+        subBuilder: PhpSettings.create)
+    ..aOM<PythonSettings>(24, _omitFieldNames ? '' : 'pythonSettings',
+        subBuilder: PythonSettings.create)
+    ..aOM<NodeSettings>(25, _omitFieldNames ? '' : 'nodeSettings',
+        subBuilder: NodeSettings.create)
+    ..aOM<DotnetSettings>(26, _omitFieldNames ? '' : 'dotnetSettings',
+        subBuilder: DotnetSettings.create)
+    ..aOM<RubySettings>(27, _omitFieldNames ? '' : 'rubySettings',
+        subBuilder: RubySettings.create)
+    ..aOM<GoSettings>(28, _omitFieldNames ? '' : 'goSettings',
+        subBuilder: GoSettings.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ClientLibrarySettings clone() => ClientLibrarySettings()..mergeFromMessage(this);
+  ClientLibrarySettings clone() =>
+      ClientLibrarySettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ClientLibrarySettings copyWith(void Function(ClientLibrarySettings) updates) => super.copyWith((message) => updates(message as ClientLibrarySettings)) as ClientLibrarySettings;
+  ClientLibrarySettings copyWith(
+          void Function(ClientLibrarySettings) updates) =>
+      super.copyWith((message) => updates(message as ClientLibrarySettings))
+          as ClientLibrarySettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -160,9 +203,11 @@ class ClientLibrarySettings extends $pb.GeneratedMessage {
   static ClientLibrarySettings create() => ClientLibrarySettings._();
   @$core.override
   ClientLibrarySettings createEmptyInstance() => create();
-  static $pb.PbList<ClientLibrarySettings> createRepeated() => $pb.PbList<ClientLibrarySettings>();
+  static $pb.PbList<ClientLibrarySettings> createRepeated() =>
+      $pb.PbList<ClientLibrarySettings>();
   @$core.pragma('dart2js:noInline')
-  static ClientLibrarySettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ClientLibrarySettings>(create);
+  static ClientLibrarySettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClientLibrarySettings>(create);
   static ClientLibrarySettings? _defaultInstance;
 
   /// Version of the API to apply these settings to. This is the full protobuf
@@ -318,39 +363,58 @@ class Publishing extends $pb.GeneratedMessage {
     if (documentationUri != null) result.documentationUri = documentationUri;
     if (apiShortName != null) result.apiShortName = apiShortName;
     if (githubLabel != null) result.githubLabel = githubLabel;
-    if (codeownerGithubTeams != null) result.codeownerGithubTeams.addAll(codeownerGithubTeams);
+    if (codeownerGithubTeams != null)
+      result.codeownerGithubTeams.addAll(codeownerGithubTeams);
     if (docTagPrefix != null) result.docTagPrefix = docTagPrefix;
     if (organization != null) result.organization = organization;
     if (librarySettings != null) result.librarySettings.addAll(librarySettings);
-    if (protoReferenceDocumentationUri != null) result.protoReferenceDocumentationUri = protoReferenceDocumentationUri;
-    if (restReferenceDocumentationUri != null) result.restReferenceDocumentationUri = restReferenceDocumentationUri;
+    if (protoReferenceDocumentationUri != null)
+      result.protoReferenceDocumentationUri = protoReferenceDocumentationUri;
+    if (restReferenceDocumentationUri != null)
+      result.restReferenceDocumentationUri = restReferenceDocumentationUri;
     return result;
   }
 
   Publishing._();
 
-  factory Publishing.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory Publishing.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory Publishing.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Publishing.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Publishing', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..pc<MethodSettings>(2, _omitFieldNames ? '' : 'methodSettings', $pb.PbFieldType.PM, subBuilder: MethodSettings.create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Publishing',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..pc<MethodSettings>(
+        2, _omitFieldNames ? '' : 'methodSettings', $pb.PbFieldType.PM,
+        subBuilder: MethodSettings.create)
     ..aOS(101, _omitFieldNames ? '' : 'newIssueUri')
     ..aOS(102, _omitFieldNames ? '' : 'documentationUri')
     ..aOS(103, _omitFieldNames ? '' : 'apiShortName')
     ..aOS(104, _omitFieldNames ? '' : 'githubLabel')
     ..pPS(105, _omitFieldNames ? '' : 'codeownerGithubTeams')
     ..aOS(106, _omitFieldNames ? '' : 'docTagPrefix')
-    ..e<ClientLibraryOrganization>(107, _omitFieldNames ? '' : 'organization', $pb.PbFieldType.OE, defaultOrMaker: ClientLibraryOrganization.CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED, valueOf: ClientLibraryOrganization.valueOf, enumValues: ClientLibraryOrganization.values)
-    ..pc<ClientLibrarySettings>(109, _omitFieldNames ? '' : 'librarySettings', $pb.PbFieldType.PM, subBuilder: ClientLibrarySettings.create)
+    ..e<ClientLibraryOrganization>(
+        107, _omitFieldNames ? '' : 'organization', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            ClientLibraryOrganization.CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED,
+        valueOf: ClientLibraryOrganization.valueOf,
+        enumValues: ClientLibraryOrganization.values)
+    ..pc<ClientLibrarySettings>(
+        109, _omitFieldNames ? '' : 'librarySettings', $pb.PbFieldType.PM,
+        subBuilder: ClientLibrarySettings.create)
     ..aOS(110, _omitFieldNames ? '' : 'protoReferenceDocumentationUri')
     ..aOS(111, _omitFieldNames ? '' : 'restReferenceDocumentationUri')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Publishing clone() => Publishing()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Publishing copyWith(void Function(Publishing) updates) => super.copyWith((message) => updates(message as Publishing)) as Publishing;
+  Publishing copyWith(void Function(Publishing) updates) =>
+      super.copyWith((message) => updates(message as Publishing)) as Publishing;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -361,7 +425,8 @@ class Publishing extends $pb.GeneratedMessage {
   Publishing createEmptyInstance() => create();
   static $pb.PbList<Publishing> createRepeated() => $pb.PbList<Publishing>();
   @$core.pragma('dart2js:noInline')
-  static Publishing getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Publishing>(create);
+  static Publishing getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Publishing>(create);
   static Publishing? _defaultInstance;
 
   /// A list of API method settings, e.g. the behavior for methods that use the
@@ -450,7 +515,8 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(110)
   $core.String get protoReferenceDocumentationUri => $_getSZ(9);
   @$pb.TagNumber(110)
-  set protoReferenceDocumentationUri($core.String value) => $_setString(9, value);
+  set protoReferenceDocumentationUri($core.String value) =>
+      $_setString(9, value);
   @$pb.TagNumber(110)
   $core.bool hasProtoReferenceDocumentationUri() => $_has(9);
   @$pb.TagNumber(110)
@@ -461,7 +527,8 @@ class Publishing extends $pb.GeneratedMessage {
   @$pb.TagNumber(111)
   $core.String get restReferenceDocumentationUri => $_getSZ(10);
   @$pb.TagNumber(111)
-  set restReferenceDocumentationUri($core.String value) => $_setString(10, value);
+  set restReferenceDocumentationUri($core.String value) =>
+      $_setString(10, value);
   @$pb.TagNumber(111)
   $core.bool hasRestReferenceDocumentationUri() => $_has(10);
   @$pb.TagNumber(111)
@@ -472,32 +539,48 @@ class Publishing extends $pb.GeneratedMessage {
 class JavaSettings extends $pb.GeneratedMessage {
   factory JavaSettings({
     $core.String? libraryPackage,
-    $core.Iterable<$core.MapEntry<$core.String, $core.String>>? serviceClassNames,
+    $core.Iterable<$core.MapEntry<$core.String, $core.String>>?
+        serviceClassNames,
     CommonLanguageSettings? common,
   }) {
     final result = create();
     if (libraryPackage != null) result.libraryPackage = libraryPackage;
-    if (serviceClassNames != null) result.serviceClassNames.addEntries(serviceClassNames);
+    if (serviceClassNames != null)
+      result.serviceClassNames.addEntries(serviceClassNames);
     if (common != null) result.common = common;
     return result;
   }
 
   JavaSettings._();
 
-  factory JavaSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory JavaSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory JavaSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory JavaSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'JavaSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'JavaSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'libraryPackage')
-    ..m<$core.String, $core.String>(2, _omitFieldNames ? '' : 'serviceClassNames', entryClassName: 'JavaSettings.ServiceClassNamesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('google.api'))
-    ..aOM<CommonLanguageSettings>(3, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..hasRequiredFields = false
-  ;
+    ..m<$core.String, $core.String>(
+        2, _omitFieldNames ? '' : 'serviceClassNames',
+        entryClassName: 'JavaSettings.ServiceClassNamesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('google.api'))
+    ..aOM<CommonLanguageSettings>(3, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   JavaSettings clone() => JavaSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  JavaSettings copyWith(void Function(JavaSettings) updates) => super.copyWith((message) => updates(message as JavaSettings)) as JavaSettings;
+  JavaSettings copyWith(void Function(JavaSettings) updates) =>
+      super.copyWith((message) => updates(message as JavaSettings))
+          as JavaSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -506,9 +589,11 @@ class JavaSettings extends $pb.GeneratedMessage {
   static JavaSettings create() => JavaSettings._();
   @$core.override
   JavaSettings createEmptyInstance() => create();
-  static $pb.PbList<JavaSettings> createRepeated() => $pb.PbList<JavaSettings>();
+  static $pb.PbList<JavaSettings> createRepeated() =>
+      $pb.PbList<JavaSettings>();
   @$core.pragma('dart2js:noInline')
-  static JavaSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<JavaSettings>(create);
+  static JavaSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<JavaSettings>(create);
   static JavaSettings? _defaultInstance;
 
   /// The package name to use in Java. Clobbers the java_package option
@@ -573,18 +658,27 @@ class CppSettings extends $pb.GeneratedMessage {
 
   CppSettings._();
 
-  factory CppSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory CppSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory CppSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CppSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CppSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CppSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CppSettings clone() => CppSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CppSettings copyWith(void Function(CppSettings) updates) => super.copyWith((message) => updates(message as CppSettings)) as CppSettings;
+  CppSettings copyWith(void Function(CppSettings) updates) =>
+      super.copyWith((message) => updates(message as CppSettings))
+          as CppSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -595,7 +689,8 @@ class CppSettings extends $pb.GeneratedMessage {
   CppSettings createEmptyInstance() => create();
   static $pb.PbList<CppSettings> createRepeated() => $pb.PbList<CppSettings>();
   @$core.pragma('dart2js:noInline')
-  static CppSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CppSettings>(create);
+  static CppSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CppSettings>(create);
   static CppSettings? _defaultInstance;
 
   /// Some settings.
@@ -623,18 +718,27 @@ class PhpSettings extends $pb.GeneratedMessage {
 
   PhpSettings._();
 
-  factory PhpSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory PhpSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory PhpSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PhpSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PhpSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PhpSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PhpSettings clone() => PhpSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PhpSettings copyWith(void Function(PhpSettings) updates) => super.copyWith((message) => updates(message as PhpSettings)) as PhpSettings;
+  PhpSettings copyWith(void Function(PhpSettings) updates) =>
+      super.copyWith((message) => updates(message as PhpSettings))
+          as PhpSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -645,7 +749,8 @@ class PhpSettings extends $pb.GeneratedMessage {
   PhpSettings createEmptyInstance() => create();
   static $pb.PbList<PhpSettings> createRepeated() => $pb.PbList<PhpSettings>();
   @$core.pragma('dart2js:noInline')
-  static PhpSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PhpSettings>(create);
+  static PhpSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PhpSettings>(create);
   static PhpSettings? _defaultInstance;
 
   /// Some settings.
@@ -671,39 +776,58 @@ class PythonSettings_ExperimentalFeatures extends $pb.GeneratedMessage {
     $core.bool? unversionedPackageDisabled,
   }) {
     final result = create();
-    if (restAsyncIoEnabled != null) result.restAsyncIoEnabled = restAsyncIoEnabled;
-    if (protobufPythonicTypesEnabled != null) result.protobufPythonicTypesEnabled = protobufPythonicTypesEnabled;
-    if (unversionedPackageDisabled != null) result.unversionedPackageDisabled = unversionedPackageDisabled;
+    if (restAsyncIoEnabled != null)
+      result.restAsyncIoEnabled = restAsyncIoEnabled;
+    if (protobufPythonicTypesEnabled != null)
+      result.protobufPythonicTypesEnabled = protobufPythonicTypesEnabled;
+    if (unversionedPackageDisabled != null)
+      result.unversionedPackageDisabled = unversionedPackageDisabled;
     return result;
   }
 
   PythonSettings_ExperimentalFeatures._();
 
-  factory PythonSettings_ExperimentalFeatures.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory PythonSettings_ExperimentalFeatures.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory PythonSettings_ExperimentalFeatures.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PythonSettings_ExperimentalFeatures.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PythonSettings.ExperimentalFeatures', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PythonSettings.ExperimentalFeatures',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'restAsyncIoEnabled')
     ..aOB(2, _omitFieldNames ? '' : 'protobufPythonicTypesEnabled')
     ..aOB(3, _omitFieldNames ? '' : 'unversionedPackageDisabled')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PythonSettings_ExperimentalFeatures clone() => PythonSettings_ExperimentalFeatures()..mergeFromMessage(this);
+  PythonSettings_ExperimentalFeatures clone() =>
+      PythonSettings_ExperimentalFeatures()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PythonSettings_ExperimentalFeatures copyWith(void Function(PythonSettings_ExperimentalFeatures) updates) => super.copyWith((message) => updates(message as PythonSettings_ExperimentalFeatures)) as PythonSettings_ExperimentalFeatures;
+  PythonSettings_ExperimentalFeatures copyWith(
+          void Function(PythonSettings_ExperimentalFeatures) updates) =>
+      super.copyWith((message) =>
+              updates(message as PythonSettings_ExperimentalFeatures))
+          as PythonSettings_ExperimentalFeatures;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PythonSettings_ExperimentalFeatures create() => PythonSettings_ExperimentalFeatures._();
+  static PythonSettings_ExperimentalFeatures create() =>
+      PythonSettings_ExperimentalFeatures._();
   @$core.override
   PythonSettings_ExperimentalFeatures createEmptyInstance() => create();
-  static $pb.PbList<PythonSettings_ExperimentalFeatures> createRepeated() => $pb.PbList<PythonSettings_ExperimentalFeatures>();
+  static $pb.PbList<PythonSettings_ExperimentalFeatures> createRepeated() =>
+      $pb.PbList<PythonSettings_ExperimentalFeatures>();
   @$core.pragma('dart2js:noInline')
-  static PythonSettings_ExperimentalFeatures getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PythonSettings_ExperimentalFeatures>(create);
+  static PythonSettings_ExperimentalFeatures getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<
+          PythonSettings_ExperimentalFeatures>(create);
   static PythonSettings_ExperimentalFeatures? _defaultInstance;
 
   /// Enables generation of asynchronous REST clients if `rest` transport is
@@ -754,25 +878,37 @@ class PythonSettings extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (common != null) result.common = common;
-    if (experimentalFeatures != null) result.experimentalFeatures = experimentalFeatures;
+    if (experimentalFeatures != null)
+      result.experimentalFeatures = experimentalFeatures;
     return result;
   }
 
   PythonSettings._();
 
-  factory PythonSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory PythonSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory PythonSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PythonSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PythonSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..aOM<PythonSettings_ExperimentalFeatures>(2, _omitFieldNames ? '' : 'experimentalFeatures', subBuilder: PythonSettings_ExperimentalFeatures.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PythonSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..aOM<PythonSettings_ExperimentalFeatures>(
+        2, _omitFieldNames ? '' : 'experimentalFeatures',
+        subBuilder: PythonSettings_ExperimentalFeatures.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PythonSettings clone() => PythonSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PythonSettings copyWith(void Function(PythonSettings) updates) => super.copyWith((message) => updates(message as PythonSettings)) as PythonSettings;
+  PythonSettings copyWith(void Function(PythonSettings) updates) =>
+      super.copyWith((message) => updates(message as PythonSettings))
+          as PythonSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -781,9 +917,11 @@ class PythonSettings extends $pb.GeneratedMessage {
   static PythonSettings create() => PythonSettings._();
   @$core.override
   PythonSettings createEmptyInstance() => create();
-  static $pb.PbList<PythonSettings> createRepeated() => $pb.PbList<PythonSettings>();
+  static $pb.PbList<PythonSettings> createRepeated() =>
+      $pb.PbList<PythonSettings>();
   @$core.pragma('dart2js:noInline')
-  static PythonSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PythonSettings>(create);
+  static PythonSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PythonSettings>(create);
   static PythonSettings? _defaultInstance;
 
   /// Some settings.
@@ -802,13 +940,15 @@ class PythonSettings extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   PythonSettings_ExperimentalFeatures get experimentalFeatures => $_getN(1);
   @$pb.TagNumber(2)
-  set experimentalFeatures(PythonSettings_ExperimentalFeatures value) => $_setField(2, value);
+  set experimentalFeatures(PythonSettings_ExperimentalFeatures value) =>
+      $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasExperimentalFeatures() => $_has(1);
   @$pb.TagNumber(2)
   void clearExperimentalFeatures() => $_clearField(2);
   @$pb.TagNumber(2)
-  PythonSettings_ExperimentalFeatures ensureExperimentalFeatures() => $_ensure(1);
+  PythonSettings_ExperimentalFeatures ensureExperimentalFeatures() =>
+      $_ensure(1);
 }
 
 /// Settings for Node client libraries.
@@ -823,18 +963,27 @@ class NodeSettings extends $pb.GeneratedMessage {
 
   NodeSettings._();
 
-  factory NodeSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory NodeSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory NodeSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory NodeSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'NodeSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'NodeSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   NodeSettings clone() => NodeSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  NodeSettings copyWith(void Function(NodeSettings) updates) => super.copyWith((message) => updates(message as NodeSettings)) as NodeSettings;
+  NodeSettings copyWith(void Function(NodeSettings) updates) =>
+      super.copyWith((message) => updates(message as NodeSettings))
+          as NodeSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -843,9 +992,11 @@ class NodeSettings extends $pb.GeneratedMessage {
   static NodeSettings create() => NodeSettings._();
   @$core.override
   NodeSettings createEmptyInstance() => create();
-  static $pb.PbList<NodeSettings> createRepeated() => $pb.PbList<NodeSettings>();
+  static $pb.PbList<NodeSettings> createRepeated() =>
+      $pb.PbList<NodeSettings>();
   @$core.pragma('dart2js:noInline')
-  static NodeSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<NodeSettings>(create);
+  static NodeSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<NodeSettings>(create);
   static NodeSettings? _defaultInstance;
 
   /// Some settings.
@@ -866,40 +1017,64 @@ class DotnetSettings extends $pb.GeneratedMessage {
   factory DotnetSettings({
     CommonLanguageSettings? common,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>? renamedServices,
-    $core.Iterable<$core.MapEntry<$core.String, $core.String>>? renamedResources,
+    $core.Iterable<$core.MapEntry<$core.String, $core.String>>?
+        renamedResources,
     $core.Iterable<$core.String>? ignoredResources,
     $core.Iterable<$core.String>? forcedNamespaceAliases,
     $core.Iterable<$core.String>? handwrittenSignatures,
   }) {
     final result = create();
     if (common != null) result.common = common;
-    if (renamedServices != null) result.renamedServices.addEntries(renamedServices);
-    if (renamedResources != null) result.renamedResources.addEntries(renamedResources);
-    if (ignoredResources != null) result.ignoredResources.addAll(ignoredResources);
-    if (forcedNamespaceAliases != null) result.forcedNamespaceAliases.addAll(forcedNamespaceAliases);
-    if (handwrittenSignatures != null) result.handwrittenSignatures.addAll(handwrittenSignatures);
+    if (renamedServices != null)
+      result.renamedServices.addEntries(renamedServices);
+    if (renamedResources != null)
+      result.renamedResources.addEntries(renamedResources);
+    if (ignoredResources != null)
+      result.ignoredResources.addAll(ignoredResources);
+    if (forcedNamespaceAliases != null)
+      result.forcedNamespaceAliases.addAll(forcedNamespaceAliases);
+    if (handwrittenSignatures != null)
+      result.handwrittenSignatures.addAll(handwrittenSignatures);
     return result;
   }
 
   DotnetSettings._();
 
-  factory DotnetSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory DotnetSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory DotnetSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DotnetSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'DotnetSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..m<$core.String, $core.String>(2, _omitFieldNames ? '' : 'renamedServices', entryClassName: 'DotnetSettings.RenamedServicesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('google.api'))
-    ..m<$core.String, $core.String>(3, _omitFieldNames ? '' : 'renamedResources', entryClassName: 'DotnetSettings.RenamedResourcesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('google.api'))
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DotnetSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..m<$core.String, $core.String>(2, _omitFieldNames ? '' : 'renamedServices',
+        entryClassName: 'DotnetSettings.RenamedServicesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('google.api'))
+    ..m<$core.String, $core.String>(
+        3, _omitFieldNames ? '' : 'renamedResources',
+        entryClassName: 'DotnetSettings.RenamedResourcesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('google.api'))
     ..pPS(4, _omitFieldNames ? '' : 'ignoredResources')
     ..pPS(5, _omitFieldNames ? '' : 'forcedNamespaceAliases')
     ..pPS(6, _omitFieldNames ? '' : 'handwrittenSignatures')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DotnetSettings clone() => DotnetSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DotnetSettings copyWith(void Function(DotnetSettings) updates) => super.copyWith((message) => updates(message as DotnetSettings)) as DotnetSettings;
+  DotnetSettings copyWith(void Function(DotnetSettings) updates) =>
+      super.copyWith((message) => updates(message as DotnetSettings))
+          as DotnetSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -908,9 +1083,11 @@ class DotnetSettings extends $pb.GeneratedMessage {
   static DotnetSettings create() => DotnetSettings._();
   @$core.override
   DotnetSettings createEmptyInstance() => create();
-  static $pb.PbList<DotnetSettings> createRepeated() => $pb.PbList<DotnetSettings>();
+  static $pb.PbList<DotnetSettings> createRepeated() =>
+      $pb.PbList<DotnetSettings>();
   @$core.pragma('dart2js:noInline')
-  static DotnetSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DotnetSettings>(create);
+  static DotnetSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DotnetSettings>(create);
   static DotnetSettings? _defaultInstance;
 
   /// Some settings.
@@ -973,18 +1150,27 @@ class RubySettings extends $pb.GeneratedMessage {
 
   RubySettings._();
 
-  factory RubySettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory RubySettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory RubySettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RubySettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'RubySettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RubySettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RubySettings clone() => RubySettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RubySettings copyWith(void Function(RubySettings) updates) => super.copyWith((message) => updates(message as RubySettings)) as RubySettings;
+  RubySettings copyWith(void Function(RubySettings) updates) =>
+      super.copyWith((message) => updates(message as RubySettings))
+          as RubySettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -993,9 +1179,11 @@ class RubySettings extends $pb.GeneratedMessage {
   static RubySettings create() => RubySettings._();
   @$core.override
   RubySettings createEmptyInstance() => create();
-  static $pb.PbList<RubySettings> createRepeated() => $pb.PbList<RubySettings>();
+  static $pb.PbList<RubySettings> createRepeated() =>
+      $pb.PbList<RubySettings>();
   @$core.pragma('dart2js:noInline')
-  static RubySettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RubySettings>(create);
+  static RubySettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RubySettings>(create);
   static RubySettings? _defaultInstance;
 
   /// Some settings.
@@ -1019,25 +1207,38 @@ class GoSettings extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (common != null) result.common = common;
-    if (renamedServices != null) result.renamedServices.addEntries(renamedServices);
+    if (renamedServices != null)
+      result.renamedServices.addEntries(renamedServices);
     return result;
   }
 
   GoSettings._();
 
-  factory GoSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory GoSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory GoSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GoSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GoSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common', subBuilder: CommonLanguageSettings.create)
-    ..m<$core.String, $core.String>(2, _omitFieldNames ? '' : 'renamedServices', entryClassName: 'GoSettings.RenamedServicesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('google.api'))
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GoSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<CommonLanguageSettings>(1, _omitFieldNames ? '' : 'common',
+        subBuilder: CommonLanguageSettings.create)
+    ..m<$core.String, $core.String>(2, _omitFieldNames ? '' : 'renamedServices',
+        entryClassName: 'GoSettings.RenamedServicesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('google.api'))
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GoSettings clone() => GoSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GoSettings copyWith(void Function(GoSettings) updates) => super.copyWith((message) => updates(message as GoSettings)) as GoSettings;
+  GoSettings copyWith(void Function(GoSettings) updates) =>
+      super.copyWith((message) => updates(message as GoSettings)) as GoSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -1048,7 +1249,8 @@ class GoSettings extends $pb.GeneratedMessage {
   GoSettings createEmptyInstance() => create();
   static $pb.PbList<GoSettings> createRepeated() => $pb.PbList<GoSettings>();
   @$core.pragma('dart2js:noInline')
-  static GoSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GoSettings>(create);
+  static GoSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GoSettings>(create);
   static GoSettings? _defaultInstance;
 
   /// Some settings.
@@ -1089,7 +1291,8 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (initialPollDelay != null) result.initialPollDelay = initialPollDelay;
-    if (pollDelayMultiplier != null) result.pollDelayMultiplier = pollDelayMultiplier;
+    if (pollDelayMultiplier != null)
+      result.pollDelayMultiplier = pollDelayMultiplier;
     if (maxPollDelay != null) result.maxPollDelay = maxPollDelay;
     if (totalPollTimeout != null) result.totalPollTimeout = totalPollTimeout;
     return result;
@@ -1097,21 +1300,36 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
 
   MethodSettings_LongRunning._();
 
-  factory MethodSettings_LongRunning.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory MethodSettings_LongRunning.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory MethodSettings_LongRunning.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MethodSettings_LongRunning.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MethodSettings.LongRunning', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
-    ..aOM<$0.Duration>(1, _omitFieldNames ? '' : 'initialPollDelay', subBuilder: $0.Duration.create)
-    ..a<$core.double>(2, _omitFieldNames ? '' : 'pollDelayMultiplier', $pb.PbFieldType.OF)
-    ..aOM<$0.Duration>(3, _omitFieldNames ? '' : 'maxPollDelay', subBuilder: $0.Duration.create)
-    ..aOM<$0.Duration>(4, _omitFieldNames ? '' : 'totalPollTimeout', subBuilder: $0.Duration.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MethodSettings.LongRunning',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
+    ..aOM<$0.Duration>(1, _omitFieldNames ? '' : 'initialPollDelay',
+        subBuilder: $0.Duration.create)
+    ..a<$core.double>(
+        2, _omitFieldNames ? '' : 'pollDelayMultiplier', $pb.PbFieldType.OF)
+    ..aOM<$0.Duration>(3, _omitFieldNames ? '' : 'maxPollDelay',
+        subBuilder: $0.Duration.create)
+    ..aOM<$0.Duration>(4, _omitFieldNames ? '' : 'totalPollTimeout',
+        subBuilder: $0.Duration.create)
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MethodSettings_LongRunning clone() => MethodSettings_LongRunning()..mergeFromMessage(this);
+  MethodSettings_LongRunning clone() =>
+      MethodSettings_LongRunning()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MethodSettings_LongRunning copyWith(void Function(MethodSettings_LongRunning) updates) => super.copyWith((message) => updates(message as MethodSettings_LongRunning)) as MethodSettings_LongRunning;
+  MethodSettings_LongRunning copyWith(
+          void Function(MethodSettings_LongRunning) updates) =>
+      super.copyWith(
+              (message) => updates(message as MethodSettings_LongRunning))
+          as MethodSettings_LongRunning;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -1120,9 +1338,11 @@ class MethodSettings_LongRunning extends $pb.GeneratedMessage {
   static MethodSettings_LongRunning create() => MethodSettings_LongRunning._();
   @$core.override
   MethodSettings_LongRunning createEmptyInstance() => create();
-  static $pb.PbList<MethodSettings_LongRunning> createRepeated() => $pb.PbList<MethodSettings_LongRunning>();
+  static $pb.PbList<MethodSettings_LongRunning> createRepeated() =>
+      $pb.PbList<MethodSettings_LongRunning>();
   @$core.pragma('dart2js:noInline')
-  static MethodSettings_LongRunning getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<MethodSettings_LongRunning>(create);
+  static MethodSettings_LongRunning getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MethodSettings_LongRunning>(create);
   static MethodSettings_LongRunning? _defaultInstance;
 
   /// Initial delay after which the first poll request will be made.
@@ -1187,26 +1407,36 @@ class MethodSettings extends $pb.GeneratedMessage {
     final result = create();
     if (selector != null) result.selector = selector;
     if (longRunning != null) result.longRunning = longRunning;
-    if (autoPopulatedFields != null) result.autoPopulatedFields.addAll(autoPopulatedFields);
+    if (autoPopulatedFields != null)
+      result.autoPopulatedFields.addAll(autoPopulatedFields);
     return result;
   }
 
   MethodSettings._();
 
-  factory MethodSettings.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory MethodSettings.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory MethodSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MethodSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MethodSettings', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MethodSettings',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'selector')
-    ..aOM<MethodSettings_LongRunning>(2, _omitFieldNames ? '' : 'longRunning', subBuilder: MethodSettings_LongRunning.create)
+    ..aOM<MethodSettings_LongRunning>(2, _omitFieldNames ? '' : 'longRunning',
+        subBuilder: MethodSettings_LongRunning.create)
     ..pPS(3, _omitFieldNames ? '' : 'autoPopulatedFields')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   MethodSettings clone() => MethodSettings()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  MethodSettings copyWith(void Function(MethodSettings) updates) => super.copyWith((message) => updates(message as MethodSettings)) as MethodSettings;
+  MethodSettings copyWith(void Function(MethodSettings) updates) =>
+      super.copyWith((message) => updates(message as MethodSettings))
+          as MethodSettings;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -1215,9 +1445,11 @@ class MethodSettings extends $pb.GeneratedMessage {
   static MethodSettings create() => MethodSettings._();
   @$core.override
   MethodSettings createEmptyInstance() => create();
-  static $pb.PbList<MethodSettings> createRepeated() => $pb.PbList<MethodSettings>();
+  static $pb.PbList<MethodSettings> createRepeated() =>
+      $pb.PbList<MethodSettings>();
   @$core.pragma('dart2js:noInline')
-  static MethodSettings getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<MethodSettings>(create);
+  static MethodSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MethodSettings>(create);
   static MethodSettings? _defaultInstance;
 
   /// The fully qualified name of the method, for which the options below apply.
@@ -1287,25 +1519,36 @@ class SelectiveGapicGeneration extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (methods != null) result.methods.addAll(methods);
-    if (generateOmittedAsInternal != null) result.generateOmittedAsInternal = generateOmittedAsInternal;
+    if (generateOmittedAsInternal != null)
+      result.generateOmittedAsInternal = generateOmittedAsInternal;
     return result;
   }
 
   SelectiveGapicGeneration._();
 
-  factory SelectiveGapicGeneration.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory SelectiveGapicGeneration.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory SelectiveGapicGeneration.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SelectiveGapicGeneration.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'SelectiveGapicGeneration', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SelectiveGapicGeneration',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.api'),
+      createEmptyInstance: create)
     ..pPS(1, _omitFieldNames ? '' : 'methods')
     ..aOB(2, _omitFieldNames ? '' : 'generateOmittedAsInternal')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SelectiveGapicGeneration clone() => SelectiveGapicGeneration()..mergeFromMessage(this);
+  SelectiveGapicGeneration clone() =>
+      SelectiveGapicGeneration()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SelectiveGapicGeneration copyWith(void Function(SelectiveGapicGeneration) updates) => super.copyWith((message) => updates(message as SelectiveGapicGeneration)) as SelectiveGapicGeneration;
+  SelectiveGapicGeneration copyWith(
+          void Function(SelectiveGapicGeneration) updates) =>
+      super.copyWith((message) => updates(message as SelectiveGapicGeneration))
+          as SelectiveGapicGeneration;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -1314,9 +1557,11 @@ class SelectiveGapicGeneration extends $pb.GeneratedMessage {
   static SelectiveGapicGeneration create() => SelectiveGapicGeneration._();
   @$core.override
   SelectiveGapicGeneration createEmptyInstance() => create();
-  static $pb.PbList<SelectiveGapicGeneration> createRepeated() => $pb.PbList<SelectiveGapicGeneration>();
+  static $pb.PbList<SelectiveGapicGeneration> createRepeated() =>
+      $pb.PbList<SelectiveGapicGeneration>();
   @$core.pragma('dart2js:noInline')
-  static SelectiveGapicGeneration getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SelectiveGapicGeneration>(create);
+  static SelectiveGapicGeneration getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SelectiveGapicGeneration>(create);
   static SelectiveGapicGeneration? _defaultInstance;
 
   /// An allowlist of the fully qualified names of RPCs that should be included
@@ -1341,10 +1586,27 @@ class SelectiveGapicGeneration extends $pb.GeneratedMessage {
 }
 
 class Client {
-  static final methodSignature = $pb.Extension<$core.String>.repeated(_omitMessageNames ? '' : 'google.protobuf.MethodOptions', _omitFieldNames ? '' : 'methodSignature', 1051, $pb.PbFieldType.PS, check: $pb.getCheckFunction($pb.PbFieldType.PS));
-  static final defaultHost = $pb.Extension<$core.String>(_omitMessageNames ? '' : 'google.protobuf.ServiceOptions', _omitFieldNames ? '' : 'defaultHost', 1049, $pb.PbFieldType.OS);
-  static final oauthScopes = $pb.Extension<$core.String>(_omitMessageNames ? '' : 'google.protobuf.ServiceOptions', _omitFieldNames ? '' : 'oauthScopes', 1050, $pb.PbFieldType.OS);
-  static final apiVersion = $pb.Extension<$core.String>(_omitMessageNames ? '' : 'google.protobuf.ServiceOptions', _omitFieldNames ? '' : 'apiVersion', 525000001, $pb.PbFieldType.OS);
+  static final methodSignature = $pb.Extension<$core.String>.repeated(
+      _omitMessageNames ? '' : 'google.protobuf.MethodOptions',
+      _omitFieldNames ? '' : 'methodSignature',
+      1051,
+      $pb.PbFieldType.PS,
+      check: $pb.getCheckFunction($pb.PbFieldType.PS));
+  static final defaultHost = $pb.Extension<$core.String>(
+      _omitMessageNames ? '' : 'google.protobuf.ServiceOptions',
+      _omitFieldNames ? '' : 'defaultHost',
+      1049,
+      $pb.PbFieldType.OS);
+  static final oauthScopes = $pb.Extension<$core.String>(
+      _omitMessageNames ? '' : 'google.protobuf.ServiceOptions',
+      _omitFieldNames ? '' : 'oauthScopes',
+      1050,
+      $pb.PbFieldType.OS);
+  static final apiVersion = $pb.Extension<$core.String>(
+      _omitMessageNames ? '' : 'google.protobuf.ServiceOptions',
+      _omitFieldNames ? '' : 'apiVersion',
+      525000001,
+      $pb.PbFieldType.OS);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
     registry.add(methodSignature);
     registry.add(defaultHost);
@@ -1353,6 +1615,7 @@ class Client {
   }
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

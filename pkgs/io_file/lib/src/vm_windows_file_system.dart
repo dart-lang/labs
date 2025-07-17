@@ -391,6 +391,95 @@ final class WindowsMetadata implements Metadata {
 /// (e.g. 'COM1'), must be prefixed with `r'\\.\'`. For example, `'NUL'` would
 /// be refered to by the path `r'\\.\NUL'`.
 final class WindowsFileSystem extends FileSystem {
+  void _slowCopy(
+    String oldPath,
+    String newPath,
+    int fromHandle,
+    int toHandle,
+    Allocator arena,
+  ) {
+    final buffer = arena<Uint8>(blockSize);
+    final bytesRead = arena<win32.DWORD>();
+
+    while (true) {
+      if (win32.ReadFile(fromHandle, buffer, blockSize, bytesRead, nullptr) ==
+          win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        // On Windows, reading from a pipe that is closed by the writer results
+        // in ERROR_BROKEN_PIPE.
+        if (errorCode == win32.ERROR_BROKEN_PIPE ||
+            errorCode == win32.ERROR_SUCCESS) {
+          return;
+        }
+        throw _getError(errorCode, systemCall: 'ReadFile', path1: oldPath);
+      }
+
+      if (bytesRead.value == 0) {
+        return;
+      }
+
+      var writeRemaining = bytesRead.value;
+      var writeBuffer = buffer;
+      final bytesWritten = arena<win32.DWORD>();
+      while (writeRemaining > 0) {
+        if (win32.WriteFile(
+              toHandle,
+              writeBuffer,
+              writeRemaining,
+              bytesWritten,
+              nullptr,
+            ) ==
+            win32.FALSE) {
+          final errorCode = win32.GetLastError();
+          throw _getError(errorCode, systemCall: 'WriteFile', path1: newPath);
+        }
+        writeRemaining -= bytesWritten.value;
+        writeBuffer += bytesWritten.value;
+      }
+    }
+  }
+
+  @override
+  void copyFile(String oldPath, String newPath) => ffi.using((arena) {
+    _primeGetLastError();
+
+    final oldHandle = win32.CreateFile(
+      _extendedPath(oldPath, arena),
+      win32.GENERIC_READ | win32.FILE_SHARE_READ,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_ATTRIBUTE_NORMAL,
+      0,
+    );
+    if (oldHandle == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, systemCall: 'CreateFile', path1: oldPath);
+    }
+    try {
+      final newHandle = win32.CreateFile(
+        _extendedPath(newPath, arena),
+        win32.FILE_GENERIC_WRITE,
+        0,
+        nullptr,
+        win32.CREATE_NEW,
+        win32.FILE_ATTRIBUTE_NORMAL & win32.FILE_FLAG_OPEN_REPARSE_POINT,
+        0,
+      );
+      if (newHandle == win32.INVALID_HANDLE_VALUE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(errorCode, systemCall: 'CreateFile', path1: newPath);
+      }
+      try {
+        _slowCopy(oldPath, newPath, oldHandle, newHandle, arena);
+      } finally {
+        win32.CloseHandle(newHandle);
+      }
+    } finally {
+      win32.CloseHandle(oldHandle);
+    }
+  });
+
   @override
   bool same(String path1, String path2) => using((arena) {
     // Calling `GetLastError` for the first time causes the `GetLastError`
@@ -510,6 +599,7 @@ final class WindowsFileSystem extends FileSystem {
   void removeDirectoryTree(String path) => using((arena) {
     _primeGetLastError();
 
+    path = _extendedPath(path, arena).toDartString();
     final findData = arena<win32.WIN32_FIND_DATA>();
     final searchPath = p.join(path, '*');
 

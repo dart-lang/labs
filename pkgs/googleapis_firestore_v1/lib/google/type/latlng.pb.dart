@@ -34,19 +34,26 @@ class LatLng extends $pb.GeneratedMessage {
 
   LatLng._();
 
-  factory LatLng.fromBuffer($core.List<$core.int> data, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(data, registry);
-  factory LatLng.fromJson($core.String json, [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(json, registry);
+  factory LatLng.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LatLng.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'LatLng', package: const $pb.PackageName(_omitMessageNames ? '' : 'google.type'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LatLng',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'google.type'),
+      createEmptyInstance: create)
     ..a<$core.double>(1, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
     ..a<$core.double>(2, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   LatLng clone() => LatLng()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LatLng copyWith(void Function(LatLng) updates) => super.copyWith((message) => updates(message as LatLng)) as LatLng;
+  LatLng copyWith(void Function(LatLng) updates) =>
+      super.copyWith((message) => updates(message as LatLng)) as LatLng;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
@@ -57,7 +64,8 @@ class LatLng extends $pb.GeneratedMessage {
   LatLng createEmptyInstance() => create();
   static $pb.PbList<LatLng> createRepeated() => $pb.PbList<LatLng>();
   @$core.pragma('dart2js:noInline')
-  static LatLng getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LatLng>(create);
+  static LatLng getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LatLng>(create);
   static LatLng? _defaultInstance;
 
   /// The latitude in degrees. It must be in the range [-90.0, +90.0].
@@ -81,6 +89,7 @@ class LatLng extends $pb.GeneratedMessage {
   void clearLongitude() => $_clearField(2);
 }
 
-
-const $core.bool _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const $core.bool _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const $core.bool _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const $core.bool _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');
