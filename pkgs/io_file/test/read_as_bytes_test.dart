@@ -66,11 +66,11 @@ void main() {
                 'errorCode',
                 io.Platform.isWindows
                     ? win32.ERROR_ACCESS_DENIED
-                    : (io.Platform.isIOS
-                        // It seems like an iOS but that ENOENT can be
-                        // returned when attempting to read a directory.
-                        ? anyOf(errors.enoent, errors.eisdir)
-                        : errors.eisdir),
+                    // iOS and Android can fail with ENOENT when calling
+                    // `open` on a directory. This may be due to
+                    // file system sandboxing.
+                    // TODO(bquinlan): Clarify this.
+                    : anyOf(errors.enoent, errors.eisdir),
               )
               .having((e) => e.path1, 'path1', path),
         ),
