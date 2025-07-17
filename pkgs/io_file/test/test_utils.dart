@@ -30,6 +30,7 @@ abstract interface class FileUtils {
   bool isDirectory(String path);
 
   void createDirectory(String path);
+  void deleteDirectory(String path);
 
   void createTextFile(String path, String s);
 }
