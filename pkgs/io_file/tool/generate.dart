@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// Run all code generation and formatting steps.
+
 import 'dart:io';
 
 import 'package:dart_style/dart_style.dart';
