@@ -22,12 +22,12 @@ void tests(FileUtils utils, FileSystem fs) {
 
   setUp(() {
     tmp = utils.createTestDirectory('createDirectory');
-    cwd = fileSystem.currentDirectory;
-    fileSystem.currentDirectory = tmp;
+    cwd = fs.currentDirectory;
+    fs.currentDirectory = tmp;
   });
 
   tearDown(() {
-    fileSystem.currentDirectory = cwd;
+    fs.currentDirectory = cwd;
     utils.deleteDirectoryTree(tmp);
   });
 

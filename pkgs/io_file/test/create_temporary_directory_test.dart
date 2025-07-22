@@ -32,60 +32,60 @@ void tests(FileUtils utils, FileSystem fs) {
   });
 
   test('no arguments', () {
-    final tmp1 = fileSystem.createTemporaryDirectory();
+    final tmp1 = fs.createTemporaryDirectory();
     addTearDown(() => utils.deleteDirectory(tmp1));
-    final tmp2 = fileSystem.createTemporaryDirectory();
+    final tmp2 = fs.createTemporaryDirectory();
     addTearDown(() => utils.deleteDirectory(tmp2));
 
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
 
   test('prefix', () {
-    final tmp1 = fileSystem.createTemporaryDirectory(prefix: 'myprefix');
+    final tmp1 = fs.createTemporaryDirectory(prefix: 'myprefix');
     addTearDown(() => utils.deleteDirectory(tmp1));
-    final tmp2 = fileSystem.createTemporaryDirectory(prefix: 'myprefix');
+    final tmp2 = fs.createTemporaryDirectory(prefix: 'myprefix');
     addTearDown(() => utils.deleteDirectory(tmp2));
 
     expect(tmp1, contains('myprefix'));
     expect(tmp2, contains('myprefix'));
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
 
   test('prefix is empty string', () {
-    final tmp1 = fileSystem.createTemporaryDirectory(prefix: '');
+    final tmp1 = fs.createTemporaryDirectory(prefix: '');
     addTearDown(() => utils.deleteDirectory(tmp1));
-    final tmp2 = fileSystem.createTemporaryDirectory(prefix: '');
+    final tmp2 = fs.createTemporaryDirectory(prefix: '');
     addTearDown(() => utils.deleteDirectory(tmp2));
 
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
 
   test('prefix contains XXXXXX', () {
-    final tmp1 = fileSystem.createTemporaryDirectory(prefix: 'myprefix-XXXXXX');
+    final tmp1 = fs.createTemporaryDirectory(prefix: 'myprefix-XXXXXX');
     addTearDown(() => utils.deleteDirectory(tmp1));
-    final tmp2 = fileSystem.createTemporaryDirectory(prefix: 'myprefix-XXXXXX');
+    final tmp2 = fs.createTemporaryDirectory(prefix: 'myprefix-XXXXXX');
     addTearDown(() => utils.deleteDirectory(tmp2));
 
     expect(tmp1, contains('myprefix-'));
     expect(tmp2, contains('myprefix-'));
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
 
   test('parent', () {
-    final tmp1 = fileSystem.createTemporaryDirectory(parent: tmp);
-    final tmp2 = fileSystem.createTemporaryDirectory(parent: tmp);
+    final tmp1 = fs.createTemporaryDirectory(parent: tmp);
+    final tmp2 = fs.createTemporaryDirectory(parent: tmp);
 
     expect(tmp1, startsWith(tmp));
     expect(tmp2, startsWith(tmp));
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
@@ -99,32 +99,32 @@ void tests(FileUtils utils, FileSystem fs) {
     final parent = p.join(tmp, dirname);
     utils.createDirectory(parent);
 
-    final tmp1 = fileSystem.createTemporaryDirectory(parent: parent);
-    final tmp2 = fileSystem.createTemporaryDirectory(parent: parent);
+    final tmp1 = fs.createTemporaryDirectory(parent: parent);
+    final tmp2 = fs.createTemporaryDirectory(parent: parent);
 
     expect(tmp1, startsWith(tmp));
     expect(tmp2, startsWith(tmp));
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
 
   test('parent is empty string', () {
-    final tmp1 = fileSystem.createTemporaryDirectory(parent: '');
+    final tmp1 = fs.createTemporaryDirectory(parent: '');
     addTearDown(() => utils.deleteDirectory(tmp1));
-    final tmp2 = fileSystem.createTemporaryDirectory(parent: '');
+    final tmp2 = fs.createTemporaryDirectory(parent: '');
     addTearDown(() => utils.deleteDirectory(tmp2));
 
     expect(p.isRelative(tmp1), isTrue);
     expect(p.isRelative(tmp2), isTrue);
-    expect(fileSystem.same(tmp1, tmp2), isFalse);
+    expect(fs.same(tmp1, tmp2), isFalse);
     expect(utils.isDirectory(tmp1), isTrue);
     expect(utils.isDirectory(tmp2), isTrue);
   });
 
   test('parent does not exist', () {
     expect(
-      () => fileSystem.createTemporaryDirectory(parent: '/foo/bar/baz'),
+      () => fs.createTemporaryDirectory(parent: '/foo/bar/baz'),
       throwsA(
         isA<PathNotFoundException>().having(
           (e) => e.errorCode,
@@ -139,7 +139,7 @@ void tests(FileUtils utils, FileSystem fs) {
     final subdir1 = '$tmp/dir1';
     utils.createDirectory(subdir1);
 
-    final tmp1 = fileSystem.createTemporaryDirectory(
+    final tmp1 = fs.createTemporaryDirectory(
       parent: subdir1,
       prefix: '$subdir1/file',
     );
@@ -154,7 +154,7 @@ void tests(FileUtils utils, FileSystem fs) {
       ..createDirectory(subdir1)
       ..createDirectory(subdir2);
 
-    final tmp1 = fileSystem.createTemporaryDirectory(
+    final tmp1 = fs.createTemporaryDirectory(
       parent: subdir1,
       prefix: '$subdir2/file',
     );
@@ -164,7 +164,7 @@ void tests(FileUtils utils, FileSystem fs) {
 
   test('prefix is non-existant path inside temp directory', () {
     expect(
-      () => fileSystem.createTemporaryDirectory(prefix: 'subdir/file'),
+      () => fs.createTemporaryDirectory(prefix: 'subdir/file'),
       throwsA(
         isA<PathNotFoundException>().having(
           (e) => e.errorCode,
@@ -179,10 +179,7 @@ void tests(FileUtils utils, FileSystem fs) {
     final subdir1 = '$tmp/dir1';
     utils.createDirectory(subdir1);
 
-    final tmp1 = fileSystem.createTemporaryDirectory(
-      parent: tmp,
-      prefix: 'dir1/file',
-    );
+    final tmp1 = fs.createTemporaryDirectory(parent: tmp, prefix: 'dir1/file');
     expect(p.canonicalize(tmp1), startsWith(p.canonicalize(subdir1)));
     expect(utils.isDirectory(tmp1), isTrue);
   });

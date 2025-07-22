@@ -23,17 +23,17 @@ void tests(FileUtils utils, FileSystem fs) {
 
   setUp(() {
     tmp = utils.createTestDirectory('createDirectory');
-    cwd = fileSystem.currentDirectory;
-    fileSystem.currentDirectory = tmp;
+    cwd = fs.currentDirectory;
+    fs.currentDirectory = tmp;
   });
 
   tearDown(() {
-    fileSystem.currentDirectory = cwd;
+    fs.currentDirectory = cwd;
     utils.deleteDirectoryTree(tmp);
   });
   test('path does not exist', () {
     expect(
-      () => fileSystem.metadata('$tmp/file1'),
+      () => fs.metadata('$tmp/file1'),
       throwsA(
         isA<PathNotFoundException>().having(
           (e) => e.errorCode,
@@ -48,7 +48,7 @@ void tests(FileUtils utils, FileSystem fs) {
     final path = p.join(tmp, 'f' * 255);
     utils.createTextFile(path, 'Hello World');
 
-    final data = fileSystem.metadata(path);
+    final data = fs.metadata(path);
     expect(data.isFile, isTrue);
   });
 
@@ -56,13 +56,13 @@ void tests(FileUtils utils, FileSystem fs) {
     final path = 'f' * 255;
     utils.createTextFile(path, 'Hello World');
 
-    final data = fileSystem.metadata(path);
+    final data = fs.metadata(path);
     expect(data.isFile, isTrue);
   });
 
   group('file types', () {
     test('directory', () {
-      final data = fileSystem.metadata(tmp);
+      final data = fs.metadata(tmp);
       expect(data.isDirectory, isTrue);
       expect(data.isFile, isFalse);
       expect(data.isLink, isFalse);
@@ -71,7 +71,7 @@ void tests(FileUtils utils, FileSystem fs) {
     test(
       'tty',
       () {
-        final data = fileSystem.metadata('/dev/tty');
+        final data = fs.metadata('/dev/tty');
         expect(data.isDirectory, isFalse);
         expect(data.isFile, isFalse);
         expect(data.isLink, isFalse);
@@ -89,7 +89,7 @@ void tests(FileUtils utils, FileSystem fs) {
       final path = '$tmp/file1';
       utils.createTextFile(path, 'Hello World');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(data.isDirectory, isFalse);
       expect(data.isFile, isTrue);
       expect(data.isLink, isFalse);
@@ -98,7 +98,7 @@ void tests(FileUtils utils, FileSystem fs) {
     test('fifo', () async {
       final fifo = (await Fifo.create('$tmp/file'))..close();
 
-      final data = fileSystem.metadata(fifo.path);
+      final data = fs.metadata(fifo.path);
       expect(data.isDirectory, isFalse);
       expect(data.isFile, isFalse);
       expect(data.isLink, isFalse);
@@ -110,7 +110,7 @@ void tests(FileUtils utils, FileSystem fs) {
       try {
         // On Windows, opening the pipe consumes it. See:
         // https://github.com/dotnet/runtime/issues/69604
-        fileSystem.readAsBytes(fifo.path);
+        fs.readAsBytes(fifo.path);
       } catch (_) {}
     });
     test('file link', () {
@@ -118,7 +118,7 @@ void tests(FileUtils utils, FileSystem fs) {
       final path = '$tmp/link';
       io.Link(path).createSync('$tmp/file1');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(data.isDirectory, isFalse);
       expect(data.isFile, isFalse);
       expect(data.isLink, isTrue);
@@ -129,7 +129,7 @@ void tests(FileUtils utils, FileSystem fs) {
       final path = '$tmp/link';
       io.Link(path).createSync('$tmp/dir');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(data.isDirectory, isFalse);
       expect(data.isFile, isFalse);
       expect(data.isLink, isTrue);
@@ -146,7 +146,7 @@ void tests(FileUtils utils, FileSystem fs) {
       final path = '$tmp/file1';
       io.File(path).writeAsStringSync('Hello World!');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(data.isHidden, isNull);
     },
     skip:
@@ -159,14 +159,14 @@ void tests(FileUtils utils, FileSystem fs) {
       final path = '$tmp/file1';
       io.File(path).writeAsStringSync('');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(data.size, 0);
     });
     test('non-empty file', () {
       final path = '$tmp/file1';
       io.File(path).writeAsStringSync('Hello World!');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(data.size, 12);
     });
   });
@@ -178,7 +178,7 @@ void tests(FileUtils utils, FileSystem fs) {
         final path = '$tmp/file1';
         io.File(path).writeAsStringSync('');
 
-        final data = fileSystem.metadata(path);
+        final data = fs.metadata(path);
         expect(
           data.creation!.millisecondsSinceEpoch,
           closeTo(DateTime.now().millisecondsSinceEpoch, 5000),
@@ -196,7 +196,7 @@ void tests(FileUtils utils, FileSystem fs) {
       final path = '$tmp/file1';
       io.File(path).writeAsStringSync('Hello World!');
 
-      final data = fileSystem.metadata(path);
+      final data = fs.metadata(path);
       expect(
         data.modification.millisecondsSinceEpoch,
         closeTo(DateTime.now().millisecondsSinceEpoch, 5000),
@@ -205,11 +205,11 @@ void tests(FileUtils utils, FileSystem fs) {
     test('modified after creation', () async {
       final path = '$tmp/file1';
       io.File(path).writeAsStringSync('Hello World!');
-      final data1 = fileSystem.metadata(path);
+      final data1 = fs.metadata(path);
 
       await Future<void>.delayed(const Duration(milliseconds: 1000));
       io.File(path).writeAsStringSync('Hello World!');
-      final data2 = fileSystem.metadata(path);
+      final data2 = fs.metadata(path);
 
       expect(
         data2.modification.millisecondsSinceEpoch,

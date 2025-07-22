@@ -51,36 +51,33 @@ void tests(FileUtils utils, FileSystem fs) {
           -1) {
         assert(false, 'libc.errno: ${libc.errno}');
       }
-      final metadata = fileSystem.metadata(oldPath);
+      final metadata = fs.metadata(oldPath);
       assert((metadata as PosixMetadata).mode & libc.S_IWOTH != 0);
     });
 
-    fileSystem.copyFile(oldPath, newPath);
+    fs.copyFile(oldPath, newPath);
 
     // Ensure that "other users" do not have write permissions on the copied
     // file.
-    final metadata = fileSystem.metadata(newPath);
+    final metadata = fs.metadata(newPath);
     expect((metadata as PosixMetadata).mode & libc.S_IWOTH, 0);
-  }, skip: io.Platform.isWindows);
+  }, skip: fs is! PosixFileSystem);
 
   test('copy does not preserve source file attributes', () {
     final data = randomUint8List(1024);
     final oldPath = '$tmp/file1';
     final newPath = '$tmp/file2';
     utils.createBinaryFile(oldPath, data);
-    (fileSystem as WindowsFileSystem).setMetadata(oldPath, isReadOnly: true);
+    (fs as WindowsFileSystem).setMetadata(oldPath, isReadOnly: true);
     addTearDown(
-      () => (fileSystem as WindowsFileSystem).setMetadata(
-        oldPath,
-        isReadOnly: false,
-      ),
+      () => (fs as WindowsFileSystem).setMetadata(oldPath, isReadOnly: false),
     );
 
-    fileSystem.copyFile(oldPath, newPath);
+    fs.copyFile(oldPath, newPath);
 
-    final metadata = fileSystem.metadata(newPath);
-    expect((metadata as WindowsMetadata).isReadOnly, isFalse);
-  }, skip: !io.Platform.isWindows);
+    final metadata = fs.metadata(newPath);
+    expect(metadata.isReadOnly, isFalse);
+  }, skip: fs is! WindowsFileSystem);
 
   test('copy file absolute path', () {
     final data = randomUint8List(1024);
@@ -88,9 +85,9 @@ void tests(FileUtils utils, FileSystem fs) {
     final newPath = '$tmp/file2';
     utils.createBinaryFile(oldPath, data);
 
-    fileSystem.copyFile(oldPath, newPath);
+    fs.copyFile(oldPath, newPath);
 
-    expect(io.File(newPath).readAsBytesSync(), data);
+    expect(utils.readBinaryFile(newPath), data);
   });
 
   test('copy between absolute paths, long file names', () {
@@ -99,9 +96,9 @@ void tests(FileUtils utils, FileSystem fs) {
     final newPath = p.join(tmp, '2' * 255);
     utils.createBinaryFile(oldPath, data);
 
-    fileSystem.copyFile(oldPath, newPath);
+    fs.copyFile(oldPath, newPath);
 
-    expect(io.File(newPath).readAsBytesSync(), data);
+    expect(utils.readBinaryFile(newPath), data);
   });
 
   test('copy between relative path, long file names', () {
@@ -110,18 +107,18 @@ void tests(FileUtils utils, FileSystem fs) {
     final newPath = '2' * 255;
     utils.createBinaryFile(oldPath, data);
 
-    fileSystem.copyFile(oldPath, newPath);
+    fs.copyFile(oldPath, newPath);
 
-    expect(io.File(newPath).readAsBytesSync(), data);
+    expect(utils.readBinaryFile(newPath), data);
   });
 
   test('copy directory', () {
     final oldPath = '$tmp/dir1';
     final newPath = '$tmp/dir2';
-    io.Directory(oldPath).createSync();
+    utils.createDirectory(oldPath);
 
     expect(
-      () => fileSystem.copyFile(oldPath, newPath),
+      () => fs.copyFile(oldPath, newPath),
       throwsA(
         isA<IOFileException>()
             .having((e) => e.path1, 'path1', oldPath)
@@ -142,9 +139,9 @@ void tests(FileUtils utils, FileSystem fs) {
     utils.createBinaryFile(linkedFile, data);
     io.Link(oldPath).createSync(linkedFile);
 
-    fileSystem.copyFile(oldPath, newPath);
+    fs.copyFile(oldPath, newPath);
 
-    expect(io.File(newPath).readAsBytesSync(), data);
+    expect(utils.readBinaryFile(newPath), data);
   });
 
   test('copy file to existing file', () {
@@ -156,7 +153,7 @@ void tests(FileUtils utils, FileSystem fs) {
       ..createTextFile(newPath, 'Hello World!');
 
     expect(
-      () => fileSystem.copyFile(oldPath, newPath),
+      () => fs.copyFile(oldPath, newPath),
       throwsA(
         isA<PathExistsException>()
             .having((e) => e.path1, 'path1', newPath)
@@ -180,7 +177,7 @@ void tests(FileUtils utils, FileSystem fs) {
     io.Link(newPath).createSync(linkedFile);
 
     expect(
-      () => fileSystem.copyFile(oldPath, newPath),
+      () => fs.copyFile(oldPath, newPath),
       throwsA(
         isA<PathExistsException>()
             .having((e) => e.path1, 'path1', newPath)
@@ -202,7 +199,7 @@ void tests(FileUtils utils, FileSystem fs) {
       ..createDirectory(newPath);
 
     expect(
-      () => fileSystem.copyFile(oldPath, newPath),
+      () => fs.copyFile(oldPath, newPath),
       throwsA(
         isA<IOFileException>()
             .having((e) => e.path1, 'path1', newPath)
@@ -220,7 +217,7 @@ void tests(FileUtils utils, FileSystem fs) {
     final newPath = '$tmp/file2';
 
     expect(
-      () => fileSystem.copyFile(oldPath, newPath),
+      () => fs.copyFile(oldPath, newPath),
       throwsA(
         isA<PathNotFoundException>()
             .having((e) => e.path1, 'path1', oldPath)
@@ -242,7 +239,7 @@ void tests(FileUtils utils, FileSystem fs) {
     utils.createBinaryFile(oldPath, data);
 
     expect(
-      () => fileSystem.copyFile(oldPath, newPath),
+      () => fs.copyFile(oldPath, newPath),
       throwsA(
         isA<PathNotFoundException>()
             .having((e) => e.path1, 'path1', newPath)
@@ -268,7 +265,7 @@ void tests(FileUtils utils, FileSystem fs) {
               ..write(data)
               ..close();
 
-        fileSystem.copyFile(fifo.path, newPath);
+        fs.copyFile(fifo.path, newPath);
 
         expect(utils.readBinaryFile(newPath), data);
       });
@@ -286,7 +283,7 @@ void tests(FileUtils utils, FileSystem fs) {
       }
       fifo.close();
 
-      fileSystem.copyFile(fifo.path, newPath);
+      fs.copyFile(fifo.path, newPath);
 
       expect(utils.readBinaryFile(newPath), data);
     });
@@ -301,7 +298,7 @@ void tests(FileUtils utils, FileSystem fs) {
               ..write(data)
               ..close();
 
-        fileSystem.copyFile(fifo.path, newPath);
+        fs.copyFile(fifo.path, newPath);
 
         expect(utils.readBinaryFile(newPath), data);
       });
@@ -314,9 +311,9 @@ void tests(FileUtils utils, FileSystem fs) {
         final data = randomUint8List(i);
         final oldPath = '$tmp/file1';
         final newPath = '$tmp/file2';
-        io.File(oldPath).writeAsBytesSync(data);
+        utils.createBinaryFile(oldPath, data);
 
-        fileSystem.copyFile(oldPath, newPath);
+        fs.copyFile(oldPath, newPath);
 
         expect(utils.readBinaryFile(newPath), data);
       });
@@ -327,9 +324,9 @@ void tests(FileUtils utils, FileSystem fs) {
         final data = randomUint8List(i);
         final oldPath = '$tmp/file1';
         final newPath = '$tmp/file2';
-        io.File(oldPath).writeAsBytesSync(data);
+        utils.createBinaryFile(oldPath, data);
 
-        fileSystem.copyFile(oldPath, newPath);
+        fs.copyFile(oldPath, newPath);
 
         expect(utils.readBinaryFile(newPath), data);
       });
