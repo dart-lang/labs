@@ -3,7 +3,7 @@ name: NativeAddBindings
 description: |
   Bindings for `constants.g.h`.
 
-  Regenerate bindings with `dart run ffigen --config constants-ffigen.yaml`.
+  Regenerate bindings with `dart run tool/generate.dart`.
 output: 'lib/src/constant_bindings.g.dart'
 headers:
   entry-points:
