@@ -69,9 +69,7 @@ void tests(FileUtils utils, FileSystem fs) {
     final newPath = '$tmp/file2';
     utils.createBinaryFile(oldPath, data);
     (fs as WindowsFileSystem).setMetadata(oldPath, isReadOnly: true);
-    addTearDown(
-      () => (fs as WindowsFileSystem).setMetadata(oldPath, isReadOnly: false),
-    );
+    addTearDown(() => fs.setMetadata(oldPath, isReadOnly: false));
 
     fs.copyFile(oldPath, newPath);
 
