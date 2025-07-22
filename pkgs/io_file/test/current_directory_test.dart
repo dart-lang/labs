@@ -32,19 +32,19 @@ void tests(FileUtils utils, FileSystem fs) {
   test('absolute path', () {
     final path = '$tmp/dir';
     utils.createDirectory(path);
-    fileSystem.currentDirectory = path;
+    fs.currentDirectory = path;
 
     expect(
-      fileSystem.same(fileSystem.currentDirectory, path),
+      fs.same(fs.currentDirectory, path),
       isTrue,
       reason:
-          '${fileSystem.currentDirectory} is a diffent directory than'
+          '${fs.currentDirectory} is a diffent directory than'
           '$path',
     );
     expect(
-      p.isAbsolute(fileSystem.currentDirectory),
+      p.isAbsolute(fs.currentDirectory),
       isTrue,
-      reason: '${fileSystem.currentDirectory} is not absolute',
+      reason: '${fs.currentDirectory} is not absolute',
     );
   });
 
@@ -52,10 +52,10 @@ void tests(FileUtils utils, FileSystem fs) {
     // On Windows, limited to MAX_PATH (260) characters.
     final path = p.join(tmp, 'a' * 200, 'b' * 200);
     utils.createDirectory(path);
-    final oldCurrentDirectory = fileSystem.currentDirectory;
+    final oldCurrentDirectory = fs.currentDirectory;
 
     expect(
-      () => fileSystem.currentDirectory = path,
+      () => fs.currentDirectory = path,
       throwsA(
         isA<IOFileException>()
             .having((e) => e.path1, 'path1', path)
@@ -66,26 +66,26 @@ void tests(FileUtils utils, FileSystem fs) {
             ),
       ),
     );
-    expect(fileSystem.currentDirectory, oldCurrentDirectory);
+    expect(fs.currentDirectory, oldCurrentDirectory);
   }, skip: fs is! WindowsFileSystem);
 
   test('relative path', () {
     final path = '$tmp/dir';
     utils.createDirectory(path);
 
-    fileSystem.currentDirectory = 'dir';
+    fs.currentDirectory = 'dir';
 
     expect(
-      fileSystem.same(fileSystem.currentDirectory, path),
+      fs.same(fs.currentDirectory, path),
       isTrue,
       reason:
-          '${fileSystem.currentDirectory} is a diffent directory than '
+          '${fs.currentDirectory} is a diffent directory than '
           '$path',
     );
     expect(
-      p.isAbsolute(fileSystem.currentDirectory),
+      p.isAbsolute(fs.currentDirectory),
       isTrue,
-      reason: '${fileSystem.currentDirectory} is not absolute',
+      reason: '${fs.currentDirectory} is not absolute',
     );
   });
 }
