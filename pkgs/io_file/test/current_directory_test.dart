@@ -5,6 +5,8 @@
 @TestOn('vm')
 library;
 
+import 'dart:io' as io;
+
 import 'package:io_file/io_file.dart';
 import 'package:io_file/windows_file_system.dart';
 import 'package:path/path.dart' as p;
@@ -51,7 +53,7 @@ void tests(FileUtils utils, FileSystem fs) {
   test('absolute path, too long path', () {
     // On Windows, limited to MAX_PATH (260) characters.
     final path = p.join(tmp, 'a' * 200, 'b' * 200);
-    utils.createDirectory(path);
+    io.Directory(path).createSync(recursive: true);
     final oldCurrentDirectory = fs.currentDirectory;
 
     expect(

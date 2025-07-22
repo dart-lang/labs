@@ -69,7 +69,7 @@ void tests(FileUtils utils, FileSystem fs) {
     final newPath = '$tmp/file2';
     utils.createBinaryFile(oldPath, data);
     (fileSystem as WindowsFileSystem).setMetadata(oldPath, isReadOnly: true);
-    tearDown(
+    addTearDown(
       () => (fileSystem as WindowsFileSystem).setMetadata(
         oldPath,
         isReadOnly: false,
