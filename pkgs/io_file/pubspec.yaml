@@ -21,7 +21,6 @@ dev_dependencies:
   args: ^2.7.0
   benchmark_harness: ^2.3.1
   dart_flutter_team_lints: ^3.4.0
-  dart_style: ^3.1.0
   errno: ^1.4.1
   ffigen: ^19.0.0
   stdlibc:

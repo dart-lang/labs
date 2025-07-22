@@ -4,19 +4,20 @@
 
 // Run all code generation and formatting steps.
 
+import 'dart:convert';
 import 'dart:io';
-
-import 'package:dart_style/dart_style.dart';
 
 import 'package:ffigen/src/executables/ffigen.dart' as ffigen;
 import 'build_constants.dart' as build_constants;
 
 void _formatFile(String path) {
-  final formatter = DartFormatter(
-    languageVersion: DartFormatter.latestLanguageVersion,
-  );
-  final file = File(path);
-  file.writeAsStringSync(formatter.format(file.readAsStringSync(), uri: path));
+  final result = Process.runSync(Platform.executable, [
+    'format',
+    path,
+  ], stderrEncoding: utf8);
+  if (result.exitCode != 0) {
+    throw Exception('failed to format $path:\n${result.stderr}');
+  }
 }
 
 void main() async {
