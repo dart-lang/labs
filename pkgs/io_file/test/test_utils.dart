@@ -33,4 +33,7 @@ abstract interface class FileUtils {
   void deleteDirectory(String path);
 
   void createTextFile(String path, String s);
+  void createBinaryFile(String path, Uint8List b);
+
+  Uint8List readBinaryFile(String path);
 }
