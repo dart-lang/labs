@@ -11,218 +11,235 @@ import 'package:io_file/src/vm_windows_file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-import 'file_system_file_utils.dart' hide fileUtils;
 import 'test_utils.dart';
 
-void tests(FileUtils utils, WindowsFileSystem fileSystem) {
-  late String tmp;
-  late String cwd;
+void main() {
+  final windowsFileSystem = WindowsFileSystem();
 
-  setUp(() {
-    tmp = utils.createTestDirectory('createDirectory');
-    cwd = fileSystem.currentDirectory;
-    fileSystem.currentDirectory = tmp;
-  });
+  group('windows metadata', () {
+    late String tmp;
+    late String cwd;
 
-  tearDown(() {
-    fileSystem.currentDirectory = cwd;
-    utils.deleteDirectoryTree(tmp);
-  });
-
-  group('isReadOnly', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-
-      final data = fileSystem.metadata(path);
-      expect(data.isReadOnly, isFalse);
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = windowsFileSystem.currentDirectory;
+      windowsFileSystem.currentDirectory = tmp;
     });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isReadOnly: true);
 
-      final data = fileSystem.metadata(path);
-      expect(data.isReadOnly, isTrue);
+    tearDown(() {
+      windowsFileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
     });
-  });
 
-  group('isHidden', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
+    group('isReadOnly', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
 
-      final data = fileSystem.metadata(path);
-      expect(data.isHidden, isFalse);
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isReadOnly: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isReadOnly, isTrue);
+      });
     });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isHidden: true);
 
-      final data = fileSystem.metadata(path);
-      expect(data.isHidden, isTrue);
+    group('isHidden', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isHidden, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isHidden: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isHidden, isTrue);
+      });
     });
-  });
 
-  group('isSystem', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
+    group('isSystem', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
 
-      final data = fileSystem.metadata(path);
-      expect(data.isSystem, isFalse);
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isSystem, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isSystem: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isSystem, isTrue);
+      });
     });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isSystem: true);
 
-      final data = fileSystem.metadata(path);
-      expect(data.isSystem, isTrue);
+    group('needsArchive', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, needsArchive: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.needsArchive, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, needsArchive: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.needsArchive, isTrue);
+      });
     });
-  });
 
-  group('needsArchive', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, needsArchive: false);
+    group('isTemporary', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
 
-      final data = fileSystem.metadata(path);
-      expect(data.needsArchive, isFalse);
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isTemporary, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isTemporary: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isTemporary, isTrue);
+      });
     });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, needsArchive: true);
 
-      final data = fileSystem.metadata(path);
-      expect(data.needsArchive, isTrue);
+    group('isContentNotIndexed', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isContentIndexed: false);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isContentIndexed, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isContentIndexed: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isContentIndexed, isTrue);
+      });
     });
-  });
 
-  group('isTemporary', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
+    group('isOffline', () {
+      test('false', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
 
-      final data = fileSystem.metadata(path);
-      expect(data.isTemporary, isFalse);
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isOffline, isFalse);
+      });
+      test('true', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        windowsFileSystem.setMetadata(path, isOffline: true);
+
+        final data = windowsFileSystem.metadata(path);
+        expect(data.isOffline, isTrue);
+      });
     });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isTemporary: true);
 
-      final data = fileSystem.metadata(path);
-      expect(data.isTemporary, isTrue);
+    group('creation', () {
+      test('new file', () {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        final maxCreationTime = DateTime.now().millisecondsSinceEpoch;
+
+        final data = windowsFileSystem.metadata(path);
+        expect(
+          data.creation.millisecondsSinceEpoch,
+          // Creation time within 1 second.
+          inInclusiveRange(maxCreationTime - 1000, maxCreationTime),
+        );
+      });
     });
-  });
 
-  group('isContentNotIndexed', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isContentIndexed: false);
+    group('modificiation', () {
+      test('new file', () async {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        await Future<void>.delayed(const Duration(seconds: 1));
+        File(path).writeAsStringSync('How are you?');
+        final maxModificationTime = DateTime.now().millisecondsSinceEpoch;
 
-      final data = fileSystem.metadata(path);
-      expect(data.isContentIndexed, isFalse);
+        final data = windowsFileSystem.metadata(path);
+        expect(
+          data.modification.millisecondsSinceEpoch,
+          inInclusiveRange(
+            data.creation.millisecondsSinceEpoch + 1000,
+            maxModificationTime,
+          ),
+        );
+      });
     });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isContentIndexed: true);
 
-      final data = fileSystem.metadata(path);
-      expect(data.isContentIndexed, isTrue);
-    });
-  });
+    group('access', () {
+      test('new file', () async {
+        final path = '$tmp/file1';
+        File(path).writeAsStringSync('Hello World');
+        File(path).readAsBytesSync();
+        final maxAccessTime = DateTime.now().millisecondsSinceEpoch;
 
-  group('isOffline', () {
-    test('false', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-
-      final data = fileSystem.metadata(path);
-      expect(data.isOffline, isFalse);
-    });
-    test('true', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      fileSystem.setMetadata(path, isOffline: true);
-
-      final data = fileSystem.metadata(path);
-      expect(data.isOffline, isTrue);
-    });
-  });
-
-  group('creation', () {
-    test('new file', () {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      final maxCreationTime = DateTime.now().millisecondsSinceEpoch;
-
-      final data = fileSystem.metadata(path);
-      expect(
-        data.creation.millisecondsSinceEpoch,
-        // Creation time within 1 second.
-        inInclusiveRange(maxCreationTime - 1000, maxCreationTime),
-      );
-    });
-  });
-
-  group('modificiation', () {
-    test('new file', () async {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      await Future<void>.delayed(const Duration(seconds: 1));
-      File(path).writeAsStringSync('How are you?');
-      final maxModificationTime = DateTime.now().millisecondsSinceEpoch;
-
-      final data = fileSystem.metadata(path);
-      expect(
-        data.modification.millisecondsSinceEpoch,
-        inInclusiveRange(
-          data.creation.millisecondsSinceEpoch + 1000,
-          maxModificationTime,
-        ),
-      );
-    });
-  });
-
-  group('access', () {
-    test('new file', () async {
-      final path = '$tmp/file1';
-      File(path).writeAsStringSync('Hello World');
-      File(path).readAsBytesSync();
-      final maxAccessTime = DateTime.now().millisecondsSinceEpoch;
-
-      final data = fileSystem.metadata(path);
-      expect(
-        data.access.millisecondsSinceEpoch,
-        inInclusiveRange(data.creation.millisecondsSinceEpoch, maxAccessTime),
-      );
+        final data = windowsFileSystem.metadata(path);
+        expect(
+          data.access.millisecondsSinceEpoch,
+          inInclusiveRange(data.creation.millisecondsSinceEpoch, maxAccessTime),
+        );
+      });
     });
   });
 
   group('set metadata', () {
+    late String tmp;
+    late String cwd;
+
+    setUp(() {
+      tmp = createTemp('createTemporaryDirectory');
+      cwd = windowsFileSystem.currentDirectory;
+      windowsFileSystem.currentDirectory = tmp;
+    });
+
+    tearDown(() {
+      windowsFileSystem.currentDirectory = cwd;
+      deleteTemp(tmp);
+    });
+
     test('absolute path, long name', () {
       final path = p.join(tmp, 'f' * 255);
       File(path).writeAsStringSync('Hello World');
 
-      fileSystem.setMetadata(path, isReadOnly: true);
+      windowsFileSystem.setMetadata(path, isReadOnly: true);
 
-      expect(fileSystem.metadata(path).isReadOnly, isTrue);
+      expect(windowsFileSystem.metadata(path).isReadOnly, isTrue);
     });
 
     test('relative path, long name', () {
       final path = 'f' * 255;
       File(path).writeAsStringSync('Hello World');
 
-      fileSystem.setMetadata(path, isReadOnly: true);
+      windowsFileSystem.setMetadata(path, isReadOnly: true);
 
-      expect(fileSystem.metadata(path).isReadOnly, isTrue);
+      expect(windowsFileSystem.metadata(path).isReadOnly, isTrue);
     });
 
     for (var includeOriginalMetadata in [true, false]) {
@@ -234,7 +251,7 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
           setUp(() {
             path = '$tmp/file1';
             File(path).writeAsStringSync('Hello World');
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isReadOnly: true,
               isHidden: true,
@@ -244,24 +261,24 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
               isContentIndexed: true,
               isOffline: true,
             );
-            initialMetadata = fileSystem.metadata(path);
+            initialMetadata = windowsFileSystem.metadata(path);
           });
 
           test('set none', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
-            expect(fileSystem.metadata(path), initialMetadata);
+            expect(windowsFileSystem.metadata(path), initialMetadata);
           });
           test('unset isReadOnly', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isReadOnly: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isTrue);
@@ -272,13 +289,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
           });
 
           test('unset isHidden', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isHidden: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isTrue);
@@ -288,13 +305,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isTrue);
           });
           test('unset isSystem', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isSystem: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isFalse);
@@ -304,13 +321,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isTrue);
           });
           test('unset needsArchive', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               needsArchive: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isTrue);
@@ -320,13 +337,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isTrue);
           });
           test('unset isTemporary', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isTemporary: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isTrue);
@@ -336,13 +353,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isTrue);
           });
           test('unset isContentNotIndexed', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isContentIndexed: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isTrue);
@@ -352,13 +369,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isTrue);
           });
           test('unset isOffline', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isOffline: false,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isTrue);
@@ -376,7 +393,7 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
           setUp(() {
             path = '$tmp/file1';
             File(path).writeAsStringSync('Hello World');
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isReadOnly: false,
               isHidden: false,
@@ -386,24 +403,24 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
               isContentIndexed: false,
               isOffline: false,
             );
-            initialMetadata = fileSystem.metadata(path);
+            initialMetadata = windowsFileSystem.metadata(path);
           });
 
           test('set none', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
-            expect(fileSystem.metadata(path), initialMetadata);
+            expect(windowsFileSystem.metadata(path), initialMetadata);
           });
           test('set isReadOnly', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isReadOnly: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isTrue);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isFalse);
@@ -414,13 +431,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
           });
 
           test('set isHidden', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isHidden: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isTrue);
             expect(data.isSystem, isFalse);
@@ -430,13 +447,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isFalse);
           });
           test('set isSystem', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isSystem: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isTrue);
@@ -446,13 +463,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isFalse);
           });
           test('set needsArchive', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               needsArchive: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isFalse);
@@ -462,13 +479,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isFalse);
           });
           test('set isTemporary', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isTemporary: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isFalse);
@@ -478,13 +495,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isFalse);
           });
           test('set isContentNotIndexed', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isContentIndexed: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isFalse);
@@ -494,13 +511,13 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
             expect(data.isOffline, isFalse);
           });
           test('set isOffline', () {
-            fileSystem.setMetadata(
+            windowsFileSystem.setMetadata(
               path,
               isOffline: true,
               original: includeOriginalMetadata ? initialMetadata : null,
             );
 
-            final data = fileSystem.metadata(path);
+            final data = windowsFileSystem.metadata(path);
             expect(data.isReadOnly, isFalse);
             expect(data.isHidden, isFalse);
             expect(data.isSystem, isFalse);
@@ -512,16 +529,5 @@ void tests(FileUtils utils, WindowsFileSystem fileSystem) {
         });
       });
     }
-  });
-}
-
-void main() {
-  group('windows metadata', () {
-    final fileSystem = WindowsFileSystem();
-    group('dart:io verification', () => tests(fileUtils(), fileSystem));
-    group(
-      'self verification',
-      () => tests(FileSystemFileUtils(fileSystem), fileSystem),
-    );
   });
 }
