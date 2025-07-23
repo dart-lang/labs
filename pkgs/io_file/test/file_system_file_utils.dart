@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:io_file/io_file.dart';
 
 import 'test_utils.dart';
@@ -12,8 +14,16 @@ class FileSystemFileUtils implements FileUtils {
   FileSystemFileUtils([FileSystem? fs]) : fs = fs ?? fileSystem;
 
   @override
+  void createBinaryFile(String path, Uint8List b) => fs.writeAsBytes(path, b);
+
+  @override
   void createDirectory(String path) {
     fs.createDirectory(path);
+  }
+
+  @override
+  void deleteDirectory(String path) {
+    // TODO: implement deleteDirectory
   }
 
   @override
@@ -32,6 +42,9 @@ class FileSystemFileUtils implements FileUtils {
 
   @override
   bool isDirectory(String path) => fs.metadata(path).isDirectory;
+
+  @override
+  Uint8List readBinaryFile(String path) => fs.readAsBytes(path);
 }
 
 FileUtils fileUtils() => FileSystemFileUtils();
