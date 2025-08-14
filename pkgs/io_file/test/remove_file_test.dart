@@ -79,7 +79,7 @@ void tests(FileUtils utils, FileSystem fs) {
     expect(
       () => fileSystem.removeFile(path),
       throwsA(
-        isA<PathAccessException>().having(
+        isA<IOFileException>().having(
           (e) => e.errorCode,
           'errorCode',
           fileSystem is WindowsFileSystem
@@ -99,10 +99,29 @@ void tests(FileUtils utils, FileSystem fs) {
     utils.createDirectory(dirPath);
     io.Link(linkPath).createSync(dirPath);
 
-    fileSystem.removeFile(linkPath);
+    if (fs is WindowsFileSystem) {
+      expect(
+        () => fileSystem.removeFile(linkPath),
+        throwsA(
+          isA<PathAccessException>().having(
+            (e) => e.errorCode,
+            'errorCode',
+            win32.ERROR_ACCESS_DENIED,
+          ),
+        ),
+      );
+      expect(utils.exists(dirPath), isTrue, reason: '$dirPath does not exist');
+      expect(
+        utils.exists(linkPath),
+        isTrue,
+        reason: '$linkPath does not exist',
+      );
+    } else {
+      fileSystem.removeFile(linkPath);
 
-    expect(utils.exists(dirPath), isTrue, reason: '$dirPath does not exist');
-    expect(utils.exists(linkPath), isFalse, reason: '$linkPath exists');
+      expect(utils.exists(dirPath), isTrue, reason: '$dirPath does not exist');
+      expect(utils.exists(linkPath), isFalse, reason: '$linkPath exists');
+    }
   });
 
   test('link to file', () {
