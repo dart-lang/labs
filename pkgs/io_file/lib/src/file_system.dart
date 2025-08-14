@@ -197,14 +197,12 @@ abstract class FileSystem {
   /// a `prefix` of `'../foo'` will create a sibling directory to the parent
   /// directory.
   ///
-  /// TODO(brianquinlan): Write to a file in the created temporary directory
-  /// when that is supported.
-  ///
   /// ```dart
   /// import 'package:io_file/io_file.dart';
   ///
   /// void main() {
-  ///   fileSystem.createTemporaryDirectory(prefix: 'myproject');
+  ///   final tmp = fileSystem.createTemporaryDirectory(prefix: 'myproject');
+  ///   fileSystem.writeAsString('$tmp/README.txt', 'Hello World!');
   /// }
   /// ```
   String createTemporaryDirectory({String? parent, String? prefix});
@@ -266,7 +264,7 @@ abstract class FileSystem {
   /// but keeping it the original directory, requires creating a new complete
   /// path with the new name at the end.
   ///
-  ///TODO(brianquinlan): add an example here.
+  /// TODO(brianquinlan): add an example here.
   ///
   /// On some platforms, a rename operation cannot move a file between
   /// different file systems. If that is the case, instead copy the file to the
@@ -279,10 +277,10 @@ abstract class FileSystem {
 
   /// Checks whether two paths refer to the same object in the file system.
   ///
-  /// Throws `PathNotFoundException` if either path doesn't exist.
+  /// Throws [PathNotFoundException] if either path doesn't exist.
   ///
   /// Links are resolved before determining if the paths refer to the same
-  /// object. Throws `PathNotFoundException` if either path requires resolving
+  /// object. Throws [PathNotFoundException] if either path requires resolving
   /// a broken link.
   bool same(String path1, String path2);
 
@@ -293,7 +291,11 @@ abstract class FileSystem {
   /// 2. the TMP environment variable if set
   /// 3. '/data/local/tmp' on Android, '/tmp' elsewhere
   ///
-  /// TODO(brianquinlan): Add the Windows strategy here.
+  /// On Windows, the path is taken from:
+  /// 1. the TMP environment variable if set
+  /// 2. the TEMP environment variable if set
+  /// 3. the USERPROFILE environment variable if set
+  /// 4. the Windows directory
   String get temporaryDirectory {
     throw UnsupportedError('temporaryDirectory');
   }
@@ -303,7 +305,7 @@ abstract class FileSystem {
   /// If `path` is a broken symlink and `mode` is [WriteMode.failExisting]:
   /// - On Windows, the target of the symlink is created, using `data` as its
   ///   contents.
-  /// - On POSIX, [writeAsBytes] throws `PathExistsException`.
+  /// - On POSIX, [writeAsBytes] throws [PathExistsException].
   void writeAsBytes(
     String path,
     Uint8List data, [
@@ -315,7 +317,7 @@ abstract class FileSystem {
   /// If `path` is a broken symlink and `mode` is [WriteMode.failExisting]:
   /// - On Windows, the target of the symlink is created, using `data` as its
   ///   contents.
-  /// - On POSIX, [writeAsBytes] throws `PathExistsException`.
+  /// - On POSIX, [writeAsBytes] throws [PathExistsException].
   ///
   /// `lineTerminator` is used to replace `'\n'` characters in `content`.
   /// If `lineTerminator` is provided, then it must be one of `'\n'` or
