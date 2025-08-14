@@ -83,8 +83,11 @@ void tests(FileUtils utils, FileSystem fs) {
           (e) => e.errorCode,
           'errorCode',
           fileSystem is WindowsFileSystem
-              ? win32.ERROR_PATH_NOT_FOUND
-              : errors.eperm,
+              ? win32.ERROR_ACCESS_DENIED
+              : anyOf(
+                errors.eperm, // POSIX
+                errors.eisdir, // Linux
+              ),
         ),
       ),
     );
@@ -124,7 +127,7 @@ void tests(FileUtils utils, FileSystem fs) {
           (e) => e.errorCode,
           'errorCode',
           fileSystem is WindowsFileSystem
-              ? win32.ERROR_PATH_NOT_FOUND
+              ? win32.ERROR_FILE_NOT_FOUND
               : errors.enoent,
         ),
       ),
