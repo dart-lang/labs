@@ -1,10 +1,10 @@
 concurrency: 1
 reporter: compact
 test-randomize-ordering-seed: random
-tags:
+on_platform:
   # TODO(brianquinlan): Remove retries when
   # https://github.com/dart-lang/sdk/issues/38832 is fixed.
   android || ios || linux || mac-os:
-    retry: 2
+    retry: 1
   windows:
-    retry: 5
+    retry: 3
