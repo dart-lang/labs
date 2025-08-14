@@ -342,24 +342,6 @@ final class PosixFileSystem extends FileSystem {
   });
 
   @override
-  bool same(String path1, String path2) => ffi.using((arena) {
-    final stat1 = arena<libc.Stat>();
-    if (libc.stat(path1.toNativeUtf8(allocator: arena).cast(), stat1) == -1) {
-      final errno = libc.errno;
-      throw _getError(errno, systemCall: 'stat', path1: path1);
-    }
-
-    final stat2 = arena<libc.Stat>();
-    if (libc.stat(path2.toNativeUtf8(allocator: arena).cast(), stat2) == -1) {
-      final errno = libc.errno;
-      throw _getError(errno, systemCall: 'stat', path1: path2);
-    }
-
-    return (stat1.ref.st_ino == stat2.ref.st_ino) &&
-        (stat1.ref.st_dev == stat2.ref.st_dev);
-  });
-
-  @override
   void createDirectory(String path) => ffi.using((arena) {
     if (libc.mkdir(
           path.toNativeUtf8(allocator: arena).cast(),
@@ -370,6 +352,22 @@ final class PosixFileSystem extends FileSystem {
       throw _getError(errno, systemCall: 'mkdir', path1: path);
     }
   });
+
+  @override
+  String createTemporaryDirectory({String? parent, String? prefix}) =>
+      ffi.using((arena) {
+        final directory = parent ?? temporaryDirectory;
+        final template = p.join(directory, '${prefix ?? ''}XXXXXX');
+
+        final path = libc.mkdtemp(
+          template.toNativeUtf8(allocator: arena).cast(),
+        );
+        if (path == nullptr) {
+          final errno = libc.errno;
+          throw _getError(errno, systemCall: 'mkdtemp', path1: template);
+        }
+        return path.cast<ffi.Utf8>().toDartString();
+      });
 
   @override
   set currentDirectory(String path) => ffi.using((arena) {
@@ -388,22 +386,6 @@ final class PosixFileSystem extends FileSystem {
     }
     return buffer.cast<ffi.Utf8>().toDartString();
   });
-
-  @override
-  String createTemporaryDirectory({String? parent, String? prefix}) =>
-      ffi.using((arena) {
-        final directory = parent ?? temporaryDirectory;
-        final template = p.join(directory, '${prefix ?? ''}XXXXXX');
-
-        final path = libc.mkdtemp(
-          template.toNativeUtf8(allocator: arena).cast(),
-        );
-        if (path == nullptr) {
-          final errno = libc.errno;
-          throw _getError(errno, systemCall: 'mkdtemp', path1: template);
-        }
-        return path.cast<ffi.Utf8>().toDartString();
-      });
 
   @override
   PosixMetadata metadata(String path) => ffi.using((arena) {
@@ -536,24 +518,6 @@ final class PosixFileSystem extends FileSystem {
   });
 
   @override
-  void rename(String oldPath, String newPath) => ffi.using((arena) {
-    // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
-    if (libc.rename(
-          oldPath.toNativeUtf8(allocator: arena).cast(),
-          newPath.toNativeUtf8(allocator: arena).cast(),
-        ) !=
-        0) {
-      final errno = libc.errno;
-      throw _getError(
-        errno,
-        systemCall: 'rename',
-        path1: oldPath,
-        path2: newPath,
-      );
-    }
-  });
-
-  @override
   Uint8List readAsBytes(String path) => ffi.using((arena) {
     final fd = _tempFailureRetry(
       () => libc.open(
@@ -636,6 +600,42 @@ final class PosixFileSystem extends FileSystem {
       rethrow;
     }
   }
+
+  @override
+  void rename(String oldPath, String newPath) => ffi.using((arena) {
+    // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
+    if (libc.rename(
+          oldPath.toNativeUtf8(allocator: arena).cast(),
+          newPath.toNativeUtf8(allocator: arena).cast(),
+        ) !=
+        0) {
+      final errno = libc.errno;
+      throw _getError(
+        errno,
+        systemCall: 'rename',
+        path1: oldPath,
+        path2: newPath,
+      );
+    }
+  });
+
+  @override
+  bool same(String path1, String path2) => ffi.using((arena) {
+    final stat1 = arena<libc.Stat>();
+    if (libc.stat(path1.toNativeUtf8(allocator: arena).cast(), stat1) == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, systemCall: 'stat', path1: path1);
+    }
+
+    final stat2 = arena<libc.Stat>();
+    if (libc.stat(path2.toNativeUtf8(allocator: arena).cast(), stat2) == -1) {
+      final errno = libc.errno;
+      throw _getError(errno, systemCall: 'stat', path1: path2);
+    }
+
+    return (stat1.ref.st_ino == stat2.ref.st_ino) &&
+        (stat1.ref.st_dev == stat2.ref.st_dev);
+  });
 
   @override
   String get temporaryDirectory => ffi.using((arena) {

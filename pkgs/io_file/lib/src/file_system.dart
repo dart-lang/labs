@@ -209,6 +209,19 @@ abstract class FileSystem {
   /// ```
   String createTemporaryDirectory({String? parent, String? prefix});
 
+  /// The current
+  /// [working directory](https://en.wikipedia.org/wiki/Working_directory) of
+  /// the Dart process.
+  ///
+  /// Setting the value of this field will change the working directory for
+  /// *all* isolates.
+  ///
+  /// On Windows, unless
+  /// [long paths are enabled](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation),
+  /// the maximum length of the [currentDirectory] path is 260 characters.
+  String get currentDirectory;
+  set currentDirectory(String path);
+
   /// TODO(brianquinlan): Add an `exists` method that can determine if a file
   /// exists without mutating it on Windows (maybe using `FindFirstFile`?)
 
@@ -223,19 +236,6 @@ abstract class FileSystem {
   /// The most reliable way to determine if a file system object can be read or
   /// written to is to attempt to open it.
   Metadata metadata(String path);
-
-  /// The current
-  /// [working directory](https://en.wikipedia.org/wiki/Working_directory) of
-  /// the Dart process.
-  ///
-  /// Setting the value of this field will change the working directory for
-  /// *all* isolates.
-  ///
-  /// On Windows, unless
-  /// [long paths are enabled](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation),
-  /// the maximum length of the [currentDirectory] path is 260 characters.
-  String get currentDirectory;
-  set currentDirectory(String path);
 
   /// Deletes the directory at the given path.
   ///
@@ -256,6 +256,9 @@ abstract class FileSystem {
   /// those links are deleted but their targets are not.
   void removeDirectoryTree(String path);
 
+  /// Reads the entire file contents as a list of bytes.
+  Uint8List readAsBytes(String path);
+
   /// Renames, and possibly moves a file system object from one path to another.
   ///
   /// If `newPath` is a relative path, it is resolved against the current
@@ -273,9 +276,6 @@ abstract class FileSystem {
   /// first. If `newPath` identifies an existing directory, the operation
   /// fails and raises [PathExistsException].
   void rename(String oldPath, String newPath);
-
-  /// Reads the entire file contents as a list of bytes.
-  Uint8List readAsBytes(String path);
 
   /// Checks whether two paths refer to the same object in the file system.
   ///
