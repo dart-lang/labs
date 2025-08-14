@@ -1,3 +1,6 @@
 concurrency: 1
 reporter: compact
 test-randomize-ordering-seed: random
+# TODO(brianquinlan): Remove retries when
+# https://github.com/dart-lang/sdk/issues/38832 is fixed.
+retry: 1
