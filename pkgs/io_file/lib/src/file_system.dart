@@ -211,6 +211,9 @@ abstract class FileSystem {
   /// [working directory](https://en.wikipedia.org/wiki/Working_directory) of
   /// the Dart process.
   ///
+  /// Absolute or relative paths can be set but the retrieved path will always
+  /// be absolute.
+  ///
   /// Setting the value of this field will change the working directory for
   /// *all* isolates.
   ///
