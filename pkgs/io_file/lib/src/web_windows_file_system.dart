@@ -55,6 +55,11 @@ base class WindowsFileSystem extends FileSystem {
   }
 
   @override
+  void removeFile(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
   void rename(String oldPath, String newPath) {
     throw UnimplementedError();
   }

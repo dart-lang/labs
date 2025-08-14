@@ -20,6 +20,10 @@ class DartIOFileUtils implements FileUtils {
       Directory(path).deleteSync(recursive: true);
 
   @override
+  bool exists(String path) =>
+      FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound;
+
+  @override
   bool isDirectory(String path) => FileSystemEntity.isDirectorySync(path);
 
   @override

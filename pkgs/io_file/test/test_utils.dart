@@ -27,6 +27,7 @@ abstract interface class FileUtils {
   String createTestDirectory(String testName);
   void deleteDirectoryTree(String path);
 
+  bool exists(String path);
   bool isDirectory(String path);
 
   void createDirectory(String path);

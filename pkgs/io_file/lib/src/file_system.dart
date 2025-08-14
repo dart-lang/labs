@@ -256,6 +256,17 @@ abstract class FileSystem {
   /// those links are deleted but their targets are not.
   void removeDirectoryTree(String path);
 
+  /// Deletes the file at the given path.
+  ///
+  /// If `path` represents a directory, then [IOFileException] is thrown.
+  ///
+  /// If `path` represents a symbolic link to a file, then the symbolic link is
+  /// deleted.
+  ///
+  /// If `path` represents a symbolic link to a directory then, on POSIX, the
+  /// symbolic link is deleted. On Windows, a [IOFileException] is thrown.
+  void removeFile(String path);
+
   /// Reads the entire file contents as a list of bytes.
   Uint8List readAsBytes(String path);
 
