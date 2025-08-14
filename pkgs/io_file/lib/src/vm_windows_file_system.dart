@@ -481,55 +481,6 @@ final class WindowsFileSystem extends FileSystem {
   });
 
   @override
-  bool same(String path1, String path2) => using((arena) {
-    // Calling `GetLastError` for the first time causes the `GetLastError`
-    // symbol to be loaded, which resets `GetLastError`. So make a harmless
-    // call before the value is needed.
-    win32.GetLastError();
-
-    final info1 = _byHandleFileInformation(path1, arena);
-    final info2 = _byHandleFileInformation(path2, arena);
-
-    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
-        info1.nFileIndexHigh == info2.nFileIndexHigh &&
-        info1.nFileIndexLow == info2.nFileIndexLow;
-  });
-
-  // NOTE: the return value is allocated in the given arena!
-  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
-    String path,
-    ffi.Arena arena,
-  ) {
-    final h = win32.CreateFile(
-      _extendedPath(path, arena),
-      0,
-      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
-      nullptr,
-      win32.OPEN_EXISTING,
-      win32.FILE_FLAG_BACKUP_SEMANTICS,
-      win32.NULL,
-    );
-    if (h == win32.INVALID_HANDLE_VALUE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
-    }
-    try {
-      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
-      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
-        final errorCode = win32.GetLastError();
-        throw _getError(
-          errorCode,
-          systemCall: 'GetFileInformationByHandle',
-          path1: path,
-        );
-      }
-      return info.ref;
-    } finally {
-      win32.CloseHandle(h);
-    }
-  }
-
-  @override
   void createDirectory(String path) => using((arena) {
     _primeGetLastError();
 
@@ -583,6 +534,65 @@ final class WindowsFileSystem extends FileSystem {
         win32.free(buffer);
       }
     } while (true);
+  });
+
+  @override
+  WindowsMetadata metadata(String path) => using((arena) {
+    _primeGetLastError();
+
+    final pathUtf16 = _extendedPath(path, arena);
+    final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
+    if (win32.GetFileAttributesEx(
+          pathUtf16,
+          win32.GetFileExInfoStandard,
+          fileInfo,
+        ) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(
+        errorCode,
+        systemCall: 'GetFileAttributesEx',
+        path1: path,
+      );
+    }
+    final info = fileInfo.ref;
+    final attributes = info.dwFileAttributes;
+
+    final h = win32.CreateFile(
+      pathUtf16,
+      0,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS,
+      win32.NULL,
+    );
+    final int fileType;
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      // `CreateFile` may have modes incompatible with opening some file types.
+      fileType = win32.FILE_TYPE_UNKNOWN;
+    } else {
+      try {
+        // Returns `FILE_TYPE_UNKNOWN` on failure, which is what we want anyway.
+        fileType = win32.GetFileType(h);
+      } finally {
+        win32.CloseHandle(h);
+      }
+    }
+    return WindowsMetadata.fromFileAttributes(
+      attributes: attributes,
+      fileType: fileType,
+      size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
+      creationTime100Nanos:
+          info.ftCreationTime.dwHighDateTime << 32 |
+          info.ftCreationTime.dwLowDateTime,
+      lastAccessTime100Nanos:
+          info.ftLastAccessTime.dwHighDateTime << 32 |
+          info.ftLastAccessTime.dwLowDateTime,
+      lastWriteTime100Nanos:
+          info.ftLastWriteTime.dwHighDateTime << 32 |
+          info.ftLastWriteTime.dwLowDateTime,
+    );
   });
 
   @override
@@ -676,183 +686,6 @@ final class WindowsFileSystem extends FileSystem {
       final errorCode = win32.GetLastError();
       throw _getError(errorCode, systemCall: 'DeleteFile', path1: path);
     }
-  });
-
-  @override
-  void rename(String oldPath, String newPath) => using((arena) {
-    _primeGetLastError();
-
-    if (win32.MoveFileEx(
-          _extendedPath(oldPath, arena),
-          _extendedPath(newPath, arena),
-          win32.MOVEFILE_WRITE_THROUGH | win32.MOVEFILE_REPLACE_EXISTING,
-        ) ==
-        win32.FALSE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(
-        errorCode,
-        systemCall: 'MoveFileEx',
-        path1: oldPath,
-        path2: newPath,
-      );
-    }
-  });
-
-  /// Sets metadata for the file system entity.
-  ///
-  /// TODO(brianquinlan): Document the arguments.
-  ///
-  /// Make sure to document that [original] should come from a call to
-  /// `metadata`. Creating your own `WindowsMetadata` will result in unsupported
-  /// fields being cleared.
-  void setMetadata(
-    String path, {
-    bool? isReadOnly,
-    bool? isHidden,
-    bool? isSystem,
-    bool? needsArchive,
-    bool? isTemporary,
-    bool? isContentIndexed,
-    bool? isOffline,
-    WindowsMetadata? original,
-  }) => using((arena) {
-    _primeGetLastError();
-
-    if ((isReadOnly ??
-            isHidden ??
-            isSystem ??
-            needsArchive ??
-            isTemporary ??
-            isContentIndexed ??
-            isOffline) ==
-        null) {
-      return;
-    }
-    final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
-    final nativePath = _extendedPath(path, arena);
-    int attributes;
-    if (original == null) {
-      if (win32.GetFileAttributesEx(
-            nativePath,
-            win32.GetFileExInfoStandard,
-            fileInfo,
-          ) ==
-          win32.FALSE) {
-        final errorCode = win32.GetLastError();
-        throw _getError(
-          errorCode,
-          systemCall: 'GetFileAttributesEx',
-          path1: path,
-        );
-      }
-      attributes = fileInfo.ref.dwFileAttributes;
-    } else {
-      attributes = original._attributes;
-    }
-
-    if (attributes == win32.FILE_ATTRIBUTE_NORMAL) {
-      // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
-      // is valid only when used alone.
-      attributes = 0;
-    }
-
-    int updateBit(int base, int value, bool? bit) => switch (bit) {
-      null => base,
-      true => base | value,
-      false => base & ~value,
-    };
-
-    attributes = updateBit(
-      attributes,
-      win32.FILE_ATTRIBUTE_READONLY,
-      isReadOnly,
-    );
-    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);
-    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_SYSTEM, isSystem);
-    attributes = updateBit(
-      attributes,
-      win32.FILE_ATTRIBUTE_ARCHIVE,
-      needsArchive,
-    );
-    attributes = updateBit(
-      attributes,
-      win32.FILE_ATTRIBUTE_TEMPORARY,
-      isTemporary,
-    );
-    attributes = updateBit(
-      attributes,
-      win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED,
-      isContentIndexed != null ? !isContentIndexed : null,
-    );
-    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
-    if (attributes == 0) {
-      // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
-      // is valid only when used alone.
-      attributes = win32.FILE_ATTRIBUTE_NORMAL;
-    }
-    if (win32.SetFileAttributes(nativePath, attributes) == win32.FALSE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(errorCode, systemCall: 'SetFileAttributes', path1: path);
-    }
-  });
-
-  @override
-  WindowsMetadata metadata(String path) => using((arena) {
-    _primeGetLastError();
-
-    final pathUtf16 = _extendedPath(path, arena);
-    final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
-    if (win32.GetFileAttributesEx(
-          pathUtf16,
-          win32.GetFileExInfoStandard,
-          fileInfo,
-        ) ==
-        win32.FALSE) {
-      final errorCode = win32.GetLastError();
-      throw _getError(
-        errorCode,
-        systemCall: 'GetFileAttributesEx',
-        path1: path,
-      );
-    }
-    final info = fileInfo.ref;
-    final attributes = info.dwFileAttributes;
-
-    final h = win32.CreateFile(
-      pathUtf16,
-      0,
-      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
-      nullptr,
-      win32.OPEN_EXISTING,
-      win32.FILE_FLAG_BACKUP_SEMANTICS,
-      win32.NULL,
-    );
-    final int fileType;
-    if (h == win32.INVALID_HANDLE_VALUE) {
-      // `CreateFile` may have modes incompatible with opening some file types.
-      fileType = win32.FILE_TYPE_UNKNOWN;
-    } else {
-      try {
-        // Returns `FILE_TYPE_UNKNOWN` on failure, which is what we want anyway.
-        fileType = win32.GetFileType(h);
-      } finally {
-        win32.CloseHandle(h);
-      }
-    }
-    return WindowsMetadata.fromFileAttributes(
-      attributes: attributes,
-      fileType: fileType,
-      size: info.nFileSizeHigh << 32 | info.nFileSizeLow,
-      creationTime100Nanos:
-          info.ftCreationTime.dwHighDateTime << 32 |
-          info.ftCreationTime.dwLowDateTime,
-      lastAccessTime100Nanos:
-          info.ftLastAccessTime.dwHighDateTime << 32 |
-          info.ftLastAccessTime.dwLowDateTime,
-      lastWriteTime100Nanos:
-          info.ftLastWriteTime.dwHighDateTime << 32 |
-          info.ftLastWriteTime.dwLowDateTime,
-    );
   });
 
   @override
@@ -962,6 +795,173 @@ final class WindowsFileSystem extends FileSystem {
       rethrow;
     }
   }
+
+  @override
+  void rename(String oldPath, String newPath) => using((arena) {
+    _primeGetLastError();
+
+    if (win32.MoveFileEx(
+          _extendedPath(oldPath, arena),
+          _extendedPath(newPath, arena),
+          win32.MOVEFILE_WRITE_THROUGH | win32.MOVEFILE_REPLACE_EXISTING,
+        ) ==
+        win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(
+        errorCode,
+        systemCall: 'MoveFileEx',
+        path1: oldPath,
+        path2: newPath,
+      );
+    }
+  });
+
+  @override
+  bool same(String path1, String path2) => using((arena) {
+    // Calling `GetLastError` for the first time causes the `GetLastError`
+    // symbol to be loaded, which resets `GetLastError`. So make a harmless
+    // call before the value is needed.
+    win32.GetLastError();
+
+    final info1 = _byHandleFileInformation(path1, arena);
+    final info2 = _byHandleFileInformation(path2, arena);
+
+    return info1.dwVolumeSerialNumber == info2.dwVolumeSerialNumber &&
+        info1.nFileIndexHigh == info2.nFileIndexHigh &&
+        info1.nFileIndexLow == info2.nFileIndexLow;
+  });
+
+  // NOTE: the return value is allocated in the given arena!
+  static win32.BY_HANDLE_FILE_INFORMATION _byHandleFileInformation(
+    String path,
+    ffi.Arena arena,
+  ) {
+    final h = win32.CreateFile(
+      _extendedPath(path, arena),
+      0,
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS,
+      win32.NULL,
+    );
+    if (h == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
+    }
+    try {
+      final info = arena<win32.BY_HANDLE_FILE_INFORMATION>();
+      if (win32.GetFileInformationByHandle(h, info) == win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(
+          errorCode,
+          systemCall: 'GetFileInformationByHandle',
+          path1: path,
+        );
+      }
+      return info.ref;
+    } finally {
+      win32.CloseHandle(h);
+    }
+  }
+
+  /// Sets metadata for the file system entity.
+  ///
+  /// TODO(brianquinlan): Document the arguments.
+  ///
+  /// Make sure to document that [original] should come from a call to
+  /// `metadata`. Creating your own `WindowsMetadata` will result in unsupported
+  /// fields being cleared.
+  void setMetadata(
+    String path, {
+    bool? isReadOnly,
+    bool? isHidden,
+    bool? isSystem,
+    bool? needsArchive,
+    bool? isTemporary,
+    bool? isContentIndexed,
+    bool? isOffline,
+    WindowsMetadata? original,
+  }) => using((arena) {
+    _primeGetLastError();
+
+    if ((isReadOnly ??
+            isHidden ??
+            isSystem ??
+            needsArchive ??
+            isTemporary ??
+            isContentIndexed ??
+            isOffline) ==
+        null) {
+      return;
+    }
+    final fileInfo = arena<win32.WIN32_FILE_ATTRIBUTE_DATA>();
+    final nativePath = _extendedPath(path, arena);
+    int attributes;
+    if (original == null) {
+      if (win32.GetFileAttributesEx(
+            nativePath,
+            win32.GetFileExInfoStandard,
+            fileInfo,
+          ) ==
+          win32.FALSE) {
+        final errorCode = win32.GetLastError();
+        throw _getError(
+          errorCode,
+          systemCall: 'GetFileAttributesEx',
+          path1: path,
+        );
+      }
+      attributes = fileInfo.ref.dwFileAttributes;
+    } else {
+      attributes = original._attributes;
+    }
+
+    if (attributes == win32.FILE_ATTRIBUTE_NORMAL) {
+      // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
+      // is valid only when used alone.
+      attributes = 0;
+    }
+
+    int updateBit(int base, int value, bool? bit) => switch (bit) {
+      null => base,
+      true => base | value,
+      false => base & ~value,
+    };
+
+    attributes = updateBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_READONLY,
+      isReadOnly,
+    );
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_HIDDEN, isHidden);
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_SYSTEM, isSystem);
+    attributes = updateBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_ARCHIVE,
+      needsArchive,
+    );
+    attributes = updateBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_TEMPORARY,
+      isTemporary,
+    );
+    attributes = updateBit(
+      attributes,
+      win32.FILE_ATTRIBUTE_NOT_CONTENT_INDEXED,
+      isContentIndexed != null ? !isContentIndexed : null,
+    );
+    attributes = updateBit(attributes, win32.FILE_ATTRIBUTE_OFFLINE, isOffline);
+    if (attributes == 0) {
+      // `FILE_ATTRIBUTE_NORMAL` indicates that no other attributes are set and
+      // is valid only when used alone.
+      attributes = win32.FILE_ATTRIBUTE_NORMAL;
+    }
+    if (win32.SetFileAttributes(nativePath, attributes) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, systemCall: 'SetFileAttributes', path1: path);
+    }
+  });
 
   @override
   String get temporaryDirectory {
