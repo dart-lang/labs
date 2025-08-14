@@ -14,7 +14,6 @@ import 'package:test/test.dart';
 import 'package:win32/win32.dart' as win32;
 
 import 'errors.dart' as errors;
-import 'fifo.dart';
 import 'file_system_file_utils.dart' hide fileUtils;
 import 'test_utils.dart';
 
