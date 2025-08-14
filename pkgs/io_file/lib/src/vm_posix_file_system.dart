@@ -519,12 +519,8 @@ final class PosixFileSystem extends FileSystem {
 
   @override
   void removeFile(String path) => ffi.using((arena) {
-    if (libc.unlinkat(
-          libc.AT_FDCWD,
-          path.toNativeUtf8(allocator: arena).cast(),
-          0,
-        ) ==
-        -1) {
+    final nativePath = path.toNativeUtf8(allocator: arena);
+    if (libc.unlinkat(libc.AT_FDCWD, nativePath.cast(), 0) == -1) {
       final errno = libc.errno;
       throw _getError(errno, systemCall: 'unlinkat', path1: path);
     }

@@ -69,10 +69,6 @@ void tests(FileUtils utils, FileSystem fs) {
   });
 
   test('directory', () {
-    // On Windows:
-    // When using an API to create a directory, the specified path cannot be
-    // so long that you cannot append an 8.3 file name (that is, the directory
-    // name cannot exceed MAX_PATH minus 12).
     final path = p.join(tmp, 'dir');
     utils.createDirectory(path);
 
