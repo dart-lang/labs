@@ -41,6 +41,18 @@ class FileSystemFileUtils implements FileUtils {
   }
 
   @override
+  bool exists(String path) {
+    // TODO(brianquinlan): Add to a dedicated `exists` method when such a thing
+    // exists.
+    try {
+      fs.metadata(path);
+    } on PathNotFoundException {
+      return false;
+    }
+    return true;
+  }
+
+  @override
   bool isDirectory(String path) => fs.metadata(path).isDirectory;
 
   @override

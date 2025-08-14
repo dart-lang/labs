@@ -256,6 +256,8 @@ abstract class FileSystem {
   /// those links are deleted but their targets are not.
   void removeDirectoryTree(String path);
 
+  void removeFile(String path);
+
   /// Renames, and possibly moves a file system object from one path to another.
   ///
   /// If `newPath` is a relative path, it is resolved against the current

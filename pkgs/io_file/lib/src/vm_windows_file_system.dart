@@ -669,6 +669,16 @@ final class WindowsFileSystem extends FileSystem {
   });
 
   @override
+  void removeFile(String path) => using((arena) {
+    _primeGetLastError();
+
+    if (win32.DeleteFile(_extendedPath(path, arena)) == win32.FALSE) {
+      final errorCode = win32.GetLastError();
+      throw _getError(errorCode, systemCall: 'DeleteFile', path1: path);
+    }
+  });
+
+  @override
   void rename(String oldPath, String newPath) => using((arena) {
     _primeGetLastError();
 

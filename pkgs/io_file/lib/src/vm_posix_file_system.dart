@@ -536,6 +536,19 @@ final class PosixFileSystem extends FileSystem {
   });
 
   @override
+  void removeFile(String path) => ffi.using((arena) {
+    if (libc.unlinkat(
+          libc.AT_FDCWD,
+          path.toNativeUtf8(allocator: arena).cast(),
+          0,
+        ) ==
+        -1) {
+      final errno = libc.errno;
+      throw _getError(errno, systemCall: 'unlinkat', path1: path);
+    }
+  });
+
+  @override
   void rename(String oldPath, String newPath) => ffi.using((arena) {
     // See https://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
     if (libc.rename(
