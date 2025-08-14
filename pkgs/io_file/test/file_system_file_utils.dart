@@ -42,7 +42,7 @@ class FileSystemFileUtils implements FileUtils {
 
   @override
   bool exists(String path) {
-    // TODO(brianquinlan): Add to a dedicated `exists` method when such a thing
+    // TODO(brianquinlan): Switch to `FileSystem.exists` when such a method
     // exists.
     try {
       fs.metadata(path);
