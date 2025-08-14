@@ -18,7 +18,7 @@ See
 |  create tmp directory |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  create tmp file      |         |       |       |       |        |            |              |
 |  delete directory     |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
-|  delete file          |         |       |       |                |            |              |
+|  delete file          |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  delete tree          |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  enum dir contents    |         |       |       |       |        |            |              |
 |  exists               |         |       |              |         |            |              |
