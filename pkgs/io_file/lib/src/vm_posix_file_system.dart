@@ -388,6 +388,20 @@ final class PosixFileSystem extends FileSystem {
   });
 
   @override
+  bool exists(String path) => ffi.using((arena) {
+        final stat = arena<libc.Stat>();
+        if (libc.lstat(path.toNativeUtf8(allocator: arena).cast(), stat) ==
+            -1) {
+          if (libc.errno == libc.ENOENT) {
+            return false;
+          }
+          final errno = libc.errno;
+          throw _getError(errno, systemCall: 'lstat', path1: path);
+        }
+        return true;
+      });
+
+  @override
   PosixMetadata metadata(String path) => ffi.using((arena) {
     final stat = arena<libc.Stat>();
 

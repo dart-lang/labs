@@ -222,6 +222,15 @@ abstract class FileSystem {
   String get currentDirectory;
   set currentDirectory(String path);
 
+  /// Checks if a file system object exists for the given path.
+  ///
+  /// Returns `true` if a file, directory, or link exists at the given path,
+  /// and `false` otherwise.
+  ///
+  /// If `path` is a symbolic link, `exists` returns `true` even if the link
+  /// is broken (i.e. the target of the link does not exist).
+  bool exists(String path);
+
   /// TODO(brianquinlan): Add an `exists` method that can determine if a file
   /// exists without mutating it on Windows (maybe using `FindFirstFile`?)
 
