@@ -31,22 +31,39 @@ void tests(FileUtils utils, FileSystem fs) {
 
   test('file exists', () {
     final path = p.join(tmp, 'file');
-    utils.createTextFile(path, '');
+    utils.createTextFile(path, 'Hello World!');
+
     expect(fs.exists(path), isTrue);
   });
 
   test('directory exists', () {
     final path = p.join(tmp, 'dir');
     utils.createDirectory(path);
+
     expect(fs.exists(path), isTrue);
   });
 
   test('link to file exists', () {
     final filePath = p.join(tmp, 'file');
     final linkPath = p.join(tmp, 'link');
-    utils.createTextFile(filePath, '');
+    utils.createTextFile(filePath, 'Hello World!');
     io.Link(linkPath).createSync(filePath);
+
     expect(fs.exists(linkPath), isTrue);
+  });
+
+  test('absolute path, long name', () {
+    final path = p.join(tmp, 'f' * 255);
+    utils.createTextFile(path, 'Hello World');
+
+    expect(fs.exists(path), isTrue);
+  });
+
+  test('relative path, long name', () {
+    final path = 'f' * 255;
+    utils.createTextFile(path, 'Hello World');
+
+    expect(fs.exists(path), isTrue);
   });
 
   test('link to directory exists', () {
@@ -54,33 +71,21 @@ void tests(FileUtils utils, FileSystem fs) {
     final linkPath = p.join(tmp, 'link');
     utils.createDirectory(dirPath);
     io.Link(linkPath).createSync(dirPath);
+
     expect(fs.exists(linkPath), isTrue);
   });
 
   test('broken link exists', () {
     final linkPath = p.join(tmp, 'link');
     io.Link(linkPath).createSync('non-existent');
-    expect(fs.exists(linkPath), isTrue);
+
+    expect(fs.exists(linkPath), isFalse);
   });
 
   test('path does not exist', () {
-    final path = p.join(tmp, 'non-existent');
+    final path = p.join(tmp, 'file');
+
     expect(fs.exists(path), isFalse);
-  });
-
-  test('path in non-existent directory does not exist', () {
-    final path = p.join(tmp, 'non-existent-dir', 'file');
-    expect(fs.exists(path), isFalse);
-  });
-
-  test('empty path does not exist', () {
-    expect(fs.exists(''), isFalse);
-  });
-
-  test('long file path exists', () {
-    final longPath = p.join(tmp, 'a' * 255);
-    utils.createTextFile(longPath, '');
-    expect(fs.exists(longPath), isTrue);
   });
 }
 

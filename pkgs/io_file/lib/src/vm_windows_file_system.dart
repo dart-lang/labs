@@ -538,31 +538,29 @@ final class WindowsFileSystem extends FileSystem {
 
   @override
   bool exists(String path) => using((arena) {
-        _primeGetLastError();
+    _primeGetLastError();
 
-        final handle = win32.CreateFile(
-          _extendedPath(path, arena),
-          0, // No access to the object itself, just its attributes.
-          win32.FILE_SHARE_READ |
-              win32.FILE_SHARE_WRITE |
-              win32.FILE_SHARE_DELETE,
-          nullptr,
-          win32.OPEN_EXISTING,
-          win32.FILE_FLAG_BACKUP_SEMANTICS, // Required to open directories.
-          0,
-        );
+    final handle = win32.CreateFile(
+      _extendedPath(path, arena),
+      0, // No access to the object itself, just its attributes.
+      win32.FILE_SHARE_READ | win32.FILE_SHARE_WRITE | win32.FILE_SHARE_DELETE,
+      nullptr,
+      win32.OPEN_EXISTING,
+      win32.FILE_FLAG_BACKUP_SEMANTICS, // Required to open directories.
+      win32.NULL,
+    );
 
-        if (handle == win32.INVALID_HANDLE_VALUE) {
-          final errorCode = win32.GetLastError();
-          if (errorCode == win32.ERROR_FILE_NOT_FOUND ||
-              errorCode == win32.ERROR_PATH_NOT_FOUND) {
-            return false;
-          }
-          throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
-        }
-        win32.CloseHandle(handle);
-        return true;
-      });
+    if (handle == win32.INVALID_HANDLE_VALUE) {
+      final errorCode = win32.GetLastError();
+      if (errorCode == win32.ERROR_FILE_NOT_FOUND ||
+          errorCode == win32.ERROR_PATH_NOT_FOUND) {
+        return false;
+      }
+      throw _getError(errorCode, systemCall: 'CreateFile', path1: path);
+    }
+    win32.CloseHandle(handle);
+    return true;
+  });
 
   @override
   WindowsMetadata metadata(String path) => using((arena) {
