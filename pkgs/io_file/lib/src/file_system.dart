@@ -228,8 +228,11 @@ abstract class FileSystem {
   /// Returns `true` if a file, directory, or link exists at the given path,
   /// and `false` otherwise.
   ///
-  /// If `path` is a symbolic link, `exists` returns `true` even if the link
-  /// is broken (i.e. the target of the link does not exist).
+  /// If `path` is a symbolic link, `exists` returns `false` if the link is
+  /// broken (i.e. the target of the link does not exist).
+  ///
+  /// On Windows, calling `exists` on a named pipe may cause the server to close
+  /// it.
   bool exists(String path);
 
   /// TODO(brianquinlan): Add an `exists` method that can determine if a file
