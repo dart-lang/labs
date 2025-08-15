@@ -36,6 +36,11 @@ final class PosixFileSystem extends FileSystem {
   }
 
   @override
+  bool exists(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
   Metadata metadata(String path) {
     throw UnimplementedError();
   }

@@ -21,7 +21,7 @@ See
 |  delete file          |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  delete tree          |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  enum dir contents    |         |       |       |       |        |            |              |
-|  exists               |         |       |              |         |            |              |
+|  exists               |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  get metadata (stat)  |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  identity (same file) |    ✓    |   ✓   |   ✓   |   ✓   |    ✓    |            |              |
 |  open                 |         |       |              |         |            |              |
