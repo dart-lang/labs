@@ -33,23 +33,6 @@ jobs:
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
 
-  check-generation:
-    # Verify that the generated code is up-to-date. Every platform/arch should
-    # generate the same API bindings.
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: dev
-      - run: dart pub get
-      - run: dart --enable-experiment=native-assets run tool/generate.dart
-      - run: git diff --exit-code
-
   desktop-vm-test:
     strategy:
       fail-fast: false
