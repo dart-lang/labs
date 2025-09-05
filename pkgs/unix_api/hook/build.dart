@@ -10,12 +10,12 @@ import 'package:native_toolchain_c/native_toolchain_c.dart';
 void main(List<String> args) async {
   await build(args, (input, output) async {
     final packageName = input.packageName;
-    // if (input.config.code.targetOS == OS.windows) return;
+    if (input.config.code.targetOS == OS.windows) return;
     await CBuilder.library(
       name: packageName,
       assetName: 'libc_shim',
       sources: ['src/libc_shim.c', 'src/constants.g.c'],
-      // flags: ['-Weverything'],
+      flags: ['-Weverything'],
     ).run(
       input: input,
       output: output,
