@@ -1,5 +1,5 @@
 name: unix_api
-description: A starting point for Dart libraries or applications.
+description:  Access to POSIX APIs.
 version: 0.1.0-wip
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/unix_api
 publish_to: none
