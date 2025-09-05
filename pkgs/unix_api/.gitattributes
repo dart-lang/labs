@@ -1,0 +1,6 @@
+# ffigen generated code
+lib/src/constant_bindings.g.dart linguist-generated
+lib/src/constants.g.dart linguist-generated
+lib/src/libc_bindings.g.dart linguist-generated
+src/constants.g.c linguist-generated
+src/constants.g.h linguist-generated

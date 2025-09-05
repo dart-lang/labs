@@ -15,6 +15,8 @@ dependencies:
   meta: ^1.16.0
   native_toolchain_c: ^0.16.0
   path: ^1.9.1
+  unix_api:
+    path: ../unix_api
   win32: ^5.14.0
 
 dev_dependencies:
