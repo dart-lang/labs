@@ -126,6 +126,12 @@ external int close(int fd);
 )
 external ffi.Pointer<ffi.Char> getcwd(ffi.Pointer<ffi.Char> buf, int size);
 
+@ffi.Native<ffi.Long Function()>(symbol: 'libc_shim_getpid')
+external int getpid();
+
+@ffi.Native<ffi.Long Function()>(symbol: 'libc_shim_getppid')
+external int getppid();
+
 @ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>(
   symbol: 'libc_shim_unlinkat',
 )
