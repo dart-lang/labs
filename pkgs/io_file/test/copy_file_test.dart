@@ -12,10 +12,10 @@ import 'package:ffi/ffi.dart';
 import 'package:io_file/io_file.dart';
 import 'package:io_file/posix_file_system.dart';
 import 'package:io_file/src/internal_constants.dart' show blockSize;
-import 'package:io_file/src/libc.dart' as libc;
 import 'package:io_file/src/vm_windows_file_system.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+import 'package:unix_api/unix_api.dart' as libc;
 import 'package:win32/win32.dart' as win32;
 
 import 'errors.dart' as errors;

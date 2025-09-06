@@ -10,11 +10,11 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart' as ffi;
 import 'package:path/path.dart' as p;
+import 'package:unix_api/unix_api.dart' as libc;
 
 import 'exceptions.dart';
 import 'file_system.dart';
 import 'internal_constants.dart';
-import 'libc.dart' as libc;
 
 /// The default `mode` to use with `open` calls that may create a file.
 const _defaultMode = 438; // => 0666 => rw-rw-rw-
