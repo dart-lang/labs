@@ -14,8 +14,7 @@ dependencies:
   meta: ^1.16.0
   native_toolchain_c: ^0.16.0
   path: ^1.9.1
-  unix_api:
-    path: ../unix_api
+  unix_api: ^0.1.0
   win32: ^5.14.0
 
 dev_dependencies:
@@ -30,3 +29,7 @@ dev_dependencies:
       url: https://github.com/canonical/stdlibc.dart.git
   test: ^1.24.0
   uuid: ^4.5.1
+
+dependency_overrides:  
+  unix_api:  
+    path: ../unix_api

@@ -11,10 +11,10 @@ Thare are two existing packages that provide POSIX API bindings for Dart:
 native code that cannot be tree shaken away. In exchange, it works on all
 POSIX platforms that Dart supports.
 
-| Package      | Required Tools   | Supported Platforms                     | Fix Disk Usage |
-| :---         | :--------------  | :------------------------------------   | :------------  |
-|  `posix`     | Dart             | iOS (arm64), Linux (x64), macOS (arm64)  | 0 KiB          |
-|  `stdlibc`   | Dart             | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB          |
+| Package      | Required Tools   | Supported Platforms                     | Fixed Disk Usage |
+| :---         | :--------------  | :------------------------------------   | :--------------  |
+|  `posix`     | Dart             | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
+|  `stdlibc`   | Dart             | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
 |  `unix_api`  | Dart, C compiler | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
 
 ## Design
