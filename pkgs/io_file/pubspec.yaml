@@ -15,6 +15,7 @@ dependencies:
   native_toolchain_c: ^0.16.0
   path: ^1.9.1
   unix_api:
+    # Change this to a released version when this package is published.
     path: ../unix_api
   win32: ^5.14.0
 
