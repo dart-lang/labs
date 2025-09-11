@@ -37,3 +37,4 @@ dev_dependencies:
       url: https://github.com/canonical/stdlibc.dart.git
   test: ^1.24.0
   uuid: ^4.5.1
+

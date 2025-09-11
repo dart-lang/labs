@@ -9,10 +9,11 @@ import 'dart:io' as io;
 
 import 'package:ffi/ffi.dart';
 import 'package:io_file/io_file.dart';
-import 'package:io_file/src/libc.dart' as libc;
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+import 'package:unix_api/unix_api.dart' as libc;
 import 'package:win32/win32.dart' as win32;
+
 import 'errors.dart' as errors;
 import 'test_utils.dart';
 

@@ -181,6 +181,9 @@ int libc_shim_close(int fd) { return close(fd); }
 
 char *libc_shim_getcwd(char *buf, int64_t size) { return getcwd(buf, size); }
 
+long libc_shim_getpid() { return getpid(); }
+long libc_shim_getppid() { return getppid(); }
+
 int libc_shim_unlinkat(int dirfd, const char *pathname, int flags) {
   return unlinkat(dirfd, pathname, flags);
 }
