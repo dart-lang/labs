@@ -5,6 +5,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'cfunction.dart';
+
 final ffigenTypes = <Pattern>[
   'void',
   'int',
@@ -25,7 +27,7 @@ const _cSourceTemplate = '''
 
 #include <assert.h>
 
-#include "constants.g.h"
+#include "functions.g.h"
 
 ''';
 
@@ -33,14 +35,6 @@ const _cHeaderTemplate = '''
 // AUTO GENERATED FILE, DO NOT EDIT.
 // Regenerate with `dart run tool/build_functions.dart`.
 
-#include <stdint.h>
-
-// A sentinal indicating that a constant is not defined on the current platform.
-//
-// It is a random sequence of 64 bits and used by `constants.g.dart` to
-// determine whether a value returned by `libc_shim_get_(constant)` is the
-// actual platform constant or is undefined.
-#define libc_shim_UNDEFINED 5635263260456932693
 ''';
 
 const _dartTemplate = '''
@@ -102,18 +96,6 @@ RegExp exp = RegExp(
   r'\((?<args>[^)]*)\)',
 );
 
-class CFunction {
-  final String name;
-  final String returnType;
-  final List<String> argumentTypes;
-
-  const CFunction(this.name, this.returnType, this.argumentTypes);
-}
-
-bool acceptableType(String type) {
-  return ffigenTypes.any((x) => x.matchAsPrefix(type) != null);
-}
-
 /// Generates Dart and C source from "constants.json"
 ///
 /// Generates the following files based on "constants.json":
@@ -146,23 +128,22 @@ void main() {
       final returnType = match.namedGroup('return')!;
       final functionName = match.namedGroup('name')!;
       final args = match.namedGroup('args')!;
-
-      if (!acceptableType(returnType)) {
-        throw Exception('invalid return type $returnType for $functionName');
-      }
-
       final typeList = args.split(RegExp(r'\s*,\s*'));
 
-      for (var type in typeList) {
-        if (!acceptableType(type)) {
-          throw Exception('invalid argument type $type for $functionName');
-        }
-      }
+      final func = CFunction(
+        functionName,
+        returnType,
+        typeList,
+        function['comment'],
+        function['url'],
+      );
 
-      //      addFunctionToCSource()
+      cHeaderBuffer.writeln(func.dartDeclaration('libc_shim_'));
+      cHeaderBuffer.writeln();
+      cSourceBuffer.writeln(func.trampoline('libc_shim_'));
+      cSourceBuffer.writeln();
     }
   }
-  //  File('lib/src/constants.g.dart').writeAsStringSync(dartBuffer.toString());
-  //  File('src/constants.g.c').writeAsStringSync(cSourceBuffer.toString());
-  //  File('src/constants.g.h').writeAsStringSync(cHeaderBuffer.toString());
+  File('src/functions.g.c').writeAsStringSync(cSourceBuffer.toString());
+  File('src/functions.g.h').writeAsStringSync(cHeaderBuffer.toString());
 }

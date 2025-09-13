@@ -115,12 +115,6 @@ external ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> template);
 external ffi.Pointer<ffi.Char> strerror(int errnum);
 
 /// <unistd.h>
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_chdir')
-external int chdir(ffi.Pointer<ffi.Char> path);
-
-@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_close')
-external int close(int fd);
-
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int64)>(
   symbol: 'libc_shim_getcwd',
 )
@@ -136,6 +130,101 @@ external int getppid();
   symbol: 'libc_shim_unlinkat',
 )
 external int unlinkat(int dirfd, ffi.Pointer<ffi.Char> pathname, int flags);
+
+/// Determines the accessibility of a file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/access.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
+  symbol: 'libc_shim_access',
+)
+external int access(ffi.Pointer<ffi.Char> arg0, int arg1);
+
+/// Schedules an alarm signal.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/alarm.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.UnsignedInt Function(ffi.UnsignedInt)>(
+  symbol: 'libc_shim_alarm',
+)
+external int alarm(int arg0);
+
+/// Changes the working directory.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_chdir')
+external int chdir(ffi.Pointer<ffi.Char> arg0);
+
+/// Closes a file descriptor.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_close')
+external int close(int arg0);
+
+/// Encrypts a string.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/crypt.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<
+  ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)
+>(symbol: 'libc_shim_crypt')
+external ffi.Pointer<ffi.Char> crypt(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+);
+
+/// Generates a path name for the controlling terminal.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/ctermid.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
+  symbol: 'libc_shim_ctermid',
+)
+external ffi.Pointer<ffi.Char> ctermid(ffi.Pointer<ffi.Char> arg0);
+
+/// Duplicates an open file descriptor.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/dup.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_dup')
+external int dup(int arg0);
+
+/// Copies an open file descriptor into another.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/dup.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(symbol: 'libc_shim_dup2')
+external int dup2(int arg0, int arg1);
+
+/// Determines the accessibility of a file descriptor.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/faccessat.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int)>(
+  symbol: 'libc_shim_faccessat',
+)
+external int faccessat(
+  int arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  int arg2,
+  int arg3,
+);
+
+/// Changes the current directory.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fchdir.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_fchdir')
+external int fchdir(int arg0);
+
+/// Forces all queued I/O operations to complete.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_fdatasync')
+external int fdatasync(int arg0);
 
 /// <dirent.h>
 final class dirent extends ffi.Struct {

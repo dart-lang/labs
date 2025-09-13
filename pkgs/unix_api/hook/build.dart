@@ -14,8 +14,7 @@ void main(List<String> args) async {
     await CBuilder.library(
       name: packageName,
       assetName: 'libc_shim',
-      sources: ['src/libc_shim.c', 'src/constants.g.c'],
-      flags: ['-Weverything'],
+      sources: ['src/libc_shim.c', 'src/constants.g.c', 'src/functions.g.c'],
     ).run(
       input: input,
       output: output,

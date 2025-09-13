@@ -8,9 +8,11 @@ output: 'lib/src/libc_bindings.g.dart'
 headers:
   entry-points:
     - 'src/libc_shim.h'
+    - 'src/functions.g.h'
 
   include-directives:
     - 'src/libc_shim.h'
+    - 'src/functions.g.h'
 preamble: |
   // ignore_for_file: type=lint, unused_field
 comments:
