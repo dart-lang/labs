@@ -1,0 +1,37 @@
+{
+  "<unistd.h>" : [
+    {
+        "prototype": "int access(const char *, int)"
+    },
+    {
+        "prototype": "unsigned alarm(unsigned)"
+    },
+    {
+        "prototype": "unsigned alarm(unsigned)"
+    },
+    {
+        "prototype": "int chdir(const char *)"
+    },
+    {
+        "prototype": "int close(int)"
+    },
+    {
+        "prototype": "char * crypt(const char *, const char *)"
+    },
+    {
+        "prototype": "char * ctermid(char *)"
+    },
+    {
+        "prototype": "int dup(void)"
+    },
+    {
+        "prototype": "int dup2(int, int)"
+    },
+    {
+        "prototype": "int dup3(int, int, int)"
+    },
+    {
+        "prototype": "pid_t getpid(void)"
+    }
+  ]
+}
