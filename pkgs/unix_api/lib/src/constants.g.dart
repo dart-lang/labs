@@ -553,3 +553,39 @@ int get UF_HIDDEN {
     return v;
   }
 }
+
+int get F_OK {
+  final v = get_F_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('F_OK');
+  } else {
+    return v;
+  }
+}
+
+int get R_OK {
+  final v = get_R_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('R_OK');
+  } else {
+    return v;
+  }
+}
+
+int get W_OK {
+  final v = get_W_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('W_OK');
+  } else {
+    return v;
+  }
+}
+
+int get X_OK {
+  final v = get_X_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('X_OK');
+  } else {
+    return v;
+  }
+}

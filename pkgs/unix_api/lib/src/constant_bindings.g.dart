@@ -190,4 +190,16 @@ external int get_UF_APPEND();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_UF_HIDDEN')
 external int get_UF_HIDDEN();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_F_OK')
+external int get_F_OK();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_R_OK')
+external int get_R_OK();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_W_OK')
+external int get_W_OK();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_X_OK')
+external int get_X_OK();
+
 const int libc_shim_UNDEFINED = 5635263260456932693;

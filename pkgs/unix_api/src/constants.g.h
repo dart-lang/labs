@@ -131,3 +131,11 @@ __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_UF_APPEND(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_UF_HIDDEN(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_F_OK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_R_OK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_W_OK(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_X_OK(void);

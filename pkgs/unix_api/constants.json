@@ -69,5 +69,11 @@
     "DT_REG",
     "DT_SOCK",
     "DT_UNKNOWN"
+  ],
+  "<unistd.h>": [
+    "F_OK",
+    "R_OK",
+    "W_OK",
+    "X_OK"
   ]
 }

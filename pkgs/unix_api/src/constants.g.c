@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <sys/stat.h>
+#include <unistd.h>
 int64_t libc_shim_get_DT_BLK(void) {
 #ifdef DT_BLK
   assert(DT_BLK != libc_shim_UNDEFINED);
@@ -434,6 +435,34 @@ int64_t libc_shim_get_UF_HIDDEN(void) {
 #ifdef UF_HIDDEN
   assert(UF_HIDDEN != libc_shim_UNDEFINED);
   return UF_HIDDEN;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_F_OK(void) {
+#ifdef F_OK
+  assert(F_OK != libc_shim_UNDEFINED);
+  return F_OK;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_R_OK(void) {
+#ifdef R_OK
+  assert(R_OK != libc_shim_UNDEFINED);
+  return R_OK;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_W_OK(void) {
+#ifdef W_OK
+  assert(W_OK != libc_shim_UNDEFINED);
+  return W_OK;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_X_OK(void) {
+#ifdef X_OK
+  assert(X_OK != libc_shim_UNDEFINED);
+  return X_OK;
 #endif
   return libc_shim_UNDEFINED;
 }
