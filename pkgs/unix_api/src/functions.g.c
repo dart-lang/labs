@@ -8,63 +8,63 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-int libc_shim_rename(const char * a, const char * b) {
-  return rename(a, b);
+int libc_shim_rename(const char * arg0, const char * arg1) {
+  return rename(arg0, arg1);
 }
 
-char * libc_shim_strerror(int a) {
-  return strerror(a);
+char * libc_shim_strerror(int arg0) {
+  return strerror(arg0);
 }
 
-int libc_shim_access(const char * a, int b) {
-  return access(a, b);
+int libc_shim_access(const char * arg0, int arg1) {
+  return access(arg0, arg1);
 }
 
-unsigned libc_shim_alarm(unsigned a) {
-  return alarm(a);
+unsigned libc_shim_alarm(unsigned arg0) {
+  return alarm(arg0);
 }
 
-int libc_shim_chdir(const char * a) {
-  return chdir(a);
+int libc_shim_chdir(const char * arg0) {
+  return chdir(arg0);
 }
 
-int libc_shim_close(int a) {
-  return close(a);
+int libc_shim_close(int arg0) {
+  return close(arg0);
 }
 
-char * libc_shim_crypt(const char * a, const char * b) {
-  return crypt(a, b);
+char * libc_shim_crypt(const char * arg0, const char * arg1) {
+  return crypt(arg0, arg1);
 }
 
-char * libc_shim_ctermid(char * a) {
-  return ctermid(a);
+char * libc_shim_ctermid(char * arg0) {
+  return ctermid(arg0);
 }
 
-int libc_shim_dup(int a) {
-  return dup(a);
+int libc_shim_dup(int arg0) {
+  return dup(arg0);
 }
 
-int libc_shim_dup2(int a, int b) {
-  return dup2(a, b);
+int libc_shim_dup2(int arg0, int arg1) {
+  return dup2(arg0, arg1);
 }
 
-int libc_shim_faccessat(int a, const char * b, int c, int d) {
-  return faccessat(a, b, c, d);
+int libc_shim_faccessat(int arg0, const char * arg1, int arg2, int arg3) {
+  return faccessat(arg0, arg1, arg2, arg3);
 }
 
-int libc_shim_fchdir(int a) {
-  return fchdir(a);
+int libc_shim_fchdir(int arg0) {
+  return fchdir(arg0);
 }
 
-int libc_shim_fdatasync(int a) {
-  return fdatasync(a);
+int libc_shim_fdatasync(int arg0) {
+  return fdatasync(arg0);
 }
 
-int libc_shim_unlink(const char *path) {
-  return unlink(path);
+int libc_shim_unlink(const char * arg0) {
+  return unlink(arg0);
 }
 
-int libc_shim_unlinkat(int a, const char * b, int c) {
-  return unlinkat(a, b, c);
+int libc_shim_unlinkat(int arg0, const char * arg1, int arg2) {
+  return unlinkat(arg0, arg1, arg2);
 }
 

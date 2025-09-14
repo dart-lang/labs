@@ -1,4 +1,9 @@
-final ffigenTypes = <Pattern>[
+// Copyright (c) 2025, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+/// Types understood natively by `dart:ffi`.
+final _ffigenTypes = <Pattern>[
   'void',
   'int',
   'unsigned',
@@ -7,8 +12,10 @@ final ffigenTypes = <Pattern>[
   'long',
 ];
 
-final parameterNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-
+/// A representation of a C function.
+///
+/// Used to generate code that wraps an existing C function in a form that can
+/// be consumed by `package:ffigen`.
 class CFunction {
   final String name;
   final String returnType;
@@ -20,7 +27,7 @@ class CFunction {
   String get dartReturnType => returnType;
 
   bool acceptableType(String type) {
-    return ffigenTypes.any(
+    return _ffigenTypes.any(
       (ffigenType) => ffigenType.matchAsPrefix(type) != null,
     );
   }
@@ -43,6 +50,7 @@ class CFunction {
     }
   }
 
+  /// Generate a declaration that can be consumed by `package:ffigen`.
   String dartDeclaration(String prefix) {
     final declaration =
         '''__attribute__((visibility("default"))) __attribute__((used))
@@ -53,23 +61,30 @@ $dartReturnType $prefix$name(${dartArgumentTypes.join(", ")});
       return '''/// ${comment}
 ///
 /// Read the [specification](${url}). 
-/// $declaration''';
+$declaration''';
     }
     return declaration;
   }
 
+  /// Generate a call to the wrapped function.
   String trampoline(String prefix) {
-    final parameters = <String>[];
+    final parametersList = <String>[];
 
     if (dartArgumentTypes.length != 1 || dartArgumentTypes[0] != 'void') {
       for (var i = 0; i < dartArgumentTypes.length; ++i) {
-        parameters.add('${dartArgumentTypes[i]} ${parameterNames[i]}');
+        parametersList.add('${dartArgumentTypes[i]} arg$i');
       }
     }
 
-    String parameterList = parameters.isEmpty ? 'void' : parameters.join(", ");
-    return '''$dartReturnType $prefix$name($parameterList) {
-  return $name(${[for (var i = 0; i < parameters.length; ++i) parameterNames[i]].join(', ')});
+    String parameters = parametersList.isEmpty
+        ? 'void'
+        : parametersList.join(", ");
+    String callParameters = [
+      for (var i = 0; i < parametersList.length; ++i) 'arg$i',
+    ].join(', ');
+
+    return '''$dartReturnType $prefix$name($parameters) {
+  return $name($callParameters);
 }''';
   }
 }
