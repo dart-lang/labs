@@ -5,7 +5,17 @@
 
 #include "functions.g.h"
 
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
+int libc_shim_rename(const char * a, const char * b) {
+  return rename(a, b);
+}
+
+char * libc_shim_strerror(int a) {
+  return strerror(a);
+}
+
 int libc_shim_access(const char * a, int b) {
   return access(a, b);
 }
@@ -48,5 +58,13 @@ int libc_shim_fchdir(int a) {
 
 int libc_shim_fdatasync(int a) {
   return fdatasync(a);
+}
+
+int libc_shim_unlink(const char *path) {
+  return unlink(path);
+}
+
+int libc_shim_unlinkat(int a, const char * b, int c) {
+  return unlinkat(a, b, c);
 }
 

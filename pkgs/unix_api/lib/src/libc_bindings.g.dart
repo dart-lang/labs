@@ -91,12 +91,6 @@ external int fstatat(
   int flag,
 );
 
-/// <stdio.h>
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_rename',
-)
-external int rename(ffi.Pointer<ffi.Char> old, ffi.Pointer<ffi.Char> newy);
-
 /// <stdlib.h>
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
   symbol: 'libc_shim_getenv',
@@ -107,12 +101,6 @@ external ffi.Pointer<ffi.Char> getenv(ffi.Pointer<ffi.Char> name);
   symbol: 'libc_shim_mkdtemp',
 )
 external ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> template);
-
-/// <string.h>
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Int)>(
-  symbol: 'libc_shim_strerror',
-)
-external ffi.Pointer<ffi.Char> strerror(int errnum);
 
 /// <unistd.h>
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int64)>(
@@ -126,10 +114,23 @@ external int getpid();
 @ffi.Native<ffi.Long Function()>(symbol: 'libc_shim_getppid')
 external int getppid();
 
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>(
-  symbol: 'libc_shim_unlinkat',
+/// Renames a file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
+  symbol: 'libc_shim_rename',
 )
-external int unlinkat(int dirfd, ffi.Pointer<ffi.Char> pathname, int flags);
+external int rename(ffi.Pointer<ffi.Char> arg0, ffi.Pointer<ffi.Char> arg1);
+
+/// Formats an error code as a string.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Int)>(
+  symbol: 'libc_shim_strerror',
+)
+external ffi.Pointer<ffi.Char> strerror(int arg0);
 
 /// Determines the accessibility of a file.
 ///
@@ -225,6 +226,22 @@ external int fchdir(int arg0);
 /// __attribute__((visibility("default"))) __attribute__((used))
 @ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_fdatasync')
 external int fdatasync(int arg0);
+
+/// Removes a directory entry.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/linkat.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_unlink')
+external int unlink(ffi.Pointer<ffi.Char> path);
+
+/// Removes a directory entry relative to another file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/unlinkat.html).
+/// __attribute__((visibility("default"))) __attribute__((used))
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>(
+  symbol: 'libc_shim_unlinkat',
+)
+external int unlinkat(int arg0, ffi.Pointer<ffi.Char> arg1, int arg2);
 
 /// <dirent.h>
 final class dirent extends ffi.Struct {

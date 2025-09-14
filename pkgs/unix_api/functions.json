@@ -1,4 +1,18 @@
 {
+  "<stdio.h>" : [
+    {
+        "comment": "Renames a file.",
+        "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html",
+        "prototype": "int rename(const char *, const char *)"
+    }
+  ],
+  "<string.h>" : [
+    {
+        "comment": "Formats an error code as a string.",
+        "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html",
+        "prototype": "char *strerror(int)"
+    }
+  ],
   "<unistd.h>" : [
     {
         "comment": "Determines the accessibility of a file.",
@@ -54,6 +68,16 @@
         "comment": "Forces all queued I/O operations to complete.",
         "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html",
         "prototype": "int fdatasync(int)"
+    },
+    {
+        "comment": "Removes a directory entry.",
+        "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/linkat.html",
+        "prototype": "int unlink(const char *)"
+    },
+    {
+        "comment": "Removes a directory entry relative to another file.",
+        "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/unlinkat.html",
+        "prototype": "int unlinkat(int, const char *, int)"
     }
 ]
 }

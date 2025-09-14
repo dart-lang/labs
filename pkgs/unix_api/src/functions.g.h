@@ -1,6 +1,20 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 // Regenerate with `dart run tool/build_functions.dart`.
 
+/// Renames a file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html). 
+/// __attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_rename(const char *, const char *);
+
+
+/// Formats an error code as a string.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html). 
+/// __attribute__((visibility("default"))) __attribute__((used))
+char * libc_shim_strerror(int);
+
+
 /// Determines the accessibility of a file.
 ///
 /// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/access.html). 
@@ -76,5 +90,19 @@ int libc_shim_fchdir(int);
 /// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html). 
 /// __attribute__((visibility("default"))) __attribute__((used))
 int libc_shim_fdatasync(int);
+
+
+/// Removes a directory entry.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/linkat.html). 
+/// __attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_unlink(const char *path);
+
+
+/// Removes a directory entry relative to another file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/unlinkat.html). 
+/// __attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_unlinkat(int, const char *, int);
 
 
