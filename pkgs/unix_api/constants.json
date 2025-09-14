@@ -70,6 +70,9 @@
     "DT_SOCK",
     "DT_UNKNOWN"
   ],
+  "<stdio.h>": [
+    "L_ctermid"
+  ],
   "<unistd.h>": [
     "F_OK",
     "R_OK",

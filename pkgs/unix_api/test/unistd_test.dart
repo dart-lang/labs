@@ -80,5 +80,46 @@ void main() {
         expect(close(fd), 0);
       });
     });
+
+    test('crypt', () {
+      ffi.using((arena) {
+        final encrypted = crypt(
+          "hello".toNativeUtf8(allocator: arena).cast(),
+          "salt".toNativeUtf16(allocator: arena).cast(),
+        );
+        expect(encrypted, isNot(nullptr));
+      });
+    }, skip: Platform.isAndroid ? 'not implemeneted' : false);
+
+    test('ctermid', () {
+      ffi.using((arena) {
+        final buffer = arena<Char>(L_ctermid);
+        buffer[0] = 0;
+
+        ctermid(buffer);
+
+        expect(buffer[0], isNot(0));
+      });
+    }, skip: Platform.isAndroid ? 'not implemeneted' : false);
+
+    test('dup', () {
+      final path = p.join(tmp.path, 'test1');
+
+      File(path).writeAsStringSync('Hello World!');
+
+      ffi.using((arena) {
+        final fd1 = open(
+          path.toNativeUtf8(allocator: arena).cast(),
+          O_RDONLY | O_CLOEXEC,
+          0,
+        );
+        expect(fd1, isNot(0));
+        addTearDown(() => close(fd1));
+
+        final fd2 = dup(fd1);
+        expect(fd2, greaterThan(0));
+        addTearDown(() => close(fd2));
+      });
+    });
   });
 }

@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <unistd.h>
 int64_t libc_shim_get_DT_BLK(void) {
@@ -204,6 +205,13 @@ int64_t libc_shim_get_PATH_MAX(void) {
 #ifdef PATH_MAX
   assert(PATH_MAX != libc_shim_UNDEFINED);
   return PATH_MAX;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_L_ctermid(void) {
+#ifdef L_ctermid
+  assert(L_ctermid != libc_shim_UNDEFINED);
+  return L_ctermid;
 #endif
   return libc_shim_UNDEFINED;
 }

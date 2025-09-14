@@ -91,6 +91,9 @@ external int get_O_WRONLY();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PATH_MAX')
 external int get_PATH_MAX();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_L_ctermid')
+external int get_L_ctermid();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_SYMLINK_NOFOLLOW')
 external int get_AT_SYMLINK_NOFOLLOW();
 

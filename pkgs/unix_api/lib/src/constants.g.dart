@@ -257,6 +257,15 @@ int get PATH_MAX {
   }
 }
 
+int get L_ctermid {
+  final v = get_L_ctermid();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('L_ctermid');
+  } else {
+    return v;
+  }
+}
+
 int get AT_SYMLINK_NOFOLLOW {
   final v = get_AT_SYMLINK_NOFOLLOW();
   if (v == libc_shim_UNDEFINED) {
