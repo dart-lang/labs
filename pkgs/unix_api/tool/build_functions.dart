@@ -12,6 +12,7 @@ const _cSourceTemplate = '''
 // Regenerate with `dart run tool/build_functions.dart`.
 
 #include <assert.h>
+#include <errno.h>
 
 #include "functions.g.h"
 
@@ -66,6 +67,8 @@ void main() {
         typeList,
         function['comment'],
         function['url'],
+        availableAndroid: function['available_android'] ?? true,
+        availableIOS: function['available_ios'] ?? true,
       );
 
       cHeaderBuffer.writeln(func.dartDeclaration('libc_shim_'));

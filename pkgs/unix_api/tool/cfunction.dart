@@ -22,6 +22,8 @@ class CFunction {
   final List<String> argumentTypes;
   final String? comment;
   final String? url;
+  final bool availableIOS;
+  final bool availableAndroid;
 
   List<String> get dartArgumentTypes => argumentTypes;
   String get dartReturnType => returnType;
@@ -37,8 +39,10 @@ class CFunction {
     this.returnType,
     this.argumentTypes,
     this.comment,
-    this.url,
-  ) {
+    this.url, {
+    this.availableIOS = true,
+    this.availableAndroid = true,
+  }) {
     if (!acceptableType(returnType)) {
       throw Exception('invalid return type $returnType for $name');
     }
@@ -66,6 +70,13 @@ $declaration''';
     return declaration;
   }
 
+  String def() {
+    return [
+      if (!availableIOS) 'defined(TARGET_OS_IOS)',
+      if (!availableAndroid) 'defined(__ANDROID__)',
+    ].join(' || ');
+  }
+
   /// Generate a call to the wrapped function.
   String trampoline(String prefix) {
     final parametersList = <String>[];
@@ -83,8 +94,22 @@ $declaration''';
       for (var i = 0; i < parametersList.length; ++i) 'arg$i',
     ].join(', ');
 
-    return '''$dartReturnType $prefix$name($parameters) {
-  return $name($callParameters);
+    final firstLine = '$dartReturnType $prefix$name($parameters) {';
+    final trampolineCall = 'return $name($callParameters);';
+    final implementationGuard = def();
+
+    if (implementationGuard.isEmpty) {
+      return '''$firstLine
+  $trampolineCall
 }''';
+    } else {
+      return '''$firstLine
+#if $implementationGuard
+  errno = ENOTSUP;
+#else
+  $trampolineCall
+#endif
+}''';
+    }
   }
 }

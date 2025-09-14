@@ -2,6 +2,7 @@
 // Regenerate with `dart run tool/build_functions.dart`.
 
 #include <assert.h>
+#include <errno.h>
 
 #include "functions.g.h"
 
@@ -33,11 +34,19 @@ int libc_shim_close(int arg0) {
 }
 
 char * libc_shim_crypt(const char * arg0, const char * arg1) {
+#if defined(__ANDROID__)
+  errno = ENOTSUP;
+#else
   return crypt(arg0, arg1);
+#endif
 }
 
 char * libc_shim_ctermid(char * arg0) {
+#if defined(__ANDROID__)
+  errno = ENOTSUP;
+#else
   return ctermid(arg0);
+#endif
 }
 
 int libc_shim_dup(int arg0) {
@@ -57,7 +66,11 @@ int libc_shim_fchdir(int arg0) {
 }
 
 int libc_shim_fdatasync(int arg0) {
+#if defined(TARGET_OS_IOS)
+  errno = ENOTSUP;
+#else
   return fdatasync(arg0);
+#endif
 }
 
 int libc_shim_unlink(const char * arg0) {
