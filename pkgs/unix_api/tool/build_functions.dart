@@ -69,6 +69,7 @@ void main() {
         function['url'],
         availableAndroid: function['available_android'] ?? true,
         availableIOS: function['available_ios'] ?? true,
+        unavailableReturn: function['unavailable_value'],
       );
 
       cHeaderBuffer.writeln(func.dartDeclaration('libc_shim_'));

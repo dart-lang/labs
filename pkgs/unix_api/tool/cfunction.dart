@@ -24,6 +24,7 @@ class CFunction {
   final String? url;
   final bool availableIOS;
   final bool availableAndroid;
+  final String? unavailableReturn;
 
   List<String> get dartArgumentTypes => argumentTypes;
   String get dartReturnType => returnType;
@@ -42,6 +43,7 @@ class CFunction {
     this.url, {
     this.availableIOS = true,
     this.availableAndroid = true,
+    this.unavailableReturn,
   }) {
     if (!acceptableType(returnType)) {
       throw Exception('invalid return type $returnType for $name');
@@ -106,6 +108,7 @@ $declaration''';
       return '''$firstLine
 #if $implementationGuard
   errno = ENOTSUP;
+  ${unavailableReturn != null ? "return $unavailableReturn;" : ""}
 #else
   $trampolineCall
 #endif

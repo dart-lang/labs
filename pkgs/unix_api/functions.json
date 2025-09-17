@@ -37,14 +37,14 @@
     {
         "comment": "Encrypts a string.",
         "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/crypt.html",
-        "prototype": "char * crypt(const char *, const char *)",
-        "available_android": false
+        "prototype": "char * crypt(const char *, const char *)"
     },
     {
         "comment": "Generates a path name for the controlling terminal.",
         "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/ctermid.html",
         "prototype": "char * ctermid(char *)",
-        "available_android": false
+        "available_android": false,
+        "unavailable_value": "\"\""
     },
     {
         "comment": "Duplicates an open file descriptor.",
@@ -70,7 +70,8 @@
         "comment": "Forces all queued I/O operations to complete.",
         "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html",
         "prototype": "int fdatasync(int)",
-        "available_ios": false
+        "available_ios": false,
+        "unavailable_value": "-1"
     },
     {
         "comment": "Removes a directory entry.",
