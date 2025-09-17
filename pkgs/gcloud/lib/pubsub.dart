@@ -353,14 +353,16 @@ abstract class Message {
   /// be UTF-8 encoded to create the actual binary body for the message.
   ///
   /// Message attributes can be passed in the [attributes] map.
-  factory Message.withString(String message, {Map<String, String> attributes}) =
-      _MessageImpl.withString;
+  factory Message.withString(String message,
+      {Map<String, String> attributes,
+      String? orderingKey}) = _MessageImpl.withString;
 
   /// Creates a new message with a binary body.
   ///
   /// Message attributes can be passed in the [attributes] Map.
   factory Message.withBytes(List<int> message,
-      {Map<String, String> attributes}) = _MessageImpl.withBytes;
+      {Map<String, String> attributes,
+      String? orderingKey}) = _MessageImpl.withBytes;
 
   /// The message body as a String.
   ///

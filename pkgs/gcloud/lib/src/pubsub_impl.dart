@@ -234,16 +234,14 @@ class _MessageImpl implements Message {
   _MessageImpl.withString(
     this._stringMessage, {
     Map<String, String>? attributes,
-    String? orderingKey,
+    this.orderingKey,
   })  : _bytesMessage = null,
-        attributes = attributes ?? <String, String>{},
-        orderingKey = orderingKey;
+        attributes = attributes ?? <String, String>{};
 
   _MessageImpl.withBytes(this._bytesMessage,
-      {Map<String, String>? attributes, String? orderingKey})
+      {Map<String, String>? attributes, this.orderingKey})
       : _stringMessage = null,
-        attributes = attributes ?? <String, String>{},
-        orderingKey = orderingKey;
+        attributes = attributes ?? <String, String>{};
 
   @override
   List<int> get asBytes => _bytesMessage ?? utf8.encode(_stringMessage!);
