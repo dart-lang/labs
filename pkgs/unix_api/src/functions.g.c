@@ -34,7 +34,12 @@ int libc_shim_close(int arg0) {
 }
 
 char * libc_shim_crypt(const char * arg0, const char * arg1) {
+#if defined(__ANDROID__)
+  errno = ENOTSUP;
+  return NULL;
+#else
   return crypt(arg0, arg1);
+#endif
 }
 
 char * libc_shim_ctermid(char * arg0) {

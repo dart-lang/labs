@@ -83,8 +83,8 @@ void main() {
         "hello".toNativeUtf8(allocator: arena).cast(),
         "salt".toNativeUtf16(allocator: arena).cast(),
       );
-      expect(encrypted, isNot(nullptr));
-    }, skip: Platform.isAndroid ? 'not implemeneted' : false);
+      expect(encrypted, Platform.isAndroid ? isNull : isNot(nullptr));
+    });
 
     test('ctermid', () {
       final buffer = arena<Char>(L_ctermid);
@@ -92,8 +92,8 @@ void main() {
 
       ctermid(buffer);
 
-      expect(buffer[0], isNot(0));
-    }, skip: Platform.isAndroid ? 'not implemeneted' : false);
+      expect(buffer[0], Platform.isAndroid ? 0 : isNot(0));
+    });
 
     test('dup', () {
       final path = p.join(tmp.path, 'test1');
