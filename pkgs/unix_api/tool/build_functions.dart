@@ -24,6 +24,13 @@ const _cHeaderTemplate = '''
 
 ''';
 
+/// Parses a C function declaration like.
+///
+/// `"char * crypt(const char *, const char *)"`
+/// =>
+/// return = "char *"
+/// name = "crypt"
+/// args = ["const char *", "const char *"]
 RegExp _cDeclaration = RegExp(
   r'^\s*(?<return>.+?)\s*'
   r'(?<name>\w+)'
