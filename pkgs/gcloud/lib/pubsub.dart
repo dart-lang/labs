@@ -375,6 +375,9 @@ abstract class Message {
 
   /// The attributes for this message.
   Map<String, String> get attributes;
+
+  /// The ordering key for this message.
+  String? get orderingKey;
 }
 
 /// A Pub/Sub pull event.

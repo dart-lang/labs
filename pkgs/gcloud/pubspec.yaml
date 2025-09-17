@@ -17,7 +17,7 @@ dependencies:
   _discoveryapis_commons: ^1.0.0
   googleapis:
     git:
-      url: git@github.com:shorebirdtech/googleapis.dart.git
+      url: https://github.com/shorebirdtech/googleapis.dart.git
       ref: c5c7e0d128b8efb7b89ef46015e25f4600807aa4
       path: generated/googleapis
   http: '>=0.13.5 <2.0.0'
