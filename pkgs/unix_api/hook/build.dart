@@ -15,8 +15,7 @@ void main(List<String> args) async {
       name: packageName,
       assetName: 'libc_shim',
       libraries: [
-        if ([OS.android, OS.linux].contains(input.config.code.targetOS))
-          'crypt',
+        if ([OS.linux].contains(input.config.code.targetOS)) 'crypt',
       ],
       sources: ['src/libc_shim.c', 'src/constants.g.c', 'src/functions.g.c'],
     ).run(
