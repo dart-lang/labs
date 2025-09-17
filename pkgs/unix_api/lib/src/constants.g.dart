@@ -257,6 +257,15 @@ int get PATH_MAX {
   }
 }
 
+int get L_ctermid {
+  final v = get_L_ctermid();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('L_ctermid');
+  } else {
+    return v;
+  }
+}
+
 int get AT_SYMLINK_NOFOLLOW {
   final v = get_AT_SYMLINK_NOFOLLOW();
   if (v == libc_shim_UNDEFINED) {
@@ -549,6 +558,42 @@ int get UF_HIDDEN {
   final v = get_UF_HIDDEN();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('UF_HIDDEN');
+  } else {
+    return v;
+  }
+}
+
+int get F_OK {
+  final v = get_F_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('F_OK');
+  } else {
+    return v;
+  }
+}
+
+int get R_OK {
+  final v = get_R_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('R_OK');
+  } else {
+    return v;
+  }
+}
+
+int get W_OK {
+  final v = get_W_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('W_OK');
+  } else {
+    return v;
+  }
+}
+
+int get X_OK {
+  final v = get_X_OK();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('X_OK');
   } else {
     return v;
   }

@@ -105,23 +105,12 @@ LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf);
 LIBC_SHIM_EXPORT int libc_shim_fstatat(int fd, char *path,
                                        struct libc_shim_Stat *buf, int flag);
 
-// <stdio.h>
-LIBC_SHIM_EXPORT int libc_shim_rename(const char *old, const char *newy);
-
 // <stdlib.h>
 LIBC_SHIM_EXPORT char *libc_shim_getenv(const char *name);
 LIBC_SHIM_EXPORT char *libc_shim_mkdtemp(char *template);
 
-// <string.h>
-
-LIBC_SHIM_EXPORT char *libc_shim_strerror(int errnum);
-
 // <unistd.h>
 
-LIBC_SHIM_EXPORT int libc_shim_chdir(const char *path);
-LIBC_SHIM_EXPORT int libc_shim_close(int fd);
 LIBC_SHIM_EXPORT char *libc_shim_getcwd(char *buf, int64_t size);
 LIBC_SHIM_EXPORT long libc_shim_getpid();
 LIBC_SHIM_EXPORT long libc_shim_getppid();
-LIBC_SHIM_EXPORT int libc_shim_unlinkat(int dirfd, const char *pathname,
-                                        int flags);

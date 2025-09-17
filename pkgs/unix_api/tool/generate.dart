@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:ffigen/src/executables/ffigen.dart' as ffigen;
 import 'build_constants.dart' as build_constants;
+import 'build_functions.dart' as build_functions;
 
 void _formatFile(String path) {
   final result = Process.runSync(Platform.executable, [
@@ -22,6 +23,7 @@ void _formatFile(String path) {
 
 void main() async {
   build_constants.main();
+  build_functions.main();
 
   await ffigen.main(['--no-format', '-v', 'severe', '--config', 'ffigen.yaml']);
   await ffigen.main([
