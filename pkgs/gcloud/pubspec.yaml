@@ -18,7 +18,7 @@ dependencies:
   googleapis:
     git:
       url: git@github.com:shorebirdtech/googleapis.dart.git
-      ref: 71b65fab0988ed9a5ad3546752e184fa599ef8dd
+      ref: c5c7e0d128b8efb7b89ef46015e25f4600807aa4
       path: generated/googleapis
   http: '>=0.13.5 <2.0.0'
   meta: ^1.3.0
