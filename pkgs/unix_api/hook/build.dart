@@ -15,7 +15,7 @@ void main(List<String> args) async {
       name: packageName,
       assetName: 'libc_shim',
       sources: ['src/libc_shim.c', 'src/constants.g.c'],
-      flags: ['-Weverything', '-Wsign-conversion'],
+      flags: ['-Weverything'],
     ).run(
       input: input,
       output: output,
