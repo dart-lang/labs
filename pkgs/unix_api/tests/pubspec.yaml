@@ -1,0 +1,16 @@
+name: tests
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.9.2
+
+# Add regular dependencies here.
+dependencies:
+  errno: ^1.4.1
+  path: ^1.9.1
+  unix_api:
+    path: ../../unix_api
+  test: ^1.24.0
+
