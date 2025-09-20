@@ -8,9 +8,9 @@ environment:
 
 dependencies:
   errno: ^1.4.1
+  ffi: ^2.1.4
   path: ^1.9.1
+  test: ^1.24.0
   unix_api:
     path: ../../unix_api
-  test: ^1.24.0
-  ffi: ^2.1.4
 
