@@ -98,8 +98,7 @@ jobs:
       - uses: futureware-tech/simulator-action@dab10d813144ef59b48d401cd95da151222ef8cd
         with:
           os: iOS
-          os_version: '>=13.0'
-
+          os_version: '>=17.0'
       - run: |
           flutter pub get
           flutter test integration_test --reporter=failures-only --test-randomize-ordering-seed=random
