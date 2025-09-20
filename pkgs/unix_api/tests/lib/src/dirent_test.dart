@@ -6,9 +6,9 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart' as ffi;
-import 'package:unix_api/unix_api.dart';
-import 'package:test/test.dart';
 import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
+import 'package:unix_api/unix_api.dart';
 
 void main() {
   group('dirent', () {
