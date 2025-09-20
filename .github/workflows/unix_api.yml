@@ -30,7 +30,6 @@ jobs:
         with:
           sdk: dev
       - run: dart pub get
-      - run: cd mobile_test && flutter pub get & cd ..
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
 
