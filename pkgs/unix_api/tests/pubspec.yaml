@@ -12,4 +12,5 @@ dependencies:
   unix_api:
     path: ../../unix_api
   test: ^1.24.0
+  ffi: ^2.1.4
 
