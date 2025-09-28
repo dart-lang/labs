@@ -1,5 +1,5 @@
 name: mobile_test
-description: "Used to execute package:unix_api tests on Android and iOS"
+description: "Used to execute package:io_file tests on Android and iOS"
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -10,11 +10,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
   integration_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
   tests:
     path: ../tests
+  # Dependencies required by io_file/test:
+  code_assets: ^0.19.0
+  ffi: ^2.1.4
+  hooks: ^0.19.0
+  logging: ^1.3.0
+  native_toolchain_c: ^0.16.0
+  path: ^1.9.1
+  win32: ^5.14.0
+  errno: ^1.4.1
+  stdlibc:
+    git:
+      # Change this to a released version.
+      url: https://github.com/canonical/stdlibc.dart.git
+  test: ^1.24.0
+  uuid: ^4.5.1
+
