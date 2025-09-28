@@ -89,7 +89,8 @@ jobs:
             flutter test integration_test --reporter=failures-only --test-randomize-ordering-seed=random'
 
   ios-vm-test:
-    if: true
+    # TODO(https://github.com/dart-lang/labs/issues/278): Enable tests on iOS.
+    if: false
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
