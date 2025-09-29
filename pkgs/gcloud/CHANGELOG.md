@@ -1,4 +1,4 @@
-## 0.8.20
+## 0.9.0
 
 - Support `orderingKey` on pub/sub's `Message` type.
 - Support the latest version `^15.0.0` of the `googleapis` package.
