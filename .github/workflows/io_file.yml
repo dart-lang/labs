@@ -9,11 +9,13 @@ on:
     paths:
       - '.github/workflows/io_file.yml'
       - 'pkgs/io_file/**'
+      - 'pkgs/unix_api/**'
   pull_request:
     branches: [ main ]
     paths:
       - '.github/workflows/io_file.yml'
       - 'pkgs/io_file/**'
+      - 'pkgs/unix_api/**'
   schedule:
     - cron: '0 0 * * 0' # weekly
 
@@ -45,7 +47,7 @@ jobs:
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
           sdk: ${{ matrix.sdk }}
-      - run: dart --enable-experiment=native-assets test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
+      - run: dart test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
 
   profile-vm-test:
     # Ensure that the tests pass when run under the profiler (which sends
@@ -56,7 +58,7 @@ jobs:
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
           sdk: dev
-      - run: dart --enable-experiment=native-assets --profiler --profile_period=50 test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
+      - run: dart --profiler --profile_period=50 test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
 
   desktop-vm-benchmark:
     strategy:
@@ -72,9 +74,9 @@ jobs:
           sdk: ${{ matrix.sdk }}
       - run: dart pub get
       - name: 🪑 Run Read Benchmarks
-        run: dart --enable-experiment=native-assets run benchmarks/read_as_bytes.dart
+        run: dart run benchmarks/read_as_bytes.dart
       - name: 🪑 Run Write Benchmarks
-        run: dart --enable-experiment=native-assets run benchmarks/write_as_bytes.dart
+        run: dart run benchmarks/write_as_bytes.dart
 
   android-vm-test:
     runs-on: ubuntu-latest
@@ -129,4 +131,4 @@ jobs:
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
         with:
           sdk: dev
-      - run: dart --enable-experiment=native-assets test --reporter=failures-only --test-randomize-ordering-seed=random --platform chrome
+      - run: dart test --reporter=failures-only --test-randomize-ordering-seed=random --platform chrome
