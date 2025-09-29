@@ -4,7 +4,6 @@ description: >-
   High level idiomatic Dart API for Google Cloud Storage, Pub-Sub and Datastore.
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/gcloud
 issue_tracker: https://github.com/dart-lang/labs/issues?q=is%3Aissue+is%3Aopen+label%3Apackage%3Agcloud
-publish_to: none
 
 topics:
  - cloud
