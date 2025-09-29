@@ -72,7 +72,7 @@ $declaration''';
     return declaration;
   }
 
-  String def() {
+  String _platform_restriction_ifdef() {
     return [
       if (!availableIOS) 'defined(TARGET_OS_IOS)',
       if (!availableAndroid) 'defined(__ANDROID__)',
@@ -98,7 +98,7 @@ $declaration''';
 
     final firstLine = '$dartReturnType $prefix$name($parameters) {';
     final trampolineCall = 'return $name($callParameters);';
-    final implementationGuard = def();
+    final implementationGuard = _platform_restriction_ifdef();
 
     if (implementationGuard.isEmpty) {
       return '''$firstLine
