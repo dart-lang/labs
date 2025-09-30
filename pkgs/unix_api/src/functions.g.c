@@ -35,7 +35,7 @@ int libc_shim_close(int arg0) {
 
 char * libc_shim_crypt(const char * arg0, const char * arg1) {
 #if defined(__ANDROID__)
-  errno = ENOTSUP;
+  errno = ENOSYS;
   return NULL;
 #else
   return crypt(arg0, arg1);
@@ -44,7 +44,7 @@ char * libc_shim_crypt(const char * arg0, const char * arg1) {
 
 char * libc_shim_ctermid(char * arg0) {
 #if defined(__ANDROID__)
-  errno = ENOTSUP;
+  errno = ENOSYS;
   return "";
 #else
   return ctermid(arg0);
@@ -69,7 +69,7 @@ int libc_shim_fchdir(int arg0) {
 
 int libc_shim_fdatasync(int arg0) {
 #if defined(TARGET_OS_IOS)
-  errno = ENOTSUP;
+  errno = ENOSYS;
   return -1;
 #else
   return fdatasync(arg0);
