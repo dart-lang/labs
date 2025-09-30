@@ -107,7 +107,7 @@ $declaration''';
     } else {
       return '''$firstLine
 #if $implementationGuard
-  errno = ENOTSUP;
+  errno = ENOSYS;
   ${unavailableReturn != null ? "return $unavailableReturn;" : ""}
 #else
   $trampolineCall
