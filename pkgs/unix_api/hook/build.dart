@@ -14,7 +14,10 @@ void main(List<String> args) async {
     await CBuilder.library(
       name: packageName,
       assetName: 'libc_shim',
-      sources: ['src/libc_shim.c', 'src/constants.g.c'],
+      libraries: [
+        if ([OS.linux].contains(input.config.code.targetOS)) 'crypt',
+      ],
+      sources: ['src/libc_shim.c', 'src/constants.g.c', 'src/functions.g.c'],
       flags: ['-Weverything'],
     ).run(
       input: input,
