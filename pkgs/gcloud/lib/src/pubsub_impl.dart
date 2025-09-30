@@ -81,13 +81,14 @@ class _PubSubImpl implements PubSub {
     return _api.projects.subscriptions.modifyPushConfig(request, subscription);
   }
 
-  Future _publish(
-      String topic, List<int> message, Map<String, String> attributes) {
+  Future _publish(String topic, List<int> message,
+      Map<String, String> attributes, String? orderingKey) {
     var request = pubsub.PublishRequest()
       ..messages = [
         (pubsub.PubsubMessage()
           ..dataAsBytes = message
-          ..attributes = attributes.isEmpty ? null : attributes)
+          ..attributes = attributes.isEmpty ? null : attributes
+          ..orderingKey = orderingKey)
       ];
     // TODO(sgjesse): Handle PublishResponse containing message ids.
     return _api.projects.topics.publish(request, topic).then((_) => null);
@@ -227,13 +228,18 @@ class _MessageImpl implements Message {
   @override
   final Map<String, String> attributes;
 
+  @override
+  final String? orderingKey;
+
   _MessageImpl.withString(
     this._stringMessage, {
     Map<String, String>? attributes,
+    this.orderingKey,
   })  : _bytesMessage = null,
         attributes = attributes ?? <String, String>{};
 
-  _MessageImpl.withBytes(this._bytesMessage, {Map<String, String>? attributes})
+  _MessageImpl.withBytes(this._bytesMessage,
+      {Map<String, String>? attributes, this.orderingKey})
       : _stringMessage = null,
         attributes = attributes ?? <String, String>{};
 
@@ -251,11 +257,14 @@ class _MessageImpl implements Message {
 ///
 /// The labels map is lazily created when first accessed.
 class _PullMessage implements Message {
+  _PullMessage(this._message, this.orderingKey);
+
   final pubsub.PubsubMessage _message;
   List<int>? _bytes;
   String? _string;
 
-  _PullMessage(this._message);
+  @override
+  String? orderingKey;
 
   @override
   List<int> get asBytes {
@@ -281,11 +290,15 @@ class _PullMessage implements Message {
 ///
 /// The labels have been decoded into a Map.
 class _PushMessage implements Message {
-  final String _base64Message;
+  _PushMessage(this._base64Message, this.attributes, this.orderingKey);
+
   @override
   final Map<String, String> attributes;
 
-  _PushMessage(this._base64Message, this.attributes);
+  @override
+  final String? orderingKey;
+
+  final String _base64Message;
 
   @override
   List<int> get asBytes => base64.decode(_base64Message);
@@ -306,13 +319,15 @@ class _PullEventImpl implements PullEvent {
 
   /// Low level response received from Pub/Sub.
   final pubsub.PullResponse _response;
+
   @override
   final Message message;
 
   _PullEventImpl(
       this._api, this._subscriptionName, pubsub.PullResponse response)
       : _response = response,
-        message = _PullMessage(response.receivedMessages![0].message!);
+        message = _PullMessage(response.receivedMessages![0].message!,
+            response.receivedMessages![0].message?.orderingKey);
 
   @override
   Future acknowledge() {
@@ -346,13 +361,15 @@ class _PushEventImpl implements PushEvent {
       var value = l['strValue'] ?? l['numValue'];
       labels[key] = value.toString();
     }
+    var orderingKey = body['orderingKey'] as String?;
     var subscription = body['subscription'] as String;
     // TODO(#1): Remove this when the push event subscription name is prefixed
     // with '/subscriptions/'.
     if (!subscription.startsWith(_prefix)) {
       subscription = _prefix + subscription;
     }
-    return _PushEventImpl(_PushMessage(data, labels), subscription);
+    return _PushEventImpl(
+        _PushMessage(data, labels, orderingKey), subscription);
   }
 }
 
@@ -379,22 +396,26 @@ class _TopicImpl implements Topic {
 
   @override
   Future publish(Message message) {
-    return _api._publish(_topic.name!, message.asBytes, message.attributes);
+    return _api._publish(
+        _topic.name!, message.asBytes, message.attributes, message.orderingKey);
   }
 
   @override
   Future delete() => _api._deleteTopic(_topic.name!);
 
   @override
-  Future publishString(String message, {Map<String, String>? attributes}) {
+  Future publishString(String message,
+      {Map<String, String>? attributes, String? orderingKey}) {
     attributes ??= <String, String>{};
-    return _api._publish(_topic.name!, utf8.encode(message), attributes);
+    return _api._publish(
+        _topic.name!, utf8.encode(message), attributes, orderingKey);
   }
 
   @override
-  Future publishBytes(List<int> message, {Map<String, String>? attributes}) {
+  Future publishBytes(List<int> message,
+      {Map<String, String>? attributes, String? orderingKey}) {
     attributes ??= <String, String>{};
-    return _api._publish(_topic.name!, message, attributes);
+    return _api._publish(_topic.name!, message, attributes, orderingKey);
   }
 }
 
