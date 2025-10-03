@@ -1,6 +1,20 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 // Regenerate with `dart run tool/build_functions.dart`.
 
+/// Opens a file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html). 
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_open(const char *, int, long);
+
+
+/// Opens a file relative to a file descriptor.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/openat.html). 
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_openat(int, const char *, int, long);
+
+
 /// Renames a file.
 ///
 /// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html). 
@@ -13,6 +27,13 @@ int libc_shim_rename(const char *, const char *);
 /// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html). 
 __attribute__((visibility("default"))) __attribute__((used))
 char * libc_shim_strerror(int);
+
+
+/// Changes the mode of a file.
+///
+/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/chmod.html). 
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_chmod(const char *, long);
 
 
 /// Determines the accessibility of a file.
@@ -90,6 +111,10 @@ int libc_shim_fchdir(int);
 /// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html). 
 __attribute__((visibility("default"))) __attribute__((used))
 int libc_shim_fdatasync(int);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+long libc_shim_read(int, void *, unsigned long);
 
 
 /// Removes a directory entry.
