@@ -132,23 +132,25 @@ char * libc_shim_crypt(const char * arg0, const char * arg1, int * err) {
 #if defined(__ANDROID__)
   *err = ENOSYS;
   return NULL;
-#endif
+#else
   errno = *err;
   char * r = crypt(arg0, arg1);
   *err = errno;
   return r;
+#endif
 }
 
 
 char * libc_shim_ctermid(char * arg0, int * err) {
 #if defined(__ANDROID__)
   *err = ENOSYS;
-  return &quot;&quot;;
-#endif
+  return "";
+#else
   errno = *err;
   char * r = ctermid(arg0);
   *err = errno;
   return r;
+#endif
 }
 
 
@@ -188,11 +190,12 @@ int libc_shim_fdatasync(int arg0, int * err) {
 #if defined(TARGET_OS_IOS)
   *err = ENOSYS;
   return -1;
-#endif
+#else
   errno = *err;
   int r = fdatasync(arg0);
   *err = errno;
   return r;
+#endif
 }
 
 

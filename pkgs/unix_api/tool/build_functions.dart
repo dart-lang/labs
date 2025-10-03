@@ -68,7 +68,7 @@ const _cFunctionImplementationTemplate = '''
 #if {{unsupported_guard}}
   *err = ENOSYS;
   return {{error_return}};
-#endif
+#else
 {{/unsupported_guard}}
 {{#parameter_domain_checks}}
   if ({{parameter_domain_checks}}) {
@@ -86,11 +86,14 @@ const _cFunctionImplementationTemplate = '''
   }  
 {{/parameter_range_check_required}}
   return r;
+{{#unsupported_guard}}
+#endif
+{{/unsupported_guard}}
 }
 ''';
 
-String renderTemplate(Template template, CFunction function) {
-  return template.renderString({
+String renderTemplate(String template, CFunction function) {
+  return Template(template, htmlEscapeValues: false).renderString({
     'function_name': function.name,
     'function_description': function.comment,
     'function_reference_url': function.url,
@@ -111,15 +114,15 @@ String renderTemplate(Template template, CFunction function) {
 }
 
 String buildDeclaration(CFunction function) {
-  return renderTemplate(Template(cDeclarationTemplate), function);
+  return renderTemplate(cDeclarationTemplate, function);
 }
 
 String buildFunction(CFunction function) {
-  return renderTemplate(Template(_cFunctionImplementationTemplate), function);
+  return renderTemplate(_cFunctionImplementationTemplate, function);
 }
 
 String buildDartFunction(CFunction function) {
-  return renderTemplate(Template(dart, htmlEscapeValues: false), function);
+  return renderTemplate(dart, function);
 }
 
 /// Generates Dart and C source from "functions.json"
