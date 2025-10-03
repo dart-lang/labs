@@ -50,10 +50,11 @@ RegExp _cDeclaration = RegExp(
 );
 
 const dart = '''
-{{dart_return_type}} {{function_name}}({{dart_parameters}}) {
-  return {{function_prefix}}{{function_name}}({{dart_ffi_call_parameters}});
-
-}
+/// {{function_description}}
+/// 
+/// See the [POSIX specification for `{{function_name}}`]({{function_reference_url}}).
+{{dart_return_type}} {{function_name}}({{dart_parameters}}) =>
+    {{function_prefix}}{{function_name}}({{dart_ffi_call_parameters}});
 ''';
 
 const cDeclarationTemplate = '''
@@ -91,6 +92,8 @@ const _cFunctionImplementationTemplate = '''
 String renderTemplate(Template template, CFunction function) {
   return template.renderString({
     'function_name': function.name,
+    'function_description': function.comment,
+    'function_reference_url': function.url,
     'function_prefix': function.prefix,
     'ffi_function_type_parameters': function.ffiFunctionTypeParametersString,
     'ffi_function_named_parameters': function.ffiFunctionNamedParametersString,
@@ -158,8 +161,8 @@ void main() {
         name: functionName,
         unixReturnType: returnType,
         unixArgumentTypes: typeList,
-        description: function['comment'] ?? 'XXX',
-        documentationUrl: function['url'] ?? 'XXX',
+        description: function['comment'],
+        documentationUrl: function['url'],
         availableAndroid: function['available_android'] ?? true,
         availableIOS: function['available_ios'] ?? true,
         errorReturn: function['error_value'],

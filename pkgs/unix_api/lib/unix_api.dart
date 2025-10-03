@@ -6,9 +6,9 @@ import 'dart:ffi';
 
 import 'src/errno.dart';
 
+export 'src/bespoke.dart';
 export 'src/constants.g.dart';
 export 'src/functions.g.dart';
-export 'src/libc_bindings.g.dart' hide errno, seterrno;
 
 int get errno => errnoPtr.value;
 set errno(int err) => errnoPtr.value = err;

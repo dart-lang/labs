@@ -42,5 +42,7 @@ void main() async {
   ]);
   _formatFile('lib/src/constant_bindings.g.dart');
   _formatFile('lib/src/constants.g.dart');
+  _formatFile('lib/src/functions_bindings.g.dart');
+  _formatFile('lib/src/functions.g.dart');
   _formatFile('lib/src/libc_bindings.g.dart');
 }

@@ -8,6 +8,7 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -47,6 +48,22 @@ int libc_shim_rename(const char * arg0, const char * arg1, int * err) {
 }
 
 
+char * libc_shim_mkdtemp(char * arg0, int * err) {
+  errno = *err;
+  char * r = mkdtemp(arg0);
+  *err = errno;
+  return r;
+}
+
+
+char * libc_shim_getenv(const char * arg0, int * err) {
+  errno = *err;
+  char * r = getenv(arg0);
+  *err = errno;
+  return r;
+}
+
+
 char * libc_shim_strerror(int arg0, int * err) {
   errno = *err;
   char * r = strerror(arg0);
@@ -62,6 +79,18 @@ int libc_shim_chmod(const char * arg0, long arg1, int * err) {
   }
   errno = *err;
   int r = chmod(arg0, (mode_t) arg1);
+  *err = errno;
+  return r;
+}
+
+
+int libc_shim_mkdir(const char * arg0, long arg1, int * err) {
+  if (!libc_shim_valid_mode_t(arg1)) {
+    *err = EDOM;
+    return -1;
+  }
+  errno = *err;
+  int r = mkdir(arg0, (mode_t) arg1);
   *err = errno;
   return r;
 }
@@ -210,6 +239,22 @@ long libc_shim_read(int arg0, void * arg1, unsigned long arg2, int * err) {
   }
   errno = *err;
   ssize_t r = read(arg0, arg1, (size_t) arg2);
+  *err = errno;
+  if ((ssize_t)((long) r) != r) {
+    errno = ERANGE;
+    return -1;
+  }  
+  return r;
+}
+
+
+long libc_shim_write(int arg0, const void * arg1, unsigned long arg2, int * err) {
+  if (!libc_shim_valid_size_t(arg2)) {
+    *err = EDOM;
+    return -1;
+  }
+  errno = *err;
+  ssize_t r = write(arg0, arg1, (size_t) arg2);
   *err = errno;
   if ((ssize_t)((long) r) != r) {
     errno = ERANGE;

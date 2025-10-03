@@ -12,50 +12,81 @@ import 'dart:ffi' as ffi;
 ///
 /// TODO(brianquinlan): Remove `libc_shim_d_name_ptr` when there is a fix for:
 /// https://github.com/dart-lang/sdk/issues/41237
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<dirent>)>(
-  symbol: 'libc_shim_d_name_ptr',
-)
-external ffi.Pointer<ffi.Char> d_name_ptr(ffi.Pointer<dirent> d);
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<dirent>)>()
+external ffi.Pointer<ffi.Char> libc_shim_d_name_ptr(ffi.Pointer<dirent> d);
 
-@ffi.Native<ffi.Int Function(ffi.Pointer<DIR>)>(symbol: 'libc_shim_closedir')
-external int closedir(ffi.Pointer<DIR> d);
+@ffi.Native<ffi.Int Function(ffi.Pointer<DIR>, ffi.Pointer<ffi.Int>)>()
+external int libc_shim_closedir(ffi.Pointer<DIR> d, ffi.Pointer<ffi.Int> err);
 
-@ffi.Native<ffi.Pointer<DIR> Function(ffi.Int)>(symbol: 'libc_shim_fdopendir')
-external ffi.Pointer<DIR> fdopendir(int fd);
-
-@ffi.Native<ffi.Pointer<DIR> Function(ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_opendir',
-)
-external ffi.Pointer<DIR> opendir(ffi.Pointer<ffi.Char> path);
-
-@ffi.Native<ffi.Pointer<dirent> Function(ffi.Pointer<DIR>)>(
-  symbol: 'libc_shim_readdir',
-)
-external ffi.Pointer<dirent> readdir(ffi.Pointer<DIR> d);
-
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>)>(
-  symbol: 'libc_shim_stat',
-)
-external int stat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
-
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>)>(
-  symbol: 'libc_shim_lstat',
-)
-external int lstat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
-
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<Stat>)>(
-  symbol: 'libc_shim_fstat',
-)
-external int fstat(int fd, ffi.Pointer<Stat> buf);
+@ffi.Native<ffi.Pointer<DIR> Function(ffi.Int, ffi.Pointer<ffi.Int>)>()
+external ffi.Pointer<DIR> libc_shim_fdopendir(int fd, ffi.Pointer<ffi.Int> err);
 
 @ffi.Native<
-  ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>, ffi.Int)
->(symbol: 'libc_shim_fstatat')
-external int fstatat(
+  ffi.Pointer<DIR> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)
+>()
+external ffi.Pointer<DIR> libc_shim_opendir(
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Pointer<dirent> Function(ffi.Pointer<DIR>, ffi.Pointer<ffi.Int>)
+>()
+external ffi.Pointer<dirent> libc_shim_readdir(
+  ffi.Pointer<DIR> d,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<Stat>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_stat(
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<Stat> buf,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<Stat>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_lstat(
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<Stat> buf,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(ffi.Int, ffi.Pointer<Stat>, ffi.Pointer<ffi.Int>)
+>()
+external int libc_shim_fstat(
+  int fd,
+  ffi.Pointer<Stat> buf,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Int,
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<Stat>,
+    ffi.Int,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_fstatat(
   int fd,
   ffi.Pointer<ffi.Char> path,
   ffi.Pointer<Stat> buf,
   int flag,
+  ffi.Pointer<ffi.Int> err,
 );
 
 /// <dirent.h>

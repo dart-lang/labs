@@ -5,6 +5,7 @@
 /// Types understood natively by `dart:ffi`.
 final _ffigenTypes = <Pattern>[
   'void',
+  'const void *',
   'int',
   'unsigned',
   'char *',
@@ -26,6 +27,7 @@ final _foo = {
 final _ffiToDartTypes = {
   'void': 'void',
   'void *': 'ffi.Pointer<ffi.Void>',
+  'const void *': 'ffi.Pointer<ffi.Void>',
   'int': 'int',
   'int *': 'ffi.Pointer<ffi.Int>',
   'unsigned': 'int',

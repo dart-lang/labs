@@ -255,18 +255,6 @@ final class PosixMetadata implements Metadata {
   );
 }
 
-/// The POSIX `read` function.
-///
-/// See https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html
-@Native<Int Function(Int, Pointer<Uint8>, Int)>(isLeaf: false)
-external int read(int fd, Pointer<Uint8> buf, int count);
-
-/// The POSIX `write` function.
-///
-/// See https://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html
-@Native<Int Function(Int, Pointer<Uint8>, Int)>(isLeaf: false)
-external int write(int fd, Pointer<Uint8> buf, int count);
-
 /// A [FileSystem] implementation for POSIX systems (e.g. Android, iOS, Linux,
 /// macOS).
 final class PosixFileSystem extends FileSystem {
@@ -280,7 +268,9 @@ final class PosixFileSystem extends FileSystem {
     final buffer = arena<Uint8>(blockSize);
 
     while (true) {
-      final r = _tempFailureRetry(() => read(fromFd, buffer, blockSize));
+      final r = _tempFailureRetry(
+        () => libc.read(fromFd, buffer.cast(), blockSize),
+      );
       switch (r) {
         case -1:
           final errno = libc.errno;
@@ -293,7 +283,7 @@ final class PosixFileSystem extends FileSystem {
       var writeBuffer = buffer;
       while (writeRemaining > 0) {
         final w = _tempFailureRetry(
-          () => write(toFd, writeBuffer, writeRemaining),
+          () => libc.write(toFd, writeBuffer.cast(), writeRemaining),
         );
         if (w == -1) {
           final errno = libc.errno;
@@ -466,7 +456,7 @@ final class PosixFileSystem extends FileSystem {
         var dirent = libc.readdir(dir);
 
         while (dirent != nullptr) {
-          final child = libc.d_name_ptr(dirent);
+          final child = dirent.d_name_ptr;
           late final childPath = p.join(
             parentPath,
             name.toDartString(),
@@ -574,7 +564,9 @@ final class PosixFileSystem extends FileSystem {
     final builder = BytesBuilder(copy: true);
 
     while (true) {
-      final r = _tempFailureRetry(() => read(fd, buffer, blockSize));
+      final r = _tempFailureRetry(
+        () => libc.read(fd, buffer.cast(), blockSize),
+      );
       switch (r) {
         case -1:
           final errno = libc.errno;
@@ -597,7 +589,7 @@ final class PosixFileSystem extends FileSystem {
 
       while (bufferOffset < length) {
         final r = _tempFailureRetry(
-          () => read(
+          () => libc.read(
             fd,
             (buffer + bufferOffset).cast(),
             min(length - bufferOffset, maxReadSize),
@@ -711,8 +703,11 @@ final class PosixFileSystem extends FileSystem {
 
         while (remaining > 0) {
           final w = _tempFailureRetry(
-            () =>
-                write(fd, buffer, min(remaining, min(maxWriteSize, remaining))),
+            () => libc.write(
+              fd,
+              buffer.cast(),
+              min(remaining, min(maxWriteSize, remaining)),
+            ),
           );
           if (w == -1) {
             final errno = libc.errno;

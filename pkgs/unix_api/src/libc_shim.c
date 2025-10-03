@@ -18,14 +18,18 @@
 
 char *libc_shim_d_name_ptr(struct libc_shim_dirent *d) { return d->d_name; }
 
-int libc_shim_closedir(libc_shim_DIR *d) {
+int libc_shim_closedir(libc_shim_DIR *d, int *err) {
+  errno = *err;
   int r = closedir(d->_dir);
+  *err = errno;
   free(d);
   return r;
 }
 
-libc_shim_DIR *libc_shim_fdopendir(int fd) {
+libc_shim_DIR *libc_shim_fdopendir(int fd, int *err) {
+  errno = *err;
   DIR *d = fdopendir(fd);
+  *err = errno;
   if (d == NULL) {
     return NULL;
   }
@@ -34,8 +38,10 @@ libc_shim_DIR *libc_shim_fdopendir(int fd) {
   return myd;
 }
 
-libc_shim_DIR *libc_shim_opendir(const char *path) {
+libc_shim_DIR *libc_shim_opendir(const char *path, int *err) {
+  errno = *err;
   DIR *d = opendir(path);
+  *err = errno;
   if (d == NULL) {
     return NULL;
   }
@@ -44,8 +50,10 @@ libc_shim_DIR *libc_shim_opendir(const char *path) {
   return myd;
 }
 
-struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *myd) {
+struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *myd, int *err) {
+  errno = *err;
   struct dirent *d = readdir(myd->_dir);
+  *err = errno;
   if (d == NULL) {
     return NULL;
   }
@@ -96,27 +104,33 @@ static void _fill(struct libc_shim_Stat *buf, struct stat *s) {
 #endif
 }
 
-int libc_shim_stat(const char *path, struct libc_shim_Stat *buf) {
+int libc_shim_stat(const char *path, struct libc_shim_Stat *buf, int *err) {
   struct stat s;
+  errno = *err;
   int r = stat(path, &s);
+  *err = errno;
   if (r != -1) {
     _fill(buf, &s);
   }
   return r;
 }
 
-int libc_shim_lstat(const char *path, struct libc_shim_Stat *buf) {
+int libc_shim_lstat(const char *path, struct libc_shim_Stat *buf, int *err) {
   struct stat s;
+  errno = *err;
   int r = lstat(path, &s);
+  *err = errno;
   if (r != -1) {
     _fill(buf, &s);
   }
   return r;
 }
 
-int libc_shim_fstat(int fd, struct libc_shim_Stat *buf) {
+int libc_shim_fstat(int fd, struct libc_shim_Stat *buf, int *err) {
   struct stat s;
+  errno = *err;
   int r = fstat(fd, &s);
+  *err = errno;
   if (r != -1) {
     _fill(buf, &s);
   }
@@ -124,9 +138,11 @@ int libc_shim_fstat(int fd, struct libc_shim_Stat *buf) {
 }
 
 int libc_shim_fstatat(int fd, char *path, struct libc_shim_Stat *buf,
-                      int flag) {
+                      int flag, int *err) {
   struct stat s;
+  errno = *err;
   int r = fstatat(fd, path, &s, flag);
+  *err = errno;
   if (r != -1) {
     _fill(buf, &s);
   }

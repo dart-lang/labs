@@ -21,9 +21,6 @@ ffi-native:
 structs:
   rename:
     'libc_shim_(.*)': '$1'
-functions:
-  rename:
-    'libc_shim_(.*)': '$1'
 typedefs:
   rename:
     'libc_shim_(.*)': '$1'

@@ -20,6 +20,18 @@
             "prototype": "int rename(const char *, const char *)"
         }
     ],
+    "<stdlib.h>": [
+        {
+            "comment": "Create a temporary directory.",
+            "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdtemp.html",
+            "prototype": "char *mkdtemp(char *)"
+        },
+        {
+            "comment": "Gets the value of an environment variable.",
+            "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/getenv.html",
+            "prototype": "char * getenv(const char *)"
+        }
+    ],
     "<string.h>": [
         {
             "comment": "Formats an error code as a string.",
@@ -32,6 +44,12 @@
             "comment": "Changes the mode of a file.",
             "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/chmod.html",
             "prototype": "int chmod(const char *, mode_t)",
+            "error_value": "-1"
+        },
+        {
+            "comment": "Creates a directory",
+            "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html",
+            "prototype": "int mkdir(const char *, mode_t)",
             "error_value": "-1"
         }
     ],
@@ -116,7 +134,15 @@
             "error_value": "-1"
         },
         {
+            "comment": "Reads from a file.",
+            "url": "https://pubs.opengroup.org/onlinepubs/009696699/functions/read.html",
             "prototype": "ssize_t read(int, void *, size_t)",
+            "error_value": "-1"
+        },
+        {
+            "comment": "Writes to a file.",
+            "url": "https://pubs.opengroup.org/onlinepubs/009696699/functions/write.html",
+            "prototype": "ssize_t write(int, const void *, size_t)",
             "error_value": "-1"
         },
         {

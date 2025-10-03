@@ -18,11 +18,23 @@ int libc_shim_rename(const char *, const char *, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))
+char * libc_shim_mkdtemp(char *, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+char * libc_shim_getenv(const char *, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
 char * libc_shim_strerror(int, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))
 int libc_shim_chmod(const char *, long, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_mkdir(const char *, long, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))
@@ -83,6 +95,10 @@ long libc_shim_getppid(int *);
 
 __attribute__((visibility("default"))) __attribute__((used))
 long libc_shim_read(int, void *, unsigned long, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+long libc_shim_write(int, const void *, unsigned long, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))

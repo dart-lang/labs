@@ -57,10 +57,10 @@ typedef struct {
 // TODO(brianquinlan): Remove `libc_shim_d_name_ptr` when there is a fix for:
 // https://github.com/dart-lang/sdk/issues/41237
 LIBC_SHIM_EXPORT char *libc_shim_d_name_ptr(struct libc_shim_dirent *d);
-LIBC_SHIM_EXPORT int libc_shim_closedir(libc_shim_DIR *d);
-LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_fdopendir(int fd);
-LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_opendir(const char *path);
-LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d);
+LIBC_SHIM_EXPORT int libc_shim_closedir(libc_shim_DIR *d, int *err);
+LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_fdopendir(int fd, int *err);
+LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_opendir(const char *path, int *err);
+LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d, int *err);
 
 // <sys/stat.h>
 struct libc_shim_timespec {
@@ -87,9 +87,9 @@ struct libc_shim_Stat {
 };
 
 LIBC_SHIM_EXPORT int libc_shim_stat(const char *path,
-                                    struct libc_shim_Stat *buf);
+                                    struct libc_shim_Stat *buf, int *err);
 LIBC_SHIM_EXPORT int libc_shim_lstat(const char *path,
-                                     struct libc_shim_Stat *buf);
-LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf);
+                                     struct libc_shim_Stat *buf, int *err);
+LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf, int *err);
 LIBC_SHIM_EXPORT int libc_shim_fstatat(int fd, char *path,
-                                       struct libc_shim_Stat *buf, int flag);
+                                       struct libc_shim_Stat *buf, int flag, int *err);

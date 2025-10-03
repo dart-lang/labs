@@ -38,6 +38,16 @@ ffi.Pointer<ffi.Char> arg1,
 ffi.Pointer<ffi.Int> arg2,
 );
 
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char> , ffi.Pointer<ffi.Int> )>()
+external ffi.Pointer<ffi.Char> libc_shim_mkdtemp(ffi.Pointer<ffi.Char> arg0,
+ffi.Pointer<ffi.Int> arg1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char> , ffi.Pointer<ffi.Int> )>()
+external ffi.Pointer<ffi.Char> libc_shim_getenv(ffi.Pointer<ffi.Char> arg0,
+ffi.Pointer<ffi.Int> arg1,
+);
+
 @ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Int , ffi.Pointer<ffi.Int> )>()
 external ffi.Pointer<ffi.Char> libc_shim_strerror(int arg0,
 ffi.Pointer<ffi.Int> arg1,
@@ -45,6 +55,12 @@ ffi.Pointer<ffi.Int> arg1,
 
 @ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char> , ffi.Long , ffi.Pointer<ffi.Int> )>()
 external int libc_shim_chmod(ffi.Pointer<ffi.Char> arg0,
+int arg1,
+ffi.Pointer<ffi.Int> arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char> , ffi.Long , ffi.Pointer<ffi.Int> )>()
+external int libc_shim_mkdir(ffi.Pointer<ffi.Char> arg0,
 int arg1,
 ffi.Pointer<ffi.Int> arg2,
 );
@@ -126,6 +142,13 @@ external int libc_shim_getppid(ffi.Pointer<ffi.Int> arg0,
 
 @ffi.Native<ffi.Long Function(ffi.Int , ffi.Pointer<ffi.Void> , ffi.UnsignedLong , ffi.Pointer<ffi.Int> )>()
 external int libc_shim_read(int arg0,
+ffi.Pointer<ffi.Void> arg1,
+int arg2,
+ffi.Pointer<ffi.Int> arg3,
+);
+
+@ffi.Native<ffi.Long Function(ffi.Int , ffi.Pointer<ffi.Void> , ffi.UnsignedLong , ffi.Pointer<ffi.Int> )>()
+external int libc_shim_write(int arg0,
 ffi.Pointer<ffi.Void> arg1,
 int arg2,
 ffi.Pointer<ffi.Int> arg3,
