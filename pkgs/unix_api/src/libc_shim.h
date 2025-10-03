@@ -62,15 +62,6 @@ LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_fdopendir(int fd);
 LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_opendir(const char *path);
 LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d);
 
-// <errno.h>
-LIBC_SHIM_EXPORT void libc_shim_seterrno(int err);
-LIBC_SHIM_EXPORT int libc_shim_errno(void);
-
-// <fcntl.h>
-LIBC_SHIM_EXPORT int libc_shim_open(const char *pathname, int flags, int mode);
-LIBC_SHIM_EXPORT int libc_shim_openat(int fd, const char *pathname, int flags,
-                                      int mode);
-
 // <sys/stat.h>
 struct libc_shim_timespec {
   int64_t tv_sec;
@@ -95,8 +86,6 @@ struct libc_shim_Stat {
   int64_t st_flags;
 };
 
-LIBC_SHIM_EXPORT int libc_shim_chmod(const char *path, int mode);
-LIBC_SHIM_EXPORT int libc_shim_mkdir(const char *pathname, int mode);
 LIBC_SHIM_EXPORT int libc_shim_stat(const char *path,
                                     struct libc_shim_Stat *buf);
 LIBC_SHIM_EXPORT int libc_shim_lstat(const char *path,
@@ -104,13 +93,3 @@ LIBC_SHIM_EXPORT int libc_shim_lstat(const char *path,
 LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf);
 LIBC_SHIM_EXPORT int libc_shim_fstatat(int fd, char *path,
                                        struct libc_shim_Stat *buf, int flag);
-
-// <stdlib.h>
-LIBC_SHIM_EXPORT char *libc_shim_getenv(const char *name);
-LIBC_SHIM_EXPORT char *libc_shim_mkdtemp(char *template);
-
-// <unistd.h>
-
-LIBC_SHIM_EXPORT char *libc_shim_getcwd(char *buf, int64_t size);
-LIBC_SHIM_EXPORT long libc_shim_getpid();
-LIBC_SHIM_EXPORT long libc_shim_getppid();

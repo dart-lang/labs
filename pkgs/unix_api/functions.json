@@ -33,7 +33,6 @@
             "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/chmod.html",
             "prototype": "int chmod(const char *, mode_t)",
             "error_value": "-1"
-
         }
     ],
     "<unistd.h>": [
@@ -96,6 +95,24 @@
             "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html",
             "prototype": "int fdatasync(int)",
             "available_ios": false,
+            "error_value": "-1"
+        },
+        {
+            "comment": "Gets the current working directory.",
+            "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/getcwd.html",
+            "prototype": "char * getcwd(char *, size_t)",
+            "error_value": "NULL"
+        },
+        {
+            "comment": "Gets the current process id.",
+            "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/getpid.html",
+            "prototype": "pid_t getpid(void)",
+            "error_value": "-1"
+        },
+        {
+            "comment": "Gets the parent process id.",
+            "url": "https://pubs.opengroup.org/onlinepubs/9699919799/functions/getppid.html",
+            "prototype": "pid_t getppid(void)",
             "error_value": "-1"
         },
         {

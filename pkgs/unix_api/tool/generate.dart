@@ -33,7 +33,13 @@ void main() async {
     '--config',
     'constants-ffigen.yaml',
   ]);
-
+  await ffigen.main([
+    '--no-format',
+    '-v',
+    'severe',
+    '--config',
+    'functions-ffigen.yaml',
+  ]);
   _formatFile('lib/src/constant_bindings.g.dart');
   _formatFile('lib/src/constants.g.dart');
   _formatFile('lib/src/libc_bindings.g.dart');

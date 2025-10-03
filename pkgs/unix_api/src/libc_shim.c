@@ -59,22 +59,6 @@ struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *myd) {
   return &(myd->libc_shim_dirent);
 }
 
-// <errno.h>
-
-void libc_shim_seterrno(int err) { errno = err; }
-
-int libc_shim_errno(void) { return errno; }
-
-// <fcntl.h>
-
-int libc_shim_open(const char *pathname, int flags, int mode) {
-  return open(pathname, flags, mode);
-}
-
-int libc_shim_openat(int fd, const char *pathname, int flags, int mode) {
-  return openat(fd, pathname, flags, mode);
-}
-
 // <sys/stat.h>
 
 static void _fill(struct libc_shim_Stat *buf, struct stat *s) {
@@ -110,14 +94,6 @@ static void _fill(struct libc_shim_Stat *buf, struct stat *s) {
   buf->st_mtim.tv_sec = s->st_mtim.tv_sec;
   buf->st_mtim.tv_nsec = s->st_mtim.tv_nsec;
 #endif
-}
-
-int libc_shim_chmod(const char *path, int mode) {
-  return chmod(path, mode);
-}
-
-int libc_shim_mkdir(const char *pathname, int mode) {
-  return mkdir(pathname, mode);
 }
 
 int libc_shim_stat(const char *path, struct libc_shim_Stat *buf) {
@@ -156,16 +132,3 @@ int libc_shim_fstatat(int fd, char *path, struct libc_shim_Stat *buf,
   }
   return r;
 }
-
-// <stdlib.h>
-
-char *libc_shim_getenv(const char *name) { return getenv(name); }
-
-char *libc_shim_mkdtemp(char *template) { return mkdtemp(template); }
-
-// <unistd.h>
-
-char *libc_shim_getcwd(char *buf, int64_t size) { return getcwd(buf, size); }
-
-long libc_shim_getpid() { return getpid(); }
-long libc_shim_getppid() { return getppid(); }

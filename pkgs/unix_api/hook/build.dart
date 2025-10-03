@@ -18,7 +18,7 @@ void main(List<String> args) async {
         if ([OS.linux].contains(input.config.code.targetOS)) 'crypt',
       ],
       sources: ['src/libc_shim.c', 'src/constants.g.c', 'src/functions.g.c'],
-      flags: ['-Weverything'],
+      flags: ['-Weverything', '-std=c99'],
     ).run(
       input: input,
       output: output,

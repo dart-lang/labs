@@ -4,13 +4,13 @@ description: |
   Bindings for `src/libc_shim.h`.
 
   Regenerate bindings with `dart run tool/generate.dart`.
-output: 'lib/src/libc_bindings.g.dart'
+output: 'lib/src/function_bindings.g.dart'
 headers:
   entry-points:
-    - 'src/libc_shim.h'
+    - 'src/functions.g.h'
 
   include-directives:
-    - 'src/libc_shim.h'
+    - 'src/functions.g.h'
 preamble: |
   // ignore_for_file: type=lint, unused_field
 comments:
@@ -18,12 +18,4 @@ comments:
   length: full
 ffi-native:
   asset-id: package:unix_api/libc_shim
-structs:
-  rename:
-    'libc_shim_(.*)': '$1'
-functions:
-  rename:
-    'libc_shim_(.*)': '$1'
-typedefs:
-  rename:
-    'libc_shim_(.*)': '$1'
+
