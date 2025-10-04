@@ -6,3 +6,5 @@ src/constants.g.c linguist-generated
 src/constants.g.h linguist-generated
 src/functions.g.c linguist-generated
 src/functions.g.h linguist-generated
+src/functions_bindings.g.dart linguist-generated
+src/functions.g.dart linguist-generated

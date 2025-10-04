@@ -17,112 +17,124 @@ int libc_shim_valid_mode_t(long a) { return (long)((mode_t) a) == a; }
 int libc_shim_valid_size_t(unsigned long a) { return (unsigned long)((size_t) a) == a; }
 
 int libc_shim_open(const char * arg0, int arg1, long arg2, int * err) {
+  int r;
   if (!libc_shim_valid_mode_t(arg2)) {
     *err = EDOM;
     return -1;
   }
   errno = *err;
-  int r = open(arg0, arg1, (mode_t) arg2);
+  r = open(arg0, arg1, (mode_t) arg2);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_openat(int arg0, const char * arg1, int arg2, long arg3, int * err) {
+  int r;
   if (!libc_shim_valid_mode_t(arg3)) {
     *err = EDOM;
     return -1;
   }
   errno = *err;
-  int r = openat(arg0, arg1, arg2, (mode_t) arg3);
+  r = openat(arg0, arg1, arg2, (mode_t) arg3);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_rename(const char * arg0, const char * arg1, int * err) {
+  int r;
   errno = *err;
-  int r = rename(arg0, arg1);
+  r = rename(arg0, arg1);
   *err = errno;
   return r;
 }
 
 
 char * libc_shim_mkdtemp(char * arg0, int * err) {
+  char * r;
   errno = *err;
-  char * r = mkdtemp(arg0);
+  r = mkdtemp(arg0);
   *err = errno;
   return r;
 }
 
 
 char * libc_shim_getenv(const char * arg0, int * err) {
+  char * r;
   errno = *err;
-  char * r = getenv(arg0);
+  r = getenv(arg0);
   *err = errno;
   return r;
 }
 
 
 char * libc_shim_strerror(int arg0, int * err) {
+  char * r;
   errno = *err;
-  char * r = strerror(arg0);
+  r = strerror(arg0);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_chmod(const char * arg0, long arg1, int * err) {
+  int r;
   if (!libc_shim_valid_mode_t(arg1)) {
     *err = EDOM;
     return -1;
   }
   errno = *err;
-  int r = chmod(arg0, (mode_t) arg1);
+  r = chmod(arg0, (mode_t) arg1);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_mkdir(const char * arg0, long arg1, int * err) {
+  int r;
   if (!libc_shim_valid_mode_t(arg1)) {
     *err = EDOM;
     return -1;
   }
   errno = *err;
-  int r = mkdir(arg0, (mode_t) arg1);
+  r = mkdir(arg0, (mode_t) arg1);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_access(const char * arg0, int arg1, int * err) {
+  int r;
   errno = *err;
-  int r = access(arg0, arg1);
+  r = access(arg0, arg1);
   *err = errno;
   return r;
 }
 
 
 unsigned libc_shim_alarm(unsigned arg0, int * err) {
+  unsigned r;
   errno = *err;
-  unsigned r = alarm(arg0);
+  r = alarm(arg0);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_chdir(const char * arg0, int * err) {
+  int r;
   errno = *err;
-  int r = chdir(arg0);
+  r = chdir(arg0);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_close(int arg0, int * err) {
+  int r;
   errno = *err;
-  int r = close(arg0);
+  r = close(arg0);
   *err = errno;
   return r;
 }
@@ -133,8 +145,9 @@ char * libc_shim_crypt(const char * arg0, const char * arg1, int * err) {
   *err = ENOSYS;
   return NULL;
 #else
+  char * r;
   errno = *err;
-  char * r = crypt(arg0, arg1);
+  r = crypt(arg0, arg1);
   *err = errno;
   return r;
 #endif
@@ -146,8 +159,9 @@ char * libc_shim_ctermid(char * arg0, int * err) {
   *err = ENOSYS;
   return "";
 #else
+  char * r;
   errno = *err;
-  char * r = ctermid(arg0);
+  r = ctermid(arg0);
   *err = errno;
   return r;
 #endif
@@ -155,32 +169,36 @@ char * libc_shim_ctermid(char * arg0, int * err) {
 
 
 int libc_shim_dup(int arg0, int * err) {
+  int r;
   errno = *err;
-  int r = dup(arg0);
+  r = dup(arg0);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_dup2(int arg0, int arg1, int * err) {
+  int r;
   errno = *err;
-  int r = dup2(arg0, arg1);
+  r = dup2(arg0, arg1);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_faccessat(int arg0, const char * arg1, int arg2, int arg3, int * err) {
+  int r;
   errno = *err;
-  int r = faccessat(arg0, arg1, arg2, arg3);
+  r = faccessat(arg0, arg1, arg2, arg3);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_fchdir(int arg0, int * err) {
+  int r;
   errno = *err;
-  int r = fchdir(arg0);
+  r = fchdir(arg0);
   *err = errno;
   return r;
 }
@@ -191,8 +209,9 @@ int libc_shim_fdatasync(int arg0, int * err) {
   *err = ENOSYS;
   return -1;
 #else
+  int r;
   errno = *err;
-  int r = fdatasync(arg0);
+  r = fdatasync(arg0);
   *err = errno;
   return r;
 #endif
@@ -200,20 +219,22 @@ int libc_shim_fdatasync(int arg0, int * err) {
 
 
 char * libc_shim_getcwd(char * arg0, unsigned long arg1, int * err) {
+  char * r;
   if (!libc_shim_valid_size_t(arg1)) {
     *err = EDOM;
     return NULL;
   }
   errno = *err;
-  char * r = getcwd(arg0, (size_t) arg1);
+  r = getcwd(arg0, (size_t) arg1);
   *err = errno;
   return r;
 }
 
 
 long libc_shim_getpid(int * err) {
+  pid_t r;
   errno = *err;
-  pid_t r = getpid();
+  r = getpid();
   *err = errno;
   if ((pid_t)((long) r) != r) {
     errno = ERANGE;
@@ -224,8 +245,9 @@ long libc_shim_getpid(int * err) {
 
 
 long libc_shim_getppid(int * err) {
+  pid_t r;
   errno = *err;
-  pid_t r = getppid();
+  r = getppid();
   *err = errno;
   if ((pid_t)((long) r) != r) {
     errno = ERANGE;
@@ -236,12 +258,13 @@ long libc_shim_getppid(int * err) {
 
 
 long libc_shim_read(int arg0, void * arg1, unsigned long arg2, int * err) {
+  ssize_t r;
   if (!libc_shim_valid_size_t(arg2)) {
     *err = EDOM;
     return -1;
   }
   errno = *err;
-  ssize_t r = read(arg0, arg1, (size_t) arg2);
+  r = read(arg0, arg1, (size_t) arg2);
   *err = errno;
   if ((ssize_t)((long) r) != r) {
     errno = ERANGE;
@@ -252,12 +275,13 @@ long libc_shim_read(int arg0, void * arg1, unsigned long arg2, int * err) {
 
 
 long libc_shim_write(int arg0, const void * arg1, unsigned long arg2, int * err) {
+  ssize_t r;
   if (!libc_shim_valid_size_t(arg2)) {
     *err = EDOM;
     return -1;
   }
   errno = *err;
-  ssize_t r = write(arg0, arg1, (size_t) arg2);
+  r = write(arg0, arg1, (size_t) arg2);
   *err = errno;
   if ((ssize_t)((long) r) != r) {
     errno = ERANGE;
@@ -268,16 +292,18 @@ long libc_shim_write(int arg0, const void * arg1, unsigned long arg2, int * err)
 
 
 int libc_shim_unlink(const char * arg0, int * err) {
+  int r;
   errno = *err;
-  int r = unlink(arg0);
+  r = unlink(arg0);
   *err = errno;
   return r;
 }
 
 
 int libc_shim_unlinkat(int arg0, const char * arg1, int arg2, int * err) {
+  int r;
   errno = *err;
-  int r = unlinkat(arg0, arg1, arg2);
+  r = unlinkat(arg0, arg1, arg2);
   *err = errno;
   return r;
 }

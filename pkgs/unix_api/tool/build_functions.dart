@@ -70,6 +70,7 @@ const _cFunctionImplementationTemplate = '''
   return {{error_return}};
 #else
 {{/unsupported_guard}}
+  {{unix_return_type}} r;
 {{#parameter_domain_checks}}
   if ({{parameter_domain_checks}}) {
     *err = EDOM;
@@ -77,7 +78,7 @@ const _cFunctionImplementationTemplate = '''
   }
 {{/parameter_domain_checks}}
   errno = *err;
-  {{unix_return_type}} r = {{function_name}}({{unix_call_arguments_with_casts}});
+  r = {{function_name}}({{unix_call_arguments_with_casts}});
   *err = errno;
 {{#parameter_range_check_required}}
   if (({{unix_return_type}})(({{ffi_return_type}}) r) != r) {
