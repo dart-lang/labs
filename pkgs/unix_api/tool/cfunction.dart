@@ -37,6 +37,9 @@ final _ffiToDartTypes = {
   'long': 'int',
 };
 
+/// A C function that validates that a Unix type (e.g. `mode_t`) is
+/// representable using the given equivalent type understood by `dart:ffi`
+/// (e.g. `long`).
 class DomainValidator {
   final String prefix;
   final String unixType;
