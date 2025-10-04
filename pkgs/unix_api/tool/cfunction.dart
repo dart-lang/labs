@@ -13,7 +13,7 @@ final _ffigenTypes = <Pattern>[
   'long',
 ];
 
-final _foo = {
+final _posixToFfiTypes = {
   // mode_t shall be an integer type.
   'mode_t': 'long',
   // blksize_t, pid_t, and ssize_t shall be signed integer types.
@@ -40,7 +40,7 @@ final _ffiToDartTypes = {
 class DomainValidator {
   final String prefix;
   final String unixType;
-  String get ffiType => _foo[unixType]!;
+  String get ffiType => _posixToFfiTypes[unixType]!;
   String get name => 'valid_$unixType';
 
   DomainValidator(this.prefix, this.unixType);
@@ -85,7 +85,7 @@ class CFunction {
   String get dartReturnType => _ffiToDartType(ffiReturnType);
 
   static String _unixToFfiType(String type) {
-    for (final t in _foo.entries) {
+    for (final t in _posixToFfiTypes.entries) {
       if (t.key.matchAsPrefix(type) != null) {
         return t.value;
       }
@@ -105,7 +105,9 @@ class CFunction {
     return _ffigenTypes.any(
           (ffigenType) => ffigenType.matchAsPrefix(type) != null,
         ) ||
-        _foo.keys.any((ffigenType) => ffigenType.matchAsPrefix(type) != null);
+        _posixToFfiTypes.keys.any(
+          (ffigenType) => ffigenType.matchAsPrefix(type) != null,
+        );
   }
 
   CFunction._(
