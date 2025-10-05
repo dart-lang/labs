@@ -14,7 +14,8 @@ POSIX platforms that Dart supports.
 In addition, `package:unix_api` implements `errno` in a way that makes it
 independent of the operation of the Dart VM, e.g., if the Dart VM makes Unix
 API calls as part of JIT compilation then the `errno` exported by
-`package:unix_api` is not affected.
+`package:unix_api` is not affected (see the Dart SDK issue
+[Support for capturing errno across calls](https://github.com/dart-lang/sdk/issues/38832)).
 
 | Package      | Required Tools   | Reliable `errno` | Supported Platforms                     | Fixed Disk Usage |
 | :---         | :--------------  | :--------------  | :-------------------------------------- | :--------------  |
