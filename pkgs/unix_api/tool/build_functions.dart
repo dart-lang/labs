@@ -132,8 +132,7 @@ String buildDartFunction(CFunction function) {
 /// o src/functions.g.c
 /// o src/functions.g.h
 ///
-/// After `build_functions.dart` completes, run:
-/// `dart run ffigen --config ffigen.yaml`
+/// Run as part of `generate.dart`.
 void main() {
   final headerToConstants =
       (json.decode(File('functions.json').readAsStringSync()) as Map)
