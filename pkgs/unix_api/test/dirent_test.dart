@@ -36,7 +36,7 @@ void main() {
           dirent != nullptr;
           dirent = readdir(dir)
         ) {
-          paths.add(d_name_ptr(dirent).cast<ffi.Utf8>().toDartString());
+          paths.add(dirent.d_name_ptr.cast<ffi.Utf8>().toDartString());
         }
 
         expect(paths, containsAll(['test1', 'dir1']));

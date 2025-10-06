@@ -75,6 +75,13 @@ int64_t libc_shim_get_EACCES(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
+int64_t libc_shim_get_EDOM(void) {
+#ifdef EDOM
+  assert(EDOM != libc_shim_UNDEFINED);
+  return EDOM;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_EEXIST(void) {
 #ifdef EEXIST
   assert(EEXIST != libc_shim_UNDEFINED);

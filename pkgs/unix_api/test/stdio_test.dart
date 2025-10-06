@@ -12,31 +12,46 @@ import 'package:path/path.dart' as p;
 void main() {
   group('stdio', () {
     late Directory tmp;
+    late ffi.Arena arena;
 
     setUp(() {
       tmp = Directory.systemTemp.createTempSync('stdio');
+      arena = ffi.Arena();
     });
 
     tearDown(() {
       tmp.deleteSync(recursive: true);
+      arena.releaseAll();
+    });
+    test('rename success', () {
+      final oldPath = p.join(tmp.path, 'test1');
+      final newPath = p.join(tmp.path, 'test2');
+      File(oldPath).createSync();
+
+      expect(
+        rename(
+          oldPath.toNativeUtf8(allocator: arena).cast(),
+          newPath.toNativeUtf8(allocator: arena).cast(),
+        ),
+        0,
+      );
+
+      expect(File(newPath).existsSync(), isTrue);
     });
 
-    test('rename', () {
+    test('rename failure', () {
       final oldPath = p.join(tmp.path, 'test1');
       final newPath = p.join(tmp.path, 'test2');
 
-      File(oldPath).createSync();
+      expect(
+        rename(
+          oldPath.toNativeUtf8(allocator: arena).cast(),
+          newPath.toNativeUtf8(allocator: arena).cast(),
+        ),
+        -1,
+      );
 
-      ffi.using((arena) {
-        expect(
-          rename(
-            oldPath.toNativeUtf8(allocator: arena).cast(),
-            newPath.toNativeUtf8(allocator: arena).cast(),
-          ),
-          0,
-        );
-        expect(File(newPath).existsSync(), isTrue);
-      });
+      expect(errno, ENOENT);
     });
   });
 }

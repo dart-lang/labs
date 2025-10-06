@@ -12,221 +12,82 @@ import 'dart:ffi' as ffi;
 ///
 /// TODO(brianquinlan): Remove `libc_shim_d_name_ptr` when there is a fix for:
 /// https://github.com/dart-lang/sdk/issues/41237
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<dirent>)>(
-  symbol: 'libc_shim_d_name_ptr',
-)
-external ffi.Pointer<ffi.Char> d_name_ptr(ffi.Pointer<dirent> d);
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<dirent>)>()
+external ffi.Pointer<ffi.Char> libc_shim_d_name_ptr(ffi.Pointer<dirent> d);
 
-@ffi.Native<ffi.Int Function(ffi.Pointer<DIR>)>(symbol: 'libc_shim_closedir')
-external int closedir(ffi.Pointer<DIR> d);
+@ffi.Native<ffi.Int Function(ffi.Pointer<DIR>, ffi.Pointer<ffi.Int>)>()
+external int libc_shim_closedir(ffi.Pointer<DIR> d, ffi.Pointer<ffi.Int> err);
 
-@ffi.Native<ffi.Pointer<DIR> Function(ffi.Int)>(symbol: 'libc_shim_fdopendir')
-external ffi.Pointer<DIR> fdopendir(int fd);
-
-@ffi.Native<ffi.Pointer<DIR> Function(ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_opendir',
-)
-external ffi.Pointer<DIR> opendir(ffi.Pointer<ffi.Char> path);
-
-@ffi.Native<ffi.Pointer<dirent> Function(ffi.Pointer<DIR>)>(
-  symbol: 'libc_shim_readdir',
-)
-external ffi.Pointer<dirent> readdir(ffi.Pointer<DIR> d);
-
-/// <errno.h>
-@ffi.Native<ffi.Void Function(ffi.Int)>(symbol: 'libc_shim_seterrno')
-external void seterrno(int err);
-
-@ffi.Native<ffi.Int Function()>(symbol: 'libc_shim_errno')
-external int errno();
-
-/// <fcntl.h>
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int)>(
-  symbol: 'libc_shim_open',
-)
-external int open(ffi.Pointer<ffi.Char> pathname, int flags, int mode);
-
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int)>(
-  symbol: 'libc_shim_openat',
-)
-external int openat(
-  int fd,
-  ffi.Pointer<ffi.Char> pathname,
-  int flags,
-  int mode,
-);
-
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
-  symbol: 'libc_shim_chmod',
-)
-external int chmod(ffi.Pointer<ffi.Char> path, int mode);
-
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
-  symbol: 'libc_shim_mkdir',
-)
-external int mkdir(ffi.Pointer<ffi.Char> pathname, int mode);
-
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>)>(
-  symbol: 'libc_shim_stat',
-)
-external int stat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
-
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>)>(
-  symbol: 'libc_shim_lstat',
-)
-external int lstat(ffi.Pointer<ffi.Char> path, ffi.Pointer<Stat> buf);
-
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<Stat>)>(
-  symbol: 'libc_shim_fstat',
-)
-external int fstat(int fd, ffi.Pointer<Stat> buf);
+@ffi.Native<ffi.Pointer<DIR> Function(ffi.Int, ffi.Pointer<ffi.Int>)>()
+external ffi.Pointer<DIR> libc_shim_fdopendir(int fd, ffi.Pointer<ffi.Int> err);
 
 @ffi.Native<
-  ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Pointer<Stat>, ffi.Int)
->(symbol: 'libc_shim_fstatat')
-external int fstatat(
+  ffi.Pointer<DIR> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)
+>()
+external ffi.Pointer<DIR> libc_shim_opendir(
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Pointer<dirent> Function(ffi.Pointer<DIR>, ffi.Pointer<ffi.Int>)
+>()
+external ffi.Pointer<dirent> libc_shim_readdir(
+  ffi.Pointer<DIR> d,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<Stat>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_stat(
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<Stat> buf,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<Stat>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_lstat(
+  ffi.Pointer<ffi.Char> path,
+  ffi.Pointer<Stat> buf,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(ffi.Int, ffi.Pointer<Stat>, ffi.Pointer<ffi.Int>)
+>()
+external int libc_shim_fstat(
+  int fd,
+  ffi.Pointer<Stat> buf,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Int,
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<Stat>,
+    ffi.Int,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_fstatat(
   int fd,
   ffi.Pointer<ffi.Char> path,
   ffi.Pointer<Stat> buf,
   int flag,
+  ffi.Pointer<ffi.Int> err,
 );
-
-/// <stdlib.h>
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_getenv',
-)
-external ffi.Pointer<ffi.Char> getenv(ffi.Pointer<ffi.Char> name);
-
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_mkdtemp',
-)
-external ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> template);
-
-/// <unistd.h>
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int64)>(
-  symbol: 'libc_shim_getcwd',
-)
-external ffi.Pointer<ffi.Char> getcwd(ffi.Pointer<ffi.Char> buf, int size);
-
-@ffi.Native<ffi.Long Function()>(symbol: 'libc_shim_getpid')
-external int getpid();
-
-@ffi.Native<ffi.Long Function()>(symbol: 'libc_shim_getppid')
-external int getppid();
-
-/// Renames a file.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html).
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_rename',
-)
-external int rename(ffi.Pointer<ffi.Char> arg0, ffi.Pointer<ffi.Char> arg1);
-
-/// Formats an error code as a string.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html).
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Int)>(
-  symbol: 'libc_shim_strerror',
-)
-external ffi.Pointer<ffi.Char> strerror(int arg0);
-
-/// Determines the accessibility of a file.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/access.html).
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>(
-  symbol: 'libc_shim_access',
-)
-external int access(ffi.Pointer<ffi.Char> arg0, int arg1);
-
-/// Schedules an alarm signal.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/alarm.html).
-@ffi.Native<ffi.UnsignedInt Function(ffi.UnsignedInt)>(
-  symbol: 'libc_shim_alarm',
-)
-external int alarm(int arg0);
-
-/// Changes the working directory.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html).
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_chdir')
-external int chdir(ffi.Pointer<ffi.Char> arg0);
-
-/// Closes a file descriptor.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html).
-@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_close')
-external int close(int arg0);
-
-/// Encrypts a string.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/crypt.html).
-@ffi.Native<
-  ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)
->(symbol: 'libc_shim_crypt')
-external ffi.Pointer<ffi.Char> crypt(
-  ffi.Pointer<ffi.Char> arg0,
-  ffi.Pointer<ffi.Char> arg1,
-);
-
-/// Generates a path name for the controlling terminal.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/ctermid.html).
-@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
-  symbol: 'libc_shim_ctermid',
-)
-external ffi.Pointer<ffi.Char> ctermid(ffi.Pointer<ffi.Char> arg0);
-
-/// Duplicates an open file descriptor.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/dup.html).
-@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_dup')
-external int dup(int arg0);
-
-/// Copies an open file descriptor into another.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/dup.html).
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(symbol: 'libc_shim_dup2')
-external int dup2(int arg0, int arg1);
-
-/// Determines the accessibility of a file descriptor.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/faccessat.html).
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int)>(
-  symbol: 'libc_shim_faccessat',
-)
-external int faccessat(
-  int arg0,
-  ffi.Pointer<ffi.Char> arg1,
-  int arg2,
-  int arg3,
-);
-
-/// Changes the current directory.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fchdir.html).
-@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_fchdir')
-external int fchdir(int arg0);
-
-/// Forces all queued I/O operations to complete.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html).
-@ffi.Native<ffi.Int Function(ffi.Int)>(symbol: 'libc_shim_fdatasync')
-external int fdatasync(int arg0);
-
-/// Removes a directory entry.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/linkat.html).
-@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(symbol: 'libc_shim_unlink')
-external int unlink(ffi.Pointer<ffi.Char> arg0);
-
-/// Removes a directory entry relative to another file.
-///
-/// Read the [specification](https://pubs.opengroup.org/onlinepubs/9699919799/functions/unlinkat.html).
-@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>(
-  symbol: 'libc_shim_unlinkat',
-)
-external int unlinkat(int arg0, ffi.Pointer<ffi.Char> arg1, int arg2);
 
 /// <dirent.h>
 final class dirent extends ffi.Struct {

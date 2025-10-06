@@ -36,6 +36,7 @@
   ],
   "<errno.h>": [
     "EACCES",
+    "EDOM",
     "EEXIST",
     "EINTR",
     "EMFILE",

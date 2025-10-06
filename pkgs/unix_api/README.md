@@ -11,11 +11,17 @@ Thare are two existing packages that provide POSIX API bindings for Dart:
 native code that cannot be tree shaken away. In exchange, it works on all
 POSIX platforms that Dart supports.
 
-| Package      | Required Tools   | Supported Platforms                     | Fixed Disk Usage |
-| :---         | :--------------  | :------------------------------------   | :--------------  |
-|  `posix`     | Dart             | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
-|  `stdlibc`   | Dart             | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
-|  `unix_api`  | Dart, C compiler | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
+In addition, `package:unix_api` implements `errno` in a way that makes it
+independent of the operation of the Dart VM, e.g., if the Dart VM makes Unix
+API calls as part of JIT compilation then the `errno` exported by
+`package:unix_api` is not affected (see the Dart SDK issue
+[Support for capturing errno across calls](https://github.com/dart-lang/sdk/issues/38832)).
+
+| Package      | Required Tools   | Reliable `errno` | Supported Platforms                     | Fixed Disk Usage |
+| :---         | :--------------  | :--------------  | :-------------------------------------- | :--------------  |
+|  `posix`     | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
+|  `stdlibc`   | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
+|  `unix_api`  | Dart, C compiler | Yes              | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
 
 ## Design
 

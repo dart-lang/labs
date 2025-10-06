@@ -63,7 +63,7 @@ void main() {
       );
     });
 
-    test('close/open', () {
+    test('close', () {
       final path = p.join(tmp.path, 'test1');
 
       File(path).createSync();
@@ -73,7 +73,7 @@ void main() {
         O_RDONLY | O_CLOEXEC,
         0,
       );
-      expect(fd, isNot(0));
+      expect(fd, isNot(-1));
 
       expect(close(fd), 0);
     });
@@ -167,6 +167,44 @@ void main() {
       addTearDown(() => close(fd));
 
       fdatasync(fd);
+    });
+
+    test('getpid', () {
+      expect(getpid(), isNot(-1));
+    });
+
+    test('getppid', () {
+      expect(getppid(), isNot(-1));
+    });
+
+    test('read', () {
+      final path = p.join(tmp.path, 'test1');
+      File(path).writeAsStringSync('Hello World!');
+      final fd = open(path.toNativeUtf8(allocator: arena).cast(), O_RDONLY, 0);
+      expect(fd, isNot(-1));
+
+      final buffer = arena<Uint8>(100);
+      final r = read(fd, buffer.cast(), 100);
+
+      expect(r, greaterThan(0));
+    });
+
+    test('write', () {
+      final path = p.join(tmp.path, 'test1');
+      final fd = open(
+        path.toNativeUtf8(allocator: arena).cast(),
+        O_CREAT | O_WRONLY,
+        0,
+      );
+      expect(fd, isNot(-1));
+
+      final w = write(
+        fd,
+        'Hello World'.toNativeUtf8(allocator: arena).cast(),
+        'Hello World'.length,
+      );
+
+      expect(w, greaterThan(0));
     });
 
     test('unlink', () {
