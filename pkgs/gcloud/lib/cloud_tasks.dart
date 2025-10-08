@@ -39,7 +39,7 @@ void registerTasksService(CloudTasks tasks) {
 abstract class CloudTasks {
   /// List of required OAuth2 scopes for Cloud Tasks operations.
   // ignore: constant_identifier_names
-  static const Scopes = [tasks.CloudTasksApi.cloudTasksScope];
+  static const Scopes = [tasks.CloudTasksApi.cloudPlatformScope];
 
   /// Access Cloud Tasks using an authenticated client.
   ///
