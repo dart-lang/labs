@@ -18,11 +18,11 @@ int libc_shim_rename(const char *, const char *, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))
-char * libc_shim_mkdtemp(char *, int *);
+char * libc_shim_getenv(const char *, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))
-char * libc_shim_getenv(const char *, int *);
+char * libc_shim_mkdtemp(char *, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))
