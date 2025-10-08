@@ -2,8 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:io';
+
+import 'package:yaml/yaml.dart';
 
 const _cSourceTemplate = '''
 // AUTO GENERATED FILE, DO NOT EDIT.
@@ -81,7 +82,7 @@ int get $constant {
 /// `dart run ffigen --config constants-ffigen.yaml`
 void main() {
   final headerToConstants =
-      (json.decode(File('constants.json').readAsStringSync()) as Map)
+      (loadYaml(File('constants.yaml').readAsStringSync()) as YamlMap)
           .cast<String, Object>();
 
   final cSourceBuffer = StringBuffer(_cSourceTemplate);

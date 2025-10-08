@@ -2,8 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:io';
+
+import 'package:yaml/yaml.dart';
 
 import 'cfunction.dart';
 
@@ -47,7 +48,7 @@ RegExp _cDeclaration = RegExp(
 /// `dart run ffigen --config ffigen.yaml`
 void main() {
   final headerToConstants =
-      (json.decode(File('functions.json').readAsStringSync()) as Map)
+      (loadYaml(File('functions.yaml').readAsStringSync()) as YamlMap)
           .cast<String, Object>();
 
   final cSourceBuffer = StringBuffer(_cSourceTemplate);
