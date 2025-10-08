@@ -64,7 +64,7 @@ external int libc_shim_rename(
 @ffi.Native<
   ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)
 >()
-external ffi.Pointer<ffi.Char> libc_shim_mkdtemp(
+external ffi.Pointer<ffi.Char> libc_shim_getenv(
   ffi.Pointer<ffi.Char> arg0,
   ffi.Pointer<ffi.Int> arg1,
 );
@@ -72,7 +72,7 @@ external ffi.Pointer<ffi.Char> libc_shim_mkdtemp(
 @ffi.Native<
   ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)
 >()
-external ffi.Pointer<ffi.Char> libc_shim_getenv(
+external ffi.Pointer<ffi.Char> libc_shim_mkdtemp(
   ffi.Pointer<ffi.Char> arg0,
   ffi.Pointer<ffi.Int> arg1,
 );

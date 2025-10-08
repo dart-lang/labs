@@ -51,19 +51,19 @@ int libc_shim_rename(const char * arg0, const char * arg1, int * err) {
 }
 
 
-char * libc_shim_mkdtemp(char * arg0, int * err) {
+char * libc_shim_getenv(const char * arg0, int * err) {
   char * r;
   errno = *err;
-  r = mkdtemp(arg0);
+  r = getenv(arg0);
   *err = errno;
   return r;
 }
 
 
-char * libc_shim_getenv(const char * arg0, int * err) {
+char * libc_shim_mkdtemp(char * arg0, int * err) {
   char * r;
   errno = *err;
-  r = getenv(arg0);
+  r = mkdtemp(arg0);
   *err = errno;
   return r;
 }

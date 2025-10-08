@@ -24,17 +24,17 @@ int openat(int arg0, ffi.Pointer<ffi.Char> arg1, int arg2, int arg3) =>
 int rename(ffi.Pointer<ffi.Char> arg0, ffi.Pointer<ffi.Char> arg1) =>
     libc_shim_rename(arg0, arg1, errnoPtr);
 
-/// Create a temporary directory.
-///
-/// See the [POSIX specification for `mkdtemp`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdtemp.html).
-ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> arg0) =>
-    libc_shim_mkdtemp(arg0, errnoPtr);
-
 /// Gets the value of an environment variable.
 ///
 /// See the [POSIX specification for `getenv`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/getenv.html).
 ffi.Pointer<ffi.Char> getenv(ffi.Pointer<ffi.Char> arg0) =>
     libc_shim_getenv(arg0, errnoPtr);
+
+/// Create a temporary directory.
+///
+/// See the [POSIX specification for `mkdtemp`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdtemp.html).
+ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> arg0) =>
+    libc_shim_mkdtemp(arg0, errnoPtr);
 
 /// Formats an error code as a string.
 ///
