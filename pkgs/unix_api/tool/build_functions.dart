@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:yaml/yaml.dart';
 import 'cfunction.dart';
 import 'package:mustache_template/mustache_template.dart';
 
@@ -126,16 +126,16 @@ String buildDartFunction(CFunction function) {
   return renderTemplate(dart, function);
 }
 
-/// Generates Dart and C source from "functions.json"
+/// Generates Dart and C source from "functions.yaml"
 ///
-/// Generates the following files based on "functions.json":
+/// Generates the following files based on "functions.yaml":
 /// o src/functions.g.c
 /// o src/functions.g.h
 ///
 /// Run as part of `generate.dart`.
 void main() {
   final headerToConstants =
-      (json.decode(File('functions.json').readAsStringSync()) as Map)
+      (loadYaml(File('functions.yaml').readAsStringSync()) as Map)
           .cast<String, Object>();
 
   final cSourceBuffer = StringBuffer(_cSourceTemplate);
