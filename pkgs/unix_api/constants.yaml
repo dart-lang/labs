@@ -56,6 +56,7 @@
   - UF_HIDDEN
 "<errno.h>":
   - EACCES
+  - EBADF
   - EDOM
   - EEXIST
   - EINTR

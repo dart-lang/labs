@@ -34,6 +34,9 @@ external int get_DT_UNKNOWN();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EACCES')
 external int get_EACCES();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EBADF')
+external int get_EBADF();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EDOM')
 external int get_EDOM();
 

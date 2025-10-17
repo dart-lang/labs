@@ -28,6 +28,8 @@ int64_t libc_shim_get_DT_UNKNOWN(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EACCES(void);
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_EBADF(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EDOM(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EEXIST(void);

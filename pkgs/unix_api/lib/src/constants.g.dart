@@ -86,6 +86,15 @@ int get EACCES {
   }
 }
 
+int get EBADF {
+  final v = get_EBADF();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('EBADF');
+  } else {
+    return v;
+  }
+}
+
 int get EDOM {
   final v = get_EDOM();
   if (v == libc_shim_UNDEFINED) {
