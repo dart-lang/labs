@@ -51,5 +51,6 @@ void main() async {
   _formatFile('lib/src/constants.g.dart');
   _formatFile('lib/src/function_bindings.g.dart');
   _formatFile('lib/src/functions.g.dart');
+  _formatFile('lib/src/handwritten_constant_bindings.g.dart');
   _formatFile('lib/src/libc_bindings.g.dart');
 }
