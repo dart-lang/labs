@@ -10,11 +10,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
 int libc_shim_valid_mode_t(long a) { return (long)((mode_t) a) == a; }
 
 int libc_shim_valid_size_t(unsigned long a) { return (unsigned long)((size_t) a) == a; }
+
+int libc_shim_valid_off_t(long a) { return (long)((off_t) a) == a; }
 
 int libc_shim_open(const char * arg0, int arg1, long arg2, int * err) {
   int r;
@@ -73,6 +76,80 @@ char * libc_shim_strerror(int arg0, int * err) {
   char * r;
   errno = *err;
   r = strerror(arg0);
+  *err = errno;
+  return r;
+}
+
+
+int libc_shim_mlock(const void * arg0, unsigned long arg1, int * err) {
+  int r;
+  if (!libc_shim_valid_size_t(arg1)) {
+    *err = EDOM;
+    return -1;
+  }
+  errno = *err;
+  r = mlock(arg0, (size_t) arg1);
+  *err = errno;
+  return r;
+}
+
+
+int libc_shim_mlockall(int arg0, int * err) {
+  int r;
+  errno = *err;
+  r = mlockall(arg0);
+  *err = errno;
+  return r;
+}
+
+
+void * libc_shim_mmap(void * arg0, unsigned long arg1, int arg2, int arg3, int arg4, long arg5, int * err) {
+  void * r;
+  if (!libc_shim_valid_size_t(arg1) && !libc_shim_valid_off_t(arg5)) {
+    *err = EDOM;
+    return MAP_FAILED;
+  }
+  errno = *err;
+  r = mmap(arg0, (size_t) arg1, arg2, arg3, arg4, (off_t) arg5);
+  *err = errno;
+  return r;
+}
+
+
+int libc_shim_mprotect(void * arg0, unsigned long arg1, int arg2, int * err) {
+  int r;
+  if (!libc_shim_valid_size_t(arg1)) {
+    *err = EDOM;
+    return -1;
+  }
+  errno = *err;
+  r = mprotect(arg0, (size_t) arg1, arg2);
+  *err = errno;
+  return r;
+}
+
+
+int libc_shim_munlock(const void * arg0, unsigned long arg1, int * err) {
+  int r;
+  if (!libc_shim_valid_size_t(arg1)) {
+    *err = EDOM;
+    return -1;
+  }
+  errno = *err;
+  r = munlock(arg0, (size_t) arg1);
+  *err = errno;
+  return r;
+}
+
+
+int libc_shim_munmap(void * arg0, unsigned long arg1, int * err) {
+  int r;
+  if (!libc_shim_valid_size_t(arg1)) {
+    *err = EDOM;
+    return -1;
+  }
+  errno = *err;
+  r = munmap(arg0, (size_t) arg1);
   *err = errno;
   return r;
 }

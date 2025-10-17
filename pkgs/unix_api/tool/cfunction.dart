@@ -22,6 +22,9 @@ final _posixToFfiTypes = {
   'ssize_t': 'long',
   // size_t shall be an unsigned integer type.
   'size_t': 'unsigned long',
+  // blkcnt_t and off_t shall be signed integer types.
+  'blkcnt_t': 'long',
+  'off_t': 'long',
 };
 
 final _ffiToDartTypes = {

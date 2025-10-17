@@ -113,6 +113,15 @@ int get EINTR {
   }
 }
 
+int get EINVAL {
+  final v = get_EINVAL();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('EINVAL');
+  } else {
+    return v;
+  }
+}
+
 int get EMFILE {
   final v = get_EMFILE();
   if (v == libc_shim_UNDEFINED) {
@@ -270,6 +279,195 @@ int get L_ctermid {
   final v = get_L_ctermid();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('L_ctermid');
+  } else {
+    return v;
+  }
+}
+
+int get MAP_ANONYMOUS {
+  final v = get_MAP_ANONYMOUS();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MAP_ANONYMOUS');
+  } else {
+    return v;
+  }
+}
+
+int get MAP_FIXED {
+  final v = get_MAP_FIXED();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MAP_FIXED');
+  } else {
+    return v;
+  }
+}
+
+int get MAP_PRIVATE {
+  final v = get_MAP_PRIVATE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MAP_PRIVATE');
+  } else {
+    return v;
+  }
+}
+
+int get MAP_SHARED {
+  final v = get_MAP_SHARED();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MAP_SHARED');
+  } else {
+    return v;
+  }
+}
+
+int get MCL_CURRENT {
+  final v = get_MCL_CURRENT();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MCL_CURRENT');
+  } else {
+    return v;
+  }
+}
+
+int get MCL_FUTURE {
+  final v = get_MCL_FUTURE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MCL_FUTURE');
+  } else {
+    return v;
+  }
+}
+
+int get MS_ASYNC {
+  final v = get_MS_ASYNC();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MS_ASYNC');
+  } else {
+    return v;
+  }
+}
+
+int get MS_INVALIDATE {
+  final v = get_MS_INVALIDATE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MS_INVALIDATE');
+  } else {
+    return v;
+  }
+}
+
+int get MS_SYNC {
+  final v = get_MS_SYNC();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('MS_SYNC');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_MADV_DONTNEED {
+  final v = get_POSIX_MADV_DONTNEED();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_MADV_DONTNEED');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_MADV_NORMAL {
+  final v = get_POSIX_MADV_NORMAL();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_MADV_NORMAL');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_MADV_RANDOM {
+  final v = get_POSIX_MADV_RANDOM();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_MADV_RANDOM');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_MADV_SEQUENTIAL {
+  final v = get_POSIX_MADV_SEQUENTIAL();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_MADV_SEQUENTIAL');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_MADV_WILLNEED {
+  final v = get_POSIX_MADV_WILLNEED();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_MADV_WILLNEED');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_TYPED_MEM_ALLOCATE {
+  final v = get_POSIX_TYPED_MEM_ALLOCATE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_TYPED_MEM_ALLOCATE');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_TYPED_MEM_ALLOCATE_CONTIG {
+  final v = get_POSIX_TYPED_MEM_ALLOCATE_CONTIG();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_TYPED_MEM_ALLOCATE_CONTIG');
+  } else {
+    return v;
+  }
+}
+
+int get POSIX_TYPED_MEM_MAP_ALLOCATABLE {
+  final v = get_POSIX_TYPED_MEM_MAP_ALLOCATABLE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('POSIX_TYPED_MEM_MAP_ALLOCATABLE');
+  } else {
+    return v;
+  }
+}
+
+int get PROT_EXEC {
+  final v = get_PROT_EXEC();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PROT_EXEC');
+  } else {
+    return v;
+  }
+}
+
+int get PROT_NONE {
+  final v = get_PROT_NONE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PROT_NONE');
+  } else {
+    return v;
+  }
+}
+
+int get PROT_READ {
+  final v = get_PROT_READ();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PROT_READ');
+  } else {
+    return v;
+  }
+}
+
+int get PROT_WRITE {
+  final v = get_PROT_WRITE();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('PROT_WRITE');
   } else {
     return v;
   }

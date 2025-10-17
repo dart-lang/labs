@@ -5,6 +5,8 @@ int libc_shim_valid_mode_t(long);
 
 int libc_shim_valid_size_t(unsigned long);
 
+int libc_shim_valid_off_t(long);
+
 __attribute__((visibility("default"))) __attribute__((used))
 int libc_shim_open(const char *, int, long, int *);
 
@@ -27,6 +29,30 @@ char * libc_shim_mkdtemp(char *, int *);
 
 __attribute__((visibility("default"))) __attribute__((used))
 char * libc_shim_strerror(int, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_mlock(const void *, unsigned long, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_mlockall(int, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+void * libc_shim_mmap(void *, unsigned long, int, int, int, long, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_mprotect(void *, unsigned long, int, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_munlock(const void *, unsigned long, int *);
+
+
+__attribute__((visibility("default"))) __attribute__((used))
+int libc_shim_munmap(void *, unsigned long, int *);
 
 
 __attribute__((visibility("default"))) __attribute__((used))

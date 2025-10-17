@@ -40,6 +40,13 @@ void main() async {
     '--config',
     'functions-ffigen.yaml',
   ]);
+  await ffigen.main([
+    '--no-format',
+    '-v',
+    'severe',
+    '--config',
+    'handwritten-constants-ffigen.yaml',
+  ]);
   _formatFile('lib/src/constant_bindings.g.dart');
   _formatFile('lib/src/constants.g.dart');
   _formatFile('lib/src/function_bindings.g.dart');
