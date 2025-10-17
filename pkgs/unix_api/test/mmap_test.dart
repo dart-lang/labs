@@ -82,7 +82,7 @@ void main() {
       final address = mmap(nullptr, 0, PROT_READ, MAP_SHARED, -1, 0);
 
       expect(address, MAP_FAILED);
-      expect(errno, anyOf([EINVAL, EBADF]);
+      expect(errno, anyOf([EBADF, EINVAL]));
     });
 
     test('mprotect success', () {
