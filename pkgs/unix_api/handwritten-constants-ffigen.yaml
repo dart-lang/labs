@@ -1,0 +1,18 @@
+# Run with `dart run ffigen --config constants-ffigen.yaml`.
+name: NativeAddBindings
+description: |
+  Bindings for `handwritten_constants.h`.
+
+  Regenerate bindings with `dart run tool/generate.dart`.
+output: 'lib/src/handwritten_constant_bindings.g.dart'
+headers:
+  entry-points:
+    - 'src/handwritten_constants.h'
+
+  include-directives:
+    - 'src/handwritten_constants.h'
+comments:
+  style: any
+  length: full
+ffi-native:
+  asset-id: package:unix_api/libc_shim

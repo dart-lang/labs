@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
 int64_t libc_shim_get_DT_BLK(void) {
@@ -75,6 +76,13 @@ int64_t libc_shim_get_EACCES(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
+int64_t libc_shim_get_EBADF(void) {
+#ifdef EBADF
+  assert(EBADF != libc_shim_UNDEFINED);
+  return EBADF;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_EDOM(void) {
 #ifdef EDOM
   assert(EDOM != libc_shim_UNDEFINED);
@@ -93,6 +101,13 @@ int64_t libc_shim_get_EINTR(void) {
 #ifdef EINTR
   assert(EINTR != libc_shim_UNDEFINED);
   return EINTR;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_EINVAL(void) {
+#ifdef EINVAL
+  assert(EINVAL != libc_shim_UNDEFINED);
+  return EINVAL;
 #endif
   return libc_shim_UNDEFINED;
 }
@@ -219,6 +234,153 @@ int64_t libc_shim_get_L_ctermid(void) {
 #ifdef L_ctermid
   assert(L_ctermid != libc_shim_UNDEFINED);
   return L_ctermid;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MAP_ANONYMOUS(void) {
+#ifdef MAP_ANONYMOUS
+  assert(MAP_ANONYMOUS != libc_shim_UNDEFINED);
+  return MAP_ANONYMOUS;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MAP_FIXED(void) {
+#ifdef MAP_FIXED
+  assert(MAP_FIXED != libc_shim_UNDEFINED);
+  return MAP_FIXED;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MAP_PRIVATE(void) {
+#ifdef MAP_PRIVATE
+  assert(MAP_PRIVATE != libc_shim_UNDEFINED);
+  return MAP_PRIVATE;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MAP_SHARED(void) {
+#ifdef MAP_SHARED
+  assert(MAP_SHARED != libc_shim_UNDEFINED);
+  return MAP_SHARED;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MCL_CURRENT(void) {
+#ifdef MCL_CURRENT
+  assert(MCL_CURRENT != libc_shim_UNDEFINED);
+  return MCL_CURRENT;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MCL_FUTURE(void) {
+#ifdef MCL_FUTURE
+  assert(MCL_FUTURE != libc_shim_UNDEFINED);
+  return MCL_FUTURE;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MS_ASYNC(void) {
+#ifdef MS_ASYNC
+  assert(MS_ASYNC != libc_shim_UNDEFINED);
+  return MS_ASYNC;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MS_INVALIDATE(void) {
+#ifdef MS_INVALIDATE
+  assert(MS_INVALIDATE != libc_shim_UNDEFINED);
+  return MS_INVALIDATE;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_MS_SYNC(void) {
+#ifdef MS_SYNC
+  assert(MS_SYNC != libc_shim_UNDEFINED);
+  return MS_SYNC;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_MADV_DONTNEED(void) {
+#ifdef POSIX_MADV_DONTNEED
+  assert(POSIX_MADV_DONTNEED != libc_shim_UNDEFINED);
+  return POSIX_MADV_DONTNEED;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_MADV_NORMAL(void) {
+#ifdef POSIX_MADV_NORMAL
+  assert(POSIX_MADV_NORMAL != libc_shim_UNDEFINED);
+  return POSIX_MADV_NORMAL;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_MADV_RANDOM(void) {
+#ifdef POSIX_MADV_RANDOM
+  assert(POSIX_MADV_RANDOM != libc_shim_UNDEFINED);
+  return POSIX_MADV_RANDOM;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_MADV_SEQUENTIAL(void) {
+#ifdef POSIX_MADV_SEQUENTIAL
+  assert(POSIX_MADV_SEQUENTIAL != libc_shim_UNDEFINED);
+  return POSIX_MADV_SEQUENTIAL;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_MADV_WILLNEED(void) {
+#ifdef POSIX_MADV_WILLNEED
+  assert(POSIX_MADV_WILLNEED != libc_shim_UNDEFINED);
+  return POSIX_MADV_WILLNEED;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_TYPED_MEM_ALLOCATE(void) {
+#ifdef POSIX_TYPED_MEM_ALLOCATE
+  assert(POSIX_TYPED_MEM_ALLOCATE != libc_shim_UNDEFINED);
+  return POSIX_TYPED_MEM_ALLOCATE;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_TYPED_MEM_ALLOCATE_CONTIG(void) {
+#ifdef POSIX_TYPED_MEM_ALLOCATE_CONTIG
+  assert(POSIX_TYPED_MEM_ALLOCATE_CONTIG != libc_shim_UNDEFINED);
+  return POSIX_TYPED_MEM_ALLOCATE_CONTIG;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_POSIX_TYPED_MEM_MAP_ALLOCATABLE(void) {
+#ifdef POSIX_TYPED_MEM_MAP_ALLOCATABLE
+  assert(POSIX_TYPED_MEM_MAP_ALLOCATABLE != libc_shim_UNDEFINED);
+  return POSIX_TYPED_MEM_MAP_ALLOCATABLE;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_PROT_EXEC(void) {
+#ifdef PROT_EXEC
+  assert(PROT_EXEC != libc_shim_UNDEFINED);
+  return PROT_EXEC;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_PROT_NONE(void) {
+#ifdef PROT_NONE
+  assert(PROT_NONE != libc_shim_UNDEFINED);
+  return PROT_NONE;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_PROT_READ(void) {
+#ifdef PROT_READ
+  assert(PROT_READ != libc_shim_UNDEFINED);
+  return PROT_READ;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_PROT_WRITE(void) {
+#ifdef PROT_WRITE
+  assert(PROT_WRITE != libc_shim_UNDEFINED);
+  return PROT_WRITE;
 #endif
   return libc_shim_UNDEFINED;
 }

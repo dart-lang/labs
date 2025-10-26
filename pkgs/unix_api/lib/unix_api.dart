@@ -9,6 +9,7 @@ import 'src/errno.dart';
 export 'src/bespoke.dart';
 export 'src/constants.g.dart';
 export 'src/functions.g.dart';
+export 'src/handwritten_constants.dart';
 
 /// The code that indicates the reason for a failed function call.
 ///

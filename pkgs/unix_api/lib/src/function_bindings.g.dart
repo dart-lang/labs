@@ -16,6 +16,9 @@ external int libc_shim_valid_mode_t(int arg0);
 @ffi.Native<ffi.Int Function(ffi.UnsignedLong)>()
 external int libc_shim_valid_size_t(int arg0);
 
+@ffi.Native<ffi.Int Function(ffi.Long)>()
+external int libc_shim_valid_off_t(int arg0);
+
 @ffi.Native<
   ffi.Int Function(
     ffi.Pointer<ffi.Char>,
@@ -81,6 +84,84 @@ external ffi.Pointer<ffi.Char> libc_shim_mkdtemp(
 external ffi.Pointer<ffi.Char> libc_shim_strerror(
   int arg0,
   ffi.Pointer<ffi.Int> arg1,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Void>,
+    ffi.UnsignedLong,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_mlock(
+  ffi.Pointer<ffi.Void> arg0,
+  int arg1,
+  ffi.Pointer<ffi.Int> arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Int>)>()
+external int libc_shim_mlockall(int arg0, ffi.Pointer<ffi.Int> arg1);
+
+@ffi.Native<
+  ffi.Pointer<ffi.Void> Function(
+    ffi.Pointer<ffi.Void>,
+    ffi.UnsignedLong,
+    ffi.Int,
+    ffi.Int,
+    ffi.Int,
+    ffi.Long,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external ffi.Pointer<ffi.Void> libc_shim_mmap(
+  ffi.Pointer<ffi.Void> arg0,
+  int arg1,
+  int arg2,
+  int arg3,
+  int arg4,
+  int arg5,
+  ffi.Pointer<ffi.Int> arg6,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Void>,
+    ffi.UnsignedLong,
+    ffi.Int,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_mprotect(
+  ffi.Pointer<ffi.Void> arg0,
+  int arg1,
+  int arg2,
+  ffi.Pointer<ffi.Int> arg3,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Void>,
+    ffi.UnsignedLong,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_munlock(
+  ffi.Pointer<ffi.Void> arg0,
+  int arg1,
+  ffi.Pointer<ffi.Int> arg2,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Void>,
+    ffi.UnsignedLong,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_munmap(
+  ffi.Pointer<ffi.Void> arg0,
+  int arg1,
+  ffi.Pointer<ffi.Int> arg2,
 );
 
 @ffi.Native<

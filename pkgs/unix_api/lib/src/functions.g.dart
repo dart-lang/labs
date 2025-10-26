@@ -41,6 +41,47 @@ ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> arg0) =>
 /// See the [POSIX specification for `strerror`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html).
 ffi.Pointer<ffi.Char> strerror(int arg0) => libc_shim_strerror(arg0, errnoPtr);
 
+/// Locks a range of process address space.
+///
+/// See the [POSIX specification for `mlock`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mlock.html).
+int mlock(ffi.Pointer<ffi.Void> arg0, int arg1) =>
+    libc_shim_mlock(arg0, arg1, errnoPtr);
+
+/// Locks the processes address space.
+///
+/// See the [POSIX specification for `mlockall`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mlockall.html).
+int mlockall(int arg0) => libc_shim_mlockall(arg0, errnoPtr);
+
+/// Maps pages of memory.
+///
+/// See the [POSIX specification for `mmap`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mmap.html).
+ffi.Pointer<ffi.Void> mmap(
+  ffi.Pointer<ffi.Void> arg0,
+  int arg1,
+  int arg2,
+  int arg3,
+  int arg4,
+  int arg5,
+) => libc_shim_mmap(arg0, arg1, arg2, arg3, arg4, arg5, errnoPtr);
+
+/// Sets the protection of mapped memory.
+///
+/// See the [POSIX specification for `mprotect`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mprotect.html).
+int mprotect(ffi.Pointer<ffi.Void> arg0, int arg1, int arg2) =>
+    libc_shim_mprotect(arg0, arg1, arg2, errnoPtr);
+
+/// Unlocks a range of process address space."
+///
+/// See the [POSIX specification for `munlock`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/munlock.html).
+int munlock(ffi.Pointer<ffi.Void> arg0, int arg1) =>
+    libc_shim_munlock(arg0, arg1, errnoPtr);
+
+/// Unmaps pages of memory.
+///
+/// See the [POSIX specification for `munmap`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/munmap.html).
+int munmap(ffi.Pointer<ffi.Void> arg0, int arg1) =>
+    libc_shim_munmap(arg0, arg1, errnoPtr);
+
 /// Changes the mode of a file.
 ///
 /// See the [POSIX specification for `chmod`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/chmod.html).

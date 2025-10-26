@@ -34,6 +34,9 @@ external int get_DT_UNKNOWN();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EACCES')
 external int get_EACCES();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EBADF')
+external int get_EBADF();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EDOM')
 external int get_EDOM();
 
@@ -42,6 +45,9 @@ external int get_EEXIST();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EINTR')
 external int get_EINTR();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EINVAL')
+external int get_EINVAL();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EMFILE')
 external int get_EMFILE();
@@ -96,6 +102,75 @@ external int get_PATH_MAX();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_L_ctermid')
 external int get_L_ctermid();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MAP_ANONYMOUS')
+external int get_MAP_ANONYMOUS();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MAP_FIXED')
+external int get_MAP_FIXED();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MAP_PRIVATE')
+external int get_MAP_PRIVATE();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MAP_SHARED')
+external int get_MAP_SHARED();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MCL_CURRENT')
+external int get_MCL_CURRENT();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MCL_FUTURE')
+external int get_MCL_FUTURE();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MS_ASYNC')
+external int get_MS_ASYNC();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MS_INVALIDATE')
+external int get_MS_INVALIDATE();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_MS_SYNC')
+external int get_MS_SYNC();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_POSIX_MADV_DONTNEED')
+external int get_POSIX_MADV_DONTNEED();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_POSIX_MADV_NORMAL')
+external int get_POSIX_MADV_NORMAL();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_POSIX_MADV_RANDOM')
+external int get_POSIX_MADV_RANDOM();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_POSIX_MADV_SEQUENTIAL')
+external int get_POSIX_MADV_SEQUENTIAL();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_POSIX_MADV_WILLNEED')
+external int get_POSIX_MADV_WILLNEED();
+
+@ffi.Native<ffi.Int64 Function()>(
+  symbol: 'libc_shim_get_POSIX_TYPED_MEM_ALLOCATE',
+)
+external int get_POSIX_TYPED_MEM_ALLOCATE();
+
+@ffi.Native<ffi.Int64 Function()>(
+  symbol: 'libc_shim_get_POSIX_TYPED_MEM_ALLOCATE_CONTIG',
+)
+external int get_POSIX_TYPED_MEM_ALLOCATE_CONTIG();
+
+@ffi.Native<ffi.Int64 Function()>(
+  symbol: 'libc_shim_get_POSIX_TYPED_MEM_MAP_ALLOCATABLE',
+)
+external int get_POSIX_TYPED_MEM_MAP_ALLOCATABLE();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PROT_EXEC')
+external int get_PROT_EXEC();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PROT_NONE')
+external int get_PROT_NONE();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PROT_READ')
+external int get_PROT_READ();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_PROT_WRITE')
+external int get_PROT_WRITE();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_SYMLINK_NOFOLLOW')
 external int get_AT_SYMLINK_NOFOLLOW();
