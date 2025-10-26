@@ -41,18 +41,18 @@ ffi.Pointer<ffi.Char> mkdtemp(ffi.Pointer<ffi.Char> arg0) =>
 /// See the [POSIX specification for `strerror`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror.html).
 ffi.Pointer<ffi.Char> strerror(int arg0) => libc_shim_strerror(arg0, errnoPtr);
 
-/// Locks a range of process address space."
+/// Locks a range of process address space.
 ///
 /// See the [POSIX specification for `mlock`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mlock.html).
 int mlock(ffi.Pointer<ffi.Void> arg0, int arg1) =>
     libc_shim_mlock(arg0, arg1, errnoPtr);
 
-/// Locks the processes address space."
+/// Locks the processes address space.
 ///
 /// See the [POSIX specification for `mlockall`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mlockall.html).
 int mlockall(int arg0) => libc_shim_mlockall(arg0, errnoPtr);
 
-/// Locks or unlocks the processes address space."
+/// Maps pages of memory.
 ///
 /// See the [POSIX specification for `mmap`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/mmap.html).
 ffi.Pointer<ffi.Void> mmap(
@@ -76,7 +76,7 @@ int mprotect(ffi.Pointer<ffi.Void> arg0, int arg1, int arg2) =>
 int munlock(ffi.Pointer<ffi.Void> arg0, int arg1) =>
     libc_shim_munlock(arg0, arg1, errnoPtr);
 
-/// Locks or unlocks the processes address space."
+/// Unmaps pages of memory.
 ///
 /// See the [POSIX specification for `munmap`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/munmap.html).
 int munmap(ffi.Pointer<ffi.Void> arg0, int arg1) =>
