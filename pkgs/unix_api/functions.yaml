@@ -31,7 +31,7 @@
     comment: Locks the processes address space."
     url: "https://pubs.opengroup.org/onlinepubs/9699919799/functions/mlockall.html"
   - prototype: "void *mmap(void *, size_t, int, int, int, off_t)"
-    comment: Locks or unlocks the processes address space."
+    comment: Maps pages of memory."
     url: "https://pubs.opengroup.org/onlinepubs/9699919799/functions/mmap.html"
     error_value: "MAP_FAILED"
   - prototype: "int mprotect(void *, size_t, int)"
@@ -43,7 +43,7 @@
     url: "https://pubs.opengroup.org/onlinepubs/9699919799/functions/munlock.html"
     error_value: "-1"
   - prototype: "int munmap(void *, size_t)"
-    comment: Locks or unlocks the processes address space."
+    comment: Unmaps pages of memory."
     url: "https://pubs.opengroup.org/onlinepubs/9699919799/functions/munmap.html"
     error_value: "-1"
 "<sys/stat.h>":
