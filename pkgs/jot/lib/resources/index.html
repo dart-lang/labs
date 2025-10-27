@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html data-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+
+  <title>{{ page-title }}</title>
+
+  <link id="theme-stylesheet" href="{{ prefix }}_resources/styles-dark.css" type="text/css" rel="stylesheet" />
+  <link href="{{ prefix }}_resources/styles.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body data-path="{{ pageRef }}">
+
+  <!-- navbar -->
+
+  <nav class="navbar navbar--fixed-top">
+    <div class="navbar__inner">
+      <div class="navbar__items">
+        <span class="navbar__brand">
+          <b class="navbar__title text--truncate">{{ page-title }}</b>
+        </span>
+      </div>
+
+      <div class="navbar__items navbar__items--right">
+
+        {{ navbar }}
+
+        <div class="colorModeToggle">
+          <button id="color-mode-button" class="clean-btn toggleButton" type="button"
+            title="Switch between dark and light mode (currently light mode)">
+            <img src="{{ prefix }}_resources/toggle-light.svg" width="24" height="24" class="darkToggleIcon"/>
+            <img src="{{ prefix }}_resources/toggle-dark.svg" width="24" height="24" class="lightToggleIcon"/>
+          </button>
+        </div>
+
+        <form class="margin-left--sm">
+          <div class="navbar__search">
+            <input class="navbar__search-input" placeholder="Search" id="search">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div role="presentation" class="navbar-sidebar__backdrop"></div>
+  </nav>
+
+  <!-- main div-->
+
+  <div class="docPage">
+
+    <!-- sidebar -->
+
+    <aside class="theme-doc-sidebar-container docSidebarContainer">
+      <div class="sidebarViewport">
+        <div class="sidebar">
+
+          <nav class="menu thin-scrollbar menu_jmj1" id="sidebar-nav">
+
+          </nav>
+
+        </div>
+      </div>
+    </aside>
+
+    <!-- main -->
+
+    <main class="docMainContainer" id="doc-main-container">
+      <div class="container padding-top--md padding-bottom--lg" id="doc-main-child" data-path="{{ pageRef }}">
+        <div class="row">
+          <div class="col docItemCol">
+
+            <div>
+              <article>
+
+                <nav class="theme-doc-breadcrumbs breadcrumbsContainer">
+                  <ul class="breadcrumbs">
+
+                    {{ breadcrumbs }}
+
+                  </ul>
+                </nav>
+
+                <div class="theme-doc-markdown markdown">
+
+                  {{ page-content }}
+
+                </div>
+
+              </article>
+            </div>
+          </div>
+
+          <div class="col col--3">
+            <div class="tableOfContents thin-scrollbar theme-doc-toc-desktop">
+
+              {{ toc }}
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- search -->
+
+  <div class="search-glass-pane" style="display: none; opacity: 0">
+    <div class="search-area shadow--md margin--md">
+      <div class="search-header padding--sm"></div>
+      <ul></ul>
+      <div class="search-footer padding--sm">0 items</div>
+    </div>
+  </div>
+
+  <!-- footer -->
+
+  <footer class="footer">
+
+    <div class="container container-fluid">
+      <div class="footer__bottom text--center">
+        <div class="footer__copyright">
+          {{ footer }}
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script type="text/javascript" src="{{ prefix }}_resources/script.js"></script>
+</body>
+
+</html>
