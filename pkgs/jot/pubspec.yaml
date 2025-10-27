@@ -4,6 +4,8 @@ version: 0.1.0-dev
 repository: https://github.com/dart-lang/labs/tree/main/pkgs/jot
 issue_tracker: https://github.com/dart-lang/labs/issues?q=is%3Aissue+is%3Aopen+label%3Apackage%3Ajot
 
+publish_to: none
+
 environment:
   sdk: ^3.9.0
 
