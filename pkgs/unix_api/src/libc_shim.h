@@ -73,12 +73,70 @@ typedef struct {
   void *_pthread_attr_t;
 } libc_shim_pthread_attr_t;
 
+typedef struct {
+  void *_pthread_mutex_t;
+} libc_shim_pthread_mutex_t;
+
+typedef struct {
+  void *_pthread_mutexattr_t;
+} libc_shim_pthread_mutexattr_t;
+
+typedef struct {
+  void *_pthread_cond_t;
+} libc_shim_pthread_cond_t;
+
+typedef struct {
+  void *_pthread_condattr_t;
+} libc_shim_pthread_condattr_t;
+
+struct libc_shim_timespec;
 
 LIBC_SHIM_EXPORT int
 libc_shim_pthread_create(libc_shim_pthread_t *restrict thread,
                          const libc_shim_pthread_attr_t *restrict attr,
                          void *(*start_routine)(void *), void *restrict arg,
                          int *err);
+
+LIBC_SHIM_EXPORT int libc_shim_pthread_detach(libc_shim_pthread_t thread, int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_mutex_destroy(libc_shim_pthread_mutex_t *mutex, int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_mutex_init(libc_shim_pthread_mutex_t *restrict mutex,
+                             const libc_shim_pthread_mutexattr_t *restrict attr,
+                             int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_mutex_lock(libc_shim_pthread_mutex_t *mutex, int *err);
+
+LIBC_SHIM_EXPORT int libc_shim_pthread_mutex_timedlock(
+    libc_shim_pthread_mutex_t *restrict mutex,
+    const struct libc_shim_timespec *restrict abs_timeout, int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_mutex_unlock(libc_shim_pthread_mutex_t *mutex, int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_cond_broadcast(libc_shim_pthread_cond_t *cond, int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_cond_destroy(libc_shim_pthread_cond_t *cond, int *err);
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_cond_init(libc_shim_pthread_cond_t *cond,
+                            const libc_shim_pthread_condattr_t *attr, int *err);
+
+LIBC_SHIM_EXPORT int libc_shim_pthread_cond_signal(libc_shim_pthread_cond_t *cond,
+                                         int *err);
+
+LIBC_SHIM_EXPORT int libc_shim_pthread_cond_timedwait(
+    libc_shim_pthread_cond_t *cond, libc_shim_pthread_mutex_t *mutex,
+    const struct libc_shim_timespec *abstime, int *err);
+    
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_cond_wait(libc_shim_pthread_cond_t *cond,
+                            libc_shim_pthread_mutex_t *mutex, int *err);
 
 // <sys/stat.h>
 struct libc_shim_timespec {

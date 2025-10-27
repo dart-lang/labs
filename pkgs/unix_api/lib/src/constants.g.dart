@@ -158,6 +158,15 @@ int get ENOSPC {
   }
 }
 
+int get ENOSYS {
+  final v = get_ENOSYS();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('ENOSYS');
+  } else {
+    return v;
+  }
+}
+
 int get ENOTDIR {
   final v = get_ENOTDIR();
   if (v == libc_shim_UNDEFINED) {
@@ -180,6 +189,15 @@ int get EPERM {
   final v = get_EPERM();
   if (v == libc_shim_UNDEFINED) {
     throw UnsupportedError('EPERM');
+  } else {
+    return v;
+  }
+}
+
+int get ETIMEDOUT {
+  final v = get_ETIMEDOUT();
+  if (v == libc_shim_UNDEFINED) {
+    throw UnsupportedError('ETIMEDOUT');
   } else {
     return v;
   }

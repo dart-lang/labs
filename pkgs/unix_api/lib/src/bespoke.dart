@@ -78,3 +78,50 @@ int pthread_create(
   start_routine,
   ffi.Pointer<ffi.Void> arg,
 ) => libc_shim_pthread_create(thread, attr, start_routine, arg, errnoPtr);
+
+int pthread_detach(pthread_t thread) =>
+    libc_shim_pthread_detach(thread, errnoPtr);
+
+int pthread_mutex_destroy(ffi.Pointer<pthread_mutex_t> mutex) =>
+    libc_shim_pthread_mutex_destroy(mutex, errnoPtr);
+
+int pthread_mutex_init(
+  ffi.Pointer<pthread_mutex_t> mutex,
+  ffi.Pointer<pthread_mutexattr_t> attr,
+) => libc_shim_pthread_mutex_init(mutex, attr, errnoPtr);
+
+int pthread_mutex_lock(ffi.Pointer<pthread_mutex_t> mutex) =>
+    libc_shim_pthread_mutex_lock(mutex, errnoPtr);
+
+int pthread_mutex_timedlock(
+  ffi.Pointer<pthread_mutex_t> mutex,
+  ffi.Pointer<timespec> abs_timeout,
+) => libc_shim_pthread_mutex_timedlock(mutex, abs_timeout, errnoPtr);
+
+int pthread_mutex_unlock(ffi.Pointer<pthread_mutex_t> mutex) =>
+    libc_shim_pthread_mutex_unlock(mutex, errnoPtr);
+
+int pthread_cond_broadcast(ffi.Pointer<pthread_cond_t> cond) =>
+    libc_shim_pthread_cond_broadcast(cond, errnoPtr);
+
+int pthread_cond_init(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<pthread_condattr_t> attr,
+) => libc_shim_pthread_cond_init(cond, attr, errnoPtr);
+
+int pthread_cond_destroy(ffi.Pointer<pthread_cond_t> cond) =>
+    libc_shim_pthread_cond_destroy(cond, errnoPtr);
+
+int pthread_cond_signal(ffi.Pointer<pthread_cond_t> cond) =>
+    libc_shim_pthread_cond_signal(cond, errnoPtr);
+
+int pthread_cond_timedwait(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<pthread_mutex_t> mutex,
+  ffi.Pointer<timespec> abstime,
+) => libc_shim_pthread_cond_timedwait(cond, mutex, abstime, errnoPtr);
+
+int pthread_cond_wait(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<pthread_mutex_t> mutex,
+) => libc_shim_pthread_cond_wait(cond, mutex, errnoPtr);

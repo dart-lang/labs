@@ -2,11 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:ffi/ffi.dart' as ffi;
+import 'package:unix_api/src/libc_bindings.g.dart';
 import 'package:unix_api/unix_api.dart';
 import 'package:test/test.dart';
 import 'package:path/path.dart' as p;
@@ -16,27 +19,24 @@ typedef pthread_create_callback = ffi.Void Function(ffi.Pointer<ffi.Void>);
 
 void main() {
   group('pthread', () {
-    const allocationSize = 1024 * 1024;
-    late Directory tmp;
     late ffi.Arena arena;
 
     setUp(() {
-      tmp = Directory.systemTemp.createTempSync('mmap');
       arena = ffi.Arena();
     });
 
     tearDown(() {
-      tmp.deleteSync(recursive: true);
       arena.releaseAll();
     });
 
-    test('pthread_create', () {
+    test('pthread_create/pthread_detach', () async {
       final thread = arena<pthread_t>();
+      final c = Completer<void>();
 
       final threadCallback = NativeCallable<pthread_create_callback>.listener((
         ffi.Pointer<ffi.Void> arg,
-      ) {
-        print('Hest');
+      ) async {
+        c.complete();
       });
 
       pthread_create(
@@ -45,6 +45,76 @@ void main() {
         threadCallback.nativeFunction.cast(),
         nullptr,
       );
+      pthread_detach(thread.ref);
+
+      await c.future;
+    });
+
+    test('pthread_mutex_*', () async {
+      final mutex = arena<pthread_mutex_t>();
+      final time = arena<timespec>();
+      time.ref.tv_nsec = 0;
+      time.ref.tv_sec = 0;
+
+      expect(pthread_mutex_init(mutex, nullptr), 0);
+      expect(pthread_mutex_lock(mutex), 0);
+      await Isolate.run(() {
+        assert(
+          pthread_mutex_timedlock(mutex, time) ==
+              ((Platform.isAndroid || Platform.isLinux) ? ETIMEDOUT : ENOSYS),
+        );
+      });
+
+      final lockTestIsolate = Isolate.run(() {
+        assert(pthread_mutex_lock(mutex) == 0);
+      });
+      pthread_mutex_unlock(mutex);
+      await lockTestIsolate;
+      assert(pthread_mutex_unlock(mutex) == 0); // Locked by Isolate.
+      expect(pthread_mutex_destroy(mutex), 0);
+    });
+
+    test('condition', () async {
+      final cond = arena<pthread_cond_t>();
+      final mutex = arena<pthread_mutex_t>();
+      final time = arena<timespec>();
+      time.ref.tv_nsec = 0;
+      time.ref.tv_sec = 0;
+
+      expect(pthread_mutex_init(mutex, nullptr), 0);
+      expect(pthread_cond_init(cond, nullptr), 0);
+      expect(pthread_mutex_lock(mutex), 0);
+      expect(pthread_cond_timedwait(cond, mutex, time), ETIMEDOUT);
+      expect(pthread_mutex_unlock(mutex), 0);
+
+      // Tests waiting on a signal.
+      var waitOnSignalDone = false;
+      Isolate.run(() {
+        assert(pthread_mutex_lock(mutex) == 0);
+        assert(pthread_cond_wait(cond, mutex) == 0);
+        assert(pthread_mutex_unlock(mutex) == 0);
+      }).whenComplete(() => waitOnSignalDone = true);
+
+      while (!waitOnSignalDone) {
+        expect(pthread_cond_signal(cond), 0);
+        await Future.delayed(const Duration());
+      }
+
+      // Tests waiting on a signal.
+      var waitOnSignalBroadcast = false;
+      Isolate.run(() {
+        assert(pthread_mutex_lock(mutex) == 0);
+        assert(pthread_cond_wait(cond, mutex) == 0);
+        assert(pthread_mutex_unlock(mutex) == 0);
+      }).whenComplete(() => waitOnSignalBroadcast = true);
+
+      while (!waitOnSignalBroadcast) {
+        expect(pthread_cond_broadcast(cond), 0);
+        await Future.delayed(const Duration());
+      }
+
+      expect(pthread_mutex_destroy(mutex), 0);
+      expect(pthread_cond_destroy(cond), 0);
     });
   });
 }
