@@ -39,6 +39,28 @@ external ffi.Pointer<dirent> libc_shim_readdir(
 
 @ffi.Native<
   ffi.Int Function(
+    ffi.Pointer<pthread_t>,
+    ffi.Pointer<pthread_attr_t>,
+    ffi.Pointer<
+      ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>
+    >,
+    ffi.Pointer<ffi.Void>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_pthread_create(
+  ffi.Pointer<pthread_t> thread,
+  ffi.Pointer<pthread_attr_t> attr,
+  ffi.Pointer<
+    ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>
+  >
+  start_routine,
+  ffi.Pointer<ffi.Void> arg,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
     ffi.Pointer<ffi.Char>,
     ffi.Pointer<Stat>,
     ffi.Pointer<ffi.Int>,
@@ -108,6 +130,15 @@ final class DIR extends ffi.Struct {
   external dirent libc_shim_dirent;
 
   external ffi.Pointer<ffi.Void> _dir;
+}
+
+/// <pthread.h>
+final class pthread_t extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _pthread_t;
+}
+
+final class pthread_attr_t extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _pthread_attr_t;
 }
 
 /// <sys/stat.h>

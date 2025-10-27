@@ -60,7 +60,25 @@ LIBC_SHIM_EXPORT char *libc_shim_d_name_ptr(struct libc_shim_dirent *d);
 LIBC_SHIM_EXPORT int libc_shim_closedir(libc_shim_DIR *d, int *err);
 LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_fdopendir(int fd, int *err);
 LIBC_SHIM_EXPORT libc_shim_DIR *libc_shim_opendir(const char *path, int *err);
-LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d, int *err);
+LIBC_SHIM_EXPORT struct libc_shim_dirent *libc_shim_readdir(libc_shim_DIR *d,
+                                                            int *err);
+
+// <pthread.h>
+
+typedef struct {
+  void *_pthread_t;
+} libc_shim_pthread_t;
+
+typedef struct {
+  void *_pthread_attr_t;
+} libc_shim_pthread_attr_t;
+
+
+LIBC_SHIM_EXPORT int
+libc_shim_pthread_create(libc_shim_pthread_t *restrict thread,
+                         const libc_shim_pthread_attr_t *restrict attr,
+                         void *(*start_routine)(void *), void *restrict arg,
+                         int *err);
 
 // <sys/stat.h>
 struct libc_shim_timespec {
@@ -90,6 +108,8 @@ LIBC_SHIM_EXPORT int libc_shim_stat(const char *path,
                                     struct libc_shim_Stat *buf, int *err);
 LIBC_SHIM_EXPORT int libc_shim_lstat(const char *path,
                                      struct libc_shim_Stat *buf, int *err);
-LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf, int *err);
+LIBC_SHIM_EXPORT int libc_shim_fstat(int fd, struct libc_shim_Stat *buf,
+                                     int *err);
 LIBC_SHIM_EXPORT int libc_shim_fstatat(int fd, char *path,
-                                       struct libc_shim_Stat *buf, int flag, int *err);
+                                       struct libc_shim_Stat *buf, int flag,
+                                       int *err);

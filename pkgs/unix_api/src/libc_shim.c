@@ -8,10 +8,12 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 // <dirent.h>
@@ -137,14 +139,33 @@ int libc_shim_fstat(int fd, struct libc_shim_Stat *buf, int *err) {
   return r;
 }
 
-int libc_shim_fstatat(int fd, char *path, struct libc_shim_Stat *buf,
-                      int flag, int *err) {
+int libc_shim_fstatat(int fd, char *path, struct libc_shim_Stat *buf, int flag,
+                      int *err) {
   struct stat s;
   errno = *err;
   int r = fstatat(fd, path, &s, flag);
   *err = errno;
   if (r != -1) {
     _fill(buf, &s);
+  }
+  return r;
+}
+
+// <pthread.h>
+
+int libc_shim_pthread_create(libc_shim_pthread_t *restrict thread,
+                             const libc_shim_pthread_attr_t *restrict attr,
+                             void *(*start_routine)(void *), void *restrict arg,
+                             int *err) {
+  pthread_t *t = (pthread_t *)calloc(1, sizeof(pthread_t));
+  errno = *err;
+  int r = pthread_create(t, (attr == NULL) ? NULL : attr->_pthread_attr_t,
+                         start_routine, arg);
+  *err = errno;
+  if (r == 0) {
+    thread->_pthread_t = t;
+  } else {
+    free(t);
   }
   return r;
 }

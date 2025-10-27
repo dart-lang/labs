@@ -6,7 +6,8 @@ import 'dart:ffi' as ffi;
 
 import 'errno.dart';
 import 'libc_bindings.g.dart';
-export 'libc_bindings.g.dart' show DIR, dirent, Stat, timespec;
+export 'libc_bindings.g.dart'
+    show DIR, dirent, Stat, timespec, pthread_t, pthread_attr_t;
 
 /// Gets metadata for a file.
 ///
@@ -65,3 +66,15 @@ extension DirentPtrExtensions on ffi.Pointer<dirent> {
   /// Need because of https://github.com/dart-lang/sdk/issues/41237.
   ffi.Pointer<ffi.Char> get d_name_ptr => libc_shim_d_name_ptr(this);
 }
+
+// <pthread.h>
+
+int pthread_create(
+  ffi.Pointer<pthread_t> thread,
+  ffi.Pointer<pthread_attr_t> attr,
+  ffi.Pointer<
+    ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>
+  >
+  start_routine,
+  ffi.Pointer<ffi.Void> arg,
+) => libc_shim_pthread_create(thread, attr, start_routine, arg, errnoPtr);
