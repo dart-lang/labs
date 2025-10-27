@@ -1,0 +1,42 @@
+name: package:jot
+permissions: read-all
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0' # weekly
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        sdk: [stable, beta, dev]
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      - uses: dart-lang/setup-dart@0a8a0fc875eb934c15d08629302413c671d3f672
+        with:
+          sdk: ${{matrix.sdk}}
+
+      - run: dart pub get
+
+      - run: dart analyze --fatal-infos
+
+      - run: dart format --output=none --set-exit-if-changed .
+        if: ${{ matrix.sdk == 'stable' }}
+
+      # Ensure that the front-end is up to date.
+      - run: dart tool/build_web.dart --verify
+
+      # Ensure that we can build the front-end.
+      - run: dart tool/build_web.dart
+
+      - run: dart test
+
+      # Ensure that we can build the Dart SDK docs.
+      - run: dart tool/create_dart_sdk.dart
