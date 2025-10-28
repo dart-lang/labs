@@ -222,7 +222,7 @@ int libc_shim_pthread_mutex_timedlock(
   s.tv_sec = abs_timeout->tv_sec;
 
   errno = *err;
-  int r = pthread_mutex_timedlock(mutex->_pthread_mutex_t), abs_timeout;
+  int r = pthread_mutex_timedlock(mutex->_pthread_mutex_t, abs_timeout);
   *err = errno;
   return r;
 #else

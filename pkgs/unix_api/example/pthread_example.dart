@@ -10,6 +10,9 @@ import 'package:unix_api/unix_api.dart';
 
 typedef pthread_create_callback = Pointer<Void> Function(Pointer<Void>);
 
+@Native<Long Function(Int, Pointer<Void>, UnsignedLong)>()
+external int write(int arg0, Pointer<Void> arg1, int arg2);
+
 void main() async {
   final arena = Arena();
   final mutex1 = arena<pthread_mutex_t>();
@@ -34,8 +37,10 @@ void main() async {
         0,
   );
   print("Thread created!");
-  assert(pthread_detach(thread.ref) == 0);
+  int d;
+  assert((d = pthread_detach(thread.ref)) == 0, 'detach failed: $d');
   await Future.delayed(const Duration(seconds: 5));
   print("Done!");
+  print(errno);
   //  assert(pthread_mutex_unlock(mutex1) == 0);
 }
