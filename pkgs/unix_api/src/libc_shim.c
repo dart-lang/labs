@@ -172,7 +172,7 @@ int libc_shim_pthread_create(libc_shim_pthread_t *restrict thread,
 
 int libc_shim_pthread_detach(libc_shim_pthread_t thread, int *err) {
   errno = *err;
-  int r = pthread_detach(thread._pthread_t);
+  int r = pthread_detach(*((pthread_t *)thread._pthread_t));
   *err = errno;
   free(thread._pthread_t);
   return r;
