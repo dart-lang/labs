@@ -1,0 +1,13 @@
+# https://dart.dev/guides/libraries/private-files
+
+.dart_tool/
+pubspec.lock
+
+doc/api/
+doc/sdk/
+
+lib/resources/script.js.deps
+lib/resources/script.js.map
+
+test/fixtures/demo/doc/api/_resources/
+test/fixtures/demo/doc/api/**/*.html

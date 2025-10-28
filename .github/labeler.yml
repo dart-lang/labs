@@ -20,6 +20,10 @@
   - changed-files:
     - any-glob-to-any-file: 'pkgs/io_file/**'
 
+'package:jot':
+  - changed-files:
+    - any-glob-to-any-file: 'pkgs/jot/**'
+
 'package:native_synchronization':
   - changed-files:
     - any-glob-to-any-file: 'pkgs/native_synchronization/**'

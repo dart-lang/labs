@@ -1,0 +1,7 @@
+name: server_demo
+publish_to: none
+
+resolution: workspace
+
+environment: 
+  sdk: ^3.9.0
