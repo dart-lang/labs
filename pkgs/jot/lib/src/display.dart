@@ -4,6 +4,15 @@
 
 // ignore_for_file: implementation_imports
 
+// Note: This file was copied from package:analyzer's
+// `lib/src/dart/element/display_string_builder.dart` file and adopted to
+// make the output correct from the POV of dart format. It will need to be
+// updated periodically from the upstream source-of-truth.
+//
+// We use this file to generate reasonable looking source code from Elements
+// - something that looks like what the user might have written - which we then
+// normalize via dart format.
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
