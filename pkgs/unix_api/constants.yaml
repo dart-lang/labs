@@ -64,9 +64,11 @@
   - EMFILE
   - ENOENT
   - ENOSPC
+  - ENOSYS
   - ENOTDIR
   - ENOTEMPTY
   - EPERM
+  - ETIMEDOUT
 "<fcntl.h>":
   - AT_FDCWD
   - AT_REMOVEDIR

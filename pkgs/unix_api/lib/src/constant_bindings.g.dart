@@ -58,6 +58,9 @@ external int get_ENOENT();
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOSPC')
 external int get_ENOSPC();
 
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOSYS')
+external int get_ENOSYS();
+
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ENOTDIR')
 external int get_ENOTDIR();
 
@@ -66,6 +69,9 @@ external int get_ENOTEMPTY();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_EPERM')
 external int get_EPERM();
+
+@ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_ETIMEDOUT')
+external int get_ETIMEDOUT();
 
 @ffi.Native<ffi.Int64 Function()>(symbol: 'libc_shim_get_AT_FDCWD')
 external int get_AT_FDCWD();

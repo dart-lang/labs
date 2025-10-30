@@ -44,11 +44,15 @@ int64_t libc_shim_get_ENOENT(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_ENOSPC(void);
 __attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_ENOSYS(void);
+__attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_ENOTDIR(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_ENOTEMPTY(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_EPERM(void);
+__attribute__((visibility("default"))) __attribute__((used))
+int64_t libc_shim_get_ETIMEDOUT(void);
 __attribute__((visibility("default"))) __attribute__((used))
 int64_t libc_shim_get_AT_FDCWD(void);
 __attribute__((visibility("default"))) __attribute__((used))
