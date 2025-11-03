@@ -1,4 +1,4 @@
-[![package:jot](https://github.com/dart-lang/labs/actions/workflows/native_synchronization.yml/badge.svg)](https://github.com/dart-lang/labs/actions/workflows/jot.yml)
+[![package:jot](https://github.com/dart-lang/labs/actions/workflows/jot.yml/badge.svg)](https://github.com/dart-lang/labs/actions/workflows/jot.yml)
 
 An experimental documentation generator for Dart.
 
