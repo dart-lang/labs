@@ -48,6 +48,24 @@ class FirestoreClient extends $grpc.Client {
     $0.GetDocumentRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasName()) {
+        final value = request.name;
+        final regexps = [_regexp0];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('name=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$getDocument, request, options: options);
   }
 
@@ -56,6 +74,31 @@ class FirestoreClient extends $grpc.Client {
     $0.ListDocumentsRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasParent()) {
+        final value = request.parent;
+        final regexps = [_regexp1, _regexp0];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('parent=$value');
+        }
+      }
+      if (request.hasCollectionId()) {
+        final value = request.collectionId;
+        final regexps = [_regexp2];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('collection_id=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$listDocuments, request, options: options);
   }
 
@@ -64,6 +107,24 @@ class FirestoreClient extends $grpc.Client {
     $0.UpdateDocumentRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDocument() && request.document.hasName()) {
+        final value = request.document.name;
+        final regexps = [_regexp0];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('document.name=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$updateDocument, request, options: options);
   }
 
@@ -72,6 +133,24 @@ class FirestoreClient extends $grpc.Client {
     $0.DeleteDocumentRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasName()) {
+        final value = request.name;
+        final regexps = [_regexp0];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('name=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$deleteDocument, request, options: options);
   }
 
@@ -83,6 +162,24 @@ class FirestoreClient extends $grpc.Client {
     $0.BatchGetDocumentsRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createStreamingCall(
         _$batchGetDocuments, $async.Stream.fromIterable([request]),
         options: options);
@@ -93,6 +190,24 @@ class FirestoreClient extends $grpc.Client {
     $0.BeginTransactionRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$beginTransaction, request, options: options);
   }
 
@@ -101,6 +216,24 @@ class FirestoreClient extends $grpc.Client {
     $0.CommitRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$commit, request, options: options);
   }
 
@@ -109,6 +242,24 @@ class FirestoreClient extends $grpc.Client {
     $0.RollbackRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$rollback, request, options: options);
   }
 
@@ -117,6 +268,24 @@ class FirestoreClient extends $grpc.Client {
     $0.RunQueryRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasParent()) {
+        final value = request.parent;
+        final regexps = [_regexp0, _regexp1];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('parent=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createStreamingCall(
         _$runQuery, $async.Stream.fromIterable([request]),
         options: options);
@@ -139,6 +308,24 @@ class FirestoreClient extends $grpc.Client {
     $0.RunAggregationQueryRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasParent()) {
+        final value = request.parent;
+        final regexps = [_regexp0, _regexp1];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('parent=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createStreamingCall(
         _$runAggregationQuery, $async.Stream.fromIterable([request]),
         options: options);
@@ -151,6 +338,24 @@ class FirestoreClient extends $grpc.Client {
     $0.PartitionQueryRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasParent()) {
+        final value = request.parent;
+        final regexps = [_regexp0, _regexp1];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('parent=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$partitionQuery, request, options: options);
   }
 
@@ -160,6 +365,24 @@ class FirestoreClient extends $grpc.Client {
     $async.Stream<$0.WriteRequest> request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createStreamingCall(_$write, request, options: options);
   }
 
@@ -169,6 +392,24 @@ class FirestoreClient extends $grpc.Client {
     $async.Stream<$0.ListenRequest> request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createStreamingCall(_$listen, request, options: options);
   }
 
@@ -177,6 +418,24 @@ class FirestoreClient extends $grpc.Client {
     $0.ListCollectionIdsRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasParent()) {
+        final value = request.parent;
+        final regexps = [_regexp0, _regexp1];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('parent=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$listCollectionIds, request, options: options);
   }
 
@@ -194,6 +453,24 @@ class FirestoreClient extends $grpc.Client {
     $0.BatchWriteRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasDatabase()) {
+        final value = request.database;
+        final regexps = [_regexp3];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('database=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$batchWrite, request, options: options);
   }
 
@@ -202,8 +479,42 @@ class FirestoreClient extends $grpc.Client {
     $0.CreateDocumentRequest request, {
     $grpc.CallOptions? options,
   }) {
+    {
+      final results = <$core.String>[];
+
+      if (request.hasParent()) {
+        final value = request.parent;
+        final regexps = [_regexp4];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('parent=$value');
+        }
+      }
+      if (request.hasCollectionId()) {
+        final value = request.collectionId;
+        final regexps = [_regexp2];
+        if (regexps.any((r) => r.hasMatch(value))) {
+          results.add('collection_id=$value');
+        }
+      }
+
+      if (results.isNotEmpty) {
+        options = $grpc.CallOptions(metadata: {
+          'x-goog-request-params': results.join('&'),
+        }).mergedWith(options);
+      }
+    }
+
     return $createUnaryCall(_$createDocument, request, options: options);
   }
+
+  final $core.RegExp _regexp0 =
+      $core.RegExp('projects/[^/]*/databases/[^/]*/documents/[^/]*/.*');
+  final $core.RegExp _regexp1 =
+      $core.RegExp('projects/[^/]*/databases/[^/]*/documents');
+  final $core.RegExp _regexp2 = $core.RegExp('[^/]*');
+  final $core.RegExp _regexp3 = $core.RegExp('projects/[^/]*/databases/[^/]*');
+  final $core.RegExp _regexp4 =
+      $core.RegExp('projects/[^/]*/databases/[^/]*/documents/.*');
 
   // method descriptors
 
