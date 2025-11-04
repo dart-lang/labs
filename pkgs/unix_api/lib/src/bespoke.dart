@@ -153,6 +153,8 @@ int pthread_mutex_lock(ffi.Pointer<pthread_mutex_t> mutex) =>
 
 /// Locks a mutex, failing if the lock is not acquired before a timeout.
 ///
+/// Available on Android and Linux.
+///
 /// See the [POSIX specification for `pthread_mutex_timedlock`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_timedlock.html).
 int pthread_mutex_timedlock(
   ffi.Pointer<pthread_mutex_t> mutex,

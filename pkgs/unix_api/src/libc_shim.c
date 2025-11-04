@@ -279,9 +279,7 @@ int libc_shim_pthread_mutex_timedlock(
     libc_shim_pthread_mutex_t *restrict mutex,
     const struct libc_shim_timespec *restrict abs_timeout, int *err) {
 #if defined(__linux__) || defined(__ANDROID__)
-
   struct timespec s;
-
   s.tv_nsec = abs_timeout->tv_nsec;
   s.tv_sec = abs_timeout->tv_sec;
 
