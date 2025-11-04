@@ -153,6 +153,71 @@ int libc_shim_fstatat(int fd, char *path, struct libc_shim_Stat *buf, int flag,
 
 // <pthread.h>
 
+int libc_shim_pthread_cond_broadcast(libc_shim_pthread_cond_t *cond, int *err) {
+  errno = *err;
+  int r = pthread_cond_broadcast((pthread_cond_t *)cond->_pthread_cond_t);
+  *err = errno;
+  return r;
+}
+
+int libc_shim_pthread_cond_destroy(libc_shim_pthread_cond_t *cond, int *err) {
+  errno = *err;
+  int r = pthread_cond_destroy((pthread_cond_t *)cond->_pthread_cond_t);
+  *err = errno;
+  free(cond->_pthread_cond_t);
+  return r;
+}
+
+int libc_shim_pthread_cond_init(libc_shim_pthread_cond_t *cond,
+                                const libc_shim_pthread_condattr_t *attr,
+                                int *err) {
+  pthread_cond_t *c = (pthread_cond_t *)calloc(1, sizeof(pthread_cond_t));
+  errno = *err;
+  int r = pthread_cond_init(
+      c,
+      (attr == NULL) ? NULL : (pthread_condattr_t *)attr->_pthread_condattr_t);
+  *err = errno;
+  if (r == 0) {
+    cond->_pthread_cond_t = c;
+  } else {
+    free(c);
+  }
+  return r;
+}
+
+int libc_shim_pthread_cond_signal(libc_shim_pthread_cond_t *cond, int *err) {
+  errno = *err;
+  int r = pthread_cond_signal((pthread_cond_t *)cond->_pthread_cond_t);
+  *err = errno;
+  return r;
+}
+
+int libc_shim_pthread_cond_timedwait(libc_shim_pthread_cond_t *cond,
+                                     libc_shim_pthread_mutex_t *mutex,
+                                     const struct libc_shim_timespec *abstime,
+                                     int *err) {
+  struct timespec s;
+
+  s.tv_nsec = abstime->tv_nsec;
+  s.tv_sec = abstime->tv_sec;
+
+  errno = *err;
+  int r =
+      pthread_cond_timedwait((pthread_cond_t *)cond->_pthread_cond_t,
+                             (pthread_mutex_t *)mutex->_pthread_mutex_t, &s);
+  *err = errno;
+  return r;
+}
+
+int libc_shim_pthread_cond_wait(libc_shim_pthread_cond_t *cond,
+                                libc_shim_pthread_mutex_t *mutex, int *err) {
+  errno = *err;
+  int r = pthread_cond_wait((pthread_cond_t *)cond->_pthread_cond_t,
+                            (pthread_mutex_t *)mutex->_pthread_mutex_t);
+  *err = errno;
+  return r;
+}
+
 int libc_shim_pthread_create(libc_shim_pthread_t *restrict thread,
                              const libc_shim_pthread_attr_t *restrict attr,
                              void *(*start_routine)(void *), void *restrict arg,
@@ -176,7 +241,6 @@ int libc_shim_pthread_detach(libc_shim_pthread_t thread, int *err) {
   *err = errno;
   free(thread._pthread_t);
   return r;
-
 }
 
 int libc_shim_pthread_mutex_destroy(libc_shim_pthread_mutex_t *mutex,
@@ -206,7 +270,7 @@ int libc_shim_pthread_mutex_init(
 
 int libc_shim_pthread_mutex_lock(libc_shim_pthread_mutex_t *mutex, int *err) {
   errno = *err;
-  int r = pthread_mutex_lock((pthread_mutex_t *) mutex->_pthread_mutex_t);
+  int r = pthread_mutex_lock((pthread_mutex_t *)mutex->_pthread_mutex_t);
   *err = errno;
   return r;
 }
@@ -222,7 +286,8 @@ int libc_shim_pthread_mutex_timedlock(
   s.tv_sec = abs_timeout->tv_sec;
 
   errno = *err;
-  int r = pthread_mutex_timedlock((pthread_mutex_t *) mutex->_pthread_mutex_t, &s);
+  int r =
+      pthread_mutex_timedlock((pthread_mutex_t *)mutex->_pthread_mutex_t, &s);
   *err = errno;
   return r;
 #else
@@ -232,69 +297,7 @@ int libc_shim_pthread_mutex_timedlock(
 
 int libc_shim_pthread_mutex_unlock(libc_shim_pthread_mutex_t *mutex, int *err) {
   errno = *err;
-  int r = pthread_mutex_unlock((pthread_mutex_t *) mutex->_pthread_mutex_t);
-  *err = errno;
-  return r;
-}
-
-int libc_shim_pthread_cond_broadcast(libc_shim_pthread_cond_t *cond, int *err) {
-  errno = *err;
-  int r = pthread_cond_broadcast((pthread_cond_t *) cond->_pthread_cond_t);
-  *err = errno;
-  return r;
-}
-
-int libc_shim_pthread_cond_destroy(libc_shim_pthread_cond_t *cond, int *err) {
-  errno = *err;
-  int r = pthread_cond_destroy((pthread_cond_t *) cond->_pthread_cond_t);
-  *err = errno;
-  free(cond->_pthread_cond_t);
-  return r;
-}
-
-int libc_shim_pthread_cond_init(libc_shim_pthread_cond_t *cond,
-                                const libc_shim_pthread_condattr_t *attr,
-                                int *err) {
-  pthread_cond_t *c = (pthread_cond_t *)calloc(1, sizeof(pthread_cond_t));
-  errno = *err;
-  int r =
-      pthread_cond_init(c, (attr == NULL) ? NULL : (pthread_condattr_t *) attr->_pthread_condattr_t);
-  *err = errno;
-  if (r == 0) {
-    cond->_pthread_cond_t = c;
-  } else {
-    free(c);
-  }
-  return r;
-}
-
-int libc_shim_pthread_cond_signal(libc_shim_pthread_cond_t *cond, int *err) {
-  errno = *err;
-  int r = pthread_cond_signal((pthread_cond_t *)cond->_pthread_cond_t);
-  *err = errno;
-  return r;
-}
-
-int libc_shim_pthread_cond_timedwait(libc_shim_pthread_cond_t *cond,
-                                     libc_shim_pthread_mutex_t *mutex,
-                                     const struct libc_shim_timespec *abstime,
-                                     int *err) {
-  struct timespec s;
-
-  s.tv_nsec = abstime->tv_nsec;
-  s.tv_sec = abstime->tv_sec;
-
-  errno = *err;
-  int r = pthread_cond_timedwait((pthread_cond_t *) cond->_pthread_cond_t, (pthread_mutex_t *) mutex->_pthread_mutex_t,
-                                 &s);
-  *err = errno;
-  return r;
-}
-
-int libc_shim_pthread_cond_wait(libc_shim_pthread_cond_t *cond,
-                                libc_shim_pthread_mutex_t *mutex, int *err) {
-  errno = *err;
-  int r = pthread_cond_wait((pthread_cond_t *) cond->_pthread_cond_t, (pthread_mutex_t *) mutex->_pthread_mutex_t);
+  int r = pthread_mutex_unlock((pthread_mutex_t *)mutex->_pthread_mutex_t);
   *err = errno;
   return r;
 }
