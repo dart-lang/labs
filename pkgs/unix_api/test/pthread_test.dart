@@ -12,9 +12,7 @@ import 'package:ffi/ffi.dart' as ffi;
 import 'package:unix_api/src/libc_bindings.g.dart';
 import 'package:unix_api/unix_api.dart';
 import 'package:test/test.dart';
-import 'package:path/path.dart' as p;
 
-// typedef pthread_create_callback = ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>);
 typedef pthread_create_callback = ffi.Void Function(ffi.Pointer<ffi.Void>);
 
 void main() {
@@ -74,7 +72,7 @@ void main() {
       expect(pthread_mutex_destroy(mutex), 0);
     });
 
-    test('condition', () async {
+    test('pthread_cond_*', () async {
       final cond = arena<pthread_cond_t>();
       final mutex = arena<pthread_mutex_t>();
       final time = arena<timespec>();
