@@ -38,6 +38,71 @@ external ffi.Pointer<dirent> libc_shim_readdir(
 );
 
 @ffi.Native<
+  ffi.Int Function(ffi.Pointer<pthread_cond_t>, ffi.Pointer<ffi.Int>)
+>()
+external int libc_shim_pthread_cond_broadcast(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(ffi.Pointer<pthread_cond_t>, ffi.Pointer<ffi.Int>)
+>()
+external int libc_shim_pthread_cond_destroy(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<pthread_cond_t>,
+    ffi.Pointer<pthread_condattr_t>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_pthread_cond_init(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<pthread_condattr_t> attr,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(ffi.Pointer<pthread_cond_t>, ffi.Pointer<ffi.Int>)
+>()
+external int libc_shim_pthread_cond_signal(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<pthread_cond_t>,
+    ffi.Pointer<pthread_mutex_t>,
+    ffi.Pointer<timespec>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_pthread_cond_timedwait(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<pthread_mutex_t> mutex,
+  ffi.Pointer<timespec> abstime,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<pthread_cond_t>,
+    ffi.Pointer<pthread_mutex_t>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_pthread_cond_wait(
+  ffi.Pointer<pthread_cond_t> cond,
+  ffi.Pointer<pthread_mutex_t> mutex,
+  ffi.Pointer<ffi.Int> err,
+);
+
+@ffi.Native<
   ffi.Int Function(
     ffi.Pointer<pthread_t>,
     ffi.Pointer<pthread_attr_t>,
@@ -111,71 +176,6 @@ external int libc_shim_pthread_mutex_timedlock(
   ffi.Int Function(ffi.Pointer<pthread_mutex_t>, ffi.Pointer<ffi.Int>)
 >()
 external int libc_shim_pthread_mutex_unlock(
-  ffi.Pointer<pthread_mutex_t> mutex,
-  ffi.Pointer<ffi.Int> err,
-);
-
-@ffi.Native<
-  ffi.Int Function(ffi.Pointer<pthread_cond_t>, ffi.Pointer<ffi.Int>)
->()
-external int libc_shim_pthread_cond_broadcast(
-  ffi.Pointer<pthread_cond_t> cond,
-  ffi.Pointer<ffi.Int> err,
-);
-
-@ffi.Native<
-  ffi.Int Function(ffi.Pointer<pthread_cond_t>, ffi.Pointer<ffi.Int>)
->()
-external int libc_shim_pthread_cond_destroy(
-  ffi.Pointer<pthread_cond_t> cond,
-  ffi.Pointer<ffi.Int> err,
-);
-
-@ffi.Native<
-  ffi.Int Function(
-    ffi.Pointer<pthread_cond_t>,
-    ffi.Pointer<pthread_condattr_t>,
-    ffi.Pointer<ffi.Int>,
-  )
->()
-external int libc_shim_pthread_cond_init(
-  ffi.Pointer<pthread_cond_t> cond,
-  ffi.Pointer<pthread_condattr_t> attr,
-  ffi.Pointer<ffi.Int> err,
-);
-
-@ffi.Native<
-  ffi.Int Function(ffi.Pointer<pthread_cond_t>, ffi.Pointer<ffi.Int>)
->()
-external int libc_shim_pthread_cond_signal(
-  ffi.Pointer<pthread_cond_t> cond,
-  ffi.Pointer<ffi.Int> err,
-);
-
-@ffi.Native<
-  ffi.Int Function(
-    ffi.Pointer<pthread_cond_t>,
-    ffi.Pointer<pthread_mutex_t>,
-    ffi.Pointer<timespec>,
-    ffi.Pointer<ffi.Int>,
-  )
->()
-external int libc_shim_pthread_cond_timedwait(
-  ffi.Pointer<pthread_cond_t> cond,
-  ffi.Pointer<pthread_mutex_t> mutex,
-  ffi.Pointer<timespec> abstime,
-  ffi.Pointer<ffi.Int> err,
-);
-
-@ffi.Native<
-  ffi.Int Function(
-    ffi.Pointer<pthread_cond_t>,
-    ffi.Pointer<pthread_mutex_t>,
-    ffi.Pointer<ffi.Int>,
-  )
->()
-external int libc_shim_pthread_cond_wait(
-  ffi.Pointer<pthread_cond_t> cond,
   ffi.Pointer<pthread_mutex_t> mutex,
   ffi.Pointer<ffi.Int> err,
 );
