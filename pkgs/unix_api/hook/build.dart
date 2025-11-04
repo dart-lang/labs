@@ -16,7 +16,7 @@ void main(List<String> args) async {
       assetName: 'libc_shim',
       libraries: [
         if ([OS.linux].contains(input.config.code.targetOS)) 'crypt',
-        'pthread',
+        if (input.config.code.targetOS != OS.android) 'pthread',
       ],
       sources: [
         'src/libc_shim.c',
