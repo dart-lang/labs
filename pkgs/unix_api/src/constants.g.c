@@ -132,6 +132,13 @@ int64_t libc_shim_get_ENOSPC(void) {
 #endif
   return libc_shim_UNDEFINED;
 }
+int64_t libc_shim_get_ENOSYS(void) {
+#ifdef ENOSYS
+  assert(ENOSYS != libc_shim_UNDEFINED);
+  return ENOSYS;
+#endif
+  return libc_shim_UNDEFINED;
+}
 int64_t libc_shim_get_ENOTDIR(void) {
 #ifdef ENOTDIR
   assert(ENOTDIR != libc_shim_UNDEFINED);
@@ -150,6 +157,13 @@ int64_t libc_shim_get_EPERM(void) {
 #ifdef EPERM
   assert(EPERM != libc_shim_UNDEFINED);
   return EPERM;
+#endif
+  return libc_shim_UNDEFINED;
+}
+int64_t libc_shim_get_ETIMEDOUT(void) {
+#ifdef ETIMEDOUT
+  assert(ETIMEDOUT != libc_shim_UNDEFINED);
+  return ETIMEDOUT;
 #endif
   return libc_shim_UNDEFINED;
 }
