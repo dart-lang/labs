@@ -27,8 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: dev
       - run: dart pub get
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
@@ -44,8 +42,6 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c
-        with:
-          sdk: dev
       - run: dart pub get
       - run: dart run tool/generate.dart
       - run: git diff --exit-code
@@ -54,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [dev]
+        sdk: [stable, beta]
         os: [macos-latest, ubuntu-latest, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
     steps:
