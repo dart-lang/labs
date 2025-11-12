@@ -12,7 +12,7 @@ import 'package:ffi/ffi.dart';
 ///
 /// Another approach would be to just track the value of `errno` and create a
 /// pointer only as needed. But that would means doing a memory allocation for
-/// any POSIX call.
+/// every POSIX call.
 class _Errno implements ffi.Finalizable {
   static final _finalizer = ffi.NativeFinalizer(malloc.nativeFree);
   ffi.Pointer<ffi.Int> errnoPtr;
@@ -24,3 +24,9 @@ class _Errno implements ffi.Finalizable {
 
 final _errno = _Errno();
 ffi.Pointer<ffi.Int> get errnoPtr => _errno.errnoPtr;
+
+/// The code that indicates the reason for a failed function call.
+///
+/// See the [POSIX specification for `errno`](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/errno.h.html).
+int get errno => errnoPtr.value;
+set errno(int err) => errnoPtr.value = err;

@@ -52,20 +52,51 @@ struct stat
 
 `package:unix_api` works around this problem by defining a native (C) function
 for every POSIX function. The native function just calls the corresponding
-POSIX function. For example:
+POSIX function while preserving `errno`. For example:
 
 ```c
-int libc_shim_rename(const char *old, const char *newy) {
-  return rename(old, newy);
+int libc_shim_rename(const char * arg0, const char * arg1, int * err) {
+  int r;
+  errno = *err;
+  r = rename(arg0, arg1);
+  *err = errno;
+  return r;
 }
 ```
 
 This allows the platforms C compiler to deal with macro expansions,
 platform-specific struct layout, etc.
 
-Then `package:unix_api` uses `package:ffigen` to provide Dart bindings to
-these functions.
+Then `package:unix_api` uses `package:ffigen` to generate Dart bindings to
+these functions:
 
+```dart
+// ffigen'd bindings
+@ffi.Native<
+  ffi.Int Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<ffi.Int>,
+  )
+>()
+external int libc_shim_rename(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  ffi.Pointer<ffi.Int> arg2,
+);
+```
+
+And finally provides a function that provides the public interface:
+
+```dart
+/// Renames a file.
+///
+/// See the [POSIX specification for `rename`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html).
+int rename(ffi.Pointer<ffi.Char> arg0, ffi.Pointer<ffi.Char> arg1) =>
+    libc_shim_rename(arg0, arg1, errnoPtr);
+```
+
+`errno` is implemented [locally in the package](lib/src/errno.dart).
 
 ## Status: Experimental
 
