@@ -4,7 +4,7 @@ This package provides **experimental** bindings to POSIX APIs e.g. `open`,
 ## Why have another POSIX API implementation for Dart?
 
 There are two existing packages that provide POSIX API bindings for Dart:
-1. [`package:posix`](https://pub.dev/packages/posix
+1. [`package:posix`]
 2. [`package:stdlibc`]
 
 Both are excellent and offer easier-to-use APIs than `package:unix_api`.
