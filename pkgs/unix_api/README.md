@@ -3,9 +3,11 @@ This package provides **experimental** bindings to POSIX APIs e.g. `open`,
 
 ## Why have another POSIX API implementation for Dart?
 
-Thare are two existing packages that provide POSIX API bindings for Dart:
-1. [`package:posix`](https://pub.dev/packages/posix)
-2. [`package:stdlibc`](https://pub.dev/packages/stdlibc)
+There are two existing packages that provide POSIX API bindings for Dart:
+1. [`package:posix`](https://pub.dev/packages/posix
+2. [`package:stdlibc`]
+
+Both are excellent and offer easier-to-use APIs than `package:unix_api`.
 
 `package:unix_api` requires a native tool chain and has a small amount of
 native code that cannot be tree shaken away. In exchange, it works on all
@@ -17,21 +19,22 @@ API calls as part of JIT compilation then the `errno` exported by
 `package:unix_api` is not affected (see the Dart SDK issue
 [Support for capturing errno across calls](https://github.com/dart-lang/sdk/issues/38832)).
 
-| Package      | Required Tools   | Reliable `errno` | Supported Platforms                     | Fixed Disk Usage |
-| :---         | :--------------  | :--------------  | :-------------------------------------- | :--------------  |
-|  `posix`     | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
-|  `stdlibc`   | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
-|  `unix_api`  | Dart, C compiler | Yes              | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
+| Package              | Required Tools   | Reliable `errno` | Supported Platforms                     | Fixed Disk Usage |
+| :---                 | :--------------  | :--------------  | :-------------------------------------- | :--------------  |
+|  [`package:posix`]   | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
+|  [`package:stdlibc`] | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
+|  `unix_api`          | Dart, C compiler | Yes              | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
 
 ## Design
 
 The POSIX API is a defined in terms of source, not object compatibility.
 
-For example, glibc defines `stat` as:
+For example, glibc defines `stat` using a macro:
 
 `#define stat(fname, buf) __xstat (_STAT_VER, fname, buf)`
 
-So running `ffigen` on `sys/stat.h` will not produce an entry for `stat`.
+So using [`package:ffigen`] to generate Dart bindings for `sys/stat.h` will not
+produce an entry for `stat`.
 
 libc may also reorder `struct` fields across architectures, add extra
 fields, etc. For example, the glibc definition of `struct stat` starts
@@ -49,10 +52,14 @@ struct stat
 #else
 ```
 
+When using [`package:ffigen`] to generate bindings for such code, seperate
+bindings must be generated for every combination of platform (e.g. 
+Android) and architecture (e.g. arm64).
 
 `package:unix_api` works around this problem by defining a native (C) function
 for every POSIX function. The native function just calls the corresponding
-POSIX function while preserving `errno`. For example:
+POSIX function while preserving `errno` by passing a reference to it explicitly.
+For example:
 
 ```c
 int libc_shim_rename(const char * arg0, const char * arg1, int * err) {
@@ -65,10 +72,11 @@ int libc_shim_rename(const char * arg0, const char * arg1, int * err) {
 ```
 
 This allows the platforms C compiler to deal with macro expansions,
-platform-specific struct layout, etc.
+platform-specific struct layout, etc. [`package:hooks'] is used to
+transparently compile the C code on the developer's behalf.
 
 Then `package:unix_api` uses `package:ffigen` to generate Dart bindings to
-these functions:
+these functions. For example:
 
 ```dart
 // ffigen'd bindings
@@ -86,7 +94,8 @@ external int libc_shim_rename(
 );
 ```
 
-And finally provides a function that provides the public interface:
+And finally, `package:unix_api` provides a function that provides the public
+interface. For example:
 
 ```dart
 /// Renames a file.
@@ -112,3 +121,8 @@ much higher expected rate of API and breaking changes.
 Your feedback is valuable and will help us evolve this package. For general
 feedback, suggestions, and comments, please file an issue in the 
 [bug tracker](https://github.com/dart-lang/labs/issues).
+
+[`package:ffigen`]: https://pub.dev/packages/ffigen
+[`package:hooks`]: https://pub.dev/packages/hooks
+[`package:posix`]: https://pub.dev/packages/posix
+[`package:stdlibc`]: https://pub.dev/packages/stdlibc
