@@ -23,7 +23,7 @@ API calls as part of JIT compilation then the `errno` exported by
 | :---                 | :--------------  | :--------------  | :-------------------------------------- | :--------------  |
 |  [`package:posix`]   | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
 |  [`package:stdlibc`] | Dart             | No               | iOS (arm64), Linux (x64), macOS (arm64) | 0 KiB            |
-|  `unix_api`          | Dart, C compiler | Yes              | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
+|  `package:unix_api`      | Dart, C compiler | Yes              | Android (x64, arm32, arm64), iOS (arm64), Linux (x64, arm64), macOS (x64, arm64) | ~60 KiB |
 
 ## Design
 
@@ -52,7 +52,7 @@ struct stat
 #else
 ```
 
-When using [`package:ffigen`] to generate bindings for such code, seperate
+When using [`package:ffigen`] to generate bindings for such code, separate
 bindings must be generated for every combination of platform (e.g. 
 Android) and architecture (e.g. arm64).
 
