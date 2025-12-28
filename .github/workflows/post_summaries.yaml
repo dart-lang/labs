@@ -4,11 +4,13 @@
 # original workflow couldn't.
 
 name: Comment on the pull request
+permissions: read-all
 
 on:
   workflow_run:
     workflows: 
       - Publish
+      - Health
     types:
       - completed
 
