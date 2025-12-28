@@ -13,6 +13,7 @@ This repository is home to various Dart packages under the
 | [io_file](pkgs/io_file/) | File system access functionality written in Dart. | [![package issues](https://img.shields.io/badge/issues-4774bc)](https://github.com/dart-lang/labs/issues?q=is%3Aissue%20state%3Aopen%20label%3Apackage%3Aio_file) |
 | [jot](pkgs/jot/) | An experimental documentation generator for Dart projects. | [![package issues](https://img.shields.io/badge/issues-4774bc)](https://github.com/dart-lang/labs/issues?q=is%3Aissue%20state%3Aopen%20label%3Apackage%3Ajot) |
 | [native_synchronization](pkgs/native_synchronization/) | Low level synchronization primitives built on dart:ffi. | [![package issues](https://img.shields.io/badge/issues-4774bc)](https://github.com/dart-lang/labs/issues?q=is%3Aissue%20state%3Aopen%20label%3Apackage%3Anative_synchronization) | [![pub package](https://img.shields.io/pub/v/native_synchronization.svg)](https://pub.dev/packages/native_synchronization) |
+| [timezone](pkgs/timezone/) | Time zone databases and time zone aware `DateTime`. | [![package issues](https://img.shields.io/badge/issues-4774bc)](https://github.com/dart-lang/labs/issues?q=is%3Aissue%20state%3Aopen%20label%3Apackage%3Atimezone) |
 
 ## Publishing automation
 

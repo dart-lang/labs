@@ -1,6 +1,7 @@
 name: timezone
 description: Time zone databases and time zone aware `DateTime`.
-repository: https://github.com/srawlins/timezone
+repository: https://github.com/dart-lang/labs/tree/main/pkgs/timezone
+issue_tracker: https://github.com/dart-lang/labs/issues?q=is%3Aissue+is%3Aopen+label%3Apackage%3Atimezone
 version: 0.11.0
 
 environment:

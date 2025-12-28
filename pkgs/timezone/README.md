@@ -1,3 +1,7 @@
+[![package:timezone](https://github.com/dart-lang/labs/actions/workflows/timezone.yml/badge.svg)](https://github.com/dart-lang/labs/actions/workflows/timezone.yml)
+[![pub package](https://img.shields.io/pub/v/timezone.svg)](https://pub.dev/packages/timezone)
+[![package publisher](https://img.shields.io/pub/publisher/timezone.svg)](https://pub.dev/packages/timezone/publisher)
+
 # TimeZone
 
 This package provides the [IANA time zone database] and time zone aware

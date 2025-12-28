@@ -1,7 +1,8 @@
-# 0.11.0
+## 0.11.0
 
 - Make `Location.offset` a `Duration` instead of an `int`.
 - Generate list of common locations fom IANA data.
+- Move to `dart-lang/labs` monorepo.
 
 # 0.10.2
 
