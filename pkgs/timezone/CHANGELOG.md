@@ -3,6 +3,7 @@
 - Make `Location.offset` a `Duration` instead of an `int`.
 - Generate list of common locations fom IANA data.
 - Move to `dart-lang/labs` monorepo.
+- Add timezone data version to generated headers.
 
 # 0.10.2
 

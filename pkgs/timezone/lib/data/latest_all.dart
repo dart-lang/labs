@@ -1,4 +1,5 @@
 // This is a generated file. Do not edit.
+// Timezone data version: 2025c
 import 'dart:typed_data';
 
 import '../src/env.dart';
