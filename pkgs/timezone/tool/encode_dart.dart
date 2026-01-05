@@ -7,7 +7,7 @@ Future<void> main(List<String> args) async {
   final tzDataPath = args[0];
   final dartLibraryPath = args[1];
   final timezoneVersion = args[2];
-  
+
   final bytes = File(tzDataPath).readAsBytesSync();
   final generatedDartFile = generateDartFile(
     name: p.basenameWithoutExtension(tzDataPath),
