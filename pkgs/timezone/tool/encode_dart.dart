@@ -6,10 +6,13 @@ import 'package:path/path.dart' as p;
 Future<void> main(List<String> args) async {
   final tzDataPath = args[0];
   final dartLibraryPath = args[1];
+  final timezoneVersion = args[2];
+
   final bytes = File(tzDataPath).readAsBytesSync();
   final generatedDartFile = generateDartFile(
     name: p.basenameWithoutExtension(tzDataPath),
     data: bytes,
+    tzVersion: timezoneVersion,
   );
   File(dartLibraryPath).writeAsStringSync(generatedDartFile);
 }
@@ -41,9 +44,14 @@ String bytesAsString(
   return buffer.toString();
 }
 
-String generateDartFile({required String name, required Uint8List data}) =>
+String generateDartFile({
+  required String name,
+  required Uint8List data,
+  required String tzVersion,
+}) =>
     '''
 // This is a generated file. Do not edit.
+// Timezone data version: $tzVersion
 import 'dart:typed_data';
 
 import '../src/env.dart';
