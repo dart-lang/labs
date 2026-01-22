@@ -3,10 +3,10 @@
 /// Usage example:
 ///
 /// ```sh
-/// dart pub run tool/get
-/// dart pub run tool/encode_dart lib/data/latest.{tzf,dart}
-/// dart pub run tool/encode_dart lib/data/latest_all.{tzf,dart}
-/// dart pub run tool/encode_dart lib/data/latest_10y.{tzf,dart}
+/// dart run tool/get
+/// dart run tool/encode_dart lib/data/latest.{tzf,dart}
+/// dart run tool/encode_dart lib/data/latest_all.{tzf,dart}
+/// dart run tool/encode_dart lib/data/latest_10y.{tzf,dart}
 /// ```
 library;
 
