@@ -3,7 +3,7 @@
 /// Usage example:
 ///
 /// ```sh
-/// pub run tool/encode_tzf --zoneinfo path/to/zoneinfo
+/// dart run tool/encode_tzf --zoneinfo path/to/zoneinfo
 /// ```
 library;
 
