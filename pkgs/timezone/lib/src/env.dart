@@ -9,7 +9,7 @@ import 'tzdb.dart';
 /// File name of the Time Zone default database.
 const String tzDataDefaultFilename = 'latest.tzf';
 
-final _utc = Location('UTC', [minTime], [0], [TimeZone.UTC]);
+final _utc = Location('Etc/UTC', [minTime], [0], [TimeZone.UTC]);
 
 final _database = LocationDatabase();
 late Location _local;
