@@ -1,3 +1,0 @@
-# Ignore generated protobuf files.
-*.pb.dart linguist-generated=true
-*.pbenum.dart linguist-generated=true
