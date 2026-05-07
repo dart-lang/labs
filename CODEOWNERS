@@ -4,6 +4,7 @@
 # else.
 
 /pkgs/appengine/               @dart-lang/dart-pub-team
+/pkgs/excerpter/               @kevmoo
 /pkgs/gcloud/                  @dart-lang/dart-pub-team
 /pkgs/io_file                  @brianquinlan
 /pkgs/jot/                     @szakarias

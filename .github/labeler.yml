@@ -8,6 +8,10 @@
   - changed-files:
     - any-glob-to-any-file: 'pkgs/appengine/**'
 
+'package:excerpter':
+  - changed-files:
+    - any-glob-to-any-file: 'pkgs/excerpter/**'
+
 'package:gcloud':
   - changed-files:
     - any-glob-to-any-file: 'pkgs/gcloud/**'
