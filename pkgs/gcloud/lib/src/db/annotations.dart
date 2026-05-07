@@ -301,9 +301,8 @@ class ListProperty extends Property {
 
 /// A convenience [Property] for list of strings.
 class StringListProperty extends ListProperty {
-  const StringListProperty({String? propertyName, bool indexed = true})
-      : super(const StringProperty(),
-            propertyName: propertyName, indexed: indexed);
+  const StringListProperty({super.propertyName, super.indexed})
+      : super(const StringProperty());
 
   @override
   Object decodePrimitiveValue(ModelDB db, Object? value) {
