@@ -44,5 +44,4 @@ void template() {
   print('Templated plaster here.');
   // #docregion template
 }
-
 // #enddocregion template
