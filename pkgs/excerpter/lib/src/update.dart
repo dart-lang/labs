@@ -69,7 +69,8 @@ final class Updater {
     String pathToUpdate, {
     bool makeUpdates = true,
   }) async {
-    final pathsToUpdate = await _findTargetFiles(pathToUpdate);
+    final pathsToUpdate = (await _findTargetFiles(pathToUpdate)).toList()
+      ..sort();
     final warnings = <String>[];
     var excerptsVisited = 0;
     var excerptsNeedingUpdates = 0;
