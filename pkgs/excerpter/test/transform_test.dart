@@ -226,7 +226,7 @@ void _stringToReplaceTransforms() {
       '/Hello/Hi/g;',
       errorNotExpected,
     );
-    expect(simpleReplace.length, equals(1));
+    expect(simpleReplace, hasLength(1));
     expect(simpleReplace.first.from, equals(RegExp('Hello', multiLine: true)));
     expect(simpleReplace.first.to, equals('Hi'));
   });
@@ -236,7 +236,7 @@ void _stringToReplaceTransforms() {
       '/Hello/Hi/g;/World/Dash/g;',
       errorNotExpected,
     );
-    expect(multipleReplace.length, equals(2));
+    expect(multipleReplace, hasLength(2));
   });
 
   test('missing starting slash throws error', () {
@@ -251,7 +251,7 @@ void _stringToReplaceTransforms() {
       r'/(Hello) (Dash)/$1 World/g;',
       errorNotExpected,
     );
-    expect(res.length, equals(1));
+    expect(res, hasLength(1));
     expect(res.first, isA<BackReferenceReplaceTransform>());
   });
 
