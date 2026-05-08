@@ -2,11 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
+import 'package:source_span/source_span.dart';
 
 import 'extract.dart';
 import 'transform.dart';
@@ -61,7 +63,12 @@ final class FileUpdater {
 
     final extractor = ExcerptExtractor();
 
-    final originalLines = await File(pathToUpdate).readAsLines();
+    final fileContent = await File(pathToUpdate).readAsString();
+    final sourceFile = SourceFile.fromString(
+      fileContent,
+      url: Uri.file(pathToUpdate),
+    );
+    final originalLines = const LineSplitter().convert(fileContent);
 
     Iterable<ReplaceTransform> wholeFileTransforms = [];
     String? wholeFilePlasterTemplate;
@@ -105,13 +112,18 @@ final class FileUpdater {
       final instructionLineNumber = lineIndex + 1;
       final instructionIndent = line.length - trimmedLine.length;
 
-      Never reportError(String error) {
-        throw InjectionException._(
-          pathToUpdate,
-          line,
-          instructionLineNumber,
-          error,
-        );
+      final lineStart = sourceFile.getOffset(lineIndex);
+      final lineEnd = lineStart + line.length;
+      final lineSpan = sourceFile.span(lineStart, lineEnd);
+
+      Never reportError(String error, [int? offsetInLine, int? length]) {
+        final span = offsetInLine != null && length != null
+            ? sourceFile.span(
+                lineStart + offsetInLine,
+                lineStart + offsetInLine + length,
+              )
+            : lineSpan;
+        throw InjectionException(error, span);
       }
 
       final instruction = _Instruction.fromLine(line, reportError);
@@ -185,7 +197,7 @@ final class FileUpdater {
             instruction.regionName,
           );
         } on ExtractException catch (e) {
-          reportError(e.error);
+          reportError(e.message);
         }
 
         var plaster = (instruction.plasterTemplate ?? wholeFilePlasterTemplate)
@@ -304,30 +316,9 @@ final class FileProcessResults {
 }
 
 /// An exception that occurs when a code-excerpt injection fails.
-@immutable
-final class InjectionException implements Exception {
-  /// The path of the file this injection instruction exception occurred for.
-  final String filePath;
-
-  /// The line of the injection instruction that had errors or caused errors.
-  final String line;
-
-  /// The line number of the injection instruction that
-  /// had errors or caused errors.
-  ///
-  /// This is the line number before the updates, if any, were made.
-  final int lineNumber;
-
-  /// The error that occurred due to the injection instruction.
-  final String error;
-
-  /// Create an exception to convey that an injection instruction of [line]
-  /// at [lineNumber] in the file at [filePath] had an error
-  /// or caused an error.
-  InjectionException._(this.filePath, this.line, this.lineNumber, this.error);
-
-  @override
-  String toString() => '$filePath:$lineNumber - $error';
+final class InjectionException extends SourceSpanException {
+  /// Create an exception to convey that an injection instruction had an error.
+  InjectionException(super.message, [super.span]);
 }
 
 final RegExp _instructionPattern = RegExp(
@@ -359,7 +350,7 @@ sealed class _Instruction {
   /// through the [reportError] callback.
   static _Instruction fromLine(
     String line,
-    Never Function(String error) reportError,
+    Never Function(String error, [int? offsetInLine, int? length]) reportError,
   ) {
     final match = _instructionPattern.firstMatch(line);
     if (match == null) {
@@ -367,26 +358,40 @@ sealed class _Instruction {
     }
 
     final path = match.namedGroup('path');
-    final argumentString = match.namedGroup('args')?.trim() ?? '';
-    final argumentPairs = _splitArgs
-        .allMatches(argumentString)
-        .map((m) => (arg: m.namedGroup('arg')!, value: m.namedGroup('value')!));
+    final argumentString = match.namedGroup('args') ?? '';
+    final argsStart = line.indexOf(argumentString);
+    final argumentPairs = _splitArgs.allMatches(argumentString).map((m) {
+      final matchText = m[0]!;
+      final trimmedText = matchText.trimRight();
+      return (
+        arg: m.namedGroup('arg')!,
+        value: m.namedGroup('value')!,
+        offset: argsStart + m.start,
+        length: trimmedText.length,
+      );
+    });
 
     if (path == null) {
       if (argumentPairs.length != 1) {
         reportError('A set instruction must have only one argument specified.');
       }
-      final argName = argumentPairs.first.arg;
-      final argValue = argumentPairs.first.value;
+      final firstArg = argumentPairs.first;
+      final argName = firstArg.arg;
+      final argValue = firstArg.value;
       return switch (argName) {
         'path-base' => _SetPathBaseInstruction(argValue),
         'plaster' => _SetPlasterInstruction(argValue),
         'replace' => _SetFileReplaceInstruction(
-          stringToReplaceTransforms(argValue, reportError),
+          stringToReplaceTransforms(
+            argValue,
+            (error) => reportError(error, firstArg.offset, firstArg.length),
+          ),
         ),
         _ => reportError(
           'A set instruction can only specify the '
           '`path-base`, `plaster`, and `replace` arguments.',
+          firstArg.offset,
+          firstArg.length,
         ),
       };
     }
@@ -443,58 +448,103 @@ final class _InjectInstruction extends _Instruction {
   factory _InjectInstruction.fromArgs({
     required String targetPath,
     required String regionName,
-    required Iterable<({String arg, String value})> arguments,
-    required Never Function(String error) reportError,
+    required Iterable<({String arg, String value, int offset, int length})>
+    arguments,
+    required Never Function(String error, [int? offsetInLine, int? length])
+    reportError,
   }) {
     String? indentByString;
+    int? indentByOffset;
+    int? indentByLength;
     String? plasterTemplate;
 
     final transforms = <Transform>[];
 
-    for (final (arg: argName, value: argValue) in arguments) {
-      switch (argName) {
+    for (final (:arg, :value, :offset, :length) in arguments) {
+      switch (arg) {
         case 'indent-by':
           if (indentByString != null) {
             reportError(
               'The `indent-by` argument can only be '
               'specified once per instruction.',
+              offset,
+              length,
             );
           }
-          indentByString = argValue;
+          indentByString = value;
+          indentByOffset = offset;
+          indentByLength = length;
         case 'plaster':
           if (plasterTemplate != null) {
             reportError(
               'The `plaster` argument can only be '
               'specified once per instruction.',
+              offset,
+              length,
             );
           }
-          plasterTemplate = argValue;
+          plasterTemplate = value;
         case 'skip':
-          transforms.add(SkipTransform(int.parse(argValue)));
+          final val = int.tryParse(value);
+          if (val == null) {
+            reportError(
+              'The `skip` argument must be an integer.',
+              offset,
+              length,
+            );
+          }
+          transforms.add(SkipTransform(val));
         case 'take':
-          transforms.add(TakeTransform(int.parse(argValue)));
+          final val = int.tryParse(value);
+          if (val == null) {
+            reportError(
+              'The `take` argument must be an integer.',
+              offset,
+              length,
+            );
+          }
+          transforms.add(TakeTransform(val));
         case 'from':
-          transforms.add(FromTransform(_argStringToPattern(argValue)));
+          transforms.add(FromTransform(_argStringToPattern(value)));
         case 'to':
-          transforms.add(ToTransform(_argStringToPattern(argValue)));
+          transforms.add(ToTransform(_argStringToPattern(value)));
         case 'remove':
-          transforms.add(RemoveTransform(_argStringToPattern(argValue)));
+          transforms.add(RemoveTransform(_argStringToPattern(value)));
         case 'retain':
-          transforms.add(RetainTransform(_argStringToPattern(argValue)));
+          transforms.add(RetainTransform(_argStringToPattern(value)));
         case 'replace':
-          transforms.addAll(stringToReplaceTransforms(argValue, reportError));
+          transforms.addAll(
+            stringToReplaceTransforms(
+              value,
+              (error) => reportError(error, offset, length),
+            ),
+          );
         default:
           reportError(
-            '$argName is an unsupported argument '
-            'in inject instructions.',
+            '$arg is an unsupported argument in inject instructions.',
+            offset,
+            length,
           );
       }
     }
 
-    final indentBy = indentByString == null ? null : int.parse(indentByString);
-
-    if (indentBy != null && indentBy < 0) {
-      reportError('The `indent-by` argument must be positive.');
+    int? indentBy;
+    if (indentByString != null) {
+      indentBy = int.tryParse(indentByString);
+      if (indentBy == null) {
+        reportError(
+          'The `indent-by` argument must be an integer.',
+          indentByOffset,
+          indentByLength,
+        );
+      }
+      if (indentBy < 0) {
+        reportError(
+          'The `indent-by` argument must be positive.',
+          indentByOffset,
+          indentByLength,
+        );
+      }
     }
 
     return _InjectInstruction(

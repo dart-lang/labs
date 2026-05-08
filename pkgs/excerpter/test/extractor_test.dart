@@ -45,25 +45,32 @@ void main() {}
       );
     });
 
-    test('empty region name throws ExtractException', () async {
-      await d.file('empty_region.dart', '''
+    test(
+      'empty region name throws ExtractException with rich span format',
+      () async {
+        await d.file('empty_region.dart', '''
 // #docregion a,,b
 void main() {}
 // #enddocregion a,,b
 ''').create();
 
-      final filePath = path.join(d.sandbox, 'empty_region.dart');
-      expect(
-        () => extractor.extractRegion(filePath, 'a'),
-        throwsA(
-          isA<ExtractException>().having(
-            (e) => e.toString(),
-            'toString()',
-            contains('docregion comment tried to use an empty region name.'),
+        final filePath = path.join(d.sandbox, 'empty_region.dart');
+        expect(
+          () => extractor.extractRegion(filePath, 'a'),
+          throwsA(
+            isA<ExtractException>()
+                .having(
+                  (e) => e.message,
+                  'message',
+                  'docregion comment tried to use an empty region name.',
+                )
+                .having((e) => e.span?.text, 'span.text', '// #docregion a,,b')
+                .having((e) => e.span?.start.line, 'span.start.line', 0)
+                .having((e) => e.span?.start.column, 'span.start.column', 0),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     test('unopened enddocregion throws ExtractException', () async {
       await d.file('unopened.dart', '''

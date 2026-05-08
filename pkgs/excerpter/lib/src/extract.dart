@@ -2,10 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math show min;
 
 import 'package:meta/meta.dart';
+import 'package:source_span/source_span.dart';
 
 /// A tool to extract declared docregions from specified source files.
 ///
@@ -50,10 +52,13 @@ final class ExcerptExtractor {
       return null;
     }
 
-    final lines = await file.readAsLines();
-    if (lines.isEmpty) {
+    final content = await file.readAsString();
+    if (content.isEmpty) {
       return const {};
     }
+
+    final sourceFile = SourceFile.fromString(content, url: Uri.file(path));
+    final lines = const LineSplitter().convert(content);
 
     final regionContent = <String, Region>{_entireFileRegionName: Region._()};
     final currentRegions = <String>{_entireFileRegionName};
@@ -63,21 +68,27 @@ final class ExcerptExtractor {
       final trimmedLine = line.trimLeft();
       final indent = line.length - trimmedLine.length;
 
+      final lineStart = sourceFile.getOffset(lineIndex);
+      final lineEnd = lineStart + line.length;
+      final lineSpan = sourceFile.span(lineStart, lineEnd);
+
       final directive = _docRegionDirective.firstMatch(trimmedLine);
       if (directive != null) {
         final isEnd = directive.namedGroup('end') != null;
         final rawRegionNames = directive.namedGroup('regions');
         if (rawRegionNames == null) {
-          throw const ExtractException(
+          throw ExtractException(
             'A docregion comment must specify at least one region!',
+            lineSpan,
           );
         }
         final regionNames = rawRegionNames.split(',');
         for (final rawRegionName in regionNames) {
           final regionName = rawRegionName.trim();
           if (regionName.isEmpty) {
-            throw const ExtractException(
+            throw ExtractException(
               'docregion comment tried to use an empty region name.',
+              lineSpan,
             );
           }
           if (isEnd) {
@@ -86,6 +97,7 @@ final class ExcerptExtractor {
               throw ExtractException(
                 'enddocregion tried to close the '
                 "unopened '$regionName' region!",
+                lineSpan,
               );
             }
           } else {
@@ -109,7 +121,10 @@ final class ExcerptExtractor {
 
     currentRegions.remove(_entireFileRegionName);
     if (currentRegions.isNotEmpty) {
-      throw ExtractException('Regions $currentRegions were not closed.');
+      throw ExtractException(
+        'Regions $currentRegions were not closed.',
+        sourceFile.span(content.length),
+      );
     }
 
     return regionContent;
@@ -197,16 +212,9 @@ final class _PlasterLine extends _RegionLine {
 
 /// An exception thrown when a [ExcerptExtractor]
 /// failed to extract a region.
-@immutable
-final class ExtractException implements Exception {
-  /// The error causing the exception during extraction.
-  final String error;
-
-  /// Create a [ExtractException] with the specified [error].
-  const ExtractException(this.error);
-
-  @override
-  String toString() => error;
+final class ExtractException extends SourceSpanException {
+  /// Create a [ExtractException] with the specified [message] and [span].
+  ExtractException(super.message, [super.span]);
 }
 
 const String _entireFileRegionName = '';

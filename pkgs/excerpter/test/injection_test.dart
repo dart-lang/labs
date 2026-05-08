@@ -10,7 +10,8 @@ import 'package:test_descriptor/test_descriptor.dart' as d;
 
 void main() {
   group('Injection exceptional cases', () {
-    test('invalid code excerpt syntax throws InjectionException', () async {
+    test('invalid code excerpt syntax throws InjectionException '
+        'with rich span format', () async {
       await d.file('test.md', '''
 <?code-excerpt invalid syntax
 ''').create();
@@ -25,11 +26,19 @@ void main() {
       expect(
         fileUpdater.process,
         throwsA(
-          isA<InjectionException>().having(
-            (e) => e.toString(),
-            'toString()',
-            contains('Invalid code excerpt syntax.'),
-          ),
+          isA<InjectionException>()
+              .having(
+                (e) => e.message,
+                'message',
+                'Invalid code excerpt syntax.',
+              )
+              .having(
+                (e) => e.span?.text,
+                'span.text',
+                '<?code-excerpt invalid syntax',
+              )
+              .having((e) => e.span?.start.line, 'span.start.line', 0)
+              .having((e) => e.span?.start.column, 'span.start.column', 0),
         ),
       );
     });
@@ -179,7 +188,8 @@ void main() {}
       },
     );
 
-    test('duplicate indent-by argument throws InjectionException', () async {
+    test('duplicate indent-by argument throws InjectionException '
+        'with pinpoint sub-span', () async {
       await d.file('test.md', '''
 <?code-excerpt "code.dart" indent-by="2" indent-by="4" ?>
 ```dart
@@ -196,14 +206,26 @@ void main() {}
       expect(
         fileUpdater.process,
         throwsA(
-          isA<InjectionException>().having(
-            (e) => e.toString(),
-            'toString()',
-            contains(
-              'The `indent-by` argument can only be specified once '
-              'per instruction.',
-            ),
-          ),
+          isA<InjectionException>()
+              .having(
+                (e) => e.message,
+                'message',
+                'The `indent-by` argument can only be specified once '
+                    'per instruction.',
+              )
+              .having((e) => e.span?.text, 'span.text', 'indent-by="4"')
+              .having((e) => e.span?.start.line, 'span.start.line', 0)
+              .having((e) => e.span?.start.column, 'span.start.column', 41)
+              .having(
+                (e) => e.toString(),
+                'toString()',
+                equals('''
+Error on line 1, column 42 of ${path.join(d.sandbox, 'test.md')}: The `indent-by` argument can only be specified once per instruction.
+  ╷
+1 │ <?code-excerpt "code.dart" indent-by="2" indent-by="4" ?>
+  │                                          ^^^^^^^^^^^^^
+  ╵'''),
+              ),
         ),
       );
     });
