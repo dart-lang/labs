@@ -7,6 +7,7 @@
 void single() {
   // ...
 }
+
 ```
 
 ### Multiple plaster
@@ -18,6 +19,7 @@ void multiple() {
   print('Showing up!');
   // ...
 }
+
 ```
 
 ### Remove plaster
@@ -26,6 +28,7 @@ void multiple() {
 ```dart
 void remove() {
 }
+
 ```
 
 ### Custom template
@@ -35,6 +38,7 @@ void remove() {
 void custom() {
   /*...*/
 }
+
 ```
 
 <?code-excerpt "plaster.dart (template)" plaster="/* $defaultPlaster */"?>
