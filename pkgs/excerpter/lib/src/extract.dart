@@ -60,6 +60,11 @@ final class ExcerptExtractor {
     final sourceFile = SourceFile.fromString(content, url: Uri.file(path));
     final lines = const LineSplitter().convert(content);
 
+    final dialect = _LanguageDialect.fromPath(path);
+    var state = _ScannerState.code;
+    String? currentStringDelimiter;
+    (String, String)? currentBlockCommentDelimiter;
+
     final regionContent = <String, Region>{_entireFileRegionName: Region._()};
     final currentRegions = <String>{_entireFileRegionName};
 
@@ -72,17 +77,34 @@ final class ExcerptExtractor {
       final lineEnd = lineStart + line.length;
       final lineSpan = sourceFile.span(lineStart, lineEnd);
 
-      final directive = _docRegionDirective.firstMatch(trimmedLine);
-      if (directive != null) {
-        final isEnd = directive.namedGroup('end') != null;
-        final rawRegionNames = directive.namedGroup('regions');
+      final (
+        nextState,
+        nextStringDelim,
+        nextBlockCommentDelim,
+        isDirective,
+        match,
+      ) = _scanLine(
+        line,
+        dialect,
+        state,
+        currentStringDelimiter,
+        currentBlockCommentDelimiter,
+      );
+
+      state = nextState;
+      currentStringDelimiter = nextStringDelim;
+      currentBlockCommentDelimiter = nextBlockCommentDelim;
+
+      if (isDirective && match != null) {
+        final isEnd = match.namedGroup('end') != null;
+        final rawRegionNames = match.namedGroup('regions');
         if (rawRegionNames == null) {
           throw ExtractException(
             'A docregion comment must specify at least one region!',
             lineSpan,
           );
         }
-        final regionNames = rawRegionNames.split(',');
+        final regionNames = dialect.cleanRegions(rawRegionNames).split(',');
         for (final rawRegionName in regionNames) {
           final regionName = rawRegionName.trim();
           if (regionName.isEmpty) {
@@ -129,6 +151,115 @@ final class ExcerptExtractor {
 
     return regionContent;
   }
+}
+
+(
+  _ScannerState nextState,
+  String? nextStringDelimiter,
+  (String, String)? nextBlockCommentDelimiter,
+  bool isDirective,
+  RegExpMatch? match,
+)
+_scanLine(
+  String line,
+  _LanguageDialect dialect,
+  _ScannerState state,
+  String? currentStringDelimiter,
+  (String, String)? currentBlockCommentDelimiter,
+) {
+  if (state == _ScannerState.lineComment) {
+    state = _ScannerState.code;
+  }
+
+  final match = _docRegionDirective.firstMatch(line);
+  var isDirective = false;
+
+  var i = 0;
+  final len = line.length;
+  while (i < len) {
+    if (match != null && i == match.start) {
+      if (state == _ScannerState.lineComment ||
+          state == _ScannerState.blockComment) {
+        isDirective = true;
+      }
+    }
+
+    if (state == _ScannerState.code) {
+      (String, String)? matchedBlock;
+      for (final block in dialect.blockComments) {
+        if (line.startsWith(block.$1, i)) {
+          matchedBlock = block;
+          break;
+        }
+      }
+      if (matchedBlock != null) {
+        state = _ScannerState.blockComment;
+        currentBlockCommentDelimiter = matchedBlock;
+        i += matchedBlock.$1.length;
+        continue;
+      }
+
+      String? matchedLineComment;
+      for (final prefix in dialect.lineComments) {
+        if (line.startsWith(prefix, i)) {
+          matchedLineComment = prefix;
+          break;
+        }
+      }
+      if (matchedLineComment != null) {
+        state = _ScannerState.lineComment;
+        if (match != null && match.start >= i) {
+          isDirective = true;
+        }
+        break;
+      }
+
+      String? matchedStringDelim;
+      for (final delim in dialect.stringDelimiters) {
+        if (line.startsWith(delim, i)) {
+          matchedStringDelim = delim;
+          break;
+        }
+      }
+      if (matchedStringDelim != null) {
+        state = _ScannerState.string;
+        currentStringDelimiter = matchedStringDelim;
+        i += matchedStringDelim.length;
+        continue;
+      }
+
+      i++;
+    } else if (state == _ScannerState.string) {
+      if (line.startsWith(r'\', i) && i + 1 < len) {
+        i += 2;
+        continue;
+      }
+      if (line.startsWith(currentStringDelimiter!, i)) {
+        state = _ScannerState.code;
+        i += currentStringDelimiter.length;
+        currentStringDelimiter = null;
+      } else {
+        i++;
+      }
+    } else if (state == _ScannerState.blockComment) {
+      final endToken = currentBlockCommentDelimiter!.$2;
+      if (line.startsWith(endToken, i)) {
+        state = _ScannerState.code;
+        i += endToken.length;
+        currentBlockCommentDelimiter = null;
+      } else {
+        i++;
+      }
+    }
+  }
+
+  return (
+    state,
+    currentStringDelimiter,
+    currentBlockCommentDelimiter,
+    isDirective,
+    match,
+  );
 }
 
 /// The contents of a docregion found in a file.
@@ -220,5 +351,88 @@ final class ExtractException extends SourceSpanException {
 const String _entireFileRegionName = '';
 
 final RegExp _docRegionDirective = RegExp(
-  r'^\s*(?:\/\/+|#+|<!--|/\*)\s*#(?<end>end)?docregion\s(?<regions>[a-zA-Z0-9,_\-\s]+)(?:\s|.*?)$',
+  r'#(?<end>end)?docregion\s+(?<regions>[a-zA-Z0-9,_\-\s]+)',
 );
+
+enum _ScannerState { code, string, lineComment, blockComment }
+
+enum _LanguageDialect {
+  cStyle(
+    lineComments: ['//'],
+    blockComments: [('/*', '*/')],
+    stringDelimiters: ["'''", '"""', "'", '"'],
+  ),
+  pythonStyle(
+    lineComments: ['#'],
+    blockComments: [],
+    stringDelimiters: ["'''", '"""', "'", '"'],
+  ),
+  hashStyle(
+    lineComments: ['#'],
+    blockComments: [],
+    stringDelimiters: ["'", '"'],
+  ),
+  htmlStyle(
+    lineComments: [],
+    blockComments: [('<!--', '-->')],
+    stringDelimiters: ["'", '"'],
+  ),
+  cssStyle(
+    lineComments: [],
+    blockComments: [('/*', '*/')],
+    stringDelimiters: [],
+  ),
+  fallback(
+    lineComments: ['//', '#'],
+    blockComments: [('/*', '*/'), ('<!--', '-->')],
+    stringDelimiters: ["'''", '"""', "'", '"'],
+  );
+
+  final List<String> lineComments;
+  final List<(String, String)> blockComments;
+  final List<String> stringDelimiters;
+
+  const _LanguageDialect({
+    required this.lineComments,
+    required this.blockComments,
+    required this.stringDelimiters,
+  });
+
+  String cleanRegions(String raw) {
+    switch (this) {
+      case _LanguageDialect.htmlStyle:
+        // HTML block comments end in '-->'. Since dashes are allowed inside
+        // region names, the greedy regex matching group catches the trailing
+        // dashes from the comment closing delimiter (e.g. 'html-region --').
+        // We strip them off to recover the actual region name.
+        var cleaned = raw.trimRight();
+        while (cleaned.endsWith('-')) {
+          cleaned = cleaned.substring(0, cleaned.length - 1).trimRight();
+        }
+        return cleaned;
+      default:
+        return raw.trimRight();
+    }
+  }
+
+  factory _LanguageDialect.fromPath(String filePath) {
+    final ext = filePath.split('.').last.toLowerCase();
+    return switch (ext) {
+      'dart' ||
+      'js' ||
+      'ts' ||
+      'go' ||
+      'java' ||
+      'kt' ||
+      'swift' ||
+      'c' ||
+      'cpp' ||
+      'cs' => cStyle,
+      'py' => pythonStyle,
+      'yaml' || 'yml' => hashStyle,
+      'html' || 'xml' => htmlStyle,
+      'css' => cssStyle,
+      _ => fallback,
+    };
+  }
+}

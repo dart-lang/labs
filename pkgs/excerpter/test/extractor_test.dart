@@ -127,5 +127,68 @@ void main() {
       final lines = region.linesWithPlaster(null).toList();
       expect(lines, anyElement(contains('not a comment #docregion my-region')));
     });
+
+    test(
+      'does not match docregion patterns inside multiline strings',
+      () async {
+        await d.file('multiline_string.dart', '''
+void main() {
+  final multiline = """
+  This is a multiline string
+  #docregion my-region
+  that spans lines.
+  #enddocregion my-region
+  """;
+}
+''').create();
+
+        final filePath = path.join(d.sandbox, 'multiline_string.dart');
+        final region = await extractor.extractRegion(filePath, '');
+        final lines = region.linesWithPlaster(null).toList();
+        expect(lines, anyElement(contains('#docregion my-region')));
+      },
+    );
+
+    test('supports other dialects (Python, HTML, CSS) correctly', () async {
+      await d.file('sample.py', '''
+# #docregion py-region
+print("hello")
+# #enddocregion py-region
+''').create();
+
+      await d.file('sample.html', '''
+<!-- #docregion html-region -->
+<div>Hello</div>
+<!-- #enddocregion html-region -->
+''').create();
+
+      await d.file('sample.css', '''
+/* #docregion css-region */
+body { color: red; }
+/* #enddocregion css-region */
+''').create();
+
+      final pyPath = path.join(d.sandbox, 'sample.py');
+      final htmlPath = path.join(d.sandbox, 'sample.html');
+      final cssPath = path.join(d.sandbox, 'sample.css');
+
+      final pyRegion = await extractor.extractRegion(pyPath, 'py-region');
+      expect(
+        pyRegion.linesWithPlaster(null),
+        contains(contains('print("hello")')),
+      );
+
+      final htmlRegion = await extractor.extractRegion(htmlPath, 'html-region');
+      expect(
+        htmlRegion.linesWithPlaster(null),
+        contains(contains('<div>Hello</div>')),
+      );
+
+      final cssRegion = await extractor.extractRegion(cssPath, 'css-region');
+      expect(
+        cssRegion.linesWithPlaster(null),
+        contains(contains('body { color: red; }')),
+      );
+    });
   });
 }
