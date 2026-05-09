@@ -358,41 +358,60 @@ enum _ScannerState { code, string, lineComment, blockComment }
 
 enum _LanguageDialect {
   cStyle(
+    extensions: {
+      'dart',
+      'js',
+      'ts',
+      'go',
+      'java',
+      'kt',
+      'swift',
+      'c',
+      'cpp',
+      'cs',
+    },
     lineComments: ['//'],
     blockComments: [('/*', '*/')],
     stringDelimiters: ["'''", '"""', "'", '"'],
   ),
   pythonStyle(
+    extensions: {'py'},
     lineComments: ['#'],
     blockComments: [],
     stringDelimiters: ["'''", '"""', "'", '"'],
   ),
   hashStyle(
+    extensions: {'yaml', 'yml'},
     lineComments: ['#'],
     blockComments: [],
     stringDelimiters: ["'", '"'],
   ),
   htmlStyle(
+    extensions: {'html', 'xml'},
     lineComments: [],
     blockComments: [('<!--', '-->')],
     stringDelimiters: ["'", '"'],
   ),
   cssStyle(
+    extensions: {'css'},
     lineComments: [],
     blockComments: [('/*', '*/')],
     stringDelimiters: [],
   ),
   fallback(
+    extensions: {},
     lineComments: ['//', '#'],
     blockComments: [('/*', '*/'), ('<!--', '-->')],
     stringDelimiters: ["'''", '"""', "'", '"'],
   );
 
+  final Set<String> extensions;
   final List<String> lineComments;
   final List<(String, String)> blockComments;
   final List<String> stringDelimiters;
 
   const _LanguageDialect({
+    required this.extensions,
     required this.lineComments,
     required this.blockComments,
     required this.stringDelimiters,
@@ -417,22 +436,11 @@ enum _LanguageDialect {
 
   factory _LanguageDialect.fromPath(String filePath) {
     final ext = filePath.split('.').last.toLowerCase();
-    return switch (ext) {
-      'dart' ||
-      'js' ||
-      'ts' ||
-      'go' ||
-      'java' ||
-      'kt' ||
-      'swift' ||
-      'c' ||
-      'cpp' ||
-      'cs' => cStyle,
-      'py' => pythonStyle,
-      'yaml' || 'yml' => hashStyle,
-      'html' || 'xml' => htmlStyle,
-      'css' => cssStyle,
-      _ => fallback,
-    };
+    for (final dialect in _LanguageDialect.values) {
+      if (dialect.extensions.contains(ext)) {
+        return dialect;
+      }
+    }
+    return fallback;
   }
 }
