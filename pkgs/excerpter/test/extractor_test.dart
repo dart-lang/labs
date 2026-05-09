@@ -111,5 +111,21 @@ void main() {}
         ),
       );
     });
+
+    test('does not match docregion patterns embedded inside string literals or '
+        'normal code', () async {
+      await d.file('non_comment.dart', '''
+void main() {
+  final stringPattern = "not a comment #docregion my-region";
+  print(stringPattern);
+  final anotherPattern = "not a comment #enddocregion my-region";
+}
+''').create();
+
+      final filePath = path.join(d.sandbox, 'non_comment.dart');
+      final region = await extractor.extractRegion(filePath, '');
+      final lines = region.linesWithPlaster(null).toList();
+      expect(lines, anyElement(contains('not a comment #docregion my-region')));
+    });
   });
 }
