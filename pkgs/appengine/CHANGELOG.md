@@ -1,3 +1,7 @@
+## 0.13.12
+
+* Upgrade dependency `package:gcloud` to `^0.9.0`.
+
 ## 0.13.11
 
 * Update dependency on `googleapis_auth` and `http`.
