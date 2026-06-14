@@ -149,11 +149,12 @@ Future withAppEngineServices(Future Function() callback) {
   return appengine_internal.withAppEngineServices(callback);
 }
 
-/// Returns the [ClientContext] of the current request.
+/// Returns the [ClientContext] of the current request, or `null` if called
+/// outside of a request handler.
 ///
-/// This getter can only be called inside a request handler which was passed to
-/// [runAppEngine].
-ClientContext get context => ss.lookup(_APPENGINE_CONTEXT) as ClientContext;
+/// This getter returns a non-`null` value only when called inside a request
+/// handler which was passed to [runAppEngine].
+ClientContext? get context => ss.lookup(_APPENGINE_CONTEXT) as ClientContext?;
 
 /// Will register for log events produced by `package:logging` and forwards
 /// log records to the AppEngine logging service.

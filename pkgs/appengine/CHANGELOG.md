@@ -1,3 +1,9 @@
+## 0.14.0
+
+* **Breaking:** The `context` getter now returns `ClientContext?` instead of
+  `ClientContext`, returning `null` when called outside of a request handler
+  instead of throwing.
+
 ## 0.13.12
 
 * Upgrade dependency `package:gcloud` to `^0.9.0`.
