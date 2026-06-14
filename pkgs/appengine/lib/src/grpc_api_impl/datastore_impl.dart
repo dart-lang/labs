@@ -511,7 +511,8 @@ class _Codec {
       } else if (part.hasId()) {
         id = part.id.toInt();
       } else {
-        throw const errors.ProtocolError('Neither name nor id present in Key.');
+        throw const errors.ProtocolException(
+            'Neither name nor id present in Key.');
       }
       keyElements[i] = raw.KeyElement(part.kind, id);
     }

@@ -2,47 +2,61 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
 import 'dart:io';
 
-class AppEngineError implements Exception {
+class AppEngineException implements Exception {
   final String message;
 
-  const AppEngineError(this.message);
+  const AppEngineException(this.message);
 
   @override
   String toString() => 'AppEngineException: $message';
 }
 
-class NetworkError extends AppEngineError implements IOException {
-  NetworkError(super.message);
+class NetworkException extends AppEngineException implements IOException {
+  NetworkException(super.message);
 
   @override
-  String toString() => 'NetworkError: $message';
+  String toString() => 'NetworkException: $message';
 }
 
-class ProtocolError extends AppEngineError implements IOException {
-  static const ProtocolError INVALID_RESPONSE =
-      ProtocolError('Invalid response');
+class ProtocolException extends AppEngineException implements IOException {
+  static const ProtocolException INVALID_RESPONSE =
+      ProtocolException('Invalid response');
 
-  const ProtocolError(super.message);
+  const ProtocolException(super.message);
 
   @override
-  String toString() => 'ProtocolError: $message';
+  String toString() => 'ProtocolException: $message';
 }
 
-class ServiceError extends AppEngineError {
+class ServiceException extends AppEngineException {
   final String serviceName;
 
-  ServiceError(super.message, {this.serviceName = 'ServiceError'});
+  ServiceException(super.message, {this.serviceName = 'ServiceException'});
 
   @override
   String toString() => '$serviceName: $message';
 }
 
-class ApplicationError extends AppEngineError {
-  ApplicationError(super.message);
+class ApplicationException extends AppEngineException {
+  ApplicationException(super.message);
 
   @override
-  String toString() => 'ApplicationError: $message';
+  String toString() => 'ApplicationException: $message';
 }
+
+@Deprecated('Use AppEngineException instead')
+typedef AppEngineError = AppEngineException;
+
+@Deprecated('Use NetworkException instead')
+typedef NetworkError = NetworkException;
+
+@Deprecated('Use ProtocolException instead')
+typedef ProtocolError = ProtocolException;
+
+@Deprecated('Use ServiceException instead')
+typedef ServiceError = ServiceException;
+
+@Deprecated('Use ApplicationException instead')
+typedef ApplicationError = ApplicationException;
