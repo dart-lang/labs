@@ -1,3 +1,11 @@
+## 0.13.13-wip
+
+* Rename error classes to use the `Exception` suffix
+  (`AppEngineException`, `NetworkException`, `ProtocolException`,
+  `ServiceException`, `ApplicationException`) to follow Dart conventions for
+  types implementing `Exception`. The old `*Error` names remain available as
+  deprecated type aliases, so this change is non-breaking.
+
 ## 0.13.12
 
 * Upgrade dependency `package:gcloud` to `^0.9.0`.

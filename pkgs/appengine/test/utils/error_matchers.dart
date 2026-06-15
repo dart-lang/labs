@@ -8,11 +8,11 @@ import 'package:test/test.dart';
 import 'package:appengine/src/errors.dart';
 import 'package:gcloud/datastore.dart' as datastore;
 
-const isNetworkError = TypeMatcher<NetworkError>();
-const isProtocolError = TypeMatcher<ProtocolError>();
-const isServiceError = TypeMatcher<ServiceError>();
-const isApplicationError = TypeMatcher<AppEngineError>();
-const isAppEngineApplicationError = TypeMatcher<ApplicationError>();
+const isNetworkError = TypeMatcher<NetworkException>();
+const isProtocolError = TypeMatcher<ProtocolException>();
+const isServiceError = TypeMatcher<ServiceException>();
+const isApplicationError = TypeMatcher<AppEngineException>();
+const isAppEngineApplicationError = TypeMatcher<ApplicationException>();
 
 const isDatastoreApplicationError = TypeMatcher<datastore.ApplicationError>();
 const isTransactionAbortedError =
