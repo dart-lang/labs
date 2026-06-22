@@ -1,3 +1,7 @@
+## 0.11.1
+
+- Specify `Etc/UTC` as the default timezone (replaces `UTC`)
+
 ## 0.11.0
 
 - Make `Location.offset` a `Duration` instead of an `int`.
