@@ -69,14 +69,25 @@ jobs:
         run: dart pub get
 
       - name: Run refresh script
-        run: ./tool/refresh.sh
+        run: tool/refresh.sh
 
       - name: Check for git diff
         run: |
           if [[ -n $(git status --porcelain) ]]; then
-            echo "Changes detected after running tool/refresh.sh"
-            git diff
-            exit 1
+
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+            export TZDBVER=$(curl --silent -L -H "Accept: application/vnd.github+json" https://api.github.com/repos/eggert/tz/tags | jq -r '.[0].name')
+          
+            # Exit if the data already exists, or a PR has already been generated
+            (git rev-parse --verify "tzdb-${TZDBVER}" 2>/dev/null 1>&2) && echo "PR exists" && exit
+            
+            git checkout -b "tzdb-${TZDBVER}"
+            git add .
+            git commit -m "${TZDBVER}"
+            git push --set-upstream origin "tzdb-${TZDBVER}"
+            gh pr create --title "TZDB ${TZDBVER}" --body "See [here](https://github.com/eggert/tz/blob/main/NEWS) for the latest changes made to tz."
           else
             echo "No changes detected."
           fi
