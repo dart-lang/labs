@@ -61,3 +61,7 @@ for scope in latest latest_all latest_10y; do
 done
 
 dart format lib/data
+
+if [[ -n "$GITHUB_OUTPUT" ]]; then
+  echo "tz_version=$tz_version" >> "$GITHUB_OUTPUT"
+fi
