@@ -12,6 +12,7 @@ on:
     paths:
       - '.github/workflows/timezone.yml'
       - 'pkgs/timezone/**'
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * 0' # weekly
 
