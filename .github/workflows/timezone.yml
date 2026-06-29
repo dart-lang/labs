@@ -63,7 +63,16 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Generate Dart Bot Token
+        id: generate-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        with:
+          app-id: ${{ vars.ECOSYSTEM_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.ECOSYSTEM_BOT_PRIVATE_KEY }}
+
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
       
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
@@ -79,7 +88,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@6fff569d741c6b8131d2a49663b16573ef90be31
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate-token.outputs.token }}
           commit-message: "Update time zone data to ${{ steps.refresh.outputs.tz_version }}"
           branch: "update-tzdb-${{ steps.refresh.outputs.tz_version }}"
           title: "[refresh.sh] Update time zone data to TZDB ${{ steps.refresh.outputs.tz_version }}"
