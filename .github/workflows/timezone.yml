@@ -80,9 +80,9 @@ jobs:
         uses: peter-evans/create-pull-request@6fff569d741c6b8131d2a49663b16573ef90be31
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Update timezone data to ${{ steps.refresh.outputs.tz_version }}"
+          commit-message: "Update time zone data to ${{ steps.refresh.outputs.tz_version }}"
           branch: "update-tzdb-${{ steps.refresh.outputs.tz_version }}"
-          title: "[refresh.sh] Update timezone data to TZDB ${{ steps.refresh.outputs.tz_version }}"
+          title: "[refresh.sh] Update time zone data to TZDB ${{ steps.refresh.outputs.tz_version }}"
           body: |
             Automated update to the latest IANA Time Zone Database version ${{ steps.refresh.outputs.tz_version }}.
             See the [IANA Time Zone Database homepage](https://www.iana.org/time-zones) for announcements and details on recent data changes.
