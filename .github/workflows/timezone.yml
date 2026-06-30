@@ -89,6 +89,8 @@ jobs:
         uses: peter-evans/create-pull-request@6fff569d741c6b8131d2a49663b16573ef90be31
         with:
           token: ${{ steps.generate-token.outputs.token }}
+          committer: dart-ecosystem-bot <dart-ecosystem-bot@google.com>
+          author: dart-ecosystem-bot <dart-ecosystem-bot@google.com>
           commit-message: "Update time zone data to ${{ steps.refresh.outputs.tz_version }}"
           branch: "update-tzdb-${{ steps.refresh.outputs.tz_version }}"
           title: "[refresh.sh] Update time zone data to TZDB ${{ steps.refresh.outputs.tz_version }}"
