@@ -85,6 +85,12 @@ jobs:
         id: refresh
         run: tool/refresh.sh
 
+      - name: Install changelog updater
+        run: dart install --git-path pkgs/repo_manage --git-ref addChangelogUpdater https://github.com/dart-lang/ecosystem.git
+
+      - name: Update changelog
+        run: report changelog "Update timezone database to ${{ steps.refresh.outputs.tz_version }}."
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@6fff569d741c6b8131d2a49663b16573ef90be31
         with:
