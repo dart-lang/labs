@@ -86,8 +86,10 @@ jobs:
         run: tool/refresh.sh
 
       - name: Install changelog updater
-        run: dart install --git-path pkgs/repo_manage https://github.com/dart-lang/ecosystem.git
-
+        run: |
+          dart install --git-path pkgs/repo_manage https://github.com/dart-lang/ecosystem.git
+          echo "$HOME/.local/state/Dart/install/bin" >> $GITHUB_PATH
+          
       - name: Update changelog
         run: report changelog "Update timezone database to ${{ steps.refresh.outputs.tz_version }}."
 
