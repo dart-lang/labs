@@ -1,3 +1,7 @@
+## 0.11.1-wip
+
+- Update timezone database to 2026b.
+
 ## 0.11.1
 
 - Specify `Etc/UTC` as the default timezone (replaces `UTC`)
