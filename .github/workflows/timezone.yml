@@ -85,15 +85,27 @@ jobs:
         id: refresh
         run: tool/refresh.sh
 
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain .)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install changelog updater
+        if: steps.check_changes.outputs.changed == 'true'
         run: |
           dart install --git-path pkgs/repo_manage https://github.com/dart-lang/ecosystem.git
           echo "$HOME/.local/state/Dart/install/bin" >> $GITHUB_PATH
           
       - name: Update changelog
+        if: steps.check_changes.outputs.changed == 'true'
         run: report changelog "Update timezone database to ${{ steps.refresh.outputs.tz_version }}."
 
       - name: Create Pull Request
+        if: steps.check_changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@6fff569d741c6b8131d2a49663b16573ef90be31
         with:
           token: ${{ steps.generate-token.outputs.token }}
