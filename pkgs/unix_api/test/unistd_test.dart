@@ -56,9 +56,8 @@ void main() {
 
       // On macOS, the temporary directory may refer to a symbolic link.
       expect(
-        Directory(
-          newCwd.cast<ffi.Utf8>().toDartString(),
-        ).resolveSymbolicLinksSync(),
+        Directory(newCwd.cast<ffi.Utf8>().toDartString())
+            .resolveSymbolicLinksSync(),
         Directory(path).resolveSymbolicLinksSync(),
       );
     });

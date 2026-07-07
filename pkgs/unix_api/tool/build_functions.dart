@@ -5,7 +5,9 @@
 import 'dart:io';
 
 import 'package:yaml/yaml.dart';
+
 import 'cfunction.dart';
+
 import 'package:mustache_template/mustache_template.dart';
 
 const _cSourceTemplate = '''
@@ -134,9 +136,9 @@ String buildDartFunction(CFunction function) {
 ///
 /// Run as part of `generate.dart`.
 void main() {
-  final headerToConstants =
-      (loadYaml(File('functions.yaml').readAsStringSync()) as Map)
-          .cast<String, Object>();
+  final headerToConstants = (loadYaml(
+    File('functions.yaml').readAsStringSync(),
+  ) as Map).cast<String, Object>();
 
   final cSourceBuffer = StringBuffer(_cSourceTemplate);
   final cHeaderBuffer = StringBuffer(_cHeaderTemplate);

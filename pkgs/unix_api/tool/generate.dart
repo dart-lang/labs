@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ffigen/src/executables/ffigen.dart' as ffigen;
+
 import 'build_constants.dart' as build_constants;
 import 'build_functions.dart' as build_functions;
 
