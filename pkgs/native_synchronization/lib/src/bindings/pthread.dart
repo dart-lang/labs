@@ -12,7 +12,9 @@ final class pthread_cond_t extends Opaque {}
 
 @Native<Int Function(Pointer<pthread_mutex_t>, Pointer<Void>)>()
 external int pthread_mutex_init(
-    Pointer<pthread_mutex_t> mutex, Pointer<Void> attrs);
+  Pointer<pthread_mutex_t> mutex,
+  Pointer<Void> attrs,
+);
 
 @Native<Int Function(Pointer<pthread_mutex_t>)>()
 external int pthread_mutex_lock(Pointer<pthread_mutex_t> mutex);
@@ -25,11 +27,15 @@ external int pthread_mutex_destroy(Pointer<pthread_mutex_t> cond);
 
 @Native<Int Function(Pointer<pthread_cond_t>, Pointer<Void>)>()
 external int pthread_cond_init(
-    Pointer<pthread_cond_t> cond, Pointer<Void> attrs);
+  Pointer<pthread_cond_t> cond,
+  Pointer<Void> attrs,
+);
 
 @Native<Int Function(Pointer<pthread_cond_t>, Pointer<pthread_mutex_t>)>()
 external int pthread_cond_wait(
-    Pointer<pthread_cond_t> cond, Pointer<pthread_mutex_t> mutex);
+  Pointer<pthread_cond_t> cond,
+  Pointer<pthread_mutex_t> mutex,
+);
 
 @Native<Int Function(Pointer<pthread_cond_t>)>()
 external int pthread_cond_destroy(Pointer<pthread_cond_t> cond);

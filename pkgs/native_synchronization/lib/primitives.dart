@@ -74,8 +74,9 @@ sealed class Mutex implements Finalizable {
   }
 
   Sendable<Mutex> get asSendable => Sendable.wrap(
-      Platform.isWindows ? _WindowsMutex.fromAddress : _PosixMutex.fromAddress,
-      _address);
+    Platform.isWindows ? _WindowsMutex.fromAddress : _PosixMutex.fromAddress,
+    _address,
+  );
 
   int get _address;
 }
@@ -108,10 +109,11 @@ sealed class ConditionVariable implements Finalizable {
   void notify();
 
   Sendable<ConditionVariable> get asSendable => Sendable.wrap(
-      Platform.isWindows
-          ? _WindowsConditionVariable.fromAddress
-          : _PosixConditionVariable.fromAddress,
-      _address);
+    Platform.isWindows
+        ? _WindowsConditionVariable.fromAddress
+        : _PosixConditionVariable.fromAddress,
+    _address,
+  );
 
   int get _address;
 }

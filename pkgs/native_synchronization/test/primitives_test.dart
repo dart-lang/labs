@@ -19,7 +19,9 @@ void main() {
     });
 
     Future<String> spawnHelperIsolate(
-        int ptrAddress, Sendable<Mutex> sendableMutex) {
+      int ptrAddress,
+      Sendable<Mutex> sendableMutex,
+    ) {
       return Isolate.run(() {
         final ptr = Pointer<Uint8>.fromAddress(ptrAddress);
         final mutex = sendableMutex.materialize();
@@ -70,9 +72,10 @@ void main() {
 
   group('condvar', () {
     Future<String> spawnHelperIsolate(
-        int ptrAddress,
-        Sendable<Mutex> sendableMutex,
-        Sendable<ConditionVariable> sendableCondVar) {
+      int ptrAddress,
+      Sendable<Mutex> sendableMutex,
+      Sendable<ConditionVariable> sendableCondVar,
+    ) {
       return Isolate.run(() {
         final ptr = Pointer<Uint8>.fromAddress(ptrAddress);
         final mutex = sendableMutex.materialize();
@@ -95,7 +98,10 @@ void main() {
         final condVar = ConditionVariable();
 
         final helperResult = spawnHelperIsolate(
-            ptr.address, mutex.asSendable, condVar.asSendable);
+          ptr.address,
+          mutex.asSendable,
+          condVar.asSendable,
+        );
 
         while (true) {
           final success = mutex.runLocked(() {

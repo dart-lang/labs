@@ -25,8 +25,11 @@ class _SendableMailbox {
   final Sendable<Mutex> mutex;
   final Sendable<ConditionVariable> condVar;
 
-  _SendableMailbox(
-      {required this.address, required this.mutex, required this.condVar});
+  _SendableMailbox({
+    required this.address,
+    required this.mutex,
+    required this.condVar,
+  });
 }
 
 /// Mailbox communication primitive.
@@ -55,16 +58,16 @@ class Mailbox {
   });
 
   Mailbox()
-      : _mailbox = calloc.allocate(sizeOf<_MailboxRepr>()),
-        _mutex = Mutex(),
-        _condVar = ConditionVariable() {
+    : _mailbox = calloc.allocate(sizeOf<_MailboxRepr>()),
+      _mutex = Mutex(),
+      _condVar = ConditionVariable() {
     finalizer.attach(this, _mailbox);
   }
 
   Mailbox._fromSendable(_SendableMailbox sendable)
-      : _mailbox = Pointer.fromAddress(sendable.address),
-        _mutex = sendable.mutex.materialize(),
-        _condVar = sendable.condVar.materialize();
+    : _mailbox = Pointer.fromAddress(sendable.address),
+      _mutex = sendable.mutex.materialize(),
+      _condVar = sendable.condVar.materialize();
 
   /// Place a message into the mailbox if has space for it.
   ///
@@ -89,16 +92,16 @@ class Mailbox {
   ///
   /// If mailbox already contains a message then [close] will drop the message.
   void close() => _mutex.runLocked(() {
-        if (_mailbox.ref.state == _stateFull && _mailbox.ref.bufferLength > 0) {
-          malloc.free(_mailbox.ref.buffer);
-        }
+    if (_mailbox.ref.state == _stateFull && _mailbox.ref.bufferLength > 0) {
+      malloc.free(_mailbox.ref.buffer);
+    }
 
-        _mailbox.ref.state = _stateClosed;
-        _mailbox.ref.buffer = nullptr;
-        _mailbox.ref.bufferLength = 0;
+    _mailbox.ref.state = _stateClosed;
+    _mailbox.ref.buffer = nullptr;
+    _mailbox.ref.bufferLength = 0;
 
-        _condVar.notify();
-      });
+    _condVar.notify();
+  });
 
   /// Take a message from the mailbox.
   ///
@@ -106,21 +109,21 @@ class Mailbox {
   /// is available or mailbox is closed. If mailbox is closed then [take] will
   /// throw [StateError].
   Uint8List take() => _mutex.runLocked(() {
-        while (_mailbox.ref.state == _stateEmpty) {
-          _condVar.wait(_mutex);
-        }
+    while (_mailbox.ref.state == _stateEmpty) {
+      _condVar.wait(_mutex);
+    }
 
-        if (_mailbox.ref.state == _stateClosed) {
-          throw StateError('Mailbox is closed');
-        }
+    if (_mailbox.ref.state == _stateClosed) {
+      throw StateError('Mailbox is closed');
+    }
 
-        final result = _toList(_mailbox.ref.buffer, _mailbox.ref.bufferLength);
+    final result = _toList(_mailbox.ref.buffer, _mailbox.ref.bufferLength);
 
-        _mailbox.ref.state = _stateEmpty;
-        _mailbox.ref.buffer = nullptr;
-        _mailbox.ref.bufferLength = 0;
-        return result;
-      });
+    _mailbox.ref.state = _stateEmpty;
+    _mailbox.ref.buffer = nullptr;
+    _mailbox.ref.bufferLength = 0;
+    return result;
+  });
 
   static final _emptyResponse = Uint8List(0);
 
@@ -132,8 +135,11 @@ class Mailbox {
     // TODO: remove feature detection once 3.1 becomes stable.
     // ignore: omit_local_variable_types
     final Uint8List Function(int) asTypedList = buffer.asTypedList;
-    if (asTypedList is Uint8List Function(int,
-        {Pointer<NativeFinalizerFunction> finalizer})) {
+    if (asTypedList
+        is Uint8List Function(
+          int, {
+          Pointer<NativeFinalizerFunction> finalizer,
+        })) {
       return asTypedList(length, finalizer: malloc.nativeFree);
     }
 
@@ -150,9 +156,11 @@ class Mailbox {
   }
 
   Sendable<Mailbox> get asSendable => Sendable.wrap(
-      Mailbox._fromSendable,
-      _SendableMailbox(
-          address: _mailbox.address,
-          mutex: _mutex.asSendable,
-          condVar: _condVar.asSendable));
+    Mailbox._fromSendable,
+    _SendableMailbox(
+      address: _mailbox.address,
+      mutex: _mutex.asSendable,
+      condVar: _condVar.asSendable,
+    ),
+  );
 }

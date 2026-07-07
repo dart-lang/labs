@@ -23,10 +23,14 @@ external void ReleaseSRWLockExclusive(Pointer<SRWLOCK> mutex);
 external void InitializeConditionVariable(Pointer<CONDITION_VARIABLE> condVar);
 
 @Native<
-    Int Function(
-        Pointer<CONDITION_VARIABLE>, Pointer<SRWLOCK>, Uint32, Uint32)>()
-external int SleepConditionVariableSRW(Pointer<CONDITION_VARIABLE> condVar,
-    Pointer<SRWLOCK> srwLock, int timeOut, int flags);
+  Int Function(Pointer<CONDITION_VARIABLE>, Pointer<SRWLOCK>, Uint32, Uint32)
+>()
+external int SleepConditionVariableSRW(
+  Pointer<CONDITION_VARIABLE> condVar,
+  Pointer<SRWLOCK> srwLock,
+  int timeOut,
+  int flags,
+);
 
 @Native<Void Function(Pointer<CONDITION_VARIABLE>)>()
 external void WakeConditionVariable(Pointer<CONDITION_VARIABLE> condVar);

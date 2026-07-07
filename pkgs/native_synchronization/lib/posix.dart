@@ -16,9 +16,7 @@ class _PosixMutex extends Mutex {
     malloc.free(ptr);
   });
 
-  _PosixMutex()
-      : _impl = malloc.allocate(_PosixMutex._sizeInBytes),
-        super._() {
+  _PosixMutex() : _impl = malloc.allocate(_PosixMutex._sizeInBytes), super._() {
     if (pthread_mutex_init(_impl, nullptr) != 0) {
       malloc.free(_impl);
       throw StateError('Failed to initialize mutex');
@@ -27,8 +25,8 @@ class _PosixMutex extends Mutex {
   }
 
   _PosixMutex.fromAddress(int address)
-      : _impl = Pointer.fromAddress(address),
-        super._();
+    : _impl = Pointer.fromAddress(address),
+      super._();
 
   @override
   void _lock() {
@@ -61,8 +59,8 @@ class _PosixConditionVariable extends ConditionVariable {
   });
 
   _PosixConditionVariable()
-      : _impl = malloc.allocate(_PosixConditionVariable._sizeInBytes),
-        super._() {
+    : _impl = malloc.allocate(_PosixConditionVariable._sizeInBytes),
+      super._() {
     if (pthread_cond_init(_impl, nullptr) != 0) {
       malloc.free(_impl);
       throw StateError('Failed to initialize condition variable');
@@ -71,8 +69,8 @@ class _PosixConditionVariable extends ConditionVariable {
   }
 
   _PosixConditionVariable.fromAddress(int address)
-      : _impl = Pointer.fromAddress(address),
-        super._();
+    : _impl = Pointer.fromAddress(address),
+      super._();
 
   @override
   void notify() {

@@ -14,15 +14,15 @@ class _WindowsMutex extends Mutex {
   });
 
   _WindowsMutex()
-      : _impl = malloc.allocate(_WindowsMutex._sizeInBytes),
-        super._() {
+    : _impl = malloc.allocate(_WindowsMutex._sizeInBytes),
+      super._() {
     InitializeSRWLock(_impl);
     _finalizer.attach(this, _impl);
   }
 
   _WindowsMutex.fromAddress(int address)
-      : _impl = Pointer.fromAddress(address),
-        super._();
+    : _impl = Pointer.fromAddress(address),
+      super._();
 
   @override
   void _lock() => AcquireSRWLockExclusive(_impl);
@@ -44,15 +44,15 @@ class _WindowsConditionVariable extends ConditionVariable {
   });
 
   _WindowsConditionVariable()
-      : _impl = malloc.allocate(_WindowsConditionVariable._sizeInBytes),
-        super._() {
+    : _impl = malloc.allocate(_WindowsConditionVariable._sizeInBytes),
+      super._() {
     InitializeConditionVariable(_impl);
     _finalizer.attach(this, _impl);
   }
 
   _WindowsConditionVariable.fromAddress(int address)
-      : _impl = Pointer.fromAddress(address),
-        super._();
+    : _impl = Pointer.fromAddress(address),
+      super._();
 
   @override
   void notify() {
