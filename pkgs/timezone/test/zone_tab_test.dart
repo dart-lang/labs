@@ -15,9 +15,8 @@ void main() {
       p.dirname((await Isolate.resolvePackageUri(packageUri))!.toFilePath()),
     );
     final locationDir = p.join(packagePath, 'test');
-    final rawData = await File(
-      p.join(locationDir, 'data/zone1970.tab'),
-    ).readAsString();
+    final rawData = await File(p.join(locationDir, 'data/zone1970.tab'))
+        .readAsString();
     final db = tzdata.LocationDescriptionDatabase.fromString(rawData);
 
     expect(db.locations[0].name, equals('Europe/Andorra'));

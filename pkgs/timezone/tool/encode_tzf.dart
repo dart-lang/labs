@@ -8,6 +8,7 @@
 library;
 
 import 'dart:io';
+
 import 'package:args/args.dart';
 import 'package:file/file.dart' as pkg_file;
 import 'package:glob/glob.dart';

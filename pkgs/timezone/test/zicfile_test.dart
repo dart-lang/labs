@@ -15,9 +15,8 @@ void main() {
       p.dirname((await Isolate.resolvePackageUri(packageUri))!.toFilePath()),
     );
     final locationDir = p.join(packagePath, 'test');
-    final rawData = await File(
-      p.join(locationDir, 'data/US/Eastern'),
-    ).readAsBytes();
+    final rawData = await File(p.join(locationDir, 'data/US/Eastern'))
+        .readAsBytes();
     final loc = tzdata.Location.fromBytes('US/Eastern', rawData);
 
     expect(loc.name, equals('US/Eastern'));

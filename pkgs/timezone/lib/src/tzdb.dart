@@ -7,6 +7,7 @@ library;
 
 import 'dart:collection';
 import 'dart:typed_data';
+
 import 'location.dart';
 import 'location_database.dart';
 
