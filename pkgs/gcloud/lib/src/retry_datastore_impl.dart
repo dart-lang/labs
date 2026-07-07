@@ -69,16 +69,13 @@ class RetryDatastoreImpl implements datastore.Datastore {
     List<datastore.Key> keys, {
     datastore.Transaction? transaction,
   }) async {
-    return await _retryOptions.retry(
-      () async {
-        if (transaction == null) {
-          return await _delegate.lookup(keys);
-        } else {
-          return await _delegate.lookup(keys, transaction: transaction);
-        }
-      },
-      retryIf: _retryIf,
-    );
+    return await _retryOptions.retry(() async {
+      if (transaction == null) {
+        return await _delegate.lookup(keys);
+      } else {
+        return await _delegate.lookup(keys, transaction: transaction);
+      }
+    }, retryIf: _retryIf);
   }
 
   @override
@@ -97,10 +94,7 @@ class RetryDatastoreImpl implements datastore.Datastore {
       } else if (partition != null) {
         return await _delegate.query(query, partition: partition);
       } else if (transaction != null) {
-        return await _delegate.query(
-          query,
-          transaction: transaction,
-        );
+        return await _delegate.query(query, transaction: transaction);
       } else {
         return await _delegate.query(query);
       }
@@ -135,16 +129,13 @@ class _RetryPage<K> implements Page<K> {
 
   @override
   Future<Page<K>> next({int? pageSize}) async {
-    final nextPage = await _retryOptions.retry(
-      () async {
-        if (pageSize == null) {
-          return await _delegate.next();
-        } else {
-          return await _delegate.next(pageSize: pageSize);
-        }
-      },
-      retryIf: _retryIf,
-    );
+    final nextPage = await _retryOptions.retry(() async {
+      if (pageSize == null) {
+        return await _delegate.next();
+      } else {
+        return await _delegate.next(pageSize: pageSize);
+      }
+    }, retryIf: _retryIf);
     return _RetryPage(nextPage, _retryOptions);
   }
 }

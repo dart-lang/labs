@@ -165,15 +165,19 @@ class _ServiceScope {
   /// Inserts a new item to the service scope using [serviceScopeKey].
   ///
   /// Optionally calls a [onScopeExit] function once this service scope ends.
-  void register(Object serviceScopeKey, Object value,
-      {ScopeExitCallback? onScopeExit}) {
+  void register(
+    Object serviceScopeKey,
+    Object value, {
+    ScopeExitCallback? onScopeExit,
+  }) {
     _ensureNotInCleaningState();
     _ensureNotInDestroyingState();
 
     var isParentCopy = _parentCopies.contains(serviceScopeKey);
     if (!isParentCopy && _key2Values.containsKey(serviceScopeKey)) {
       throw ArgumentError(
-          'Service scope already contains key $serviceScopeKey.');
+        'Service scope already contains key $serviceScopeKey.',
+      );
     }
 
     var entry = _RegisteredEntry(serviceScopeKey, value, onScopeExit);
@@ -200,30 +204,36 @@ class _ServiceScope {
 
     var serviceScope = _copy();
     var map = {_serviceScopeKey: serviceScope};
-    return runZoned(() {
-      var f = func();
-      return f.whenComplete(serviceScope._runScopeExitHandlers);
-      // ignore: deprecated_member_use
-    }, zoneValues: map, onError: onError);
+    return runZoned(
+      () {
+        var f = func();
+        return f.whenComplete(serviceScope._runScopeExitHandlers);
+        // ignore: deprecated_member_use
+      },
+      zoneValues: map,
+      onError: onError,
+    );
   }
 
   void _ensureNotInDestroyingState() {
     if (_destroyed) {
       throw StateError(
-          'The service scope has already been exited. It is therefore '
-          'forbidden to use this service scope anymore. '
-          'Please make sure that your code waits for all asynchronous tasks '
-          'before the closure passed to fork() completes.');
+        'The service scope has already been exited. It is therefore '
+        'forbidden to use this service scope anymore. '
+        'Please make sure that your code waits for all asynchronous tasks '
+        'before the closure passed to fork() completes.',
+      );
     }
   }
 
   void _ensureNotInCleaningState() {
     if (_cleaningUp) {
       throw StateError(
-          'The service scope is in the process of cleaning up. It is therefore '
-          'forbidden to make any modifications to the current service scope. '
-          'Please make sure that your code waits for all asynchronous tasks '
-          'before the closure passed to fork() completes.');
+        'The service scope is in the process of cleaning up. It is therefore '
+        'forbidden to make any modifications to the current service scope. '
+        'Please make sure that your code waits for all asynchronous tasks '
+        'before the closure passed to fork() completes.',
+      );
     }
   }
 
@@ -244,8 +254,9 @@ class _ServiceScope {
     // We are running all on-scope-exit functions in reverse registration order.
     // Even if one fails, we continue cleaning up and report then the list of
     // errors (if there were any).
-    return Future.forEach(_registeredEntries.reversed,
-        (_RegisteredEntry registeredEntry) {
+    return Future.forEach(_registeredEntries.reversed, (
+      _RegisteredEntry registeredEntry,
+    ) {
       if (registeredEntry.key != null) {
         _key2Values.remove(registeredEntry.key);
       }
@@ -260,8 +271,9 @@ class _ServiceScope {
       _destroyed = true;
       if (errors.isNotEmpty) {
         throw Exception(
-            'The following errors occurred while running scope exit handlers'
-            ': $errors');
+          'The following errors occurred while running scope exit handlers'
+          ': $errors',
+        );
       }
     });
   }

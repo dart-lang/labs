@@ -25,8 +25,10 @@ bool testDetailedApiError(Object e) => e is storage_api.DetailedApiRequestError;
 const int mb = 1024 * 1024;
 const int maxNormalUpload = 1 * mb;
 const int minResumableUpload = maxNormalUpload + 1;
-final bytesResumableUpload =
-    List<int>.generate(minResumableUpload, (e) => e & 255);
+final bytesResumableUpload = List<int>.generate(
+  minResumableUpload,
+  (e) => e & 255,
+);
 
 void main() {
   var didSetUp = false;
@@ -64,17 +66,29 @@ void main() {
     group('bucket', () {
       test('create-info-delete', () {
         var bucketName = generateBucketName();
-        return storage.createBucket(bucketName).then(expectAsync1((result) {
-          expect(result, isNull);
-          return storage.bucketInfo(bucketName).then(expectAsync1((info) {
-            expect(info.bucketName, bucketName);
-            expect(info.etag, isNotNull);
-            expect(info.id, isNotNull);
-            return storage.deleteBucket(bucketName).then(expectAsync1((result) {
-              expect(result, isNull);
-            }));
-          }));
-        }));
+        return storage
+            .createBucket(bucketName)
+            .then(
+              expectAsync1((result) {
+                expect(result, isNull);
+                return storage
+                    .bucketInfo(bucketName)
+                    .then(
+                      expectAsync1((info) {
+                        expect(info.bucketName, bucketName);
+                        expect(info.etag, isNotNull);
+                        expect(info.id, isNotNull);
+                        return storage
+                            .deleteBucket(bucketName)
+                            .then(
+                              expectAsync1((result) {
+                                expect(result, isNull);
+                              }),
+                            );
+                      }),
+                    );
+              }),
+            );
       });
 
       test('create-with-predefined-acl-delete', () async {
@@ -94,8 +108,10 @@ void main() {
           // Sleep for 2 seconds to avoid bucket request limit, see:
           // https://cloud.google.com/storage/quotas#buckets
           await Future<void>.delayed(const Duration(seconds: 2));
-          var r1 = await storage.createBucket(bucketName,
-              predefinedAcl: predefinedAcl);
+          var r1 = await storage.createBucket(
+            bucketName,
+            predefinedAcl: predefinedAcl,
+          );
           expect(r1, isNull);
           var info = await storage.bucketInfo(bucketName);
           expect(info.bucketName, bucketName);
@@ -106,9 +122,14 @@ void main() {
       }, skip: 'unable to test with uniform buckets enforced for account');
 
       test('create-error', () {
-        storage.createBucket('goog-reserved').catchError(expectAsync1((e) {
-          expect(e, isNotNull);
-        }), test: testDetailedApiError);
+        storage
+            .createBucket('goog-reserved')
+            .catchError(
+              expectAsync1((e) {
+                expect(e, isNotNull);
+              }),
+              test: testDetailedApiError,
+            );
       });
     });
 
@@ -219,22 +240,35 @@ void main() {
 
       test('create-with-predefined-acl-delete', () {
         return withTestBucket((Bucket bucket) {
-          Future test(String objectName, PredefinedAcl predefinedAcl,
-              int expectedLength) {
+          Future test(
+            String objectName,
+            PredefinedAcl predefinedAcl,
+            int expectedLength,
+          ) {
             return bucket
                 .writeBytes(objectName, [1, 2, 3], predefinedAcl: predefinedAcl)
-                .then(expectAsync1((result) {
-              expect(result, isNotNull);
-              return bucket.info(objectName).then(expectAsync1((info) {
-                var acl = info.metadata.acl;
-                expect(info.name, objectName);
-                expect(info.etag, isNotNull);
-                expect(acl!.entries.length, expectedLength);
-                return bucket.delete(objectName).then(expectAsync1((result) {
-                  expect(result, isNull);
-                }));
-              }));
-            }));
+                .then(
+                  expectAsync1((result) {
+                    expect(result, isNotNull);
+                    return bucket
+                        .info(objectName)
+                        .then(
+                          expectAsync1((info) {
+                            var acl = info.metadata.acl;
+                            expect(info.name, objectName);
+                            expect(info.etag, isNotNull);
+                            expect(acl!.entries.length, expectedLength);
+                            return bucket
+                                .delete(objectName)
+                                .then(
+                                  expectAsync1((result) {
+                                    expect(result, isNull);
+                                  }),
+                                );
+                          }),
+                        );
+                  }),
+                );
           }
 
           return Future.forEach([
@@ -243,7 +277,7 @@ void main() {
             () => test('test-3', PredefinedAcl.projectPrivate, 4),
             () => test('test-4', PredefinedAcl.publicRead, 2),
             () => test('test-5', PredefinedAcl.bucketOwnerFullControl, 2),
-            () => test('test-6', PredefinedAcl.bucketOwnerRead, 2)
+            () => test('test-6', PredefinedAcl.bucketOwnerRead, 2),
           ], (Function f) => f().then(expectAsync1((_) {})));
         });
       }, skip: 'unable to test with uniform buckets enforced for account');
@@ -253,36 +287,47 @@ void main() {
           Future test(String objectName, Acl acl, int expectedLength) {
             return bucket
                 .writeBytes(objectName, [1, 2, 3], acl: acl)
-                .then(expectAsync1((result) {
-              expect(result, isNotNull);
-              return bucket.info(objectName).then(expectAsync1((info) {
-                var acl = info.metadata.acl;
-                expect(info.name, objectName);
-                expect(info.etag, isNotNull);
-                expect(acl!.entries.length, expectedLength);
-                return bucket.delete(objectName).then(expectAsync1((result) {
-                  expect(result, isNull);
-                }));
-              }));
-            }));
+                .then(
+                  expectAsync1((result) {
+                    expect(result, isNotNull);
+                    return bucket
+                        .info(objectName)
+                        .then(
+                          expectAsync1((info) {
+                            var acl = info.metadata.acl;
+                            expect(info.name, objectName);
+                            expect(info.etag, isNotNull);
+                            expect(acl!.entries.length, expectedLength);
+                            return bucket
+                                .delete(objectName)
+                                .then(
+                                  expectAsync1((result) {
+                                    expect(result, isNull);
+                                  }),
+                                );
+                          }),
+                        );
+                  }),
+                );
           }
 
-          var acl1 =
-              Acl([AclEntry(AclScope.allAuthenticated, AclPermission.WRITE)]);
+          var acl1 = Acl([
+            AclEntry(AclScope.allAuthenticated, AclPermission.WRITE),
+          ]);
           var acl2 = Acl([
             AclEntry(AclScope.allUsers, AclPermission.WRITE),
-            AclEntry(AccountScope('sgjesse@google.com'), AclPermission.WRITE)
+            AclEntry(AccountScope('sgjesse@google.com'), AclPermission.WRITE),
           ]);
           var acl3 = Acl([
             AclEntry(AclScope.allUsers, AclPermission.WRITE),
             AclEntry(AccountScope('sgjesse@google.com'), AclPermission.WRITE),
-            AclEntry(GroupScope('misc@dartlang.org'), AclPermission.READ)
+            AclEntry(GroupScope('misc@dartlang.org'), AclPermission.READ),
           ]);
           var acl4 = Acl([
             AclEntry(AclScope.allUsers, AclPermission.WRITE),
             AclEntry(AccountScope('sgjesse@google.com'), AclPermission.WRITE),
             AclEntry(GroupScope('misc@dartlang.org'), AclPermission.READ),
-            AclEntry(DomainScope('dartlang.org'), AclPermission.FULL_CONTROL)
+            AclEntry(DomainScope('dartlang.org'), AclPermission.FULL_CONTROL),
           ]);
 
           // The expected length of the returned ACL is one longer than the one
@@ -292,7 +337,7 @@ void main() {
             () => test('test-1', acl1, acl1.entries.length + 1),
             () => test('test-2', acl2, acl2.entries.length + 1),
             () => test('test-3', acl3, acl3.entries.length + 1),
-            () => test('test-4', acl4, acl4.entries.length + 1)
+            () => test('test-4', acl4, acl4.entries.length + 1),
           ], (Function f) => f().then(expectAsync1((_) {})));
         });
       }, skip: 'unable to test with uniform buckets enforced for account');
@@ -300,46 +345,74 @@ void main() {
       test('create-with-metadata-delete', () {
         return withTestBucket((Bucket bucket) {
           Future test(
-              String objectName, ObjectMetadata metadata, List<int> bytes) {
+            String objectName,
+            ObjectMetadata metadata,
+            List<int> bytes,
+          ) {
             return bucket
                 .writeBytes(objectName, bytes, metadata: metadata)
-                .then(expectAsync1((result) {
-              expect(result, isNotNull);
-              return bucket.info(objectName).then(expectAsync1((info) {
-                expect(info.name, objectName);
-                expect(info.length, bytes.length);
-                expect(info.md5Hash, isNotNull);
-                expect(info.crc32CChecksum, isNotNull);
-                expect(info.generation.objectGeneration, isNotNull);
-                expect(info.generation.metaGeneration, 1);
-                expect(info.metadata.contentType, metadata.contentType);
-                expect(info.metadata.cacheControl, metadata.cacheControl);
-                expect(info.metadata.contentDisposition,
-                    metadata.contentDisposition);
-                expect(info.metadata.contentEncoding, metadata.contentEncoding);
-                expect(info.metadata.contentLanguage, metadata.contentLanguage);
-                expect(info.metadata.custom, metadata.custom);
-                return bucket.delete(objectName).then(expectAsync1((result) {
-                  expect(result, isNull);
-                }));
-              }));
-            }));
+                .then(
+                  expectAsync1((result) {
+                    expect(result, isNotNull);
+                    return bucket
+                        .info(objectName)
+                        .then(
+                          expectAsync1((info) {
+                            expect(info.name, objectName);
+                            expect(info.length, bytes.length);
+                            expect(info.md5Hash, isNotNull);
+                            expect(info.crc32CChecksum, isNotNull);
+                            expect(info.generation.objectGeneration, isNotNull);
+                            expect(info.generation.metaGeneration, 1);
+                            expect(
+                              info.metadata.contentType,
+                              metadata.contentType,
+                            );
+                            expect(
+                              info.metadata.cacheControl,
+                              metadata.cacheControl,
+                            );
+                            expect(
+                              info.metadata.contentDisposition,
+                              metadata.contentDisposition,
+                            );
+                            expect(
+                              info.metadata.contentEncoding,
+                              metadata.contentEncoding,
+                            );
+                            expect(
+                              info.metadata.contentLanguage,
+                              metadata.contentLanguage,
+                            );
+                            expect(info.metadata.custom, metadata.custom);
+                            return bucket
+                                .delete(objectName)
+                                .then(
+                                  expectAsync1((result) {
+                                    expect(result, isNull);
+                                  }),
+                                );
+                          }),
+                        );
+                  }),
+                );
           }
 
           var metadata1 = ObjectMetadata(contentType: 'text/plain');
           var metadata2 = ObjectMetadata(
-              contentType: 'text/plain',
-              cacheControl: 'no-cache',
-              contentDisposition: 'attachment; filename="test.txt"',
-              contentEncoding: 'gzip',
-              contentLanguage: 'da',
-              custom: {'a': 'b', 'c': 'd'});
+            contentType: 'text/plain',
+            cacheControl: 'no-cache',
+            contentDisposition: 'attachment; filename="test.txt"',
+            contentEncoding: 'gzip',
+            contentLanguage: 'da',
+            custom: {'a': 'b', 'c': 'd'},
+          );
 
           return Future.forEach([
             () => test('test-1', metadata1, [65, 66, 67]),
             () => test('test-2', metadata2, [65, 66, 67]),
             () => test('test-3', metadata1, bytesResumableUpload),
-            () => test('test-4', metadata2, bytesResumableUpload)
+            () => test('test-4', metadata2, bytesResumableUpload),
           ], (Function f) => f().then(expectAsync1((_) {})));
         });
       });
@@ -348,9 +421,7 @@ void main() {
         return withTestBucket((Bucket bucket) async {
           await bucket.writeBytes(
             'test-m',
-            metadata: ObjectMetadata(
-              contentType: 'application/test-1',
-            ),
+            metadata: ObjectMetadata(contentType: 'application/test-1'),
             [1, 2, 3],
           );
 
@@ -358,10 +429,9 @@ void main() {
           expect(info.metadata.contentType, 'application/test-1');
 
           await bucket.updateMetadata(
-              'test-m',
-              ObjectMetadata(
-                contentType: 'application/test-2',
-              ));
+            'test-m',
+            ObjectMetadata(contentType: 'application/test-2'),
+          );
 
           final info2 = await bucket.info('test-m');
           expect(info2.metadata.contentType, 'application/test-2');

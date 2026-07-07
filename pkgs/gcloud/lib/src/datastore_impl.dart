@@ -29,8 +29,8 @@ class DatastoreImpl implements datastore.Datastore {
   /// The [project] parameter is the name of the cloud project (it should not
   /// start with a `s~`).
   DatastoreImpl(http.Client client, String project)
-      : _api = api.DatastoreApi(client),
-        _project = project;
+    : _api = api.DatastoreApi(client),
+      _project = project;
 
   api.Key _convertDatastore2ApiKey(datastore.Key key, {bool enforceId = true}) {
     var apiKey = api.Key();
@@ -49,8 +49,9 @@ class DatastoreImpl implements datastore.Datastore {
         part.name = id;
       } else if (enforceId) {
         throw datastore.ApplicationError(
-            'Error while encoding entity key: Using `null` as the id is not '
-            'allowed.');
+          'Error while encoding entity key: Using `null` as the id is not '
+          'allowed.',
+        );
       }
       return part;
     }).toList();
@@ -66,7 +67,8 @@ class DatastoreImpl implements datastore.Datastore {
         return datastore.KeyElement(element.kind!, element.name);
       } else {
         throw datastore.DatastoreError(
-            'Invalid server response: Expected allocated name/id.');
+          'Invalid server response: Expected allocated name/id.',
+        );
       }
     }).toList();
 
@@ -106,8 +108,11 @@ class DatastoreImpl implements datastore.Datastore {
     return true;
   }
 
-  api.Value _convertDatastore2ApiPropertyValue(Object? value, bool indexed,
-      {bool lists = true}) {
+  api.Value _convertDatastore2ApiPropertyValue(
+    Object? value,
+    bool indexed, {
+    bool lists = true,
+  }) {
     var apiValue = api.Value()..excludeFromIndexes = !indexed;
     if (value == null) {
       return apiValue..nullValue = 'NULL_VALUE';
@@ -136,11 +141,12 @@ class DatastoreImpl implements datastore.Datastore {
           _convertDatastore2ApiPropertyValue(item, indexed, lists: false);
 
       return api.Value()
-        ..arrayValue =
-            (api.ArrayValue()..values = value.map(convertItem).toList());
+        ..arrayValue = (api.ArrayValue()
+          ..values = value.map(convertItem).toList());
     } else {
       throw UnsupportedError(
-          'Types ${value.runtimeType} cannot be used for serializing.');
+        'Types ${value.runtimeType} cannot be used for serializing.',
+      );
     }
   }
 
@@ -183,12 +189,17 @@ class DatastoreImpl implements datastore.Datastore {
         }
       });
     }
-    return datastore.Entity(_convertApi2DatastoreKey(entity.key!), properties,
-        unIndexedProperties: unindexedProperties);
+    return datastore.Entity(
+      _convertApi2DatastoreKey(entity.key!),
+      properties,
+      unIndexedProperties: unindexedProperties,
+    );
   }
 
-  api.Entity _convertDatastore2ApiEntity(datastore.Entity entity,
-      {bool enforceId = false}) {
+  api.Entity _convertDatastore2ApiEntity(
+    datastore.Entity entity, {
+    bool enforceId = false,
+  }) {
     var apiEntity = api.Entity();
 
     apiEntity.key = _convertDatastore2ApiKey(entity.key, enforceId: enforceId);
@@ -219,8 +230,11 @@ class DatastoreImpl implements datastore.Datastore {
     }
     pf.op = operator;
     pf.property = api.PropertyReference()..name = filter.name;
-    pf.value =
-        _convertDatastore2ApiPropertyValue(filter.value, true, lists: false);
+    pf.value = _convertDatastore2ApiPropertyValue(
+      filter.value,
+      true,
+      lists: false,
+    );
     return api.Filter()..propertyFilter = pf;
   }
 
@@ -268,7 +282,8 @@ class DatastoreImpl implements datastore.Datastore {
   }
 
   List<api.PropertyOrder>? _convertDatastore2ApiOrders(
-      List<datastore.Order>? orders) {
+    List<datastore.Order>? orders,
+  ) {
     if (orders == null) return null;
 
     return orders.map(_convertDatastore2ApiOrder).toList();
@@ -307,8 +322,9 @@ class DatastoreImpl implements datastore.Datastore {
   }
 
   @override
-  Future<datastore.Transaction> beginTransaction(
-      {bool crossEntityGroup = false}) {
+  Future<datastore.Transaction> beginTransaction({
+    bool crossEntityGroup = false,
+  }) {
     var request = api.BeginTransactionRequest();
     return _api.projects.beginTransaction(request, _project).then((result) {
       return TransactionImpl(result.transaction!);
@@ -334,23 +350,31 @@ class DatastoreImpl implements datastore.Datastore {
     var mutations = request.mutations = <api.Mutation>[];
     if (inserts.isNotEmpty) {
       for (var i = 0; i < inserts.length; i++) {
-        mutations.add(api.Mutation()
-          ..upsert = _convertDatastore2ApiEntity(inserts[i], enforceId: true));
+        mutations.add(
+          api.Mutation()
+            ..upsert = _convertDatastore2ApiEntity(inserts[i], enforceId: true),
+        );
       }
     }
     var autoIdStartIndex = -1;
     if (autoIdInserts.isNotEmpty) {
       autoIdStartIndex = mutations.length;
       for (var i = 0; i < autoIdInserts.length; i++) {
-        mutations.add(api.Mutation()
-          ..insert =
-              _convertDatastore2ApiEntity(autoIdInserts[i], enforceId: false));
+        mutations.add(
+          api.Mutation()
+            ..insert = _convertDatastore2ApiEntity(
+              autoIdInserts[i],
+              enforceId: false,
+            ),
+        );
       }
     }
     if (deletes.isNotEmpty) {
       for (var i = 0; i < deletes.length; i++) {
-        mutations.add(api.Mutation()
-          ..delete = _convertDatastore2ApiKey(deletes[i], enforceId: true));
+        mutations.add(
+          api.Mutation()
+            ..delete = _convertDatastore2ApiKey(deletes[i], enforceId: true),
+        );
       }
     }
     return _api.projects.commit(request, _project).then((result) {
@@ -359,8 +383,9 @@ class DatastoreImpl implements datastore.Datastore {
         assert(result.mutationResults != null);
         var mutationResults = result.mutationResults!;
         assert(autoIdStartIndex != -1);
-        assert(mutationResults.length >=
-            (autoIdStartIndex + autoIdInserts.length));
+        assert(
+          mutationResults.length >= (autoIdStartIndex + autoIdInserts.length),
+        );
         keys = mutationResults
             .skip(autoIdStartIndex)
             .take(autoIdInserts.length)
@@ -389,8 +414,9 @@ class DatastoreImpl implements datastore.Datastore {
     return _api.projects.lookup(request, _project).then((response) {
       if (response.deferred != null && response.deferred!.isNotEmpty) {
         throw datastore.DatastoreError(
-            'Could not successfully look up all keys due to resource '
-            'constraints.');
+          'Could not successfully look up all keys due to resource '
+          'constraints.',
+        );
       }
 
       // NOTE: This is worst-case O(n^2)!
@@ -437,9 +463,11 @@ class DatastoreImpl implements datastore.Datastore {
         }
 
         if (!found) {
-          throw datastore.DatastoreError('Invalid server response: '
-              'Tried to lookup ${apiKey.toJson()} but entity was neither in '
-              'missing nor in found.');
+          throw datastore.DatastoreError(
+            'Invalid server response: '
+            'Tried to lookup ${apiKey.toJson()} but entity was neither in '
+            'missing nor in found.',
+          );
         }
       }
       return entities;
@@ -475,8 +503,12 @@ class DatastoreImpl implements datastore.Datastore {
         ..namespaceId = partition.namespace;
     }
 
-    return QueryPageImpl.runQuery(_api, _project, request, query.limit)
-        .catchError(_handleError);
+    return QueryPageImpl.runQuery(
+      _api,
+      _project,
+      request,
+      query.limit,
+    ).catchError(_handleError);
   }
 
   @override
@@ -500,12 +532,22 @@ class QueryPageImpl implements Page<datastore.Entity> {
   // This might be `null` in which case we request as many as we can get.
   final int? _remainingNumberOfEntities;
 
-  QueryPageImpl(this._api, this._project, this._nextRequest, this._entities,
-      this._isLast, this._remainingNumberOfEntities);
+  QueryPageImpl(
+    this._api,
+    this._project,
+    this._nextRequest,
+    this._entities,
+    this._isLast,
+    this._remainingNumberOfEntities,
+  );
 
-  static Future<QueryPageImpl> runQuery(api.DatastoreApi api, String project,
-      api.RunQueryRequest request, int? limit,
-      {int batchSize = _maxEntitiesPerResponse}) {
+  static Future<QueryPageImpl> runQuery(
+    api.DatastoreApi api,
+    String project,
+    api.RunQueryRequest request,
+    int? limit, {
+    int batchSize = _maxEntitiesPerResponse,
+  }) {
     if (limit != null && limit < batchSize) {
       batchSize = limit;
     }
@@ -529,14 +571,16 @@ class QueryPageImpl implements Page<datastore.Entity> {
           request.query!.offset! > 0 &&
           request.query!.offset != batch.skippedResults) {
         throw datastore.DatastoreError(
-            'Server did not skip over the specified ${request.query!.offset} '
-            'entities.');
+          'Server did not skip over the specified ${request.query!.offset} '
+          'entities.',
+        );
       }
 
       if (limit != null && returnedEntities.length > limit) {
         throw datastore.DatastoreError(
-            'Server returned more entities then the limit for the request'
-            '(${request.query!.limit}) was.');
+          'Server returned more entities then the limit for the request'
+          '(${request.query!.limit}) was.',
+        );
       }
 
       // FIXME: TODO: Big hack!
@@ -562,7 +606,8 @@ class QueryPageImpl implements Page<datastore.Entity> {
       // If the server signals there are more entities and we either have no
       // limit or our limit has not been reached, we set `moreBatches` to
       // `true`.
-      var moreBatches = (remainingEntities == null || remainingEntities > 0) &&
+      var moreBatches =
+          (remainingEntities == null || remainingEntities > 0) &&
           batch.moreResults == 'MORE_RESULTS_AFTER_LIMIT';
 
       var gotAll = limit != null && remainingEntities == 0;
@@ -575,21 +620,30 @@ class QueryPageImpl implements Page<datastore.Entity> {
       // FIXME: TODO: Big hack!
       // It looks like Apiary/Atlas is currently broken.
       if (moreBatches && returnedEntities.isEmpty) {
-        print('Warning: Api to Google Cloud Datastore returned bogus response. '
-            'Trying a workaround.');
+        print(
+          'Warning: Api to Google Cloud Datastore returned bogus response. '
+          'Trying a workaround.',
+        );
         isLast = true;
         moreBatches = false;
       }
 
       if (!isLast && batch.endCursor == null) {
         throw datastore.DatastoreError(
-            'Server did not supply an end cursor, even though the query '
-            'is not done.');
+          'Server did not supply an end cursor, even though the query '
+          'is not done.',
+        );
       }
 
       if (isLast) {
         return QueryPageImpl(
-            api, project, request, returnedEntities, true, null);
+          api,
+          project,
+          request,
+          returnedEntities,
+          true,
+          null,
+        );
       } else {
         // NOTE: We reuse the old RunQueryRequest object here .
 
@@ -602,7 +656,13 @@ class QueryPageImpl implements Page<datastore.Entity> {
         request.query!.startCursor = batch.endCursor;
 
         return QueryPageImpl(
-            api, project, request, returnedEntities, false, remainingEntities);
+          api,
+          project,
+          request,
+          returnedEntities,
+          false,
+          remainingEntities,
+        );
       }
     });
   }
@@ -621,7 +681,10 @@ class QueryPageImpl implements Page<datastore.Entity> {
     throwIfIsLast();
 
     return QueryPageImpl.runQuery(
-            _api, _project, _nextRequest, _remainingNumberOfEntities)
-        .catchError(DatastoreImpl._handleError);
+      _api,
+      _project,
+      _nextRequest,
+      _remainingNumberOfEntities,
+    ).catchError(DatastoreImpl._handleError);
   }
 }

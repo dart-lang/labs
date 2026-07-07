@@ -177,8 +177,11 @@ abstract class PubSub {
   /// The [name] can be either an absolute name or a relative name.
   ///
   /// Returns a `Future` which completes with the newly created subscription.
-  Future<Subscription> createSubscription(String name, String topic,
-      {Uri endpoint});
+  Future<Subscription> createSubscription(
+    String name,
+    String topic, {
+    Uri endpoint,
+  });
 
   /// Delete subscription named [name].
   ///
@@ -219,8 +222,10 @@ abstract class PubSub {
   /// Returns a `Future` which completes with a `Page` object holding the
   /// first page. Use the `Page` object to move to the next page of
   /// subscriptions.
-  Future<Page<Subscription>> pageSubscriptions(
-      {String topic, int pageSize = 50});
+  Future<Page<Subscription>> pageSubscriptions({
+    String topic,
+    int pageSize = 50,
+  });
 }
 
 /// A Pub/Sub topic.
@@ -353,16 +358,20 @@ abstract class Message {
   /// be UTF-8 encoded to create the actual binary body for the message.
   ///
   /// Message attributes can be passed in the [attributes] map.
-  factory Message.withString(String message,
-      {Map<String, String> attributes,
-      String? orderingKey}) = _MessageImpl.withString;
+  factory Message.withString(
+    String message, {
+    Map<String, String> attributes,
+    String? orderingKey,
+  }) = _MessageImpl.withString;
 
   /// Creates a new message with a binary body.
   ///
   /// Message attributes can be passed in the [attributes] Map.
-  factory Message.withBytes(List<int> message,
-      {Map<String, String> attributes,
-      String? orderingKey}) = _MessageImpl.withBytes;
+  factory Message.withBytes(
+    List<int> message, {
+    Map<String, String> attributes,
+    String? orderingKey,
+  }) = _MessageImpl.withBytes;
 
   /// The message body as a String.
   ///

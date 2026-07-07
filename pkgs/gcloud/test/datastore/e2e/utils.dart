@@ -27,10 +27,7 @@ Key buildKey(
 }
 
 Map<String, Object> buildProperties(int i) {
-  var listValues = [
-    'foo',
-    '$testListValue$i',
-  ];
+  var listValues = ['foo', '$testListValue$i'];
 
   return {
     testPropertyKeyPrefix: '$testPropertyValuePrefix$i',
@@ -68,14 +65,19 @@ List<Entity> buildEntities(
     var key = buildKey(i, idFunction: idFunction, kind: kind, p: partition);
     var properties = buildProperties(i);
     unIndexedProperties.add(testUnindexedProperty);
-    entities
-        .add(Entity(key, properties, unIndexedProperties: unIndexedProperties));
+    entities.add(
+      Entity(key, properties, unIndexedProperties: unIndexedProperties),
+    );
   }
   return entities;
 }
 
-List<Entity> buildEntityWithAllProperties(int from, int to,
-    {String kind = _testKind, Partition? partition}) {
+List<Entity> buildEntityWithAllProperties(
+  int from,
+  int to, {
+  String kind = _testKind,
+  Partition? partition,
+}) {
   var us42 = const Duration(microseconds: 42);
   var unIndexed = <String>{'blobProperty'};
 
@@ -88,8 +90,10 @@ List<Entity> buildEntityWithAllProperties(int from, int to,
       'stringProperty': 'foobar',
       'blobProperty': BlobValue([0xff, 0xff, 0xaa, 0xaa]),
       'blobPropertyIndexed': BlobValue([0xaa, 0xaa, 0xff, 0xff]),
-      'dateProperty':
-          DateTime.fromMillisecondsSinceEpoch(1, isUtc: true).add(us42),
+      'dateProperty': DateTime.fromMillisecondsSinceEpoch(
+        1,
+        isUtc: true,
+      ).add(us42),
       'keyProperty': buildKey(1, idFunction: (i) => 's$i', kind: kind),
       'listProperty': [
         42,
@@ -102,8 +106,12 @@ List<Entity> buildEntityWithAllProperties(int from, int to,
 
   var entities = <Entity>[];
   for (var i = from; i < to; i++) {
-    var key =
-        buildKey(i, idFunction: (i) => 'allprop$i', kind: kind, p: partition);
+    var key = buildKey(
+      i,
+      idFunction: (i) => 'allprop$i',
+      kind: kind,
+      p: partition,
+    );
     var properties = buildProperties(i);
     entities.add(Entity(key, properties, unIndexedProperties: unIndexed));
   }

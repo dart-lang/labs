@@ -12,8 +12,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('properties', () {
-    var datastoreKey = datastore.Key([datastore.KeyElement('MyKind', 42)],
-        partition: datastore.Partition('foonamespace'));
+    var datastoreKey = datastore.Key([
+      datastore.KeyElement('MyKind', 42),
+    ], partition: datastore.Partition('foonamespace'));
     var dbKey = KeyMock(datastoreKey);
     var modelDBMock = ModelDBMock(datastoreKey, dbKey);
 
@@ -81,26 +82,36 @@ void main() {
       expect(prop.validate(modelDBMock, [1, 2]), isTrue);
       expect(prop.encodeValue(modelDBMock, null), equals(null));
       expect(
-          (prop.encodeValue(modelDBMock, <int>[]) as datastore.BlobValue).bytes,
-          equals([]));
+        (prop.encodeValue(modelDBMock, <int>[]) as datastore.BlobValue).bytes,
+        equals([]),
+      );
       expect(
-          (prop.encodeValue(modelDBMock, [1, 2]) as datastore.BlobValue).bytes,
-          equals([1, 2]));
+        (prop.encodeValue(modelDBMock, [1, 2]) as datastore.BlobValue).bytes,
+        equals([1, 2]),
+      );
       expect(
-          (prop.encodeValue(modelDBMock, Uint8List.fromList([1, 2]))
-                  as datastore.BlobValue)
-              .bytes,
-          equals([1, 2]));
+        (prop.encodeValue(
+          modelDBMock,
+          Uint8List.fromList([1, 2]),
+        ) as datastore.BlobValue).bytes,
+        equals([1, 2]),
+      );
       expect(prop.decodePrimitiveValue(modelDBMock, null), equals(null));
-      expect(prop.decodePrimitiveValue(modelDBMock, datastore.BlobValue([])),
-          equals([]));
       expect(
-          prop.decodePrimitiveValue(modelDBMock, datastore.BlobValue([5, 6])),
-          equals([5, 6]));
+        prop.decodePrimitiveValue(modelDBMock, datastore.BlobValue([])),
+        equals([]),
+      );
       expect(
-          prop.decodePrimitiveValue(
-              modelDBMock, datastore.BlobValue(Uint8List.fromList([5, 6]))),
-          equals([5, 6]));
+        prop.decodePrimitiveValue(modelDBMock, datastore.BlobValue([5, 6])),
+        equals([5, 6]),
+      );
+      expect(
+        prop.decodePrimitiveValue(
+          modelDBMock,
+          datastore.BlobValue(Uint8List.fromList([5, 6])),
+        ),
+        equals([5, 6]),
+      );
     });
 
     test('datetime_property', () {
@@ -117,7 +128,9 @@ void main() {
       expect(prop.decodePrimitiveValue(modelDBMock, null), equals(null));
       expect(prop.decodePrimitiveValue(modelDBMock, 99 * 1000), equals(utc99));
       expect(
-          prop.decodePrimitiveValue(modelDBMock, 99 * 1000 + 1), equals(utc99));
+        prop.decodePrimitiveValue(modelDBMock, 99 * 1000 + 1),
+        equals(utc99),
+      );
       expect(prop.decodePrimitiveValue(modelDBMock, utc99), equals(utc99));
     });
 
@@ -132,18 +145,28 @@ void main() {
       expect(prop.encodeValue(modelDBMock, []), equals(null));
       expect(prop.encodeValue(modelDBMock, [true]), equals(true));
       expect(
-          prop.encodeValue(modelDBMock, [true, false]), equals([true, false]));
-      expect(prop.encodeValue(modelDBMock, true, forComparison: true),
-          equals(true));
-      expect(prop.encodeValue(modelDBMock, false, forComparison: true),
-          equals(false));
-      expect(prop.encodeValue(modelDBMock, null, forComparison: true),
-          equals(null));
+        prop.encodeValue(modelDBMock, [true, false]),
+        equals([true, false]),
+      );
+      expect(
+        prop.encodeValue(modelDBMock, true, forComparison: true),
+        equals(true),
+      );
+      expect(
+        prop.encodeValue(modelDBMock, false, forComparison: true),
+        equals(false),
+      );
+      expect(
+        prop.encodeValue(modelDBMock, null, forComparison: true),
+        equals(null),
+      );
       expect(prop.decodePrimitiveValue(modelDBMock, null), equals([]));
       expect(prop.decodePrimitiveValue(modelDBMock, []), equals([]));
       expect(prop.decodePrimitiveValue(modelDBMock, true), equals([true]));
-      expect(prop.decodePrimitiveValue(modelDBMock, [true, false]),
-          equals([true, false]));
+      expect(
+        prop.decodePrimitiveValue(modelDBMock, [true, false]),
+        equals([true, false]),
+      );
     });
 
     test('composed_list_property', () {
@@ -159,16 +182,23 @@ void main() {
       expect(prop.validate(modelDBMock, [c1, c2, 1]), isFalse);
       expect(prop.encodeValue(modelDBMock, []), equals(null));
       expect(prop.encodeValue(modelDBMock, [c1]), equals(c1.customValue));
-      expect(prop.encodeValue(modelDBMock, [c1, c2]),
-          equals([c1.customValue, c2.customValue]));
+      expect(
+        prop.encodeValue(modelDBMock, [c1, c2]),
+        equals([c1.customValue, c2.customValue]),
+      );
       expect(prop.decodePrimitiveValue(modelDBMock, null), equals([]));
       expect(prop.decodePrimitiveValue(modelDBMock, []), equals([]));
       expect(
-          prop.decodePrimitiveValue(modelDBMock, c1.customValue), equals([c1]));
+        prop.decodePrimitiveValue(modelDBMock, c1.customValue),
+        equals([c1]),
+      );
       expect(
-          prop.decodePrimitiveValue(
-              modelDBMock, [c1.customValue, c2.customValue]),
-          equals([c1, c2]));
+        prop.decodePrimitiveValue(modelDBMock, [
+          c1.customValue,
+          c2.customValue,
+        ]),
+        equals([c1, c2]),
+      );
     });
 
     test('modelkey_property', () {
@@ -183,7 +213,9 @@ void main() {
       expect(prop.encodeValue(modelDBMock, dbKey), equals(datastoreKey));
       expect(prop.decodePrimitiveValue(modelDBMock, null), equals(null));
       expect(
-          prop.decodePrimitiveValue(modelDBMock, datastoreKey), equals(dbKey));
+        prop.decodePrimitiveValue(modelDBMock, datastoreKey),
+        equals(dbKey),
+      );
     });
   });
 }
@@ -201,8 +233,11 @@ class Custom {
 }
 
 class CustomProperty extends StringProperty {
-  const CustomProperty(
-      {String? propertyName, bool required = false, bool indexed = true});
+  const CustomProperty({
+    String? propertyName,
+    bool required = false,
+    bool indexed = true,
+  });
 
   @override
   bool validate(ModelDB db, Object? value) {
@@ -280,7 +315,10 @@ class ModelDBMock implements ModelDB {
   @override
   String kindName(Type type) => throw UnimplementedError('not mocked');
   @override
-  Object? toDatastoreValue(String kind, String fieldName, Object? value,
-          {bool forComparison = false}) =>
-      null;
+  Object? toDatastoreValue(
+    String kind,
+    String fieldName,
+    Object? value, {
+    bool forComparison = false,
+  }) => null;
 }

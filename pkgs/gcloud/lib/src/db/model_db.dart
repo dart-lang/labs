@@ -29,6 +29,10 @@ abstract class ModelDB {
   String? fieldNameToPropertyName(String kind, String fieldName);
 
   /// Converts [value] according to the [Property] named [fieldName] in [kind].
-  Object? toDatastoreValue(String kind, String fieldName, Object? value,
-      {bool forComparison = false});
+  Object? toDatastoreValue(
+    String kind,
+    String fieldName,
+    Object? value, {
+    bool forComparison = false,
+  });
 }

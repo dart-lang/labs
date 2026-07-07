@@ -49,8 +49,10 @@ class Transaction {
   ///
   /// If the [key] is not found within the transaction and [orElse] was not
   /// specified, then a [KeyNotFoundException] will be thrown.
-  Future<T> lookupValue<T extends Model>(Key key,
-      {T Function()? orElse}) async {
+  Future<T> lookupValue<T extends Model>(
+    Key key, {
+    T Function()? orElse,
+  }) async {
     final values = await lookup<T>(<Key>[key]);
     assert(values.length == 1);
     var value = values.single;
@@ -95,14 +97,17 @@ class Transaction {
       partition = ancestorKey.partition;
     } else if (ancestorKey.partition != partition) {
       throw ArgumentError(
-          'Ancestor queries must have the same partition in the ancestor key '
-          'as the partition where the query executes in.');
+        'Ancestor queries must have the same partition in the ancestor key '
+        'as the partition where the query executes in.',
+      );
     }
     _checkSealed();
-    return Query<T>(db,
-        partition: partition,
-        ancestorKey: ancestorKey,
-        datastoreTransaction: _datastoreTransaction);
+    return Query<T>(
+      db,
+      partition: partition,
+      ancestorKey: ancestorKey,
+      datastoreTransaction: _datastoreTransaction,
+    );
   }
 
   /// Rolls this transaction back.
@@ -115,10 +120,12 @@ class Transaction {
   Future commit() {
     _checkSealed(changeState: _transactionCommitted);
     try {
-      return _commitHelper(db,
-          inserts: _inserts,
-          deletes: _deletes,
-          datastoreTransaction: _datastoreTransaction);
+      return _commitHelper(
+        db,
+        inserts: _inserts,
+        deletes: _deletes,
+        datastoreTransaction: _datastoreTransaction,
+      );
     } catch (error) {
       _state = _transactionCommitFailed;
       rethrow;
@@ -160,15 +167,16 @@ class Query<T extends Model> {
   int? _offset;
   int? _limit;
 
-  Query(DatastoreDB dbImpl,
-      {Partition? partition,
-      Key? ancestorKey,
-      ds.Transaction? datastoreTransaction})
-      : _db = dbImpl,
-        _kind = dbImpl.modelDB.kindName(T),
-        _partition = partition,
-        _ancestorKey = ancestorKey,
-        _transaction = datastoreTransaction;
+  Query(
+    DatastoreDB dbImpl, {
+    Partition? partition,
+    Key? ancestorKey,
+    ds.Transaction? datastoreTransaction,
+  }) : _db = dbImpl,
+       _kind = dbImpl.modelDB.kindName(T),
+       _partition = partition,
+       _ancestorKey = ancestorKey,
+       _transaction = datastoreTransaction;
 
   /// Adds a filter to this [Query].
   ///
@@ -196,11 +204,16 @@ class Query<T extends Model> {
     // TODO: We should remove the condition in a major version update of
     // `package:gcloud`.
     if (comparisonObject is! ds.Key) {
-      comparisonObject = _db.modelDB
-          .toDatastoreValue(_kind, name, comparisonObject, forComparison: true);
+      comparisonObject = _db.modelDB.toDatastoreValue(
+        _kind,
+        name,
+        comparisonObject,
+        forComparison: true,
+      );
     }
-    _filters.add(ds.Filter(
-        _relationMapping[comparison]!, propertyName, comparisonObject!));
+    _filters.add(
+      ds.Filter(_relationMapping[comparison]!, propertyName, comparisonObject!),
+    );
   }
 
   /// Adds an order to this [Query].
@@ -211,11 +224,19 @@ class Query<T extends Model> {
   void order(String orderString) {
     // TODO: validate [orderString] (e.g. is name valid)
     if (orderString.startsWith('-')) {
-      _orders.add(ds.Order(ds.OrderDirection.Descending,
-          _convertToDatastoreName(orderString.substring(1))));
+      _orders.add(
+        ds.Order(
+          ds.OrderDirection.Descending,
+          _convertToDatastoreName(orderString.substring(1)),
+        ),
+      );
     } else {
-      _orders.add(ds.Order(
-          ds.OrderDirection.Ascending, _convertToDatastoreName(orderString)));
+      _orders.add(
+        ds.Order(
+          ds.OrderDirection.Ascending,
+          _convertToDatastoreName(orderString),
+        ),
+      );
     }
   }
 
@@ -244,12 +265,13 @@ class Query<T extends Model> {
       ancestorKey = _db.modelDB.toDatastoreKey(_ancestorKey!);
     }
     var query = ds.Query(
-        ancestorKey: ancestorKey,
-        kind: _kind,
-        filters: _filters,
-        orders: _orders,
-        offset: _offset,
-        limit: _limit);
+      ancestorKey: ancestorKey,
+      kind: _kind,
+      filters: _filters,
+      orders: _orders,
+      offset: _offset,
+      limit: _limit,
+    );
 
     ds.Partition? partition;
     if (_partition != null) {
@@ -259,8 +281,11 @@ class Query<T extends Model> {
     return StreamFromPages<ds.Entity>((int pageSize) {
       if (_transaction != null) {
         if (partition != null) {
-          return _db.datastore
-              .query(query, transaction: _transaction!, partition: partition);
+          return _db.datastore.query(
+            query,
+            transaction: _transaction!,
+            partition: partition,
+          );
         }
         return _db.datastore.query(query, transaction: _transaction!);
       }
@@ -291,8 +316,8 @@ class DatastoreDB {
   final Partition _defaultPartition;
 
   DatastoreDB(this.datastore, {ModelDB? modelDB, Partition? defaultPartition})
-      : _modelDB = modelDB ?? ModelDBImpl(),
-        _defaultPartition = defaultPartition ?? Partition(null);
+    : _modelDB = modelDB ?? ModelDBImpl(),
+      _defaultPartition = defaultPartition ?? Partition(null);
 
   /// The [ModelDB] used to serialize/deserialize objects.
   ModelDB get modelDB => _modelDB;
@@ -317,9 +342,9 @@ class DatastoreDB {
   /// is currently 5.
   // TODO: Add retries and/or auto commit/rollback.
   Future<T> withTransaction<T>(TransactionHandler<T> transactionHandler) {
-    return datastore
-        .beginTransaction(crossEntityGroup: true)
-        .then((datastoreTransaction) {
+    return datastore.beginTransaction(crossEntityGroup: true).then((
+      datastoreTransaction,
+    ) {
       var transaction = Transaction(this, datastoreTransaction);
       return transactionHandler(transaction);
     });
@@ -339,8 +364,9 @@ class DatastoreDB {
       }
     } else if (ancestorKey != null && partition != ancestorKey.partition) {
       throw ArgumentError(
-          'Ancestor queries must have the same partition in the ancestor key '
-          'as the partition where the query executes in.');
+        'Ancestor queries must have the same partition in the ancestor key '
+        'as the partition where the query executes in.',
+      );
     }
     return Query<T>(this, partition: partition, ancestorKey: ancestorKey);
   }
@@ -370,8 +396,10 @@ class DatastoreDB {
   ///
   /// If the [key] is not found in the datastore and [orElse] was not
   /// specified, then a [KeyNotFoundException] will be thrown.
-  Future<T> lookupValue<T extends Model>(Key key,
-      {T Function()? orElse}) async {
+  Future<T> lookupValue<T extends Model>(
+    Key key, {
+    T Function()? orElse,
+  }) async {
     final values = await lookup<T>(<Key>[key]);
     assert(values.length == 1);
     var value = values.single;
@@ -411,10 +439,12 @@ class DatastoreDB {
   }
 }
 
-Future _commitHelper(DatastoreDB db,
-    {List<Model>? inserts,
-    List<Key>? deletes,
-    ds.Transaction? datastoreTransaction}) {
+Future _commitHelper(
+  DatastoreDB db, {
+  List<Model>? inserts,
+  List<Key>? deletes,
+  ds.Transaction? datastoreTransaction,
+}) {
   List<ds.Entity>? entityInserts, entityAutoIdInserts;
   List<ds.Key>? entityDeletes;
   late List<Model> autoIdModelInserts;
@@ -441,15 +471,17 @@ Future _commitHelper(DatastoreDB db,
   Future<ds.CommitResult> r;
   if (datastoreTransaction != null) {
     r = db.datastore.commit(
-        inserts: entityInserts ?? [],
-        autoIdInserts: entityAutoIdInserts ?? [],
-        deletes: entityDeletes ?? [],
-        transaction: datastoreTransaction);
+      inserts: entityInserts ?? [],
+      autoIdInserts: entityAutoIdInserts ?? [],
+      deletes: entityDeletes ?? [],
+      transaction: datastoreTransaction,
+    );
   } else {
     r = db.datastore.commit(
-        inserts: entityInserts ?? [],
-        autoIdInserts: entityAutoIdInserts ?? [],
-        deletes: entityDeletes ?? []);
+      inserts: entityInserts ?? [],
+      autoIdInserts: entityAutoIdInserts ?? [],
+      deletes: entityDeletes ?? [],
+    );
   }
 
   return r.then((ds.CommitResult result) {
@@ -463,16 +495,19 @@ Future _commitHelper(DatastoreDB db,
   });
 }
 
-Future<List<T?>> _lookupHelper<T extends Model>(DatastoreDB db, List<Key> keys,
-    {ds.Transaction? datastoreTransaction}) {
+Future<List<T?>> _lookupHelper<T extends Model>(
+  DatastoreDB db,
+  List<Key> keys, {
+  ds.Transaction? datastoreTransaction,
+}) {
   var entityKeys = keys.map(db.modelDB.toDatastoreKey).toList();
 
   if (datastoreTransaction != null) {
     return db.datastore
         .lookup(entityKeys, transaction: datastoreTransaction)
         .then((List<ds.Entity?> entities) {
-      return entities.map<T?>(db.modelDB.fromDatastoreEntity).toList();
-    });
+          return entities.map<T?>(db.modelDB.fromDatastoreEntity).toList();
+        });
   }
   return db.datastore.lookup(entityKeys).then((List<ds.Entity?> entities) {
     return entities.map<T?>(db.modelDB.fromDatastoreEntity).toList();

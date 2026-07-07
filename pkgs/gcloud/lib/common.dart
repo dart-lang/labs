@@ -37,11 +37,12 @@ class StreamFromPages<T> {
 
   StreamFromPages(this._firstPageProvider) {
     _controller = StreamController<T>(
-        sync: true,
-        onListen: _onListen,
-        onPause: _onPause,
-        onResume: _onResume,
-        onCancel: _onCancel);
+      sync: true,
+      onListen: _onListen,
+      onPause: _onPause,
+      onResume: _onResume,
+      onCancel: _onCancel,
+    );
   }
 
   Stream<T> get stream => _controller.stream;

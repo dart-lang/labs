@@ -30,12 +30,15 @@ class MockClient extends http.BaseClient {
   late http_testing.MockClient client;
 
   MockClient(this.hostname, this.rootPath)
-      : rootUri = Uri.parse('https://$hostname$rootPath') {
+    : rootUri = Uri.parse('https://$hostname$rootPath') {
     client = http_testing.MockClient(handler);
   }
 
   void register(
-      String method, Pattern path, http_testing.MockClientHandler handler) {
+    String method,
+    Pattern path,
+    http_testing.MockClientHandler handler,
+  ) {
     var map = mocks.putIfAbsent(method, () => {});
     if (path is RegExp) {
       map[RegExp('$rootPath${path.pattern}')] = handler;
@@ -45,13 +48,19 @@ class MockClient extends http.BaseClient {
   }
 
   void registerUpload(
-      String method, Pattern path, http_testing.MockClientHandler handler) {
+    String method,
+    Pattern path,
+    http_testing.MockClientHandler handler,
+  ) {
     var map = mocks.putIfAbsent(method, () => {});
     map['/upload$rootPath$path'] = handler;
   }
 
   void registerResumableUpload(
-      String method, Pattern path, http_testing.MockClientHandler handler) {
+    String method,
+    Pattern path,
+    http_testing.MockClientHandler handler,
+  ) {
     var map = mocks.putIfAbsent(method, () => {});
     map['/resumable/upload$rootPath$path'] = handler;
   }
@@ -61,18 +70,17 @@ class MockClient extends http.BaseClient {
   }
 
   Future<http.Response> handler(http.Request request) {
-    expect(
-      request.url.host,
-      anyOf(rootUri.host, 'storage.googleapis.com'),
-    );
+    expect(request.url.host, anyOf(rootUri.host, 'storage.googleapis.com'));
     var path = request.url.path;
     if (mocks[request.method] == null) {
       throw 'No mock handler for method ${request.method} found. '
           'Request URL was: ${request.url}';
     }
     http_testing.MockClientHandler? mockHandler;
-    mocks[request.method]!
-        .forEach((pattern, http_testing.MockClientHandler handler) {
+    mocks[request.method]!.forEach((
+      pattern,
+      http_testing.MockClientHandler handler,
+    ) {
       if (pattern.matchAsPrefix(path) != null) {
         mockHandler = handler;
       }
@@ -91,7 +99,8 @@ class MockClient extends http.BaseClient {
 
   Future<http.Response> respond(dynamic response) {
     return Future.value(
-        http.Response(jsonEncode(response), 200, headers: _responseHeaders));
+      http.Response(jsonEncode(response), 200, headers: _responseHeaders),
+    );
   }
 
   Future<http.Response> respondEmpty() {
@@ -100,7 +109,8 @@ class MockClient extends http.BaseClient {
 
   Future<http.Response> respondInitiateResumableUpload(String project) {
     final headers = Map<String, String>.from(_responseHeaders);
-    headers['location'] = 'https://$hostname/resumable/upload$rootPath'
+    headers['location'] =
+        'https://$hostname/resumable/upload$rootPath'
         'b/$project/o?uploadType=resumable&alt=json&'
         'upload_id=AEnB2UqucpaWy7d5cr5iVQzmbQcQlLDIKiClrm0SAX3rJ7UN'
         'Mu5bEoC9b4teJcJUKpqceCUeqKzuoP_jz2ps_dV0P0nT8OTuZQ';
@@ -134,17 +144,19 @@ class MockClient extends http.BaseClient {
 
   Future<http.Response> respondError(int statusCode) {
     var error = {
-      'error': {'code': statusCode, 'message': 'error'}
+      'error': {'code': statusCode, 'message': 'error'},
     };
-    return Future.value(http.Response(jsonEncode(error), statusCode,
-        headers: _responseHeaders));
+    return Future.value(
+      http.Response(jsonEncode(error), statusCode, headers: _responseHeaders),
+    );
   }
 
   Future<NormalMediaUpload> processNormalMediaUpload(http.Request request) {
     var completer = Completer<NormalMediaUpload>();
 
-    var contentType =
-        http_parser.MediaType.parse(request.headers['content-type']!);
+    var contentType = http_parser.MediaType.parse(
+      request.headers['content-type']!,
+    );
     expect(contentType.mimeType, 'multipart/related');
     var boundary = contentType.parameters['boundary'];
 
@@ -152,10 +164,10 @@ class MockClient extends http.BaseClient {
     String? json;
     Stream.fromIterable([
       request.bodyBytes,
-      [13, 10]
-    ])
-        .transform(mime.MimeMultipartTransformer(boundary!))
-        .listen((mime.MimeMultipart mimeMultipart) {
+      [13, 10],
+    ]).transform(mime.MimeMultipartTransformer(boundary!)).listen((
+      mime.MimeMultipart mimeMultipart,
+    ) {
       var contentType = mimeMultipart.headers['content-type']!;
       partCount++;
       if (partCount == 1) {
@@ -172,8 +184,8 @@ class MockClient extends http.BaseClient {
             .fold('', (p, e) => '$p$e')
             .then(base64.decode)
             .then((bytes) {
-          completer.complete(NormalMediaUpload(json!, bytes, contentType));
-        });
+              completer.complete(NormalMediaUpload(json!, bytes, contentType));
+            });
       } else {
         // Exactly two parts expected.
         throw 'Unexpected part count';
@@ -213,8 +225,10 @@ class TraceClient extends http.BaseClient {
           print(utf8.decode(body));
           print('--- END RESPONSE ---');
           return http.StreamedResponse(
-              http.ByteStream.fromBytes(body), rr.statusCode,
-              headers: rr.headers);
+            http.ByteStream.fromBytes(body),
+            rr.statusCode,
+            headers: rr.headers,
+          );
         });
       });
     });

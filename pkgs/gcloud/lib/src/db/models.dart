@@ -25,9 +25,9 @@ class Key<T> {
   }
 
   Key.emptyKey(Partition partition)
-      : _parent = partition,
-        type = null,
-        id = null;
+    : _parent = partition,
+      type = null,
+      id = null;
 
   /// Parent of this [Key].
   Key? get parent {

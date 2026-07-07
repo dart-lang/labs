@@ -86,8 +86,11 @@ abstract class Property {
   /// `true`.
   final bool indexed;
 
-  const Property(
-      {this.propertyName, this.required = false, this.indexed = true});
+  const Property({
+    this.propertyName,
+    this.required = false,
+    this.indexed = true,
+  });
 
   bool validate(ModelDB db, Object? value) {
     if (required && value == null) return false;
@@ -105,9 +108,11 @@ abstract class PrimitiveProperty extends Property {
   const PrimitiveProperty({super.propertyName, super.required, super.indexed});
 
   @override
-  Object? encodeValue(ModelDB db, Object? value,
-          {bool forComparison = false}) =>
-      value;
+  Object? encodeValue(
+    ModelDB db,
+    Object? value, {
+    bool forComparison = false,
+  }) => value;
 
   @override
   Object? decodePrimitiveValue(ModelDB db, Object? value) => value;
@@ -192,7 +197,7 @@ class ModelKeyProperty extends PrimitiveProperty {
 /// `List<int>`.
 class BlobProperty extends PrimitiveProperty {
   const BlobProperty({super.propertyName, super.required})
-      : super(indexed: false);
+    : super(indexed: false);
 
   // NOTE: We don't validate that the entries of the list are really integers
   // of the range 0..255!
@@ -247,7 +252,7 @@ class ListProperty extends Property {
   // TODO: We want to support optional list properties as well.
   // Get rid of "required: true" here.
   const ListProperty(this.subProperty, {super.propertyName, super.indexed})
-      : super(required: true);
+    : super(required: true);
 
   @override
   bool validate(ModelDB db, Object? value) {
@@ -302,7 +307,7 @@ class ListProperty extends Property {
 /// A convenience [Property] for list of strings.
 class StringListProperty extends ListProperty {
   const StringListProperty({super.propertyName, super.indexed})
-      : super(const StringProperty());
+    : super(const StringProperty());
 
   @override
   Object decodePrimitiveValue(ModelDB db, Object? value) {

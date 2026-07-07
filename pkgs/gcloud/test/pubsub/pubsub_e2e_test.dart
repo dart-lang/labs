@@ -44,13 +44,17 @@ void main() {
         for (var subscription in subscriptions) {
           if (subscription.name.startsWith(prefix)) {
             try {
-              print('WARNING: Removing leftover subscription '
-                  '${subscription.name}');
+              print(
+                'WARNING: Removing leftover subscription '
+                '${subscription.name}',
+              );
               leftovers = true;
               await pubsub.deleteSubscription(subscription.name);
             } catch (e, s) {
-              print('Error during test cleanup of subscription '
-                  '${subscription.name} ($e)');
+              print(
+                'Error during test cleanup of subscription '
+                '${subscription.name} ($e)',
+              );
               print(s);
               cleanupErrors = true;
             }
@@ -141,14 +145,18 @@ void main() {
         var topicName = generateTopicName();
         var subscriptionName = generateSubscriptionName();
         await pubsub.createTopic(topicName);
-        var subscription =
-            await pubsub.createSubscription(subscriptionName, topicName);
+        var subscription = await pubsub.createSubscription(
+          subscriptionName,
+          topicName,
+        );
         expect(subscription.name, subscriptionName);
         subscription = await pubsub.lookupSubscription(subscriptionName);
         expect(subscription.name, subscriptionName);
         expect(subscription.project, project);
-        expect(subscription.absoluteName,
-            'projects/$project/subscriptions/$subscriptionName');
+        expect(
+          subscription.absoluteName,
+          'projects/$project/subscriptions/$subscriptionName',
+        );
         expect(subscription.isPull, isTrue);
         expect(subscription.isPush, isFalse);
         expect(await pubsub.deleteSubscription(subscriptionName), isNull);
@@ -167,8 +175,10 @@ void main() {
         for (var i = 0; i < count; i++) {
           await pubsub.createSubscription(name(i), topicName);
         }
-        var subscriptions =
-            await pubsub.listSubscriptions().map((t) => t.name).toList();
+        var subscriptions = await pubsub
+            .listSubscriptions()
+            .map((t) => t.name)
+            .toList();
         for (var i = 0; i < count; i++) {
           expect(subscriptions.contains(name(i)), isTrue);
           await pubsub.deleteSubscription(name(i));
@@ -180,8 +190,10 @@ void main() {
         var topicName = generateTopicName();
         var subscriptionName = generateSubscriptionName();
         var topic = await pubsub.createTopic(topicName);
-        var subscription =
-            await pubsub.createSubscription(subscriptionName, topicName);
+        var subscription = await pubsub.createSubscription(
+          subscriptionName,
+          topicName,
+        );
         expect(await subscription.pull(), isNull);
 
         expect(await topic.publishString('Hello, world!'), isNull);

@@ -60,10 +60,14 @@ void runTests(Datastore datastore, db.DatastoreDB store) {
           return namespaceQuery.run().toList().then((namespaces) {
             expect(namespaces.length, greaterThanOrEqualTo(3));
             expect(namespaces, contains(cond((dynamic ns) => ns.name == null)));
-            expect(namespaces,
-                contains(cond((dynamic ns) => ns.name == 'FooNamespace')));
-            expect(namespaces,
-                contains(cond((dynamic ns) => ns.name == 'BarNamespace')));
+            expect(
+              namespaces,
+              contains(cond((dynamic ns) => ns.name == 'FooNamespace')),
+            );
+            expect(
+              namespaces,
+              contains(cond((dynamic ns) => ns.name == 'BarNamespace')),
+            );
 
             var futures = <Future>[];
             for (var namespace in namespaces) {
@@ -73,25 +77,39 @@ void runTests(Datastore datastore, db.DatastoreDB store) {
               }
               var partition = store.newPartition(namespace.name!);
               var kindQuery = store.query<Kind>(partition: partition);
-              futures.add(kindQuery.run().toList().then((List<db.Model> kinds) {
-                expect(kinds.length, greaterThanOrEqualTo(2));
-                if (namespace.name == null) {
-                  expect(kinds,
-                      contains(cond((dynamic k) => k.name == 'NullKind')));
-                  expect(kinds,
-                      contains(cond((dynamic k) => k.name == 'NullKind2')));
-                } else if (namespace.name == 'FooNamespace') {
-                  expect(kinds,
-                      contains(cond((dynamic k) => k.name == 'FooKind')));
-                  expect(kinds,
-                      contains(cond((dynamic k) => k.name == 'FooKind2')));
-                } else if (namespace.name == 'BarNamespace') {
-                  expect(kinds,
-                      contains(cond((dynamic k) => k.name == 'BarKind')));
-                  expect(kinds,
-                      contains(cond((dynamic k) => k.name == 'BarKind2')));
-                }
-              }));
+              futures.add(
+                kindQuery.run().toList().then((List<db.Model> kinds) {
+                  expect(kinds.length, greaterThanOrEqualTo(2));
+                  if (namespace.name == null) {
+                    expect(
+                      kinds,
+                      contains(cond((dynamic k) => k.name == 'NullKind')),
+                    );
+                    expect(
+                      kinds,
+                      contains(cond((dynamic k) => k.name == 'NullKind2')),
+                    );
+                  } else if (namespace.name == 'FooNamespace') {
+                    expect(
+                      kinds,
+                      contains(cond((dynamic k) => k.name == 'FooKind')),
+                    );
+                    expect(
+                      kinds,
+                      contains(cond((dynamic k) => k.name == 'FooKind2')),
+                    );
+                  } else if (namespace.name == 'BarNamespace') {
+                    expect(
+                      kinds,
+                      contains(cond((dynamic k) => k.name == 'BarKind')),
+                    );
+                    expect(
+                      kinds,
+                      contains(cond((dynamic k) => k.name == 'BarKind2')),
+                    );
+                  }
+                }),
+              );
             }
             return Future.wait(futures).then((_) {
               expect(datastore.commit(deletes: keys), completes);

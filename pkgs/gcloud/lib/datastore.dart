@@ -54,7 +54,7 @@ class DatastoreError implements Exception {
   final String message;
 
   DatastoreError([String? message])
-      : message = message ?? 'DatastoreError: An unknown error occurred';
+    : message = message ?? 'DatastoreError: An unknown error occurred';
 
   @override
   String toString() => message;
@@ -62,7 +62,7 @@ class DatastoreError implements Exception {
 
 class UnknownDatastoreError extends DatastoreError {
   UnknownDatastoreError(Object error)
-      : super('An unknown error occurred ($error).');
+    : super('An unknown error occurred ($error).');
 }
 
 class TransactionAbortedError extends DatastoreError {
@@ -115,8 +115,11 @@ class Entity {
   final Map<String, Object?> properties;
   final Set<String> unIndexedProperties;
 
-  Entity(this.key, this.properties,
-      {this.unIndexedProperties = const <String>{}});
+  Entity(
+    this.key,
+    this.properties, {
+    this.unIndexedProperties = const <String>{},
+  });
 }
 
 /// A complete or partial key.
@@ -177,8 +180,9 @@ class Key {
 
   @override
   String toString() {
-    var namespaceString =
-        partition.namespace == null ? 'null' : "'${partition.namespace}'";
+    var namespaceString = partition.namespace == null
+        ? 'null'
+        : "'${partition.namespace}'";
     return "Key(namespace=$namespaceString, path=[${elements.join(', ')}])";
   }
 }
@@ -421,10 +425,7 @@ abstract class Datastore {
   /// used.
   ///
   /// The operations will be retried at maximum of [maxAttempts].
-  factory Datastore.withRetry(
-    Datastore delegate, {
-    int? maxAttempts,
-  }) {
+  factory Datastore.withRetry(Datastore delegate, {int? maxAttempts}) {
     return RetryDatastoreImpl(
       delegate,
       RetryOptions(maxAttempts: maxAttempts ?? 3),
@@ -462,11 +463,12 @@ abstract class Datastore {
   /// This method might complete with a [TransactionAbortedError] error.
   /// Users must take care of retrying transactions.
   // TODO(Issue #6): Consider splitting `inserts` into insert/update/upsert.
-  Future<CommitResult> commit(
-      {List<Entity> inserts,
-      List<Entity> autoIdInserts,
-      List<Key> deletes,
-      Transaction transaction});
+  Future<CommitResult> commit({
+    List<Entity> inserts,
+    List<Entity> autoIdInserts,
+    List<Key> deletes,
+    Transaction transaction,
+  });
 
   /// Roll a started transaction back.
   Future rollback(Transaction transaction);
@@ -498,6 +500,9 @@ abstract class Datastore {
   ///
   /// Outside of transactions, the result set might be stale. Queries are by
   /// default eventually consistent.
-  Future<Page<Entity>> query(Query query,
-      {Partition partition, Transaction transaction});
+  Future<Page<Entity>> query(
+    Query query, {
+    Partition partition,
+    Transaction transaction,
+  });
 }

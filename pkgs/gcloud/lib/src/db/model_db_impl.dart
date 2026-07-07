@@ -66,9 +66,10 @@ class ModelDBImpl implements ModelDB {
       var type = _type2ModelDesc[_kind2ModelDesc[element.kind]!];
       if (type == null) {
         throw StateError(
-            'Could not find a model associated with kind "${element.kind}". '
-            'Please ensure a model class was annotated with '
-            '`@Kind(name: "${element.kind}")`.');
+          'Could not find a model associated with kind "${element.kind}". '
+          'Please ensure a model class was annotated with '
+          '`@Kind(name: "${element.kind}")`.',
+        );
       }
       final elementId = element.id;
       if (elementId is String) {
@@ -76,8 +77,10 @@ class ModelDBImpl implements ModelDB {
       } else if (elementId is int) {
         key = key.append<int>(type, id: elementId);
       } else {
-        throw StateError('Key must be either String or int, but '
-            'was ${elementId.runtimeType} for key ${element.kind}');
+        throw StateError(
+          'Key must be either String or int, but '
+          'was ${elementId.runtimeType} for key ${element.kind}',
+        );
       }
     }
     return key;
@@ -97,20 +100,26 @@ class ModelDBImpl implements ModelDB {
       var useIntegerId = modelDescription.useIntegerId;
 
       if (useIntegerId && id != null && id is! int) {
-        throw ArgumentError('Expected an integer id property but '
-            'id was of type ${id.runtimeType}');
+        throw ArgumentError(
+          'Expected an integer id property but '
+          'id was of type ${id.runtimeType}',
+        );
       }
       if (!useIntegerId && (id != null && id is! String)) {
-        throw ArgumentError('Expected a string id property but '
-            'id was of type ${id.runtimeType}');
+        throw ArgumentError(
+          'Expected a string id property but '
+          'id was of type ${id.runtimeType}',
+        );
       }
 
       elements.add(ds.KeyElement(kind, id));
       currentKey = currentKey.parent!;
     }
     var partition = currentKey._parent as Partition;
-    return ds.Key(elements.reversed.toList(),
-        partition: ds.Partition(partition.namespace));
+    return ds.Key(
+      elements.reversed.toList(),
+      partition: ds.Partition(partition.namespace),
+    );
   }
 
   /// Converts a [Model] instance to a [ds.Entity].
@@ -134,8 +143,10 @@ class ModelDBImpl implements ModelDB {
     var kind = entity.key.elements.last.kind;
     var modelDescription = _kind2ModelDesc[kind];
     if (modelDescription == null) {
-      throw StateError('Trying to deserialize entity of kind '
-          '$kind, but no Model class available for it.');
+      throw StateError(
+        'Trying to deserialize entity of kind '
+        '$kind, but no Model class available for it.',
+      );
     }
 
     try {
@@ -170,14 +181,22 @@ class ModelDBImpl implements ModelDB {
 
   /// Converts [value] according to the given [kind].
   @override
-  Object? toDatastoreValue(String kind, String fieldName, Object? value,
-      {bool forComparison = false}) {
+  Object? toDatastoreValue(
+    String kind,
+    String fieldName,
+    Object? value, {
+    bool forComparison = false,
+  }) {
     var modelDescription = _kind2ModelDesc[kind];
     if (modelDescription == null) {
       throw ArgumentError('The kind "$kind" is unknown.');
     }
-    return modelDescription.encodeField(this, fieldName, value,
-        forComparison: forComparison);
+    return modelDescription.encodeField(
+      this,
+      fieldName,
+      value,
+      forComparison: forComparison,
+    );
   }
 
   Iterable<_ModelDescription> get _modelDescriptions {
@@ -185,7 +204,8 @@ class ModelDBImpl implements ModelDB {
   }
 
   Map<String, Property> _propertiesForModel(
-      _ModelDescription modelDescription) {
+    _ModelDescription modelDescription,
+  ) {
     return _modelDesc2Properties[modelDescription]!;
   }
 
@@ -216,8 +236,10 @@ class ModelDBImpl implements ModelDB {
     for (var modelDescription in _modelDescriptions) {
       var kindName = modelDescription.kindName(this);
       if (_kind2ModelDesc.containsKey(kindName)) {
-        throw StateError('Cannot have two ModelDescriptions '
-            'with the same kind ($kindName)');
+        throw StateError(
+          'Cannot have two ModelDescriptions '
+          'with the same kind ($kindName)',
+        );
       }
       _kind2ModelDesc[kindName] = modelDescription;
     }
@@ -229,8 +251,9 @@ class ModelDBImpl implements ModelDB {
       if ((instance.reflectee as Object).runtimeType == Kind) {
         if (kindAnnotation != null) {
           throw StateError(
-              'Cannot have more than one ModelMetadata() annotation '
-              'on a Model class');
+            'Cannot have more than one ModelMetadata() annotation '
+            'on a Model class',
+          );
         }
         kindAnnotation = instance.reflectee as Kind?;
       }
@@ -286,7 +309,10 @@ class ModelDBImpl implements ModelDB {
   }
 
   void _tryLoadNewModelClassFull(
-      mirrors.ClassMirror modelClass, String name, bool useIntegerId) {
+    mirrors.ClassMirror modelClass,
+    String name,
+    bool useIntegerId,
+  ) {
     assert(!_modelDesc2Type.containsKey(modelClass.reflectedType));
 
     _ModelDescription modelDesc;
@@ -299,18 +325,22 @@ class ModelDBImpl implements ModelDB {
     _type2ModelDesc[modelDesc] = modelClass.reflectedType;
     _modelDesc2Type[modelClass.reflectedType] = modelDesc;
     _modelDesc2ClassMirror[modelDesc] = modelClass;
-    _modelDesc2Properties[modelDesc] =
-        _propertiesFromModelDescription(modelClass);
+    _modelDesc2Properties[modelDesc] = _propertiesFromModelDescription(
+      modelClass,
+    );
 
     // Ensure we have an empty constructor.
     if (!hasDefaultConstructor(modelClass)) {
-      throw StateError('Class ${modelClass.simpleName} does not have a default '
-          'constructor.');
+      throw StateError(
+        'Class ${modelClass.simpleName} does not have a default '
+        'constructor.',
+      );
     }
   }
 
   Map<String, Property> _propertiesFromModelDescription(
-      mirrors.ClassMirror modelClassMirror) {
+    mirrors.ClassMirror modelClassMirror,
+  ) {
     var properties = <String, Property>{};
     var propertyNames = <String>{};
 
@@ -318,8 +348,10 @@ class ModelDBImpl implements ModelDB {
     while (modelClassMirror.superclass != null) {
       var memberMap = modelClassMirror.instanceMembers;
       // Loop over all declarations (which includes fields)
-      modelClassMirror.declarations
-          .forEach((Symbol fieldSymbol, mirrors.DeclarationMirror decl) {
+      modelClassMirror.declarations.forEach((
+        Symbol fieldSymbol,
+        mirrors.DeclarationMirror decl,
+      ) {
         // Look if the symbol is a getter and we have metadata attached to it.
         if (memberMap.containsKey(fieldSymbol) &&
             memberMap[fieldSymbol]!.isGetter) {
@@ -330,8 +362,9 @@ class ModelDBImpl implements ModelDB {
 
           if (propertyAnnotations.length > 1) {
             throw StateError(
-                'Cannot have more than one Property annotation on a model '
-                'field.');
+              'Cannot have more than one Property annotation on a model '
+              'field.',
+            );
           } else if (propertyAnnotations.length == 1) {
             var property = propertyAnnotations.first;
 
@@ -344,14 +377,16 @@ class ModelDBImpl implements ModelDB {
 
             if (properties.containsKey(fieldName)) {
               throw StateError(
-                  'Cannot have two Property objects describing the same field '
-                  'in a model object class hierarchy.');
+                'Cannot have two Property objects describing the same field '
+                'in a model object class hierarchy.',
+              );
             }
 
             if (propertyNames.contains(propertyName)) {
               throw StateError(
-                  'Cannot have two Property objects mapping to the same '
-                  'datastore property name "$propertyName".');
+                'Cannot have two Property objects mapping to the same '
+                'datastore property name "$propertyName".',
+              );
             }
             properties[fieldName] = property;
             propertyNames.add(propertyName);
@@ -429,26 +464,33 @@ class _ModelDescription<T extends Model> {
       _encodeProperty(db, model, mirror, properties, fieldName, prop);
     });
 
-    return ds.Entity(key, properties,
-        unIndexedProperties: _unIndexedProperties);
+    return ds.Entity(
+      key,
+      properties,
+      unIndexedProperties: _unIndexedProperties,
+    );
   }
 
   void _encodeProperty(
-      ModelDBImpl db,
-      Model model,
-      mirrors.InstanceMirror mirror,
-      Map properties,
-      String fieldName,
-      Property prop) {
+    ModelDBImpl db,
+    Model model,
+    mirrors.InstanceMirror mirror,
+    Map properties,
+    String fieldName,
+    Property prop,
+  ) {
     var propertyName = prop.propertyName;
     propertyName ??= fieldName;
 
-    var value =
-        mirror.getField(mirrors.MirrorSystem.getSymbol(fieldName)).reflectee;
+    var value = mirror
+        .getField(mirrors.MirrorSystem.getSymbol(fieldName))
+        .reflectee;
     if (!prop.validate(db, value)) {
-      throw StateError('Property validation failed for '
-          'property $fieldName while trying to serialize entity of kind '
-          '${model.runtimeType}. ');
+      throw StateError(
+        'Property validation failed for '
+        'property $fieldName while trying to serialize entity of kind '
+        '${model.runtimeType}. ',
+      );
     }
     properties[propertyName] = prop.encodeValue(db, value);
   }
@@ -469,17 +511,24 @@ class _ModelDescription<T extends Model> {
     return mirror.reflectee as H;
   }
 
-  void _decodeProperty(ModelDBImpl db, ds.Entity entity,
-      mirrors.InstanceMirror mirror, String fieldName, Property prop) {
+  void _decodeProperty(
+    ModelDBImpl db,
+    ds.Entity entity,
+    mirrors.InstanceMirror mirror,
+    String fieldName,
+    Property prop,
+  ) {
     var propertyName = fieldNameToPropertyName(fieldName);
 
     var rawValue = entity.properties[propertyName!];
     var value = prop.decodePrimitiveValue(db, rawValue);
 
     if (!prop.validate(db, value)) {
-      throw StateError('Property validation failed while '
-          'trying to deserialize entity of kind '
-          '${entity.key.elements.last.kind} (property name: $propertyName)');
+      throw StateError(
+        'Property validation failed while '
+        'trying to deserialize entity of kind '
+        '${entity.key.elements.last.kind} (property name: $propertyName)',
+      );
     }
 
     try {
@@ -501,15 +550,21 @@ class _ModelDescription<T extends Model> {
     return _property2FieldName[propertySearchName];
   }
 
-  Object? encodeField(ModelDBImpl db, String fieldName, Object? value,
-      {bool enforceFieldExists = true, bool forComparison = false}) {
+  Object? encodeField(
+    ModelDBImpl db,
+    String fieldName,
+    Object? value, {
+    bool enforceFieldExists = true,
+    bool forComparison = false,
+  }) {
     var property = db._propertiesForModel(this)[fieldName];
     if (property != null) {
       return property.encodeValue(db, value, forComparison: forComparison);
     }
     if (enforceFieldExists) {
       throw ArgumentError(
-          'A field named "$fieldName" does not exist in kind "$kind".');
+        'A field named "$fieldName" does not exist in kind "$kind".',
+      );
     }
     return null;
   }
@@ -586,12 +641,22 @@ class _ExpandoModelDescription extends _ModelDescription<ExpandoModel> {
   }
 
   @override
-  Object encodeField(ModelDBImpl db, String fieldName, Object? value,
-      {bool enforceFieldExists = true, bool forComparison = false}) {
+  Object encodeField(
+    ModelDBImpl db,
+    String fieldName,
+    Object? value, {
+    bool enforceFieldExists = true,
+    bool forComparison = false,
+  }) {
     // The [enforceFieldExists] argument is intentionally ignored.
 
-    var primitiveValue = super.encodeField(db, fieldName, value,
-        enforceFieldExists: false, forComparison: forComparison);
+    var primitiveValue = super.encodeField(
+      db,
+      fieldName,
+      value,
+      enforceFieldExists: false,
+      forComparison: forComparison,
+    );
     // If superclass can't encode field, we return value here (and assume
     // it's primitive)
     // NOTE: Implicit assumption:

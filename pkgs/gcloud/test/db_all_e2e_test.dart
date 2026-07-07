@@ -33,7 +33,8 @@ void main() async {
     setUpAll(() async {
       await withAuthClient(scopes, (String project, httpClient) async {
         datastore = Datastore.withRetry(
-            datastore_impl.DatastoreImpl(httpClient, project));
+          datastore_impl.DatastoreImpl(httpClient, project),
+        );
         datastoreDB = db.DatastoreDB(datastore);
         client = httpClient;
       });

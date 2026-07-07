@@ -103,19 +103,23 @@ class Acl {
   Acl(Iterable<AclEntry> entries) : _entries = List.from(entries);
 
   Acl._fromBucketAcl(storage_api.Bucket bucket)
-      : _entries = [
-          for (final control
-              in bucket.acl ?? const <storage_api.BucketAccessControl>[])
-            AclEntry(_aclScopeFromEntity(control.entity!),
-                _aclPermissionFromRole(control.role))
-        ];
+    : _entries = [
+        for (final control
+            in bucket.acl ?? const <storage_api.BucketAccessControl>[])
+          AclEntry(
+            _aclScopeFromEntity(control.entity!),
+            _aclPermissionFromRole(control.role),
+          ),
+      ];
 
   Acl._fromObjectAcl(storage_api.Object object)
-      : _entries = [
-          for (final entry in object.acl ?? <storage_api.ObjectAccessControl>[])
-            AclEntry(_aclScopeFromEntity(entry.entity!),
-                _aclPermissionFromRole(entry.role)),
-        ];
+    : _entries = [
+        for (final entry in object.acl ?? <storage_api.ObjectAccessControl>[])
+          AclEntry(
+            _aclScopeFromEntity(entry.entity!),
+            _aclPermissionFromRole(entry.role),
+          ),
+      ];
 
   static AclScope _aclScopeFromEntity(String entity) {
     if (entity.startsWith('user-')) {
@@ -149,7 +153,8 @@ class Acl {
     if (role == 'WRITER') return AclPermission.WRITE;
     if (role == 'OWNER') return AclPermission.FULL_CONTROL;
     throw UnsupportedError(
-        "Server returned a unsupported permission role '$role'");
+      "Server returned a unsupported permission role '$role'",
+    );
   }
 
   List<storage_api.BucketAccessControl> _toBucketAccessControlList() {
@@ -291,7 +296,7 @@ abstract class AclScope {
 /// specific Google account holder or a specific Google group.
 class StorageIdScope extends AclScope {
   StorageIdScope(String storageId)
-      : super._(AclScope._typeStorageId, storageId);
+    : super._(AclScope._typeStorageId, storageId);
 
   /// Google Storage ID.
   String get storageId => _id;
@@ -341,7 +346,7 @@ class ProjectScope extends AclScope {
   final String role;
 
   ProjectScope(String project, this.role)
-      : super._(AclScope._typeProject, project);
+    : super._(AclScope._typeProject, project);
 
   /// Project ID.
   String get project => _id;
@@ -427,8 +432,9 @@ class PredefinedAcl {
 
   /// Predefined ACL for the 'authenticated-read' ACL. Applies to both buckets
   /// and objects.
-  static const PredefinedAcl authenticatedRead =
-      PredefinedAcl._('authenticatedRead');
+  static const PredefinedAcl authenticatedRead = PredefinedAcl._(
+    'authenticatedRead',
+  );
 
   /// Predefined ACL for the 'private' ACL. Applies to both buckets
   /// and objects.
@@ -443,18 +449,21 @@ class PredefinedAcl {
   static const PredefinedAcl publicRead = PredefinedAcl._('publicRead');
 
   /// Predefined ACL for the 'public-read-write' ACL. Applies only to buckets.
-  static const PredefinedAcl publicReadWrite =
-      PredefinedAcl._('publicReadWrite');
+  static const PredefinedAcl publicReadWrite = PredefinedAcl._(
+    'publicReadWrite',
+  );
 
   /// Predefined ACL for the 'bucket-owner-full-control' ACL. Applies only to
   /// objects.
-  static const PredefinedAcl bucketOwnerFullControl =
-      PredefinedAcl._('bucketOwnerFullControl');
+  static const PredefinedAcl bucketOwnerFullControl = PredefinedAcl._(
+    'bucketOwnerFullControl',
+  );
 
   /// Predefined ACL for the 'bucket-owner-read' ACL. Applies only to
   /// objects.
-  static const PredefinedAcl bucketOwnerRead =
-      PredefinedAcl._('bucketOwnerRead');
+  static const PredefinedAcl bucketOwnerRead = PredefinedAcl._(
+    'bucketOwnerRead',
+  );
 
   @override
   String toString() => 'PredefinedAcl($_name)';
@@ -483,7 +492,7 @@ abstract class Storage {
   /// List of required OAuth2 scopes for Cloud Storage operation.
   // ignore: constant_identifier_names
   static const List<String> SCOPES = <String>[
-    storage_api.StorageApi.devstorageFullControlScope
+    storage_api.StorageApi.devstorageFullControlScope,
   ];
 
   /// Initializes access to cloud storage.
@@ -498,8 +507,11 @@ abstract class Storage {
   /// [predefinedAcl].
   ///
   /// Returns a [Future] which completes when the bucket has been created.
-  Future createBucket(String bucketName,
-      {PredefinedAcl? predefinedAcl, Acl? acl});
+  Future createBucket(
+    String bucketName, {
+    PredefinedAcl? predefinedAcl,
+    Acl? acl,
+  });
 
   /// Delete a cloud storage bucket.
   ///
@@ -526,8 +538,11 @@ abstract class Storage {
   /// Otherwise the default object ACL attached to the bucket will be used.
   ///
   /// Returns a `Bucket` instance.
-  Bucket bucket(String bucketName,
-      {PredefinedAcl? defaultPredefinedObjectAcl, Acl? defaultObjectAcl});
+  Bucket bucket(
+    String bucketName, {
+    PredefinedAcl? defaultPredefinedObjectAcl,
+    Acl? defaultObjectAcl,
+  });
 
   /// Check whether a cloud storage bucket exists.
   ///
@@ -618,14 +633,15 @@ class ObjectGeneration {
 
 /// Access to object metadata.
 abstract class ObjectMetadata {
-  factory ObjectMetadata(
-      {Acl? acl,
-      String? contentType,
-      String? contentEncoding,
-      String? cacheControl,
-      String? contentDisposition,
-      String? contentLanguage,
-      Map<String, String>? custom}) = _ObjectMetadata;
+  factory ObjectMetadata({
+    Acl? acl,
+    String? contentType,
+    String? contentEncoding,
+    String? cacheControl,
+    String? contentDisposition,
+    String? contentLanguage,
+    Map<String, String>? custom,
+  }) = _ObjectMetadata;
 
   /// ACL.
   Acl? get acl;
@@ -653,14 +669,15 @@ abstract class ObjectMetadata {
   /// Create a copy of this object with some values replaced.
   ///
   // TODO: This cannot be used to set values to null.
-  ObjectMetadata replace(
-      {Acl? acl,
-      String? contentType,
-      String? contentEncoding,
-      String? cacheControl,
-      String? contentDisposition,
-      String? contentLanguage,
-      Map<String, String>? custom});
+  ObjectMetadata replace({
+    Acl? acl,
+    String? contentType,
+    String? contentEncoding,
+    String? cacheControl,
+    String? contentDisposition,
+    String? contentLanguage,
+    Map<String, String>? custom,
+  });
 }
 
 /// Result from List objects in a bucket.
@@ -734,12 +751,14 @@ abstract class Bucket {
   /// Returns a `StreamSink` where the object content can be written. When
   /// The object content has been written the `StreamSink` completes with
   /// an `ObjectInfo` instance with the information on the object created.
-  StreamSink<List<int>> write(String objectName,
-      {int? length,
-      ObjectMetadata? metadata,
-      Acl? acl,
-      PredefinedAcl? predefinedAcl,
-      String? contentType});
+  StreamSink<List<int>> write(
+    String objectName, {
+    int? length,
+    ObjectMetadata? metadata,
+    Acl? acl,
+    PredefinedAcl? predefinedAcl,
+    String? contentType,
+  });
 
   /// Create an new object in the bucket with specified content.
   ///
@@ -749,11 +768,14 @@ abstract class Bucket {
   ///
   /// Returns a `Future` which completes with an `ObjectInfo` instance when
   /// the object is written.
-  Future<ObjectInfo> writeBytes(String name, List<int> bytes,
-      {ObjectMetadata? metadata,
-      Acl? acl,
-      PredefinedAcl? predefinedAcl,
-      String? contentType});
+  Future<ObjectInfo> writeBytes(
+    String name,
+    List<int> bytes, {
+    ObjectMetadata? metadata,
+    Acl? acl,
+    PredefinedAcl? predefinedAcl,
+    String? contentType,
+  });
 
   /// Read object content as byte stream.
   ///
@@ -802,6 +824,9 @@ abstract class Bucket {
   ///
   /// Returns a `Future` which completes with a `Page` object holding the
   /// first page. Use the `Page` object to move to the next page.
-  Future<Page<BucketEntry>> page(
-      {String? prefix, String? delimiter, int pageSize = 50});
+  Future<Page<BucketEntry>> page({
+    String? prefix,
+    String? delimiter,
+    int pageSize = 50,
+  });
 }

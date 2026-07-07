@@ -12,14 +12,14 @@ class _PubSubImpl implements PubSub {
   final String _subscriptionPrefix;
 
   _PubSubImpl(http.Client client, this.project)
-      : _api = pubsub.PubsubApi(client),
-        _topicPrefix = 'projects/$project/topics/',
-        _subscriptionPrefix = 'projects/$project/subscriptions/';
+    : _api = pubsub.PubsubApi(client),
+      _topicPrefix = 'projects/$project/topics/',
+      _subscriptionPrefix = 'projects/$project/subscriptions/';
 
   _PubSubImpl.rootUrl(http.Client client, this.project, String rootUrl)
-      : _api = pubsub.PubsubApi(client, rootUrl: rootUrl),
-        _topicPrefix = 'projects/$project/topics/',
-        _subscriptionPrefix = 'projects/$project/subscriptions/';
+    : _api = pubsub.PubsubApi(client, rootUrl: rootUrl),
+      _topicPrefix = 'projects/$project/topics/',
+      _subscriptionPrefix = 'projects/$project/subscriptions/';
 
   String _fullTopicName(String name) {
     return name.startsWith('projects/') ? name : '$_topicPrefix$name';
@@ -43,13 +43,21 @@ class _PubSubImpl implements PubSub {
   }
 
   Future<pubsub.ListTopicsResponse> _listTopics(
-      int pageSize, String? nextPageToken) {
-    return _api.projects.topics.list('projects/$project',
-        pageSize: pageSize, pageToken: nextPageToken);
+    int pageSize,
+    String? nextPageToken,
+  ) {
+    return _api.projects.topics.list(
+      'projects/$project',
+      pageSize: pageSize,
+      pageToken: nextPageToken,
+    );
   }
 
   Future<pubsub.Subscription> _createSubscription(
-      String name, String topic, Uri? endpoint) {
+    String name,
+    String topic,
+    Uri? endpoint,
+  ) {
     var subscription = pubsub.Subscription()..topic = topic;
     if (endpoint != null) {
       var pushConfig = pubsub.PushConfig()..pushEndpoint = endpoint.toString();
@@ -70,9 +78,15 @@ class _PubSubImpl implements PubSub {
   }
 
   Future<pubsub.ListSubscriptionsResponse> _listSubscriptions(
-      String? topic, int pageSize, String? nextPageToken) {
-    return _api.projects.subscriptions.list('projects/$project',
-        pageSize: pageSize, pageToken: nextPageToken);
+    String? topic,
+    int pageSize,
+    String? nextPageToken,
+  ) {
+    return _api.projects.subscriptions.list(
+      'projects/$project',
+      pageSize: pageSize,
+      pageToken: nextPageToken,
+    );
   }
 
   Future _modifyPushConfig(String subscription, Uri? endpoint) {
@@ -81,21 +95,27 @@ class _PubSubImpl implements PubSub {
     return _api.projects.subscriptions.modifyPushConfig(request, subscription);
   }
 
-  Future _publish(String topic, List<int> message,
-      Map<String, String> attributes, String? orderingKey) {
+  Future _publish(
+    String topic,
+    List<int> message,
+    Map<String, String> attributes,
+    String? orderingKey,
+  ) {
     var request = pubsub.PublishRequest()
       ..messages = [
         (pubsub.PubsubMessage()
           ..dataAsBytes = message
           ..attributes = attributes.isEmpty ? null : attributes
-          ..orderingKey = orderingKey)
+          ..orderingKey = orderingKey),
       ];
     // TODO(sgjesse): Handle PublishResponse containing message ids.
     return _api.projects.topics.publish(request, topic).then((_) => null);
   }
 
   Future<pubsub.PullResponse> _pull(
-      String subscription, bool returnImmediately) {
+    String subscription,
+    bool returnImmediately,
+  ) {
     var request = pubsub.PullRequest()
       ..maxMessages = 1
       // ignore: deprecated_member_use
@@ -114,25 +134,29 @@ class _PubSubImpl implements PubSub {
   void _checkTopicName(String name) {
     if (name.startsWith('projects/') && !name.contains('/topics/')) {
       throw ArgumentError(
-          'Illegal topic name. Absolute topic names must have the form '
-          "'projects/[project-id]/topics/[topic-name]");
+        'Illegal topic name. Absolute topic names must have the form '
+        "'projects/[project-id]/topics/[topic-name]",
+      );
     }
     if (name.endsWith('/topics/')) {
       throw ArgumentError(
-          'Illegal topic name. Relative part of the name cannot be empty');
+        'Illegal topic name. Relative part of the name cannot be empty',
+      );
     }
   }
 
   void _checkSubscriptionName(String name) {
     if (name.startsWith('projects/') && !name.contains('/subscriptions/')) {
       throw ArgumentError(
-          'Illegal subscription name. Absolute subscription names must have '
-          "the form 'projects/[project-id]/subscriptions/[subscription-name]");
+        'Illegal subscription name. Absolute subscription names must have '
+        "the form 'projects/[project-id]/subscriptions/[subscription-name]",
+      );
     }
     if (name.endsWith('/subscriptions/')) {
       throw ArgumentError(
-          'Illegal subscription name. Relative part of the name cannot be '
-          'empty');
+        'Illegal subscription name. Relative part of the name cannot be '
+        'empty',
+      );
     }
   }
 
@@ -158,8 +182,10 @@ class _PubSubImpl implements PubSub {
   @override
   Stream<Topic> listTopics() {
     Future<Page<Topic>> firstPage(int pageSize) {
-      return _listTopics(pageSize, null)
-          .then((response) => _TopicPageImpl(this, pageSize, response));
+      return _listTopics(
+        pageSize,
+        null,
+      ).then((response) => _TopicPageImpl(this, pageSize, response));
     }
 
     return StreamFromPages<Topic>(firstPage).stream;
@@ -173,13 +199,18 @@ class _PubSubImpl implements PubSub {
   }
 
   @override
-  Future<Subscription> createSubscription(String name, String topic,
-      {Uri? endpoint}) {
+  Future<Subscription> createSubscription(
+    String name,
+    String topic, {
+    Uri? endpoint,
+  }) {
     _checkSubscriptionName(name);
     _checkTopicName(topic);
     return _createSubscription(
-            _fullSubscriptionName(name), _fullTopicName(topic), endpoint)
-        .then((sub) => _SubscriptionImpl(this, sub));
+      _fullSubscriptionName(name),
+      _fullTopicName(topic),
+      endpoint,
+    ).then((sub) => _SubscriptionImpl(this, sub));
   }
 
   @override
@@ -199,15 +230,18 @@ class _PubSubImpl implements PubSub {
   Stream<Subscription> listSubscriptions([String? query]) {
     Future<Page<Subscription>> firstPage(int pageSize) {
       return _listSubscriptions(query, pageSize, null).then(
-          (response) => _SubscriptionPageImpl(this, query, pageSize, response));
+        (response) => _SubscriptionPageImpl(this, query, pageSize, response),
+      );
     }
 
     return StreamFromPages<Subscription>(firstPage).stream;
   }
 
   @override
-  Future<Page<Subscription>> pageSubscriptions(
-      {String? topic, int pageSize = 50}) {
+  Future<Page<Subscription>> pageSubscriptions({
+    String? topic,
+    int pageSize = 50,
+  }) {
     return _listSubscriptions(topic, pageSize, null).then((response) {
       return _SubscriptionPageImpl(this, topic, pageSize, response);
     });
@@ -235,13 +269,15 @@ class _MessageImpl implements Message {
     this._stringMessage, {
     Map<String, String>? attributes,
     this.orderingKey,
-  })  : _bytesMessage = null,
-        attributes = attributes ?? <String, String>{};
+  }) : _bytesMessage = null,
+       attributes = attributes ?? <String, String>{};
 
-  _MessageImpl.withBytes(this._bytesMessage,
-      {Map<String, String>? attributes, this.orderingKey})
-      : _stringMessage = null,
-        attributes = attributes ?? <String, String>{};
+  _MessageImpl.withBytes(
+    this._bytesMessage, {
+    Map<String, String>? attributes,
+    this.orderingKey,
+  }) : _stringMessage = null,
+       attributes = attributes ?? <String, String>{};
 
   @override
   List<int> get asBytes => _bytesMessage ?? utf8.encode(_stringMessage!);
@@ -324,10 +360,14 @@ class _PullEventImpl implements PullEvent {
   final Message message;
 
   _PullEventImpl(
-      this._api, this._subscriptionName, pubsub.PullResponse response)
-      : _response = response,
-        message = _PullMessage(response.receivedMessages![0].message!,
-            response.receivedMessages![0].message?.orderingKey);
+    this._api,
+    this._subscriptionName,
+    pubsub.PullResponse response,
+  ) : _response = response,
+      message = _PullMessage(
+        response.receivedMessages![0].message!,
+        response.receivedMessages![0].message?.orderingKey,
+      );
 
   @override
   Future acknowledge() {
@@ -369,7 +409,9 @@ class _PushEventImpl implements PushEvent {
       subscription = _prefix + subscription;
     }
     return _PushEventImpl(
-        _PushMessage(data, labels, orderingKey), subscription);
+      _PushMessage(data, labels, orderingKey),
+      subscription,
+    );
   }
 }
 
@@ -397,23 +439,37 @@ class _TopicImpl implements Topic {
   @override
   Future publish(Message message) {
     return _api._publish(
-        _topic.name!, message.asBytes, message.attributes, message.orderingKey);
+      _topic.name!,
+      message.asBytes,
+      message.attributes,
+      message.orderingKey,
+    );
   }
 
   @override
   Future delete() => _api._deleteTopic(_topic.name!);
 
   @override
-  Future publishString(String message,
-      {Map<String, String>? attributes, String? orderingKey}) {
+  Future publishString(
+    String message, {
+    Map<String, String>? attributes,
+    String? orderingKey,
+  }) {
     attributes ??= <String, String>{};
     return _api._publish(
-        _topic.name!, utf8.encode(message), attributes, orderingKey);
+      _topic.name!,
+      utf8.encode(message),
+      attributes,
+      orderingKey,
+    );
   }
 
   @override
-  Future publishBytes(List<int> message,
-      {Map<String, String>? attributes, String? orderingKey}) {
+  Future publishBytes(
+    List<int> message, {
+    Map<String, String>? attributes,
+    String? orderingKey,
+  }) {
     attributes ??= <String, String>{};
     return _api._publish(_topic.name!, message, attributes, orderingKey);
   }
@@ -454,17 +510,22 @@ class _SubscriptionImpl implements Subscription {
     @Deprecated('returnImmediately has been deprecated from pubsub')
     bool wait = true,
   }) {
-    return _api._pull(_subscription.name!, !wait).then((response) {
-      // The documentation says 'Returns an empty list if there are no
-      // messages available in the backlog'. However the receivedMessages
-      // property can also be null in that case.
-      if (response.receivedMessages == null ||
-          response.receivedMessages!.isEmpty) {
-        return null;
-      }
-      return _PullEventImpl(_api, _subscription.name!, response);
-    }).catchError((e) => null,
-        test: (e) => e is pubsub.DetailedApiRequestError && e.status == 400);
+    return _api
+        ._pull(_subscription.name!, !wait)
+        .then((response) {
+          // The documentation says 'Returns an empty list if there are no
+          // messages available in the backlog'. However the receivedMessages
+          // property can also be null in that case.
+          if (response.receivedMessages == null ||
+              response.receivedMessages!.isEmpty) {
+            return null;
+          }
+          return _PullEventImpl(_api, _subscription.name!, response);
+        })
+        .catchError(
+          (e) => null,
+          test: (e) => e is pubsub.DetailedApiRequestError && e.status == 400,
+        );
   }
 
   @override
@@ -490,7 +551,7 @@ class _TopicPageImpl implements Page<Topic> {
   final List<Topic> items = [];
 
   _TopicPageImpl(this._api, this._pageSize, pubsub.ListTopicsResponse response)
-      : _nextPageToken = response.nextPageToken {
+    : _nextPageToken = response.nextPageToken {
     final topics = response.topics;
     if (topics != null) {
       items.addAll(topics.map((t) => _TopicImpl(_api, t)));
@@ -519,9 +580,12 @@ class _SubscriptionPageImpl implements Page<Subscription> {
   @override
   final List<Subscription> items = [];
 
-  _SubscriptionPageImpl(this._api, this._topic, this._pageSize,
-      pubsub.ListSubscriptionsResponse response)
-      : _nextPageToken = response.nextPageToken {
+  _SubscriptionPageImpl(
+    this._api,
+    this._topic,
+    this._pageSize,
+    pubsub.ListSubscriptionsResponse response,
+  ) : _nextPageToken = response.nextPageToken {
     final subscriptions = response.subscriptions;
     if (subscriptions != null) {
       items.addAll(subscriptions.map((s) => _SubscriptionImpl(_api, s)));
@@ -536,9 +600,9 @@ class _SubscriptionPageImpl implements Page<Subscription> {
     throwIfIsLast();
     final pageSize_ = pageSize ?? _pageSize;
 
-    return _api
-        ._listSubscriptions(_topic, pageSize_, _nextPageToken)
-        .then((response) {
+    return _api._listSubscriptions(_topic, pageSize_, _nextPageToken).then((
+      response,
+    ) {
       return _SubscriptionPageImpl(_api, _topic, pageSize_, response);
     });
   }

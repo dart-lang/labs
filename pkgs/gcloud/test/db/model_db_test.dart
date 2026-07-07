@@ -25,29 +25,44 @@ void main() {
   group('model_db', () {
     group('from_library', () {
       test('duplicate_kind', () {
-        expect(Future.sync(() {
-          newModelDB(#gcloud.db.model_test.duplicate_kind);
-        }), throwsA(isStateError));
+        expect(
+          Future.sync(() {
+            newModelDB(#gcloud.db.model_test.duplicate_kind);
+          }),
+          throwsA(isStateError),
+        );
       });
       test('duplicate_property', () {
-        expect(Future.sync(() {
-          newModelDB(#gcloud.db.model_test.duplicate_property);
-        }), throwsA(isStateError));
+        expect(
+          Future.sync(() {
+            newModelDB(#gcloud.db.model_test.duplicate_property);
+          }),
+          throwsA(isStateError),
+        );
       });
       test('multiple_annotations', () {
-        expect(Future.sync(() {
-          newModelDB(#gcloud.db.model_test.multiple_annotations);
-        }), throwsA(isStateError));
+        expect(
+          Future.sync(() {
+            newModelDB(#gcloud.db.model_test.multiple_annotations);
+          }),
+          throwsA(isStateError),
+        );
       });
       test('duplicate_fieldname', () {
-        expect(Future.sync(() {
-          newModelDB(#gcloud.db.model_test.duplicate_fieldname);
-        }), throwsA(isStateError));
+        expect(
+          Future.sync(() {
+            newModelDB(#gcloud.db.model_test.duplicate_fieldname);
+          }),
+          throwsA(isStateError),
+        );
       });
       test('no_default_constructor', () {
-        expect(Future.sync(() {
-          newModelDB(#gcloud.db.model_test.no_default_constructor);
-        }), throwsA(isStateError));
+        expect(
+          Future.sync(() {
+            newModelDB(#gcloud.db.model_test.no_default_constructor);
+          }),
+          throwsA(isStateError),
+        );
       });
     });
   });
