@@ -1,0 +1,29 @@
+name: Groundskeeper
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Daily at 00:00 UTC
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  tidy:
+    permissions:
+      contents: write
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - appengine
+          - gcloud
+          - io_file
+          - jot
+          - native_synchronization
+          - timezone
+          - unix_api
+    uses: dart-lang/ecosystem/.github/workflows/groundskeeper.yml@main
+    with:
+      directory: pkgs/${{ matrix.package }}
+      branch: auto-tidy-${{ matrix.package }}
+      title: 'Tidy: package:${{ matrix.package }}'
+    secrets: inherit
