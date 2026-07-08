@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
 import 'dart:async';
 import 'dart:io';
 
@@ -157,9 +156,9 @@ Future<ContextRegistry> _initializeAppEngine() async {
   final versionId =
       findEnvironmentVariable('GAE_VERSION', onlyInProd: true, needed: true) ??
           'dummy-version';
-  final instance = findEnvironmentVariable('GAE_INSTANCE',
-          onlyInProd: true, needed: true) ??
-      'dummy-instance';
+  final instance =
+      findEnvironmentVariable('GAE_INSTANCE', onlyInProd: true, needed: true) ??
+          'dummy-instance';
 
   final String? pubServeUrlString = Platform.environment['DART_PUB_SERVE'];
   final Uri? pubServeUrl =
