@@ -39,7 +39,7 @@ jobs:
       - run: dart analyze --fatal-infos
 
       - run: dart format --output=none --set-exit-if-changed .
-        if: ${{ matrix.sdk == 'stable' }}
+        if: ${{ matrix.sdk == 'dev' }}
 
       # Ensure that the front-end is up to date.
       - run: dart tool/build_web.dart --verify
