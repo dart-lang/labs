@@ -106,7 +106,10 @@ class _StorageImpl implements Storage {
   }
 
   @override
-  Future copyObject(String src, String dest, {ObjectMetadata? metadata}) {
+  Future copyObject(String src, String dest,
+      {ObjectMetadata? metadata,
+      String? ifGenerationMatch,
+      int? ifMetagenerationMatch}) {
     var srcName = _AbsoluteName.parse(src);
     var destName = _AbsoluteName.parse(dest);
     metadata ??= _ObjectMetadata();
@@ -114,7 +117,9 @@ class _StorageImpl implements Storage {
     final object = objectMetadata._object;
     return _api.objects
         .copy(object, srcName.bucketName, srcName.objectName,
-            destName.bucketName, destName.objectName)
+            destName.bucketName, destName.objectName,
+            ifGenerationMatch: ifGenerationMatch,
+            ifMetagenerationMatch: ifMetagenerationMatch?.toString())
         .then((_) => null);
   }
 
@@ -169,7 +174,9 @@ class _BucketImpl implements Bucket {
       ObjectMetadata? metadata,
       Acl? acl,
       PredefinedAcl? predefinedAcl,
-      String? contentType}) {
+      String? contentType,
+      String? ifGenerationMatch,
+      int? ifMetagenerationMatch}) {
     storage_api.Object object;
     if (metadata == null) {
       metadata = _ObjectMetadata(acl: acl, contentType: contentType);
@@ -199,8 +206,8 @@ class _BucketImpl implements Bucket {
     // Fill properties not passed in metadata.
     object.name = objectName;
 
-    var sink = _MediaUploadStreamSink(
-        _api, bucketName, objectName, object, predefinedName, length);
+    var sink = _MediaUploadStreamSink(_api, bucketName, objectName, object,
+        predefinedName, length, ifGenerationMatch, ifMetagenerationMatch);
     return sink;
   }
 
@@ -209,13 +216,17 @@ class _BucketImpl implements Bucket {
       {ObjectMetadata? metadata,
       Acl? acl,
       PredefinedAcl? predefinedAcl,
-      String? contentType}) {
+      String? contentType,
+      String? ifGenerationMatch,
+      int? ifMetagenerationMatch}) {
     var sink = write(objectName,
         length: bytes.length,
         metadata: metadata,
         acl: acl,
         predefinedAcl: predefinedAcl,
-        contentType: contentType) as _MediaUploadStreamSink;
+        contentType: contentType,
+        ifGenerationMatch: ifGenerationMatch,
+        ifMetagenerationMatch: ifMetagenerationMatch) as _MediaUploadStreamSink;
     sink.add(bytes);
     return sink.close();
   }
@@ -256,8 +267,11 @@ class _BucketImpl implements Bucket {
   }
 
   @override
-  Future delete(String objectName) {
-    return _api.objects.delete(bucketName, objectName);
+  Future delete(String objectName,
+      {String? ifGenerationMatch, int? ifMetagenerationMatch}) {
+    return _api.objects.delete(bucketName, objectName,
+        ifGenerationMatch: ifGenerationMatch,
+        ifMetagenerationMatch: ifMetagenerationMatch?.toString());
   }
 
   @override
@@ -282,7 +296,8 @@ class _BucketImpl implements Bucket {
   }
 
   @override
-  Future updateMetadata(String objectName, ObjectMetadata metadata) {
+  Future updateMetadata(String objectName, ObjectMetadata metadata,
+      {String? ifGenerationMatch, int? ifMetagenerationMatch}) {
     // TODO: support other ObjectMetadata implementations?
     var md = metadata as _ObjectMetadata;
     var object = md._object;
@@ -293,7 +308,9 @@ class _BucketImpl implements Bucket {
     if (object.acl == null && _defaultObjectAcl != null) {
       object.acl = _defaultObjectAcl!._toObjectAccessControlList();
     }
-    return _api.objects.update(object, bucketName, objectName);
+    return _api.objects.update(object, bucketName, objectName,
+        ifGenerationMatch: ifGenerationMatch,
+        ifMetagenerationMatch: ifMetagenerationMatch?.toString());
   }
 
   Future<storage_api.Objects> _listObjects(String bucketName, String? prefix,
@@ -531,6 +548,8 @@ class _MediaUploadStreamSink implements StreamSink<List<int>> {
   final storage_api.Object _object;
   final String? _predefinedAcl;
   final int? _length;
+  final String? _ifGenerationMatch;
+  final int? _ifMetagenerationMatch;
   final BytesBuilder _buffer = BytesBuilder();
   final _controller = StreamController<List<int>>(sync: true);
   late StreamSubscription _subscription;
@@ -542,8 +561,15 @@ class _MediaUploadStreamSink implements StreamSink<List<int>> {
   static const int _stateDecidedResumable = 2;
   int? _state;
 
-  _MediaUploadStreamSink(this._api, this._bucketName, this._objectName,
-      this._object, this._predefinedAcl, this._length) {
+  _MediaUploadStreamSink(
+      this._api,
+      this._bucketName,
+      this._objectName,
+      this._object,
+      this._predefinedAcl,
+      this._length,
+      this._ifGenerationMatch,
+      this._ifMetagenerationMatch) {
     if (_length != null) {
       // If the length is known in advance decide on the upload strategy
       // immediately
@@ -651,6 +677,8 @@ class _MediaUploadStreamSink implements StreamSink<List<int>> {
         _bucketName,
         name: _objectName,
         predefinedAcl: _predefinedAcl,
+        ifGenerationMatch: _ifGenerationMatch,
+        ifMetagenerationMatch: _ifMetagenerationMatch?.toString(),
         uploadMedia: media,
         uploadOptions: storage_api.UploadOptions.defaultOptions,
       );
@@ -667,6 +695,8 @@ class _MediaUploadStreamSink implements StreamSink<List<int>> {
         .insert(_object, _bucketName,
             name: _objectName,
             predefinedAcl: _predefinedAcl,
+            ifGenerationMatch: _ifGenerationMatch,
+            ifMetagenerationMatch: _ifMetagenerationMatch?.toString(),
             uploadMedia: media,
             uploadOptions: storage_api.UploadOptions.resumable)
         .then((response) {
