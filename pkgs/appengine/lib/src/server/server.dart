@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
 import 'dart:async';
 import 'dart:convert' show utf8;
 import 'dart:io';
@@ -54,7 +53,8 @@ class AppEngineHttpServer {
 
       server.listen((HttpRequest request) {
         // Default handling is sending the request to the application.
-        dynamic Function(HttpRequest, ClientContext)? handler = applicationHandler;
+        dynamic Function(HttpRequest, ClientContext)? handler =
+            applicationHandler;
 
         // Check if the request path is one of the service handlers.
         final String path = request.uri.path;
