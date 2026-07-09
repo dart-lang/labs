@@ -27,7 +27,7 @@ jobs:
   analyze_and_format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: dev
@@ -43,7 +43,7 @@ jobs:
         os: [ubuntu-latest, ubuntu-24.04-arm, windows-11-arm, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: ${{ matrix.sdk }}
@@ -54,7 +54,7 @@ jobs:
     # SIG_PROF on Linux).
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: dev
@@ -68,7 +68,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: ${{ matrix.sdk }}
@@ -85,7 +85,7 @@ jobs:
       run:
         working-directory: pkgs/io_file/mobile_test
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: master
@@ -95,7 +95,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Run tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
           api-level: 24
           disable-animations: true
@@ -111,7 +111,7 @@ jobs:
       run:
         working-directory: pkgs/io_file/mobile_test
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: master
@@ -127,7 +127,7 @@ jobs:
   web-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: dev
