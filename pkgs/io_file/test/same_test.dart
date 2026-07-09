@@ -206,17 +206,13 @@ void main() {
       expect(fileSystem.same(path1, path2), isTrue);
     });
 
-    test(
-      'hard links to same file',
-      () {
-        final path1 = '$tmp/file1';
-        final path2 = '$tmp/file2';
-        io.File(path1).writeAsStringSync('Hello World');
-        stdlibc.link(path1, path2);
-        expect(fileSystem.same(path1, path2), isTrue);
-      },
-      skip: io.Platform.isWindows ? 'hard links not supported' : false,
-    );
+    test('hard links to same file', () {
+      final path1 = '$tmp/file1';
+      final path2 = '$tmp/file2';
+      io.File(path1).writeAsStringSync('Hello World');
+      stdlibc.link(path1, path2);
+      expect(fileSystem.same(path1, path2), isTrue);
+    }, skip: io.Platform.isWindows ? 'hard links not supported' : false);
 
     test('different directories, same content', () {
       final path1 = '$tmp/dir1';
