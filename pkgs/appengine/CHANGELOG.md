@@ -5,6 +5,7 @@
   `ServiceException`, `ApplicationException`) to follow Dart conventions for
   types implementing `Exception`. The old `*Error` names remain available as
   deprecated type aliases, so this change is non-breaking.
+- Automated formatting and fixes.
 
 ## 0.13.12
 
