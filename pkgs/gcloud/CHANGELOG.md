@@ -1,3 +1,7 @@
+## 0.10.0
+
+- Add support for Cloud Tasks
+
 ## 0.9.0
 
 - Support `orderingKey` on pub/sub's `Message` type.
