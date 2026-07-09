@@ -27,4 +27,5 @@ jobs:
       branch: auto-tidy-${{ matrix.package }}
       title: 'Tidy: package:${{ matrix.package }}'
       update-changelog: true
+      changelog-message: 'Automated formatting and fixes.'
     secrets: inherit
