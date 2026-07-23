@@ -40,6 +40,6 @@ jobs:
 
       # Disabled - this would format ~492 files.
       # - run: dart format --output=none --set-exit-if-changed .
-      #   if: ${{ matrix.sdk == 'stable' }}
+      #   if: ${{ matrix.sdk == 'dev' }}
 
       - run: dart test
