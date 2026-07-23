@@ -1,7 +1,7 @@
 ## 0.11.1-wip
 
-- Update timezone database to 2026b.
 - Update timezone database to 2026c.
+- Validate header offsets and lengths in tzdb deserializer.
 
 ## 0.11.1
 
