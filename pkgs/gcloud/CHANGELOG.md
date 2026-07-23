@@ -1,3 +1,9 @@
+## 0.9.1-wip
+
+- Support the `ifGenerationMatch` and `ifMetagenerationMatch` preconditions on
+  the object write, delete, metadata update and copy operations, enabling
+  optimistic concurrency control.
+
 ## 0.9.0
 
 - Support `orderingKey` on pub/sub's `Message` type.
