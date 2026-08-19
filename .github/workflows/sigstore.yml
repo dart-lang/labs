@@ -1,0 +1,46 @@
+name: package:sigstore
+
+permissions: read-all
+
+on:
+  # Run CI on pushes to the main branch, and on PRs against main.
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/sigstore.yml'
+      - 'pkgs/sigstore/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/sigstore.yml'
+      - 'pkgs/sigstore/**'
+  schedule:
+    - cron: '0 0 * * 0' # weekly
+
+defaults:
+  run:
+    working-directory: pkgs/sigstore
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [stable, dev]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: dart-lang/setup-dart@b64355ae6ca0b5d40183261c63f829f20008a1c9
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - run: dart pub get
+
+      - run: dart analyze --fatal-infos
+
+      - run: dart format --output=none --set-exit-if-changed .
+        if: ${{ matrix.sdk == 'stable' }}
+
+      - run: dart test
