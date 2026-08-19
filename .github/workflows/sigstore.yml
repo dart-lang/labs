@@ -29,10 +29,10 @@ jobs:
       matrix:
         sdk: [stable, dev]
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           persist-credentials: false
-      - uses: dart-lang/setup-dart@b64355ae6ca0b5d40183261c63f829f20008a1c9
+      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: ${{ matrix.sdk }}
 

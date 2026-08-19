@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   crypto: ^3.0.6
-  http: ^1.4.0
   path: ^1.9.1
   pub_semver: ^2.1.5
 
