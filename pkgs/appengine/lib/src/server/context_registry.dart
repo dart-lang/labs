@@ -25,6 +25,9 @@ abstract class LoggerFactory {
   Logging newBackgroundLogger();
 }
 
+/// Sanity check for traceId (must be 32 char hex)
+final _traceIdFormat = RegExp(r'^[0-9a-f]{32}$');
+
 class ContextRegistry {
   final LoggerFactory _loggingFactory;
   final db.DatastoreDB _db;
@@ -42,13 +45,16 @@ class ContextRegistry {
 
   ClientContext add(HttpRequest request) {
     String? traceId;
-    // See https://cloud.google.com/trace/docs/support
+    // See https://docs.cloud.google.com/trace/docs/trace-context#legacy-http-header
     final traceHeader = _headerOrEmptyString(
       request.headers,
       'X-Cloud-Trace-Context',
     );
     if (traceHeader != '') {
-      traceId = traceHeader.split('/')[0];
+      final traceIdFromHeader = traceHeader.split('/').first;
+      if (_traceIdFormat.hasMatch(traceIdFromHeader)) {
+        traceId = traceIdFromHeader;
+      }
     }
 
     final services = _getServices(request, traceId);
@@ -84,12 +90,19 @@ class ContextRegistry {
 
       String ip;
       if (forwardedFor != null && forwardedFor.isNotEmpty) {
-        // It seems that, in general, if `x-forwarded-for` has multiple values
-        // it is sent as a single header value separated by commas.
-        // To ensure only one value for IP is provided, we join all of the
-        // `x-forwarded-for` headers into a single string, split on comma,
-        // then use the first value.
-        ip = forwardedFor.join(',').split(',').first.trim();
+        // Google Cloud Load Balancers append the connecting client IP and the
+        // load balancer IP to any existing `X-Forwarded-For` values.
+        // Client-supplied (possibly spoofed) IPs appear first, so we use
+        // the second-to-last IP as the client IP that arrived at GCLB.
+        // See: https://cloud.google.com/load-balancing/docs/https#x-forwarded-for_header
+        final parts = forwardedFor
+            .expand((header) => header.split(','))
+            .map((ip) => ip.trim())
+            .where((ip) => ip.isNotEmpty)
+            .toList();
+        ip = parts.length >= 2
+            ? parts[parts.length - 2]
+            : request.connectionInfo!.remoteAddress.host;
       } else {
         ip = request.connectionInfo!.remoteAddress.host;
       }
