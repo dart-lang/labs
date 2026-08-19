@@ -302,6 +302,23 @@ void main() {
       });
     });
 
+    test('copy-with-preconditions', () {
+      withMockClient((mock, api) {
+        mock.register(
+            'POST', 'b/srcBucket/o/srcObject/copyTo/b/destBucket/o/destObject',
+            expectAsync1((request) {
+          expect(request.url.queryParameters['ifGenerationMatch'], '0');
+          expect(request.url.queryParameters['ifMetagenerationMatch'], '9');
+          return mock.respond(storage.Object()..name = 'destObject');
+        }));
+        expect(
+            api.copyObject(
+                'gs://srcBucket/srcObject', 'gs://destBucket/destObject',
+                ifGenerationMatch: '0', ifMetagenerationMatch: 9),
+            completion(isNull));
+      });
+    });
+
     test('copy-invalid-args', () {
       withMockClient((mock, api) {
         expect(() => api.copyObject('a', 'b'), throwsA(isFormatException));
@@ -1027,6 +1044,68 @@ void main() {
           expect(info.metadata.acl!.entries[1].scope is AccountScope, isTrue);
           expect(info.metadata.acl!.entries[2].scope is OpaqueScope, isTrue);
         }));
+      });
+    });
+
+    group('preconditions', () {
+      test('write', () {
+        withMockClient((mock, api) {
+          var bytes = [1, 2, 3];
+          mock.registerUpload('POST', 'b/$bucketName/o',
+              expectAsync1((request) {
+            expect(request.url.queryParameters['ifGenerationMatch'], '0');
+            expect(request.url.queryParameters['ifMetagenerationMatch'], '7');
+            return mock
+                .processNormalMediaUpload(request)
+                .then(expectAsync1((mediaUpload) {
+              var object =
+                  storage.Object.fromJson(jsonDecode(mediaUpload.json) as Map);
+              expect(object.name, objectName);
+              return mock.respond(storage.Object()..name = objectName);
+            }));
+          }));
+
+          var bucket = api.bucket(bucketName);
+          expect(
+              bucket.writeBytes(objectName, bytes,
+                  ifGenerationMatch: '0', ifMetagenerationMatch: 7),
+              completion(isA<ObjectInfo>()));
+        });
+      });
+
+      test('delete', () {
+        withMockClient((mock, api) {
+          mock.register('DELETE', 'b/$bucketName/o/$objectName',
+              expectAsync1((request) {
+            expect(request.url.queryParameters['ifGenerationMatch'], '1234');
+            expect(request.url.queryParameters['ifMetagenerationMatch'], '5');
+            return mock.respondEmpty();
+          }));
+
+          var bucket = api.bucket(bucketName);
+          expect(
+              bucket.delete(objectName,
+                  ifGenerationMatch: '1234', ifMetagenerationMatch: 5),
+              completes);
+        });
+      });
+
+      test('updateMetadata', () {
+        withMockClient((mock, api) {
+          mock.register('PUT', 'b/$bucketName/o/$objectName',
+              expectAsync1((request) {
+            expect(request.url.queryParameters['ifGenerationMatch'], '42');
+            expect(request.url.queryParameters['ifMetagenerationMatch'], '3');
+            return mock.respond(storage.Object()..name = objectName);
+          }));
+
+          var bucket = api.bucket(bucketName);
+          expect(
+              bucket.updateMetadata(
+                  objectName, ObjectMetadata(contentType: 'mime/type'),
+                  ifGenerationMatch: '42', ifMetagenerationMatch: 3),
+              completes);
+        });
       });
     });
 

@@ -563,7 +563,17 @@ abstract class Storage {
   /// The names of [src] and [dest] must be absolute.
   ///
   /// [metadata] can be used to overwrite metadata properties.
-  Future copyObject(String src, String dest, {ObjectMetadata? metadata});
+  ///
+  /// The [ifGenerationMatch] and [ifMetagenerationMatch] preconditions, if
+  /// given, apply to the *destination* object and make the copy conditional on
+  /// its current generation / metageneration. This can be used for optimistic
+  /// concurrency control. An [ifGenerationMatch] of `'0'` limits the copy to
+  /// the case where the destination object does not yet exist. See
+  /// https://cloud.google.com/storage/docs/request-preconditions for details.
+  Future copyObject(String src, String dest,
+      {ObjectMetadata? metadata,
+      String? ifGenerationMatch,
+      int? ifMetagenerationMatch});
 }
 
 /// Information on a specific object.
@@ -731,6 +741,13 @@ abstract class Bucket {
   /// ACL as well, this ACL with be followed by the expansion of
   /// [predefinedAcl].
   ///
+  /// The [ifGenerationMatch] and [ifMetagenerationMatch] preconditions, if
+  /// given, make the write conditional on the current generation /
+  /// metageneration of the object being replaced. This can be used for
+  /// optimistic concurrency control. An [ifGenerationMatch] of `'0'` limits
+  /// the write to the case where the object does not yet exist. See
+  /// https://cloud.google.com/storage/docs/request-preconditions for details.
+  ///
   /// Returns a `StreamSink` where the object content can be written. When
   /// The object content has been written the `StreamSink` completes with
   /// an `ObjectInfo` instance with the information on the object created.
@@ -739,7 +756,9 @@ abstract class Bucket {
       ObjectMetadata? metadata,
       Acl? acl,
       PredefinedAcl? predefinedAcl,
-      String? contentType});
+      String? contentType,
+      String? ifGenerationMatch,
+      int? ifMetagenerationMatch});
 
   /// Create an new object in the bucket with specified content.
   ///
@@ -753,7 +772,9 @@ abstract class Bucket {
       {ObjectMetadata? metadata,
       Acl? acl,
       PredefinedAcl? predefinedAcl,
-      String? contentType});
+      String? contentType,
+      String? ifGenerationMatch,
+      int? ifMetagenerationMatch});
 
   /// Read object content as byte stream.
   ///
@@ -772,13 +793,27 @@ abstract class Bucket {
 
   /// Delete an object.
   ///
+  /// The [ifGenerationMatch] and [ifMetagenerationMatch] preconditions, if
+  /// given, make the deletion conditional on the current generation /
+  /// metageneration of the object. This can be used for optimistic concurrency
+  /// control. See
+  /// https://cloud.google.com/storage/docs/request-preconditions for details.
+  ///
   // TODO: More documentation
-  Future delete(String name);
+  Future delete(String name,
+      {String? ifGenerationMatch, int? ifMetagenerationMatch});
 
   /// Update object metadata.
   ///
+  /// The [ifGenerationMatch] and [ifMetagenerationMatch] preconditions, if
+  /// given, make the update conditional on the current generation /
+  /// metageneration of the object. This can be used for optimistic concurrency
+  /// control. See
+  /// https://cloud.google.com/storage/docs/request-preconditions for details.
+  ///
   // TODO: More documentation
-  Future updateMetadata(String objectName, ObjectMetadata metadata);
+  Future updateMetadata(String objectName, ObjectMetadata metadata,
+      {String? ifGenerationMatch, int? ifMetagenerationMatch});
 
   /// List objects in the bucket.
   ///
