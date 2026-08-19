@@ -1,11 +1,13 @@
-## 0.13.13-wip
+## 0.13.13
 
 * Rename error classes to use the `Exception` suffix
   (`AppEngineException`, `NetworkException`, `ProtocolException`,
   `ServiceException`, `ApplicationException`) to follow Dart conventions for
   types implementing `Exception`. The old `*Error` names remain available as
   deprecated type aliases, so this change is non-breaking.
-- Automated formatting and fixes.
+* Automated formatting and fixes.
+* Cleanup legacy code.
+* Fix `X-Forwarded-For` handling.
 
 ## 0.13.12
 
