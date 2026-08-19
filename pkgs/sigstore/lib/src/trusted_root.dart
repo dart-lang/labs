@@ -126,7 +126,8 @@ Future<String> fetchLatestTrustedRootJson({
       return await utf8.decoder.bind(response).join();
     }
     throw HttpException(
-      'Failed to fetch Sigstore trusted root from $uri (status: ${response.statusCode})',
+      'Failed to fetch Sigstore trusted root from $uri '
+      '(status: ${response.statusCode})',
       uri: uri,
     );
   } finally {
@@ -136,7 +137,8 @@ Future<String> fetchLatestTrustedRootJson({
   }
 }
 
-/// Updates the cached trusted_root.json at [cachePath] with the latest from [cdnUrl].
+/// Updates the cached trusted_root.json at [cachePath] with the latest from
+/// [cdnUrl].
 Future<void> updateTrustedRootCache({
   required String cachePath,
   String cdnUrl = sigstoreTufCdn,
