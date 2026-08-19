@@ -9,5 +9,11 @@ export 'src/asn1.dart' show Asn1Reader;
 export 'src/lockfile_policy.dart'
     show PackageProvenanceException, ProvenancePolicy;
 export 'src/models.dart';
-export 'src/trusted_root.dart' show loadTrustedRoot, loadTrustedRootJson;
+export 'src/trusted_root.dart'
+    show
+        fetchLatestTrustedRootJson,
+        loadTrustedRoot,
+        loadTrustedRootJson,
+        sigstoreTufCdn,
+        updateTrustedRootCache;
 export 'src/verifier.dart' show AttestationVerifier;
