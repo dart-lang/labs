@@ -11,30 +11,63 @@ import 'package:pub_semver/pub_semver.dart';
 class SigstoreBundle {
   final String mediaType;
   final VerificationMaterial verificationMaterial;
-  final DsseEnvelope dsseEnvelope;
+  final DsseEnvelope? dsseEnvelope;
+  final MessageSignature? messageSignature;
 
   SigstoreBundle({
     required this.mediaType,
     required this.verificationMaterial,
-    required this.dsseEnvelope,
+    this.dsseEnvelope,
+    this.messageSignature,
   });
 
   factory SigstoreBundle.fromJson(Map<String, dynamic> json) {
     final mediaType = json['mediaType'] as String? ?? '';
     final vMaterial = json['verificationMaterial'] as Map<String, dynamic>?;
     final dsse = json['dsseEnvelope'] as Map<String, dynamic>?;
+    final msgSig = json['messageSignature'] as Map<String, dynamic>?;
 
-    if (vMaterial == null || dsse == null) {
+    if (vMaterial == null || (dsse == null && msgSig == null)) {
       throw const FormatException(
         'Invalid Sigstore bundle format: '
-        'missing verificationMaterial or dsseEnvelope.',
+        'missing verificationMaterial or signature payload.',
       );
     }
 
     return SigstoreBundle(
       mediaType: mediaType,
       verificationMaterial: VerificationMaterial.fromJson(vMaterial),
-      dsseEnvelope: DsseEnvelope.fromJson(dsse),
+      dsseEnvelope: dsse != null ? DsseEnvelope.fromJson(dsse) : null,
+      messageSignature:
+          msgSig != null ? MessageSignature.fromJson(msgSig) : null,
+    );
+  }
+}
+
+/// Message signature for non-DSSE / raw artifact bundles.
+class MessageSignature {
+  final String? messageDigestAlgorithm;
+  final String? messageDigestBase64;
+  final String signatureBase64;
+  final Uint8List signatureBytes;
+
+  MessageSignature({
+    this.messageDigestAlgorithm,
+    this.messageDigestBase64,
+    required this.signatureBase64,
+    required this.signatureBytes,
+  });
+
+  factory MessageSignature.fromJson(Map<String, dynamic> json) {
+    final sigBase64 = json['signature'] as String? ?? '';
+    final md = json['messageDigest'] as Map<String, dynamic>?;
+    final alg = md?['algorithm'] as String?;
+    final digest = md?['digest'] as String?;
+    return MessageSignature(
+      messageDigestAlgorithm: alg,
+      messageDigestBase64: digest,
+      signatureBase64: sigBase64,
+      signatureBytes: base64Decode(sigBase64),
     );
   }
 }

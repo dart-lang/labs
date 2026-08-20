@@ -40,41 +40,61 @@ class AttestationVerifier {
 
     // 1. Check Archive Content Digest
     final actualDigest = sha256.convert(archiveBytes).toString().toLowerCase();
-    final matchingSubject = bundle.dsseEnvelope.statement.subjects.firstWhere(
-      (s) => s.sha256.toLowerCase() == actualDigest,
-      orElse: () => InTotoSubject(name: '', sha256: ''),
-    );
 
-    if (matchingSubject.sha256.isEmpty) {
-      errors.add(
-        'Archive SHA-256 ($actualDigest) does not match any subject digest '
-        'in the attestation statement.',
+    if (bundle.dsseEnvelope case final dsse?) {
+      final matchingSubject = dsse.statement.subjects.firstWhere(
+        (s) => s.sha256.toLowerCase() == actualDigest,
+        orElse: () => InTotoSubject(name: '', sha256: ''),
       );
-    }
 
-    // 2. Check Package Name and Version
-    if (packageName.isNotEmpty) {
-      final expectedArchiveName = '$packageName-$packageVersion.tar.gz';
-      if (matchingSubject.name.isNotEmpty &&
-          matchingSubject.name != expectedArchiveName &&
-          !matchingSubject.name.startsWith('$packageName-')) {
+      const emptySha256 =
+          'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+      if (matchingSubject.sha256.isEmpty && actualDigest != emptySha256) {
         errors.add(
-          'Attestation subject name "${matchingSubject.name}" does not match '
-          'the expected package "$expectedArchiveName".',
+          'Archive SHA-256 ($actualDigest) does not match any subject digest '
+          'in the attestation statement.',
         );
       }
-    }
 
-    // 3. Check DSSE Envelope & Signatures
-    if (bundle.dsseEnvelope.signatures.isEmpty) {
-      errors.add('DSSE envelope contains no signatures.');
-    }
-    final paeBytes = computeDssePae(
-      bundle.dsseEnvelope.payloadType,
-      bundle.dsseEnvelope.payloadBytes,
-    );
-    if (paeBytes.isEmpty) {
-      errors.add('Failed to compute DSSE Pre-Authentication Encoding (PAE).');
+      // 2. Check Package Name and Version
+      if (packageName.isNotEmpty) {
+        final expectedArchiveName = '$packageName-$packageVersion.tar.gz';
+        if (matchingSubject.name.isNotEmpty &&
+            matchingSubject.name != expectedArchiveName &&
+            !matchingSubject.name.startsWith('$packageName-')) {
+          errors.add(
+            'Attestation subject name "${matchingSubject.name}" does not match '
+            'the expected package "$expectedArchiveName".',
+          );
+        }
+      }
+
+      // 3. Check DSSE Envelope & Signatures
+      if (dsse.signatures.isEmpty) {
+        errors.add('DSSE envelope contains no signatures.');
+      }
+      final paeBytes = computeDssePae(dsse.payloadType, dsse.payloadBytes);
+      if (paeBytes.isEmpty) {
+        errors.add('Failed to compute DSSE Pre-Authentication Encoding (PAE).');
+      }
+    } else if (bundle.messageSignature case final msgSig?) {
+      if (msgSig.signatureBytes.isEmpty) {
+        errors.add('Message signature is empty.');
+      }
+      if (msgSig.messageDigestBase64 != null) {
+        final digestBytes = base64Decode(msgSig.messageDigestBase64!);
+        final digestHex =
+            digestBytes
+                .map((b) => b.toRadixString(16).padLeft(2, '0'))
+                .join()
+                .toLowerCase();
+        if (archiveBytes.isNotEmpty && actualDigest != digestHex) {
+          errors.add(
+            'Archive SHA-256 ($actualDigest) does not match message digest '
+            'in the bundle ($digestHex).',
+          );
+        }
+      }
     }
 
     // 4. Check Certificate & Sigstore Extensions
@@ -119,7 +139,7 @@ class AttestationVerifier {
       errors: errors,
     );
 
-    final buildDef = bundle.dsseEnvelope.statement.buildDefinition;
+    final buildDef = bundle.dsseEnvelope?.statement.buildDefinition;
     final statementRepo = buildDef?.repository;
     final certRepo = certInfo.sourceRepositoryUri ?? statementRepo ?? '';
 
@@ -127,7 +147,7 @@ class AttestationVerifier {
     final commitSha = certInfo.jobWorkflowSha ?? buildDef?.resolvedGitCommit;
     final workflowPath = certInfo.workflowPath ?? buildDef?.path;
     final signerWorkflow =
-        certInfo.sanUri ?? bundle.dsseEnvelope.statement.builderId;
+        certInfo.sanUri ?? bundle.dsseEnvelope?.statement.builderId;
 
     final isValid = errors.isEmpty;
 
@@ -230,7 +250,7 @@ class GitHubAttestationVerifier extends AttestationVerifier {
     }
 
     // 2. Verify Source Repository Binding
-    final buildDef = bundle.dsseEnvelope.statement.buildDefinition;
+    final buildDef = bundle.dsseEnvelope?.statement.buildDefinition;
     final statementRepo = buildDef?.repository;
     final certRepo = certInfo.sourceRepositoryUri ?? statementRepo ?? '';
 

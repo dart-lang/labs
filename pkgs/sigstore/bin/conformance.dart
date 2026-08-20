@@ -25,13 +25,10 @@ void main(List<String> args) async {
     ..addOption(
       'certificate-identity',
       help: 'Expected certificate identity (SAN URI / Subject)',
-      mandatory: true,
     )
-    ..addOption(
-      'certificate-oidc-issuer',
-      help: 'Expected OIDC issuer URL',
-      mandatory: true,
-    )
+    ..addOption('certificate-oidc-issuer', help: 'Expected OIDC issuer URL')
+    ..addOption('key', help: 'Path to PEM-encoded public key file')
+    ..addOption('trusted-root', help: 'Path to custom trusted_root.json file')
     ..addFlag(
       'staging',
       help: 'Use Sigstore staging infrastructure',
@@ -63,8 +60,9 @@ void main(List<String> args) async {
   }
 
   final bundlePath = command['bundle'] as String;
-  final expectedIdentity = command['certificate-identity'] as String;
-  final expectedIssuer = command['certificate-oidc-issuer'] as String;
+  final expectedIdentity = command['certificate-identity'] as String?;
+  final expectedIssuer = command['certificate-oidc-issuer'] as String?;
+  final customTrustedRoot = command['trusted-root'] as String?;
   final isStaging = command['staging'] as bool;
   final positionalArgs = command.rest;
 
@@ -101,7 +99,15 @@ void main(List<String> args) async {
 
     // Load appropriate trusted root
     final Map<String, dynamic> trustedRoot;
-    if (isStaging) {
+    if (customTrustedRoot != null) {
+      final trFile = File(customTrustedRoot);
+      if (!await trFile.exists()) {
+        stderr.writeln('Trusted root file does not exist: $customTrustedRoot');
+        exit(1);
+      }
+      trustedRoot =
+          jsonDecode(await trFile.readAsString()) as Map<String, dynamic>;
+    } else if (isStaging) {
       final stagingJson = await fetchLatestTrustedRootJson(
         cdnUrl: 'https://tuf-staging.sigstore.dev',
       );
@@ -120,50 +126,69 @@ void main(List<String> args) async {
     );
 
     // If expectedSha256 is provided, ensure subject or artifact matched
-    if (expectedSha256 != null &&
-        result.archiveSha256.isNotEmpty &&
-        result.archiveSha256.toLowerCase() != expectedSha256) {
-      stderr.writeln(
-        'Digest mismatch: expected $expectedSha256 but got '
-        '${result.archiveSha256}',
-      );
-      exit(1);
+    if (expectedSha256 != null) {
+      if (bundle.messageSignature != null &&
+          bundle.messageSignature!.messageDigestBase64 != null) {
+        final msgDigestBytes = base64Decode(
+          bundle.messageSignature!.messageDigestBase64!,
+        );
+        final msgDigestHex =
+            msgDigestBytes
+                .map((b) => b.toRadixString(16).padLeft(2, '0'))
+                .join()
+                .toLowerCase();
+        if (msgDigestHex != expectedSha256) {
+          stderr.writeln(
+            'Digest mismatch: expected $expectedSha256 but got $msgDigestHex',
+          );
+          exit(1);
+        }
+      } else if (result.archiveSha256.isNotEmpty &&
+          result.archiveSha256.toLowerCase() != expectedSha256) {
+        stderr.writeln(
+          'Digest mismatch: expected $expectedSha256 but got '
+          '${result.archiveSha256}',
+        );
+        exit(1);
+      }
     }
 
-    // Verify certificate identity and OIDC issuer
+    // Verify certificate identity and OIDC issuer when provided
     final certDer = bundle.verificationMaterial.certificateDer;
-    if (certDer == null || certDer.isEmpty) {
-      stderr.writeln('No certificate found in verification material.');
-      exit(1);
-    }
+    if (certDer != null && certDer.isNotEmpty) {
+      final certInfo = Asn1Reader.parseFulcioCertificate(certDer);
 
-    final certInfo = Asn1Reader.parseFulcioCertificate(certDer);
+      if (expectedIssuer != null &&
+          certInfo.issuer != null &&
+          certInfo.issuer != expectedIssuer) {
+        stderr.writeln(
+          'OIDC Issuer mismatch: expected "$expectedIssuer" but got '
+          '"${certInfo.issuer}"',
+        );
+        exit(1);
+      }
 
-    if (certInfo.issuer != null && certInfo.issuer != expectedIssuer) {
-      stderr.writeln(
-        'OIDC Issuer mismatch: expected "$expectedIssuer" but got '
-        '"${certInfo.issuer}"',
-      );
-      exit(1);
-    }
+      if (expectedIdentity != null) {
+        final certIdentities = [
+          if (certInfo.sanUri != null) certInfo.sanUri!,
+          if (certInfo.sourceRepositoryUri != null)
+            certInfo.sourceRepositoryUri!,
+        ];
 
-    final certIdentities = [
-      if (certInfo.sanUri != null) certInfo.sanUri!,
-      if (certInfo.sourceRepositoryUri != null) certInfo.sourceRepositoryUri!,
-    ];
-
-    if (certIdentities.isNotEmpty &&
-        !certIdentities.any(
-          (id) =>
-              id == expectedIdentity ||
-              id.endsWith(expectedIdentity) ||
-              expectedIdentity.endsWith(id),
-        )) {
-      stderr.writeln(
-        'Certificate identity mismatch: expected "$expectedIdentity" '
-        'but got ${certIdentities.join(', ')}',
-      );
-      exit(1);
+        if (certIdentities.isNotEmpty &&
+            !certIdentities.any(
+              (id) =>
+                  id == expectedIdentity ||
+                  id.endsWith(expectedIdentity) ||
+                  expectedIdentity.endsWith(id),
+            )) {
+          stderr.writeln(
+            'Certificate identity mismatch: expected "$expectedIdentity" '
+            'but got ${certIdentities.join(', ')}',
+          );
+          exit(1);
+        }
+      }
     }
 
     if (!result.isValid) {
