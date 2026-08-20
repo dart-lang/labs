@@ -3,14 +3,13 @@ name: package:sigstore
 permissions: read-all
 
 on:
-  # Run CI on pushes to the main branch, and on PRs against main.
+  # Run CI on all PRs and on pushes to the main branch.
   push:
     branches: [ main ]
     paths:
       - '.github/workflows/sigstore.yml'
       - 'pkgs/sigstore/**'
   pull_request:
-    branches: [ main ]
     paths:
       - '.github/workflows/sigstore.yml'
       - 'pkgs/sigstore/**'
