@@ -109,7 +109,8 @@ void main(List<String> args) async {
           jsonDecode(await trFile.readAsString()) as Map<String, dynamic>;
     } else if (isStaging) {
       final stagingJson = await fetchLatestTrustedRootJson(
-        cdnUrl: 'https://tuf-staging.sigstore.dev',
+        cdnUrl:
+            'https://raw.githubusercontent.com/sigstore/root-signing-staging/main/targets',
       );
       trustedRoot = jsonDecode(stagingJson) as Map<String, dynamic>;
     } else {
@@ -117,9 +118,7 @@ void main(List<String> args) async {
       if (local != null) {
         trustedRoot = local;
       } else {
-        final prodJson = await fetchLatestTrustedRootJson(
-          cdnUrl: 'https://tuf-repo-cdn.sigstore.dev',
-        );
+        final prodJson = await fetchLatestTrustedRootJson();
         trustedRoot = jsonDecode(prodJson) as Map<String, dynamic>;
       }
     }
