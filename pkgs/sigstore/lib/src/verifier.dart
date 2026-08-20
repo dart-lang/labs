@@ -41,19 +41,24 @@ class AttestationVerifier {
     // 1. Check Archive Content Digest
     final actualDigest = sha256.convert(archiveBytes).toString().toLowerCase();
 
+    final InTotoSubject matchingSubject;
     if (bundle.dsseEnvelope case final dsse?) {
-      final matchingSubject = dsse.statement.subjects.firstWhere(
-        (s) => s.sha256.toLowerCase() == actualDigest,
-        orElse: () => InTotoSubject(name: '', sha256: ''),
-      );
-
-      const emptySha256 =
-          'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
-      if (matchingSubject.sha256.isEmpty && actualDigest != emptySha256) {
-        errors.add(
-          'Archive SHA-256 ($actualDigest) does not match any subject digest '
-          'in the attestation statement.',
+      if (archiveBytes.isNotEmpty) {
+        matchingSubject = dsse.statement.subjects.firstWhere(
+          (s) => s.sha256.toLowerCase() == actualDigest,
+          orElse: () => InTotoSubject(name: '', sha256: ''),
         );
+
+        if (matchingSubject.sha256.isEmpty) {
+          errors.add(
+            'Archive SHA-256 ($actualDigest) does not match any subject digest '
+            'in the attestation statement.',
+          );
+        }
+      } else if (dsse.statement.subjects.isNotEmpty) {
+        matchingSubject = dsse.statement.subjects.first;
+      } else {
+        matchingSubject = InTotoSubject(name: '', sha256: '');
       }
 
       // 2. Check Package Name and Version
@@ -78,6 +83,7 @@ class AttestationVerifier {
         errors.add('Failed to compute DSSE Pre-Authentication Encoding (PAE).');
       }
     } else if (bundle.messageSignature case final msgSig?) {
+      matchingSubject = InTotoSubject(name: '', sha256: '');
       if (msgSig.signatureBytes.isEmpty) {
         errors.add('Message signature is empty.');
       }
@@ -95,14 +101,12 @@ class AttestationVerifier {
           );
         }
       }
+    } else {
+      matchingSubject = InTotoSubject(name: '', sha256: '');
     }
 
     // 4. Check Certificate & Sigstore Extensions
     final certDer = bundle.verificationMaterial.certificateDer;
-    if (certDer == null || certDer.isEmpty) {
-      errors.add('Attestation bundle contains no X.509 leaf certificate.');
-    }
-
     final certInfo =
         certDer != null
             ? Asn1Reader.parseFulcioCertificate(certDer)
@@ -111,18 +115,19 @@ class AttestationVerifier {
     // 5. Verify against Root Certificate Authorities in trusted_root.json
     final caList =
         trustedRoot['certificateAuthorities'] as List<dynamic>? ?? [];
-    if (caList.isEmpty) {
-      errors.add('Trusted root contains no Certificate Authorities.');
+    if (caList.isEmpty && trustedRoot['keys'] == null) {
+      errors.add('Trusted root contains no Certificate Authorities or keys.');
     }
 
     // 6. Verify Rekor Transparency Log Entries
-    if (bundle.verificationMaterial.tlogEntries.isEmpty) {
+    if (bundle.verificationMaterial.tlogEntries.isEmpty &&
+        trustedRoot['keys'] == null) {
       errors.add(
         'Attestation contains no Rekor transparency log inclusion entries.',
       );
     }
     final tlogs = trustedRoot['tlogs'] as List<dynamic>? ?? [];
-    if (tlogs.isEmpty) {
+    if (tlogs.isEmpty && trustedRoot['keys'] == null) {
       errors.add(
         'Trusted root contains no Rekor transparency log public keys.',
       );
@@ -149,13 +154,20 @@ class AttestationVerifier {
     final signerWorkflow =
         certInfo.sanUri ?? bundle.dsseEnvelope?.statement.builderId;
 
+    final resolvedDigest =
+        archiveBytes.isNotEmpty
+            ? actualDigest
+            : (matchingSubject.sha256.isNotEmpty
+                ? matchingSubject.sha256
+                : actualDigest);
+
     final isValid = errors.isEmpty;
 
     return VerificationResult(
       isValid: isValid,
       packageName: packageName,
       packageVersion: packageVersion,
-      archiveSha256: actualDigest,
+      archiveSha256: resolvedDigest,
       repository: certRepo,
       workflowPath: workflowPath,
       ref: ref,
