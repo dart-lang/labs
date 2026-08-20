@@ -254,6 +254,3 @@ class GitHubAttestationVerifier extends AttestationVerifier {
     }
   }
 }
-
-/// Alias for [GitHubAttestationVerifier] for Git-based workflows.
-typedef GitAttestationVerifier = GitHubAttestationVerifier;
