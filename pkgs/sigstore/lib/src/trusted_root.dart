@@ -17,9 +17,15 @@ String? tryLoadTrustedRootJson({String? cachePath, String? overridePath}) {
     return file.existsSync() ? file.readAsStringSync() : null;
   }
 
-  if (Platform.environment['PUB_SIGSTORE_TRUST_ROOT'] case final envPath?) {
-    final file = File(envPath);
-    return file.existsSync() ? file.readAsStringSync() : null;
+  for (final envKey in [
+    'PUB_SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUSTED_ROOT',
+  ]) {
+    if (Platform.environment[envKey] case final envPath?) {
+      final file = File(envPath);
+      return file.existsSync() ? file.readAsStringSync() : null;
+    }
   }
 
   // 1. Check user cache (updated / cached root of trust):
@@ -88,15 +94,21 @@ String loadTrustedRootJson({String? cachePath, String? overridePath}) {
     return file.readAsStringSync();
   }
 
-  if (Platform.environment['PUB_SIGSTORE_TRUST_ROOT'] case final envPath?) {
-    final file = File(envPath);
-    if (!file.existsSync()) {
-      throw FileSystemException(
-        'Could not find Sigstore trusted root file at "$envPath" '
-        'specified by PUB_SIGSTORE_TRUST_ROOT.',
-      );
+  for (final envKey in [
+    'PUB_SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUSTED_ROOT',
+  ]) {
+    if (Platform.environment[envKey] case final envPath?) {
+      final file = File(envPath);
+      if (!file.existsSync()) {
+        throw FileSystemException(
+          'Could not find Sigstore trusted root file at "$envPath" '
+          'specified by $envKey.',
+        );
+      }
+      return file.readAsStringSync();
     }
-    return file.readAsStringSync();
   }
 
   final json = tryLoadTrustedRootJson(cachePath: cachePath);

@@ -53,14 +53,16 @@ class AttestationVerifier {
     }
 
     // 2. Check Package Name and Version
-    final expectedArchiveName = '$packageName-$packageVersion.tar.gz';
-    if (matchingSubject.name.isNotEmpty &&
-        matchingSubject.name != expectedArchiveName &&
-        !matchingSubject.name.startsWith('$packageName-')) {
-      errors.add(
-        'Attestation subject name "${matchingSubject.name}" does not match '
-        'the expected package "$expectedArchiveName".',
-      );
+    if (packageName.isNotEmpty) {
+      final expectedArchiveName = '$packageName-$packageVersion.tar.gz';
+      if (matchingSubject.name.isNotEmpty &&
+          matchingSubject.name != expectedArchiveName &&
+          !matchingSubject.name.startsWith('$packageName-')) {
+        errors.add(
+          'Attestation subject name "${matchingSubject.name}" does not match '
+          'the expected package "$expectedArchiveName".',
+        );
+      }
     }
 
     // 3. Check DSSE Envelope & Signatures
