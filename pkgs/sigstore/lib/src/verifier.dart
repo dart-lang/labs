@@ -13,6 +13,14 @@ import 'models.dart';
 import 'trusted_root.dart';
 
 /// Cryptographic verifier for Sigstore package attestations.
+///
+/// Handles environment-agnostic checks:
+/// 1. Archive digest match (sha256 of archive == in-toto subject digest).
+/// 2. Package name and version match in-toto subject name.
+/// 3. DSSE Pre-Authentication Encoding (PAE) envelope and signature presence.
+/// 4. Fulcio X.509 leaf certificate presence.
+/// 5. Root Certificate Authorities validation against `trusted_root.json`.
+/// 6. Rekor transparency log inclusion proof against `trusted_root.json`.
 class AttestationVerifier {
   final Map<String, dynamic> trustedRoot;
 
@@ -20,16 +28,6 @@ class AttestationVerifier {
     : trustedRoot = trustedRoot ?? loadTrustedRoot();
 
   /// Verifies a downloaded package archive against its Sigstore attestation.
-  ///
-  /// Enforces:
-  /// 1. Archive digest match (sha256 of archive == in-toto subject digest).
-  /// 2. Package name and version match in-toto subject name.
-  /// 3. DSSE Pre-Authentication Encoding (PAE) envelope and signature presence.
-  /// 4. Fulcio X.509 leaf certificate validation against trusted_root.json.
-  /// 5. Rekor transparency log inclusion proof against trusted_root.json.
-  /// 6. OIDC Issuer is https://token.actions.githubusercontent.com.
-  /// 7. Workflow path, git ref, and commit SHA match in-toto SLSA payload.
-  /// 8. Source repository matches declared pubspec.yaml repository.
   VerificationResult verify({
     required String packageName,
     required Version packageVersion,
@@ -69,7 +67,7 @@ class AttestationVerifier {
     if (bundle.dsseEnvelope.signatures.isEmpty) {
       errors.add('DSSE envelope contains no signatures.');
     }
-    final paeBytes = _computeDssePae(
+    final paeBytes = computeDssePae(
       bundle.dsseEnvelope.payloadType,
       bundle.dsseEnvelope.payloadBytes,
     );
@@ -108,40 +106,20 @@ class AttestationVerifier {
       );
     }
 
-    // 7. Verify OIDC Issuer
-    const expectedIssuer = 'https://token.actions.githubusercontent.com';
-    if (certInfo.issuer != null && certInfo.issuer != expectedIssuer) {
-      errors.add(
-        'Untrusted OIDC Issuer "${certInfo.issuer}". '
-        'Expected "$expectedIssuer".',
-      );
-    }
+    // Hook for provider-specific identity & provenance verification
+    verifyIdentityAndProvenance(
+      packageName: packageName,
+      packageVersion: packageVersion,
+      bundle: bundle,
+      certInfo: certInfo,
+      expectedRepository: expectedRepository,
+      pubspecRepository: pubspecRepository,
+      errors: errors,
+    );
 
-    // 8. Verify Source Repository Binding
     final buildDef = bundle.dsseEnvelope.statement.buildDefinition;
     final statementRepo = buildDef?.repository;
     final certRepo = certInfo.sourceRepositoryUri ?? statementRepo ?? '';
-
-    if (certRepo.isEmpty) {
-      errors.add('Could not determine source repository from attestation.');
-    }
-
-    if (expectedRepository != null &&
-        !_repositoriesMatch(certRepo, expectedRepository)) {
-      errors.add(
-        'Attestation signer repository "$certRepo" does not match '
-        'expected repository "$expectedRepository".',
-      );
-    }
-
-    if (pubspecRepository != null &&
-        pubspecRepository.isNotEmpty &&
-        !_repositoriesMatch(certRepo, pubspecRepository)) {
-      errors.add(
-        'Attestation signer repository "$certRepo" does not match '
-        'the repository declared in pubspec.yaml ("$pubspecRepository").',
-      );
-    }
 
     final ref = certInfo.sourceRepositoryRef ?? buildDef?.ref;
     final commitSha = certInfo.jobWorkflowSha ?? buildDef?.resolvedGitCommit;
@@ -165,10 +143,26 @@ class AttestationVerifier {
     );
   }
 
+  /// Hook for provider-specific identity and provenance checks.
+  ///
+  /// Base [AttestationVerifier] performs general sanity checks without
+  /// restricting the OIDC issuer or source forge. Subclasses such as
+  /// [GitHubAttestationVerifier] override this to enforce builder-specific
+  /// invariants.
+  void verifyIdentityAndProvenance({
+    required String packageName,
+    required Version packageVersion,
+    required SigstoreBundle bundle,
+    required FulcioCertificateInfo certInfo,
+    String? expectedRepository,
+    String? pubspecRepository,
+    required List<String> errors,
+  }) {}
+
   /// Formats the DSSE Pre-Authentication Encoding (PAE).
   ///
   /// `PAE(type, body) = "DSSEv1 " + len(type) + " " + type + ...`
-  static Uint8List _computeDssePae(String type, Uint8List body) {
+  static Uint8List computeDssePae(String type, Uint8List body) {
     final typeBytes = utf8.encode(type);
     final header = utf8.encode('DSSEv1 ${typeBytes.length} ');
     final separator = utf8.encode(' ${body.length} ');
@@ -181,7 +175,8 @@ class AttestationVerifier {
     return builder.toBytes();
   }
 
-  static bool _repositoriesMatch(String a, String b) {
+  /// Normalizes and matches two repository URLs.
+  static bool repositoriesMatch(String a, String b) {
     final normA = a
         .trim()
         .toLowerCase()
@@ -195,3 +190,70 @@ class AttestationVerifier {
     return normA == normB || normA.endsWith(normB) || normB.endsWith(normA);
   }
 }
+
+/// Verifier for packages built and signed on GitHub Actions using Git
+/// provenance.
+///
+/// In addition to general Sigstore checks, validates:
+/// - OIDC Issuer is https://token.actions.githubusercontent.com.
+/// - Source repository matches expected and declared pubspec repositories.
+/// - Workflow path, git ref, and commit SHA match in-toto SLSA payload.
+class GitHubAttestationVerifier extends AttestationVerifier {
+  static const defaultOidcIssuer =
+      'https://token.actions.githubusercontent.com';
+
+  final String expectedOidcIssuer;
+
+  GitHubAttestationVerifier({
+    super.trustedRoot,
+    this.expectedOidcIssuer = defaultOidcIssuer,
+  });
+
+  @override
+  void verifyIdentityAndProvenance({
+    required String packageName,
+    required Version packageVersion,
+    required SigstoreBundle bundle,
+    required FulcioCertificateInfo certInfo,
+    String? expectedRepository,
+    String? pubspecRepository,
+    required List<String> errors,
+  }) {
+    // 1. Verify GitHub Actions OIDC Issuer
+    if (certInfo.issuer != null && certInfo.issuer != expectedOidcIssuer) {
+      errors.add(
+        'Untrusted OIDC Issuer "${certInfo.issuer}". '
+        'Expected "$expectedOidcIssuer".',
+      );
+    }
+
+    // 2. Verify Source Repository Binding
+    final buildDef = bundle.dsseEnvelope.statement.buildDefinition;
+    final statementRepo = buildDef?.repository;
+    final certRepo = certInfo.sourceRepositoryUri ?? statementRepo ?? '';
+
+    if (certRepo.isEmpty) {
+      errors.add('Could not determine source repository from attestation.');
+    }
+
+    if (expectedRepository != null &&
+        !AttestationVerifier.repositoriesMatch(certRepo, expectedRepository)) {
+      errors.add(
+        'Attestation signer repository "$certRepo" does not match '
+        'expected repository "$expectedRepository".',
+      );
+    }
+
+    if (pubspecRepository != null &&
+        pubspecRepository.isNotEmpty &&
+        !AttestationVerifier.repositoriesMatch(certRepo, pubspecRepository)) {
+      errors.add(
+        'Attestation signer repository "$certRepo" does not match '
+        'the repository declared in pubspec.yaml ("$pubspecRepository").',
+      );
+    }
+  }
+}
+
+/// Alias for [GitHubAttestationVerifier] for Git-based workflows.
+typedef GitAttestationVerifier = GitHubAttestationVerifier;

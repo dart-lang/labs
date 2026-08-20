@@ -16,4 +16,5 @@ export 'src/trusted_root.dart'
         tryLoadTrustedRoot,
         tryLoadTrustedRootJson,
         updateTrustedRootCache;
-export 'src/verifier.dart' show AttestationVerifier;
+export 'src/verifier.dart'
+    show AttestationVerifier, GitAttestationVerifier, GitHubAttestationVerifier;

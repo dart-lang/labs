@@ -73,13 +73,19 @@ void main() {
 
     final payloadBase64 = base64Encode(utf8.encode(jsonEncode(statement)));
 
+    final issuerBytes = utf8.encode(issuer);
+    final repoBytes = utf8.encode(repository);
     final derBytes = <int>[
       0x30,
       0x82,
       0x01,
       0x00,
-      ...utf8.encode(repository),
-      ...utf8.encode(issuer),
+      // OID 1.3.6.1.4.1.57264.1.1 (Issuer)
+      0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0xBF, 0x30, 0x01, 0x01,
+      0x0C, issuerBytes.length, ...issuerBytes,
+      // OID 1.3.6.1.4.1.57264.1.5 (Source Repo)
+      0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0xBF, 0x30, 0x01, 0x05,
+      0x0C, repoBytes.length, ...repoBytes,
     ];
 
     return {
@@ -106,73 +112,129 @@ void main() {
     };
   }
 
-  test('successfully verifies valid package and attestation', () {
-    final archiveBytes = Uint8List.fromList(
-      utf8.encode('fake-archive-bytes-0.1.4'),
-    );
-    final archiveSha = sha256.convert(archiveBytes).toString();
+  group('AttestationVerifier', () {
+    test('successfully verifies valid package and attestation', () {
+      final archiveBytes = Uint8List.fromList(
+        utf8.encode('fake-archive-bytes-0.1.4'),
+      );
+      final archiveSha = sha256.convert(archiveBytes).toString();
 
-    final bundleJson = createTestBundleJson(archiveSha256: archiveSha);
-    final bundle = SigstoreBundle.fromJson(bundleJson);
+      final bundleJson = createTestBundleJson(archiveSha256: archiveSha);
+      final bundle = SigstoreBundle.fromJson(bundleJson);
 
-    final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
-    final result = verifier.verify(
-      packageName: 'helpful',
-      packageVersion: Version(0, 1, 4),
-      archiveBytes: archiveBytes,
-      bundle: bundle,
-      expectedRepository: 'https://github.com/mosuem/helpful',
-      pubspecRepository: 'https://github.com/mosuem/helpful',
-    );
+      final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
+      final result = verifier.verify(
+        packageName: 'helpful',
+        packageVersion: Version(0, 1, 4),
+        archiveBytes: archiveBytes,
+        bundle: bundle,
+      );
 
-    expect(result.isValid, isTrue);
-    expect(result.errors, isEmpty);
-    expect(result.packageName, equals('helpful'));
-    expect(result.repository, equals('https://github.com/mosuem/helpful'));
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.packageName, equals('helpful'));
+      expect(result.archiveSha256, equals(archiveSha));
+    });
+
+    test('fails when archive sha256 does not match attestation', () {
+      final archiveBytes = Uint8List.fromList(
+        utf8.encode('tampered-archive-bytes'),
+      );
+      const originalSha =
+          'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+
+      final bundleJson = createTestBundleJson(archiveSha256: originalSha);
+      final bundle = SigstoreBundle.fromJson(bundleJson);
+
+      final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
+      final result = verifier.verify(
+        packageName: 'helpful',
+        packageVersion: Version(0, 1, 4),
+        archiveBytes: archiveBytes,
+        bundle: bundle,
+      );
+
+      expect(result.isValid, isFalse);
+      expect(result.errors.any((e) => e.contains('SHA-256')), isTrue);
+    });
   });
 
-  test('fails when archive sha256 does not match attestation', () {
-    final archiveBytes = Uint8List.fromList(
-      utf8.encode('tampered-archive-bytes'),
-    );
-    const originalSha =
-        'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+  group('GitHubAttestationVerifier', () {
+    test('successfully verifies valid package and GitHub provenance', () {
+      final archiveBytes = Uint8List.fromList(
+        utf8.encode('fake-archive-bytes-0.1.4'),
+      );
+      final archiveSha = sha256.convert(archiveBytes).toString();
 
-    final bundleJson = createTestBundleJson(archiveSha256: originalSha);
-    final bundle = SigstoreBundle.fromJson(bundleJson);
+      final bundleJson = createTestBundleJson(archiveSha256: archiveSha);
+      final bundle = SigstoreBundle.fromJson(bundleJson);
 
-    final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
-    final result = verifier.verify(
-      packageName: 'helpful',
-      packageVersion: Version(0, 1, 4),
-      archiveBytes: archiveBytes,
-      bundle: bundle,
-    );
+      final verifier = GitHubAttestationVerifier(trustedRoot: mockTrustedRoot);
+      final result = verifier.verify(
+        packageName: 'helpful',
+        packageVersion: Version(0, 1, 4),
+        archiveBytes: archiveBytes,
+        bundle: bundle,
+        expectedRepository: 'https://github.com/mosuem/helpful',
+        pubspecRepository: 'https://github.com/mosuem/helpful',
+      );
 
-    expect(result.isValid, isFalse);
-    expect(result.errors.any((e) => e.contains('SHA-256')), isTrue);
-  });
+      expect(result.isValid, isTrue);
+      expect(result.errors, isEmpty);
+      expect(result.packageName, equals('helpful'));
+      expect(result.repository, equals('https://github.com/mosuem/helpful'));
+    });
 
-  test('fails when repository does not match pubspec.yaml', () {
-    final archiveBytes = Uint8List.fromList(utf8.encode('valid-archive-bytes'));
-    final archiveSha = sha256.convert(archiveBytes).toString();
+    test('fails when repository does not match pubspec.yaml', () {
+      final archiveBytes = Uint8List.fromList(
+        utf8.encode('valid-archive-bytes'),
+      );
+      final archiveSha = sha256.convert(archiveBytes).toString();
 
-    final bundleJson = createTestBundleJson(
-      archiveSha256: archiveSha,
-      repository: 'https://github.com/attacker/helpful',
-    );
-    final bundle = SigstoreBundle.fromJson(bundleJson);
+      final bundleJson = createTestBundleJson(
+        archiveSha256: archiveSha,
+        repository: 'https://github.com/attacker/helpful',
+      );
+      final bundle = SigstoreBundle.fromJson(bundleJson);
 
-    final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
-    final result = verifier.verify(
-      packageName: 'helpful',
-      packageVersion: Version(0, 1, 4),
-      archiveBytes: archiveBytes,
-      bundle: bundle,
-      pubspecRepository: 'https://github.com/legitimate-owner/helpful',
-    );
+      final verifier = GitHubAttestationVerifier(trustedRoot: mockTrustedRoot);
+      final result = verifier.verify(
+        packageName: 'helpful',
+        packageVersion: Version(0, 1, 4),
+        archiveBytes: archiveBytes,
+        bundle: bundle,
+        pubspecRepository: 'https://github.com/legitimate-owner/helpful',
+      );
 
-    expect(result.isValid, isFalse);
-    expect(result.errors.any((e) => e.contains('pubspec.yaml')), isTrue);
+      expect(result.isValid, isFalse);
+      expect(result.errors.any((e) => e.contains('pubspec.yaml')), isTrue);
+    });
+
+    test('fails when OIDC issuer is not GitHub Actions', () {
+      final archiveBytes = Uint8List.fromList(
+        utf8.encode('valid-archive-bytes'),
+      );
+      final archiveSha = sha256.convert(archiveBytes).toString();
+
+      final bundleJson = createTestBundleJson(
+        archiveSha256: archiveSha,
+        issuer: 'https://accounts.google.com',
+      );
+      final bundle = SigstoreBundle.fromJson(bundleJson);
+
+      final verifier = GitHubAttestationVerifier(trustedRoot: mockTrustedRoot);
+      final result = verifier.verify(
+        packageName: 'helpful',
+        packageVersion: Version(0, 1, 4),
+        archiveBytes: archiveBytes,
+        bundle: bundle,
+      );
+
+      expect(result.isValid, isFalse);
+      expect(
+        result.errors.any((e) => e.contains('Untrusted OIDC Issuer')),
+        isTrue,
+      );
+    });
   });
 }
