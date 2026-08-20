@@ -113,7 +113,15 @@ void main(List<String> args) async {
       );
       trustedRoot = jsonDecode(stagingJson) as Map<String, dynamic>;
     } else {
-      trustedRoot = loadTrustedRoot();
+      final local = tryLoadTrustedRoot();
+      if (local != null) {
+        trustedRoot = local;
+      } else {
+        final prodJson = await fetchLatestTrustedRootJson(
+          cdnUrl: 'https://tuf-repo-cdn.sigstore.dev',
+        );
+        trustedRoot = jsonDecode(prodJson) as Map<String, dynamic>;
+      }
     }
 
     // Verify bundle envelope and signatures
