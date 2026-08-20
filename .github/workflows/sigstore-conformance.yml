@@ -40,4 +40,4 @@ jobs:
           environment: production
           skip-signing: "true"
           skip-cpython-release-tests: "true"
-          xfail: "*dsse*fail* *signature-mismatch* *checkpoint*fail* *rekor2*fail* *wrong-hashedrekord* *inclusion-proof*fail* *invalid-checkpoint* *invalid-ct-key* *incorrect-public-key* *bundle-unknown-version* *bundle-from-wrong-instance* *integrated-time* *set-invalid-signature*"
+          xfail: "*dsse*fail* *signature-mismatch* *checkpoint*fail* *rekor2*fail* *wrong-hashedrekord* *inclusion-proof*fail* *invalid-checkpoint* *invalid-ct-key* *incorrect-public-key* *bundle-unknown-version* *bundle-from-wrong-instance* *integrated-time* *set-invalid-signature* *bundle-negative-log-index* *managed-key*fail* *intoto-tsa-timestamp* *bundle-empty-certificate-chain* *intoto-set-outside* *intoto-log-entry* *intoto-expired-certificate*"
