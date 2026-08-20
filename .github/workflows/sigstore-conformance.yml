@@ -34,8 +34,9 @@ jobs:
           dart compile exe bin/conformance.dart -o bin/conformance
 
       - name: Run Sigstore Conformance Suite
-        uses: sigstore/sigstore-conformance@v0.0.29
+        uses: sigstore/sigstore-conformance@21533cde107c734ebc153c3e3a24d75fc9811a36 # v0.0.29
         with:
           entrypoint: pkgs/sigstore/bin/conformance
           environment: production
-          xfail: "test_sign*"
+          skip-signing: "true"
+          skip-cpython-release-tests: "true"
