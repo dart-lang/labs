@@ -9,23 +9,6 @@ import 'package:path/path.dart' as p;
 
 const sigstoreTufCdn = 'https://tuf-repo-cdn.sigstore.dev';
 
-/// The default fallback Sigstore root configuration.
-final defaultTrustedRoot = <String, dynamic>{
-  'mediaType': 'application/vnd.dev.sigstore.trustedroot+json;version=0.1',
-  'certificateAuthorities': [
-    {
-      'subject': {'organization': 'sigstore.dev', 'commonName': 'fulcio'},
-      'uri': 'https://fulcio.sigstore.dev',
-    },
-  ],
-  'tlogs': [
-    {
-      'baseUrl': 'https://rekor.sigstore.dev',
-      'logId': {'keyId': 'test-rekor-key-id'},
-    },
-  ],
-};
-
 /// Attempts to load the Sigstore `trusted_root.json` root of trust.
 /// Returns `null` if the file could not be found.
 String? tryLoadTrustedRootJson({String? cachePath, String? overridePath}) {

@@ -17,7 +17,7 @@ class AttestationVerifier {
   final Map<String, dynamic> trustedRoot;
 
   AttestationVerifier({Map<String, dynamic>? trustedRoot})
-    : trustedRoot = trustedRoot ?? tryLoadTrustedRoot() ?? defaultTrustedRoot;
+    : trustedRoot = trustedRoot ?? loadTrustedRoot();
 
   /// Verifies a downloaded package archive against its Sigstore attestation.
   ///

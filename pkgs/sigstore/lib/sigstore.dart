@@ -11,7 +11,6 @@ export 'src/lockfile_policy.dart'
 export 'src/models.dart';
 export 'src/trusted_root.dart'
     show
-        defaultTrustedRoot,
         fetchLatestTrustedRootJson,
         loadTrustedRoot,
         loadTrustedRootJson,
