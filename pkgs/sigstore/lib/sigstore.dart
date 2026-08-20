@@ -11,9 +11,12 @@ export 'src/lockfile_policy.dart'
 export 'src/models.dart';
 export 'src/trusted_root.dart'
     show
+        defaultTrustedRoot,
         fetchLatestTrustedRootJson,
         loadTrustedRoot,
         loadTrustedRootJson,
         sigstoreTufCdn,
+        tryLoadTrustedRoot,
+        tryLoadTrustedRootJson,
         updateTrustedRootCache;
 export 'src/verifier.dart' show AttestationVerifier;

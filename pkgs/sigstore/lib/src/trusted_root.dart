@@ -9,34 +9,34 @@ import 'package:path/path.dart' as p;
 
 const sigstoreTufCdn = 'https://tuf-repo-cdn.sigstore.dev';
 
-/// Loads the Sigstore `trusted_root.json` root of trust.
-///
-/// Looks in the following order:
-/// 1. An explicit override path passed in [overridePath].
-/// 2. The `PUB_SIGSTORE_TRUST_ROOT` environment variable.
-/// 3. The cached updated root at [cachePath] or `PUB_CACHE/sigstore/trusted_root.json` (if present).
-/// 4. The built Dart SDK directory at `lib/_internal/sigstore/trusted_root.json`.
-/// 5. The Dart repository checkout at `third_party/sigstore/trusted_root.json`.
-String loadTrustedRootJson({String? cachePath, String? overridePath}) {
+/// The default fallback Sigstore root configuration.
+final defaultTrustedRoot = <String, dynamic>{
+  'mediaType': 'application/vnd.dev.sigstore.trustedroot+json;version=0.1',
+  'certificateAuthorities': [
+    {
+      'subject': {'organization': 'sigstore.dev', 'commonName': 'fulcio'},
+      'uri': 'https://fulcio.sigstore.dev',
+    },
+  ],
+  'tlogs': [
+    {
+      'baseUrl': 'https://rekor.sigstore.dev',
+      'logId': {'keyId': 'test-rekor-key-id'},
+    },
+  ],
+};
+
+/// Attempts to load the Sigstore `trusted_root.json` root of trust.
+/// Returns `null` if the file could not be found.
+String? tryLoadTrustedRootJson({String? cachePath, String? overridePath}) {
   if (overridePath != null) {
     final file = File(overridePath);
-    if (!file.existsSync()) {
-      throw FileSystemException(
-        'Could not find Sigstore trusted root file at "$overridePath".',
-      );
-    }
-    return file.readAsStringSync();
+    return file.existsSync() ? file.readAsStringSync() : null;
   }
 
   if (Platform.environment['PUB_SIGSTORE_TRUST_ROOT'] case final envPath?) {
     final file = File(envPath);
-    if (!file.existsSync()) {
-      throw FileSystemException(
-        'Could not find Sigstore trusted root file at "$envPath" '
-        'specified by PUB_SIGSTORE_TRUST_ROOT.',
-      );
-    }
-    return file.readAsStringSync();
+    return file.existsSync() ? file.readAsStringSync() : null;
   }
 
   // 1. Check user cache (updated / cached root of trust):
@@ -74,26 +74,50 @@ String loadTrustedRootJson({String? cachePath, String? overridePath}) {
     return File(repoPath).readAsStringSync();
   }
 
-  // Fallback for tests / development when trusted_root.json is not bundled:
-  if (Platform.environment.containsKey('FLUTTER_TEST') ||
-      Platform.environment.containsKey('_PUB_TEST_CONFIG') ||
-      Platform.script.path.contains('_test.dart')) {
-    return jsonEncode({
-      'mediaType': 'application/vnd.dev.sigstore.trustedroot+json;version=0.1',
-      'certificateAuthorities': [
-        {
-          'subject': {'organization': 'sigstore.dev', 'commonName': 'fulcio'},
-          'uri': 'https://fulcio.sigstore.dev',
-        },
-      ],
-      'tlogs': [
-        {
-          'baseUrl': 'https://rekor.sigstore.dev',
-          'logId': {'keyId': 'test-rekor-key-id'},
-        },
-      ],
-    });
+  return null;
+}
+
+/// Attempts to parse and return the decoded JSON map of the Sigstore trusted
+/// root.
+/// Returns `null` if not found.
+Map<String, dynamic>? tryLoadTrustedRoot({
+  String? cachePath,
+  String? overridePath,
+}) {
+  final text = tryLoadTrustedRootJson(
+    cachePath: cachePath,
+    overridePath: overridePath,
+  );
+  if (text == null) return null;
+  return jsonDecode(text) as Map<String, dynamic>;
+}
+
+/// Loads the Sigstore `trusted_root.json` root of trust.
+/// Throws [StateError] or [FileSystemException] if not found.
+String loadTrustedRootJson({String? cachePath, String? overridePath}) {
+  if (overridePath != null) {
+    final file = File(overridePath);
+    if (!file.existsSync()) {
+      throw FileSystemException(
+        'Could not find Sigstore trusted root file at "$overridePath".',
+      );
+    }
+    return file.readAsStringSync();
   }
+
+  if (Platform.environment['PUB_SIGSTORE_TRUST_ROOT'] case final envPath?) {
+    final file = File(envPath);
+    if (!file.existsSync()) {
+      throw FileSystemException(
+        'Could not find Sigstore trusted root file at "$envPath" '
+        'specified by PUB_SIGSTORE_TRUST_ROOT.',
+      );
+    }
+    return file.readAsStringSync();
+  }
+
+  final json = tryLoadTrustedRootJson(cachePath: cachePath);
+  if (json != null) return json;
 
   throw StateError(
     'Could not locate Sigstore trusted_root.json in the Dart SDK.',
