@@ -13,8 +13,16 @@ export PATH="$HOME/.local/bin:$PATH"
 echo "==> Resolving dependencies..."
 dart pub get
 
-echo "==> Compiling Sigstore conformance CLI..."
-dart compile exe bin/conformance.dart -o bin/conformance
+echo "==> Preparing Sigstore conformance CLI wrapper..."
+cat << 'EOF' > "$DIR/bin/conformance"
+#!/usr/bin/env bash
+CALLER_CWD="$(pwd)"
+SIGSTORE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export CONFORMANCE_CWD="$CALLER_CWD"
+cd "$SIGSTORE_DIR"
+exec dart run bin/conformance.dart "$@"
+EOF
+chmod +x "$DIR/bin/conformance"
 
 echo "==> Running Sigstore conformance tests..."
 CONFORMANCE_DIR="/tmp/sigstore-conformance-repo"

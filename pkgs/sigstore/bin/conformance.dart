@@ -8,8 +8,16 @@ import 'dart:typed_data';
 
 import 'package:args/args.dart';
 import 'package:crypto/crypto.dart';
+import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:sigstore/sigstore.dart';
+
+String _resolvePath(String path) {
+  if (p.isAbsolute(path)) return path;
+  final base =
+      Platform.environment['CONFORMANCE_CWD'] ?? Directory.current.path;
+  return p.normalize(p.join(base, path));
+}
 
 /// Entrypoint implementing the `sigstore-conformance` CLI protocol.
 ///
@@ -67,7 +75,7 @@ void main(List<String> args) async {
   final positionalArgs = command.rest;
 
   try {
-    final bundleFile = File(bundlePath);
+    final bundleFile = File(_resolvePath(bundlePath));
     if (!await bundleFile.exists()) {
       stderr.writeln('Bundle file does not exist: $bundlePath');
       exit(1);
@@ -85,7 +93,7 @@ void main(List<String> args) async {
       if (input.startsWith('sha256:') && input.length == 71) {
         expectedSha256 = input.substring(7).toLowerCase();
       } else {
-        final artifactFile = File(input);
+        final artifactFile = File(_resolvePath(input));
         if (await artifactFile.exists()) {
           artifactBytes = await artifactFile.readAsBytes();
           expectedSha256 =
@@ -97,10 +105,28 @@ void main(List<String> args) async {
       }
     }
 
+    final keyPath = command['key'] as String?;
+    Uint8List? explicitKeyDer;
+    if (keyPath != null) {
+      final keyFile = File(_resolvePath(keyPath));
+      if (!await keyFile.exists()) {
+        stderr.writeln('Key file does not exist: $keyPath');
+        exit(1);
+      }
+      final pemContent = await keyFile.readAsString();
+      final cleaned = pemContent
+          .replaceAll('-----BEGIN PUBLIC KEY-----', '')
+          .replaceAll('-----END PUBLIC KEY-----', '')
+          .replaceAll('\r', '')
+          .replaceAll('\n', '')
+          .trim();
+      explicitKeyDer = base64Decode(cleaned);
+    }
+
     // Load appropriate trusted root
     final Map<String, dynamic> trustedRoot;
     if (customTrustedRoot != null) {
-      final trFile = File(customTrustedRoot);
+      final trFile = File(_resolvePath(customTrustedRoot));
       if (!await trFile.exists()) {
         stderr.writeln('Trusted root file does not exist: $customTrustedRoot');
         exit(1);
@@ -123,23 +149,32 @@ void main(List<String> args) async {
       }
     }
 
+    if (explicitKeyDer != null) {
+      final keys = (trustedRoot['keys'] as Map<String, dynamic>?) ?? {};
+      keys['explicit'] = {'rawBytes': base64Encode(explicitKeyDer)};
+      trustedRoot['keys'] = keys;
+    }
+
     // Verify bundle envelope and signatures
     final verifier = AttestationVerifier(trustedRoot: trustedRoot);
     final VerificationResult result;
-    if (expectedSha256 != null) {
-      result = verifier.verifyDigest(
+    if (artifactBytes.isNotEmpty) {
+      result = await verifier.verify(
+        packageName: '',
+        packageVersion: Version.none,
+        archiveBytes: artifactBytes,
+        bundle: bundle,
+      );
+    } else if (expectedSha256 != null) {
+      result = await verifier.verifyDigest(
         packageName: '',
         packageVersion: Version.none,
         archiveSha256: expectedSha256,
         bundle: bundle,
       );
     } else {
-      result = verifier.verify(
-        packageName: '',
-        packageVersion: Version.none,
-        archiveBytes: artifactBytes,
-        bundle: bundle,
-      );
+      stderr.writeln('No artifact or digest provided.');
+      exit(1);
     }
 
     // Verify certificate identity and OIDC issuer when provided

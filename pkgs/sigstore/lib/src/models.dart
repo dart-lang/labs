@@ -80,31 +80,49 @@ class MessageSignature {
 class VerificationMaterial {
   final Uint8List? certificateDer;
   final String? certificatePem;
+  final String? publicKeyHint;
+  final Uint8List? publicKeyDer;
   final List<TlogEntry> tlogEntries;
 
   VerificationMaterial._({
     this.certificateDer,
     this.certificatePem,
+    this.publicKeyHint,
+    this.publicKeyDer,
     required this.tlogEntries,
   });
 
   factory VerificationMaterial.fromJson(Map<String, dynamic> json) {
     Uint8List? certDer;
     String? certPem;
+    String? pubKeyHint;
+    Uint8List? pubKeyDer;
 
     if (json['certificate'] case final Map<String, dynamic> certMap) {
       if (certMap['rawBytes'] case final String rawBytesBase64) {
         certDer = base64Decode(rawBytesBase64);
       }
-    } else if (json['x509CertificateChain']
+    }
+    if (json['x509CertificateChain']
         case final Map<String, dynamic> chainMap) {
       if (chainMap['certificates'] case final List<dynamic> certList) {
-        if (certList.isNotEmpty && certList.first is Map) {
+        if (certList.isEmpty) {
+          throw const FormatException(
+            'Invalid Sigstore bundle: x509CertificateChain is empty.',
+          );
+        }
+        if (certList.first is Map) {
           final first = certList.first as Map<String, dynamic>;
           if (first['rawBytes'] case final String rawBytes) {
             certDer = base64Decode(rawBytes);
           }
         }
+      }
+    }
+    if (json['publicKey'] case final Map<String, dynamic> pkMap) {
+      pubKeyHint = pkMap['hint'] as String? ?? pkMap['keyId'] as String?;
+      if (pkMap['rawBytes'] case final String rawBytes) {
+        pubKeyDer = base64Decode(rawBytes);
       }
     }
 
@@ -117,6 +135,8 @@ class VerificationMaterial {
     return VerificationMaterial._(
       certificateDer: certDer,
       certificatePem: certPem,
+      publicKeyHint: pubKeyHint,
+      publicKeyDer: pubKeyDer,
       tlogEntries: tlogs,
     );
   }
@@ -128,18 +148,27 @@ class TlogEntry {
   final String? rootHash;
   final List<String> inclusionHashes;
   final String? canonicalizedBody;
+  final String? integratedTime;
+  final String? treeSize;
 
   TlogEntry._({
     required this.logIndex,
     this.rootHash,
     required this.inclusionHashes,
     this.canonicalizedBody,
+    this.integratedTime,
+    this.treeSize,
   });
 
   factory TlogEntry.fromJson(Map<String, dynamic> json) {
-    final logIndex = json['logIndex']?.toString() ?? '';
+    final integratedTime = json['integratedTime']?.toString();
     final inclusionProof = json['inclusionProof'] as Map<String, dynamic>?;
+    final logIndex =
+        inclusionProof?['logIndex']?.toString() ??
+        json['logIndex']?.toString() ??
+        '';
     final rootHash = inclusionProof?['rootHash'] as String?;
+    final treeSize = inclusionProof?['treeSize']?.toString();
     final hashesList = inclusionProof?['hashes'] as List<dynamic>? ?? [];
     final hashes = hashesList.map((e) => e.toString()).toList();
     final canonicalizedBody = json['canonicalizedBody'] as String?;
@@ -149,6 +178,8 @@ class TlogEntry {
       rootHash: rootHash,
       inclusionHashes: hashes,
       canonicalizedBody: canonicalizedBody,
+      integratedTime: integratedTime,
+      treeSize: treeSize,
     );
   }
 }

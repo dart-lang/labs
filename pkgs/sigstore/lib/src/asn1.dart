@@ -164,4 +164,67 @@ class Asn1Reader {
     }
     return null;
   }
+
+  /// Extracts the `SubjectPublicKeyInfo` (SPKI) DER bytes from an X.509
+  /// certificate.
+  static Uint8List? extractSubjectPublicKeyInfo(Uint8List derBytes) {
+    try {
+      final reader = Asn1Reader(derBytes);
+      if (reader.readTag() != 0x30) return null;
+      reader.readLength();
+
+      // tbsCertificate
+      if (reader.readTag() != 0x30) return null;
+      final tbsLen = reader.readLength();
+      final tbsEnd = reader.offset + tbsLen;
+
+      // 1. Version [0] (optional)
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0xA0) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 2. Serial Number
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x02) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 3. Signature Algorithm
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 4. Issuer
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 5. Validity
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 6. Subject
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 7. SubjectPublicKeyInfo
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        final spkiStart = reader.offset;
+        reader.readTag();
+        final spkiLen = reader.readLength();
+        final totalSpkiLen = (reader.offset - spkiStart) + spkiLen;
+        if (spkiStart + totalSpkiLen <= derBytes.length) {
+          return derBytes.sublist(spkiStart, spkiStart + totalSpkiLen);
+        }
+      }
+    } catch (_) {}
+    return null;
+  }
 }

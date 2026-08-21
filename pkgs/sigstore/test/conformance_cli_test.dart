@@ -6,10 +6,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:crypto/crypto.dart';
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:path/path.dart' as p;
+import 'package:sigstore/sigstore.dart';
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
+import 'package:webcrypto/webcrypto.dart';
 
 void main() {
   final mockTrustedRoot = {
@@ -28,13 +30,16 @@ void main() {
     ],
   };
 
-  Map<String, dynamic> createTestBundleJson({
+  Future<Map<String, dynamic>> createTestBundleJson({
     required String archiveSha256,
     String packageName = 'helpful',
     String packageVersion = '0.1.4',
     String repository = 'https://github.com/mosuem/helpful',
     String issuer = 'https://token.actions.githubusercontent.com',
-  }) {
+  }) async {
+    final keyPair = await EcdsaPrivateKey.generateKey(EllipticCurve.p256);
+    final spkiBytes = await keyPair.publicKey.exportSpkiKey();
+
     final statement = {
       '_type': 'https://in-toto.io/Statement/v1',
       'subject': [
@@ -66,7 +71,14 @@ void main() {
       },
     };
 
-    final payloadBase64 = base64Encode(utf8.encode(jsonEncode(statement)));
+    final payloadBytes = utf8.encode(jsonEncode(statement));
+    final payloadBase64 = base64Encode(payloadBytes);
+    final paeBytes = AttestationVerifier.computeDssePae(
+      'application/vnd.in-toto+json',
+      Uint8List.fromList(payloadBytes),
+    );
+    final sigBytes = await keyPair.privateKey.signBytes(paeBytes, Hash.sha256);
+
     final issuerBytes = utf8.encode(issuer);
     final repoBytes = utf8.encode(repository);
     final derBytes = <int>[
@@ -106,6 +118,7 @@ void main() {
       'mediaType': 'application/vnd.dev.sigstore.bundle.v0.3+json',
       'verificationMaterial': {
         'certificate': {'rawBytes': base64Encode(derBytes)},
+        'publicKey': {'rawBytes': base64Encode(spkiBytes)},
         'tlogEntries': [
           {
             'logIndex': '123456',
@@ -120,7 +133,7 @@ void main() {
         'payloadType': 'application/vnd.in-toto+json',
         'payload': payloadBase64,
         'signatures': [
-          {'sig': base64Encode(utf8.encode('test-signature'))},
+          {'sig': base64Encode(sigBytes)},
         ],
       },
     };
@@ -132,9 +145,9 @@ void main() {
       final archiveBytes = Uint8List.fromList(
         utf8.encode('fake-artifact-content'),
       );
-      final archiveSha = sha256.convert(archiveBytes).toString();
+      final archiveSha = crypto.sha256.convert(archiveBytes).toString();
 
-      final bundleJson = createTestBundleJson(archiveSha256: archiveSha);
+      final bundleJson = await createTestBundleJson(archiveSha256: archiveSha);
 
       await d.file('bundle.sigstore.json', jsonEncode(bundleJson)).create();
       await d.file('artifact.tar.gz', archiveBytes).create();
@@ -173,9 +186,9 @@ void main() {
     final archiveBytes = Uint8List.fromList(
       utf8.encode('fake-artifact-content'),
     );
-    final archiveSha = sha256.convert(archiveBytes).toString();
+    final archiveSha = crypto.sha256.convert(archiveBytes).toString();
 
-    final bundleJson = createTestBundleJson(
+    final bundleJson = await createTestBundleJson(
       archiveSha256: archiveSha,
       issuer: 'https://accounts.google.com',
     );
@@ -216,7 +229,7 @@ void main() {
         utf8.encode('tampered-artifact-content'),
       );
 
-      final bundleJson = createTestBundleJson(
+      final bundleJson = await createTestBundleJson(
         archiveSha256:
             'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
       );

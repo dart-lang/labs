@@ -9,6 +9,7 @@ import 'package:crypto/crypto.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'asn1.dart';
+import 'crypto.dart';
 import 'models.dart';
 import 'trusted_root.dart';
 
@@ -28,7 +29,7 @@ class AttestationVerifier {
     : trustedRoot = trustedRoot ?? loadTrustedRoot();
 
   /// Verifies a downloaded package archive against its Sigstore attestation.
-  VerificationResult verify({
+  Future<VerificationResult> verify({
     required String packageName,
     required Version packageVersion,
     required Uint8List archiveBytes,
@@ -38,6 +39,7 @@ class AttestationVerifier {
   }) => verifyDigest(
     packageName: packageName,
     packageVersion: packageVersion,
+    archiveBytes: archiveBytes,
     archiveSha256: sha256.convert(archiveBytes).toString().toLowerCase(),
     bundle: bundle,
     expectedRepository: expectedRepository,
@@ -45,18 +47,38 @@ class AttestationVerifier {
   );
 
   /// Verifies an artifact's SHA-256 digest against its Sigstore attestation.
-  VerificationResult verifyDigest({
+  Future<VerificationResult> verifyDigest({
     required String packageName,
     required Version packageVersion,
     required String archiveSha256,
     required SigstoreBundle bundle,
+    Uint8List? archiveBytes,
     String? expectedRepository,
     String? pubspecRepository,
-  }) {
+  }) async {
     final errors = <String>[];
 
     // 1. Check Archive Content Digest
     final actualDigest = archiveSha256.toLowerCase();
+
+    // Extract public key SPKI bytes from leaf certificate, bundle public key,
+    // or trusted root keys
+    final certDer = bundle.verificationMaterial.certificateDer;
+    Uint8List? spkiBytes;
+    if (certDer != null && certDer.isNotEmpty) {
+      spkiBytes = Asn1Reader.extractSubjectPublicKeyInfo(certDer);
+    }
+    spkiBytes ??= bundle.verificationMaterial.publicKeyDer;
+    if (spkiBytes == null &&
+        trustedRoot['keys'] is Map<String, dynamic>) {
+      final keysMap = trustedRoot['keys'] as Map<String, dynamic>;
+      for (final keyVal in keysMap.values) {
+        if (keyVal is Map && keyVal['rawBytes'] is String) {
+          spkiBytes = base64Decode(keyVal['rawBytes'] as String);
+          break;
+        }
+      }
+    }
 
     final InTotoSubject? matchingSubject;
     if (bundle.dsseEnvelope case final dsse?) {
@@ -94,6 +116,30 @@ class AttestationVerifier {
       if (paeBytes.isEmpty) {
         errors.add('Failed to compute DSSE Pre-Authentication Encoding (PAE).');
       }
+
+      if (dsse.signatures.isNotEmpty) {
+        if (spkiBytes == null) {
+          errors.add(
+            'Unable to resolve public key for DSSE envelope signature '
+            'verification.',
+          );
+        } else {
+          var anySigValid = false;
+          for (final sig in dsse.signatures) {
+            if (await verifyEcdsaP256Signature(
+              spkiBytes: spkiBytes,
+              signatureBytes: sig.sigBytes,
+              signedDataBytes: paeBytes,
+            )) {
+              anySigValid = true;
+              break;
+            }
+          }
+          if (!anySigValid) {
+            errors.add('DSSE envelope signature verification failed.');
+          }
+        }
+      }
     } else if (bundle.messageSignature case final msgSig?) {
       matchingSubject = null;
       if (msgSig.signatureBytes.isEmpty) {
@@ -113,12 +159,28 @@ class AttestationVerifier {
           );
         }
       }
+
+      if (msgSig.signatureBytes.isNotEmpty) {
+        if (spkiBytes == null) {
+          errors.add(
+            'Unable to resolve public key for message signature verification.',
+          );
+        } else if (archiveBytes != null && archiveBytes.isNotEmpty) {
+          final valid = await verifyEcdsaP256Signature(
+            spkiBytes: spkiBytes,
+            signatureBytes: msgSig.signatureBytes,
+            signedDataBytes: archiveBytes,
+          );
+          if (!valid) {
+            errors.add('Message signature verification failed.');
+          }
+        }
+      }
     } else {
       matchingSubject = null;
     }
 
     // 4. Check Certificate & Sigstore Extensions
-    final certDer = bundle.verificationMaterial.certificateDer;
     final certInfo =
         certDer != null
             ? Asn1Reader.parseFulcioCertificate(certDer)
@@ -143,6 +205,48 @@ class AttestationVerifier {
       errors.add(
         'Trusted root contains no Rekor transparency log public keys.',
       );
+    }
+
+    for (final tlogEntry in bundle.verificationMaterial.tlogEntries) {
+      if (tlogEntry.logIndex.isNotEmpty) {
+        final idx = int.tryParse(tlogEntry.logIndex);
+        if (idx == null || idx < 0) {
+          errors.add('Rekor logIndex "${tlogEntry.logIndex}" is invalid.');
+        }
+      }
+
+      if (tlogEntry.rootHash != null &&
+          tlogEntry.inclusionHashes.isNotEmpty &&
+          tlogEntry.canonicalizedBody != null) {
+        Uint8List bodyBytes;
+        try {
+          bodyBytes = base64Decode(tlogEntry.canonicalizedBody!);
+        } catch (_) {
+          bodyBytes =
+              Uint8List.fromList(utf8.encode(tlogEntry.canonicalizedBody!));
+        }
+        final leafHash = Uint8List.fromList(
+          sha256.convert([0x00, ...bodyBytes]).bytes,
+        );
+        final expectedRoot = base64Decode(tlogEntry.rootHash!);
+        final proofHashes =
+            tlogEntry.inclusionHashes.map(base64Decode).toList();
+        final logIdx = int.tryParse(tlogEntry.logIndex) ?? 0;
+        final treeSize = int.tryParse(tlogEntry.treeSize ?? '0') ?? 0;
+
+        final validProof = verifyMerkleInclusionProof(
+          leafHash: leafHash,
+          leafIndex: logIdx,
+          treeSize: treeSize,
+          proofHashes: proofHashes,
+          expectedRootHash: expectedRoot,
+        );
+        if (!validProof) {
+          errors.add(
+            'Rekor transparency log inclusion proof verification failed.',
+          );
+        }
+      }
     }
 
     // Hook for provider-specific identity & provenance verification
