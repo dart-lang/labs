@@ -5,10 +5,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:crypto/crypto.dart';
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:sigstore/sigstore.dart';
 import 'package:test/test.dart';
+import 'package:webcrypto/webcrypto.dart';
 
 void main() {
   final mockTrustedRoot = {
@@ -27,13 +28,20 @@ void main() {
     ],
   };
 
-  Map<String, dynamic> createTestBundleJson({
+  Future<Map<String, dynamic>> createTestBundleJson({
     required String archiveSha256,
     String packageName = 'helpful',
     String packageVersion = '0.1.4',
     String repository = 'https://github.com/mosuem/helpful',
     String issuer = 'https://token.actions.githubusercontent.com',
-  }) {
+    KeyPair<EcdsaPrivateKey, EcdsaPublicKey>? customKeyPair,
+    Uint8List? customSignature,
+  }) async {
+    final keyPair =
+        customKeyPair ??
+        await EcdsaPrivateKey.generateKey(EllipticCurve.p256);
+    final spkiBytes = await keyPair.publicKey.exportSpkiKey();
+
     final statement = {
       '_type': 'https://in-toto.io/Statement/v1',
       'subject': [
@@ -71,7 +79,15 @@ void main() {
       },
     };
 
-    final payloadBase64 = base64Encode(utf8.encode(jsonEncode(statement)));
+    final payloadBytes = utf8.encode(jsonEncode(statement));
+    final payloadBase64 = base64Encode(payloadBytes);
+    final paeBytes = AttestationVerifier.computeDssePae(
+      'application/vnd.in-toto+json',
+      Uint8List.fromList(payloadBytes),
+    );
+    final sigBytes =
+        customSignature ??
+        await keyPair.privateKey.signBytes(paeBytes, Hash.sha256);
 
     final issuerBytes = utf8.encode(issuer);
     final repoBytes = utf8.encode(repository);
@@ -92,6 +108,7 @@ void main() {
       'mediaType': 'application/vnd.dev.sigstore.bundle.v0.3+json',
       'verificationMaterial': {
         'certificate': {'rawBytes': base64Encode(derBytes)},
+        'publicKey': {'rawBytes': base64Encode(spkiBytes)},
         'tlogEntries': [
           {
             'logIndex': '123456',
@@ -106,24 +123,24 @@ void main() {
         'payloadType': 'application/vnd.in-toto+json',
         'payload': payloadBase64,
         'signatures': [
-          {'sig': base64Encode(utf8.encode('test-signature'))},
+          {'sig': base64Encode(sigBytes)},
         ],
       },
     };
   }
 
   group('AttestationVerifier', () {
-    test('successfully verifies valid package and attestation', () {
+    test('successfully verifies valid package and attestation', () async {
       final archiveBytes = Uint8List.fromList(
         utf8.encode('fake-archive-bytes-0.1.4'),
       );
-      final archiveSha = sha256.convert(archiveBytes).toString();
+      final archiveSha = crypto.sha256.convert(archiveBytes).toString();
 
-      final bundleJson = createTestBundleJson(archiveSha256: archiveSha);
+      final bundleJson = await createTestBundleJson(archiveSha256: archiveSha);
       final bundle = SigstoreBundle.fromJson(bundleJson);
 
       final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
-      final result = verifier.verify(
+      final result = await verifier.verify(
         packageName: 'helpful',
         packageVersion: Version(0, 1, 4),
         archiveBytes: archiveBytes,
@@ -136,18 +153,45 @@ void main() {
       expect(result.archiveSha256, equals(archiveSha));
     });
 
-    test('fails when archive sha256 does not match attestation', () {
+    test('fails when signature does not match DSSE envelope', () async {
+      final archiveBytes = Uint8List.fromList(
+        utf8.encode('fake-archive-bytes-0.1.4'),
+      );
+      final archiveSha = crypto.sha256.convert(archiveBytes).toString();
+
+      final bundleJson = await createTestBundleJson(
+        archiveSha256: archiveSha,
+        customSignature: Uint8List(64), // Invalid signature
+      );
+      final bundle = SigstoreBundle.fromJson(bundleJson);
+
+      final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
+      final result = await verifier.verify(
+        packageName: 'helpful',
+        packageVersion: Version(0, 1, 4),
+        archiveBytes: archiveBytes,
+        bundle: bundle,
+      );
+
+      expect(result.isValid, isFalse);
+      expect(
+        result.errors.any((e) => e.contains('signature verification failed')),
+        isTrue,
+      );
+    });
+
+    test('fails when archive sha256 does not match attestation', () async {
       final archiveBytes = Uint8List.fromList(
         utf8.encode('tampered-archive-bytes'),
       );
       const originalSha =
           'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
 
-      final bundleJson = createTestBundleJson(archiveSha256: originalSha);
+      final bundleJson = await createTestBundleJson(archiveSha256: originalSha);
       final bundle = SigstoreBundle.fromJson(bundleJson);
 
       final verifier = AttestationVerifier(trustedRoot: mockTrustedRoot);
-      final result = verifier.verify(
+      final result = await verifier.verify(
         packageName: 'helpful',
         packageVersion: Version(0, 1, 4),
         archiveBytes: archiveBytes,
@@ -160,17 +204,17 @@ void main() {
   });
 
   group('GitHubAttestationVerifier', () {
-    test('successfully verifies valid package and GitHub provenance', () {
+    test('successfully verifies valid package and GitHub provenance', () async {
       final archiveBytes = Uint8List.fromList(
         utf8.encode('fake-archive-bytes-0.1.4'),
       );
-      final archiveSha = sha256.convert(archiveBytes).toString();
+      final archiveSha = crypto.sha256.convert(archiveBytes).toString();
 
-      final bundleJson = createTestBundleJson(archiveSha256: archiveSha);
+      final bundleJson = await createTestBundleJson(archiveSha256: archiveSha);
       final bundle = SigstoreBundle.fromJson(bundleJson);
 
       final verifier = GitHubAttestationVerifier(trustedRoot: mockTrustedRoot);
-      final result = verifier.verify(
+      final result = await verifier.verify(
         packageName: 'helpful',
         packageVersion: Version(0, 1, 4),
         archiveBytes: archiveBytes,
@@ -185,20 +229,20 @@ void main() {
       expect(result.repository, equals('https://github.com/mosuem/helpful'));
     });
 
-    test('fails when repository does not match pubspec.yaml', () {
+    test('fails when repository does not match pubspec.yaml', () async {
       final archiveBytes = Uint8List.fromList(
         utf8.encode('valid-archive-bytes'),
       );
-      final archiveSha = sha256.convert(archiveBytes).toString();
+      final archiveSha = crypto.sha256.convert(archiveBytes).toString();
 
-      final bundleJson = createTestBundleJson(
+      final bundleJson = await createTestBundleJson(
         archiveSha256: archiveSha,
         repository: 'https://github.com/attacker/helpful',
       );
       final bundle = SigstoreBundle.fromJson(bundleJson);
 
       final verifier = GitHubAttestationVerifier(trustedRoot: mockTrustedRoot);
-      final result = verifier.verify(
+      final result = await verifier.verify(
         packageName: 'helpful',
         packageVersion: Version(0, 1, 4),
         archiveBytes: archiveBytes,
@@ -210,20 +254,20 @@ void main() {
       expect(result.errors.any((e) => e.contains('pubspec.yaml')), isTrue);
     });
 
-    test('fails when OIDC issuer is not GitHub Actions', () {
+    test('fails when OIDC issuer is not GitHub Actions', () async {
       final archiveBytes = Uint8List.fromList(
         utf8.encode('valid-archive-bytes'),
       );
-      final archiveSha = sha256.convert(archiveBytes).toString();
+      final archiveSha = crypto.sha256.convert(archiveBytes).toString();
 
-      final bundleJson = createTestBundleJson(
+      final bundleJson = await createTestBundleJson(
         archiveSha256: archiveSha,
         issuer: 'https://accounts.google.com',
       );
       final bundle = SigstoreBundle.fromJson(bundleJson);
 
       final verifier = GitHubAttestationVerifier(trustedRoot: mockTrustedRoot);
-      final result = verifier.verify(
+      final result = await verifier.verify(
         packageName: 'helpful',
         packageVersion: Version(0, 1, 4),
         archiveBytes: archiveBytes,

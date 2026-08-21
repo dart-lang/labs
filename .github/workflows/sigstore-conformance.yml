@@ -1,0 +1,43 @@
+name: package:sigstore Conformance
+
+permissions: read-all
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/sigstore-conformance.yml'
+      - 'pkgs/sigstore/**'
+  pull_request:
+    paths:
+      - '.github/workflows/sigstore-conformance.yml'
+      - 'pkgs/sigstore/**'
+  schedule:
+    - cron: '0 0 * * 0' # weekly
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
+
+      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
+        with:
+          sdk: dev
+
+      - name: Build conformance CLI
+        working-directory: pkgs/sigstore
+        run: |
+          dart pub get
+          dart compile exe bin/conformance.dart -o bin/conformance
+
+      - name: Run Sigstore Conformance Suite
+        uses: sigstore/sigstore-conformance@21533cde107c734ebc153c3e3a24d75fc9811a36 # v0.0.29
+        with:
+          entrypoint: pkgs/sigstore/bin/conformance
+          environment: production
+          skip-signing: "true"
+          skip-cpython-release-tests: "true"
+          xfail: "*dsse*fail* *signature-mismatch* *checkpoint*fail* *rekor2*fail* *wrong-hashedrekord* *inclusion-proof*fail* *invalid-checkpoint* *invalid-ct-key* *incorrect-public-key* *bundle-unknown-version* *bundle-from-wrong-instance* *integrated-time* *set-invalid-signature* *bundle-negative-log-index* *managed-key*fail* *intoto-tsa-timestamp* *bundle-empty-certificate-chain* *intoto-set-outside* *intoto-log-entry* *intoto-expired-certificate*"
