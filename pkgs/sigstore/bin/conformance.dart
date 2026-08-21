@@ -110,7 +110,7 @@ void main(List<String> args) async {
     } else if (isStaging) {
       final stagingJson = await fetchLatestTrustedRootJson(
         cdnUrl:
-            'https://raw.githubusercontent.com/sigstore/root-signing-staging/main/targets',
+            'https://raw.githubusercontent.com/sigstore/root-signing-staging/main/targets/trusted_root.json',
       );
       trustedRoot = jsonDecode(stagingJson) as Map<String, dynamic>;
     } else {

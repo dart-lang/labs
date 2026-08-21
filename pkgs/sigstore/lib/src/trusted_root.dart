@@ -8,7 +8,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 
 const sigstoreTufCdn =
-    'https://raw.githubusercontent.com/sigstore/root-signing/main/targets';
+    'https://raw.githubusercontent.com/sigstore/root-signing/main/targets/trusted_root.json';
 
 /// Attempts to load the Sigstore `trusted_root.json` root of trust.
 /// Returns `null` if the file could not be found.
@@ -137,13 +137,7 @@ Future<String> fetchLatestTrustedRootJson({
   String cdnUrl = sigstoreTufCdn,
   HttpClient? customHttpClient,
 }) async {
-  final Uri uri;
-  if (cdnUrl.endsWith('.json')) {
-    uri = Uri.parse(cdnUrl);
-  } else {
-    final base = cdnUrl.endsWith('/') ? cdnUrl : '$cdnUrl/';
-    uri = Uri.parse(base).resolve('trusted_root.json');
-  }
+  final uri = Uri.parse(cdnUrl);
   final client = customHttpClient ?? HttpClient();
   try {
     final request = await client.getUrl(uri);
