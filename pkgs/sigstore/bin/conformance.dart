@@ -125,39 +125,21 @@ void main(List<String> args) async {
 
     // Verify bundle envelope and signatures
     final verifier = AttestationVerifier(trustedRoot: trustedRoot);
-    final result = verifier.verify(
-      packageName: '',
-      packageVersion: Version.none,
-      archiveBytes: artifactBytes,
-      bundle: bundle,
-    );
-
-    // If expectedSha256 is provided, ensure subject or artifact matched
+    final VerificationResult result;
     if (expectedSha256 != null) {
-      if (bundle.messageSignature != null &&
-          bundle.messageSignature!.messageDigestBase64 != null) {
-        final msgDigestBytes = base64Decode(
-          bundle.messageSignature!.messageDigestBase64!,
-        );
-        final msgDigestHex =
-            msgDigestBytes
-                .map((b) => b.toRadixString(16).padLeft(2, '0'))
-                .join()
-                .toLowerCase();
-        if (msgDigestHex != expectedSha256) {
-          stderr.writeln(
-            'Digest mismatch: expected $expectedSha256 but got $msgDigestHex',
-          );
-          exit(1);
-        }
-      } else if (result.archiveSha256.isNotEmpty &&
-          result.archiveSha256.toLowerCase() != expectedSha256) {
-        stderr.writeln(
-          'Digest mismatch: expected $expectedSha256 but got '
-          '${result.archiveSha256}',
-        );
-        exit(1);
-      }
+      result = verifier.verifyDigest(
+        packageName: '',
+        packageVersion: Version.none,
+        archiveSha256: expectedSha256,
+        bundle: bundle,
+      );
+    } else {
+      result = verifier.verify(
+        packageName: '',
+        packageVersion: Version.none,
+        archiveBytes: artifactBytes,
+        bundle: bundle,
+      );
     }
 
     // Verify certificate identity and OIDC issuer when provided

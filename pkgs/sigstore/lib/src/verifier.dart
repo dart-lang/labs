@@ -35,11 +35,28 @@ class AttestationVerifier {
     required SigstoreBundle bundle,
     String? expectedRepository,
     String? pubspecRepository,
+  }) => verifyDigest(
+    packageName: packageName,
+    packageVersion: packageVersion,
+    archiveSha256: sha256.convert(archiveBytes).toString().toLowerCase(),
+    bundle: bundle,
+    expectedRepository: expectedRepository,
+    pubspecRepository: pubspecRepository,
+  );
+
+  /// Verifies an artifact's SHA-256 digest against its Sigstore attestation.
+  VerificationResult verifyDigest({
+    required String packageName,
+    required Version packageVersion,
+    required String archiveSha256,
+    required SigstoreBundle bundle,
+    String? expectedRepository,
+    String? pubspecRepository,
   }) {
     final errors = <String>[];
 
     // 1. Check Archive Content Digest
-    final actualDigest = sha256.convert(archiveBytes).toString().toLowerCase();
+    final actualDigest = archiveSha256.toLowerCase();
 
     final InTotoSubject? matchingSubject;
     if (bundle.dsseEnvelope case final dsse?) {

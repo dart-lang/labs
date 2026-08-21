@@ -8,6 +8,8 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$DIR"
 
+export PATH="$HOME/.local/bin:$PATH"
+
 echo "==> Resolving dependencies..."
 dart pub get
 
@@ -15,10 +17,14 @@ echo "==> Compiling Sigstore conformance CLI..."
 dart compile exe bin/conformance.dart -o bin/conformance
 
 echo "==> Running Sigstore conformance tests..."
-if command -v pytest &> /dev/null && pytest --help | grep -q -- "--entrypoint"; then
-  pytest --entrypoint bin/conformance -k "test_verify"
+CONFORMANCE_DIR="/tmp/sigstore-conformance-repo"
+if [ ! -d "$CONFORMANCE_DIR" ]; then
+  echo "Cloning sigstore-conformance test suite to $CONFORMANCE_DIR..."
+  git clone --depth 1 https://github.com/sigstore/sigstore-conformance.git "$CONFORMANCE_DIR"
+fi
+
+if command -v pytest &> /dev/null; then
+  pytest --entrypoint "$DIR/bin/conformance" -k "test_verify" "$CONFORMANCE_DIR/test"
 else
-  echo "pytest with sigstore-conformance not installed."
-  echo "Install via: pip install sigstore-conformance"
-  echo "Then run: pytest --entrypoint bin/conformance -k 'test_verify'"
+  echo "pytest not found in PATH."
 fi
