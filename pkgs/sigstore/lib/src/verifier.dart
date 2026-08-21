@@ -43,23 +43,17 @@ class AttestationVerifier {
 
     final InTotoSubject? matchingSubject;
     if (bundle.dsseEnvelope case final dsse?) {
-      if (archiveBytes.isNotEmpty) {
-        final matches = dsse.statement.subjects.where(
-          (s) => s.sha256.toLowerCase() == actualDigest,
-        );
-        if (matches.isEmpty) {
-          matchingSubject = null;
-          errors.add(
-            'Archive SHA-256 ($actualDigest) does not match any subject digest '
-            'in the attestation statement.',
-          );
-        } else {
-          matchingSubject = matches.first;
-        }
-      } else if (dsse.statement.subjects.isNotEmpty) {
-        matchingSubject = dsse.statement.subjects.first;
-      } else {
+      final matches = dsse.statement.subjects.where(
+        (s) => s.sha256.toLowerCase() == actualDigest,
+      );
+      if (matches.isEmpty) {
         matchingSubject = null;
+        errors.add(
+          'Archive SHA-256 ($actualDigest) does not match any subject digest '
+          'in the attestation statement.',
+        );
+      } else {
+        matchingSubject = matches.first;
       }
 
       // 2. Check Package Name and Version
@@ -95,7 +89,7 @@ class AttestationVerifier {
                 .map((b) => b.toRadixString(16).padLeft(2, '0'))
                 .join()
                 .toLowerCase();
-        if (archiveBytes.isNotEmpty && actualDigest != digestHex) {
+        if (actualDigest != digestHex) {
           errors.add(
             'Archive SHA-256 ($actualDigest) does not match message digest '
             'in the bundle ($digestHex).',
@@ -155,20 +149,13 @@ class AttestationVerifier {
     final signerWorkflow =
         certInfo.sanUri ?? bundle.dsseEnvelope?.statement.builderId;
 
-    final resolvedDigest =
-        archiveBytes.isNotEmpty
-            ? actualDigest
-            : ((matchingSubject?.sha256.isNotEmpty ?? false)
-                ? matchingSubject!.sha256
-                : actualDigest);
-
     final isValid = errors.isEmpty;
 
     return VerificationResult(
       isValid: isValid,
       packageName: packageName,
       packageVersion: packageVersion,
-      archiveSha256: resolvedDigest,
+      archiveSha256: actualDigest,
       repository: certRepo,
       workflowPath: workflowPath,
       ref: ref,
