@@ -27,10 +27,14 @@ class SigstoreBundle {
     final dsse = json['dsseEnvelope'] as Map<String, dynamic>?;
     final msgSig = json['messageSignature'] as Map<String, dynamic>?;
 
-    if (vMaterial == null || (dsse == null && msgSig == null)) {
+    if (vMaterial == null) {
       throw const FormatException(
-        'Invalid Sigstore bundle format: '
-        'missing verificationMaterial or signature payload.',
+        'Invalid Sigstore bundle format: missing verificationMaterial.',
+      );
+    }
+    if (dsse == null && msgSig == null) {
+      throw const FormatException(
+        'Invalid Sigstore bundle format: missing signature payload.',
       );
     }
 
