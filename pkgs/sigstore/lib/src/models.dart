@@ -14,7 +14,7 @@ class SigstoreBundle {
   final DsseEnvelope? dsseEnvelope;
   final MessageSignature? messageSignature;
 
-  SigstoreBundle({
+  SigstoreBundle._({
     required this.mediaType,
     required this.verificationMaterial,
     this.dsseEnvelope,
@@ -38,7 +38,7 @@ class SigstoreBundle {
       );
     }
 
-    return SigstoreBundle(
+    return SigstoreBundle._(
       mediaType: mediaType,
       verificationMaterial: VerificationMaterial.fromJson(vMaterial),
       dsseEnvelope: dsse != null ? DsseEnvelope.fromJson(dsse) : null,
@@ -55,7 +55,7 @@ class MessageSignature {
   final String signatureBase64;
   final Uint8List signatureBytes;
 
-  MessageSignature({
+  MessageSignature._({
     this.messageDigestAlgorithm,
     this.messageDigestBase64,
     required this.signatureBase64,
@@ -67,7 +67,7 @@ class MessageSignature {
     final md = json['messageDigest'] as Map<String, dynamic>?;
     final alg = md?['algorithm'] as String?;
     final digest = md?['digest'] as String?;
-    return MessageSignature(
+    return MessageSignature._(
       messageDigestAlgorithm: alg,
       messageDigestBase64: digest,
       signatureBase64: sigBase64,
@@ -82,7 +82,7 @@ class VerificationMaterial {
   final String? certificatePem;
   final List<TlogEntry> tlogEntries;
 
-  VerificationMaterial({
+  VerificationMaterial._({
     this.certificateDer,
     this.certificatePem,
     required this.tlogEntries,
@@ -114,7 +114,7 @@ class VerificationMaterial {
             .map((e) => TlogEntry.fromJson(e as Map<String, dynamic>))
             .toList();
 
-    return VerificationMaterial(
+    return VerificationMaterial._(
       certificateDer: certDer,
       certificatePem: certPem,
       tlogEntries: tlogs,
@@ -129,7 +129,7 @@ class TlogEntry {
   final List<String> inclusionHashes;
   final String? canonicalizedBody;
 
-  TlogEntry({
+  TlogEntry._({
     required this.logIndex,
     this.rootHash,
     required this.inclusionHashes,
@@ -144,7 +144,7 @@ class TlogEntry {
     final hashes = hashesList.map((e) => e.toString()).toList();
     final canonicalizedBody = json['canonicalizedBody'] as String?;
 
-    return TlogEntry(
+    return TlogEntry._(
       logIndex: logIndex,
       rootHash: rootHash,
       inclusionHashes: hashes,
@@ -162,7 +162,7 @@ class DsseEnvelope {
   final List<DsseSignature> signatures;
   final InTotoStatement statement;
 
-  DsseEnvelope({
+  DsseEnvelope._({
     required this.payloadType,
     required this.payloadBase64,
     required this.payloadBytes,
@@ -184,7 +184,7 @@ class DsseEnvelope {
             .map((e) => DsseSignature.fromJson(e as Map<String, dynamic>))
             .toList();
 
-    return DsseEnvelope(
+    return DsseEnvelope._(
       payloadType: payloadType,
       payloadBase64: payloadBase64,
       payloadBytes: payloadBytes,
@@ -200,11 +200,15 @@ class DsseSignature {
   final String sigBase64;
   final Uint8List sigBytes;
 
-  DsseSignature({this.keyid, required this.sigBase64, required this.sigBytes});
+  DsseSignature._({
+    this.keyid,
+    required this.sigBase64,
+    required this.sigBytes,
+  });
 
   factory DsseSignature.fromJson(Map<String, dynamic> json) {
     final sigBase64 = json['sig'] as String? ?? '';
-    return DsseSignature(
+    return DsseSignature._(
       keyid: json['keyid'] as String?,
       sigBase64: sigBase64,
       sigBytes: base64Decode(sigBase64),
@@ -221,7 +225,7 @@ class InTotoStatement {
   final SlsaBuildDefinition? buildDefinition;
   final String? builderId;
 
-  InTotoStatement({
+  InTotoStatement._({
     required this.type,
     required this.predicateType,
     required this.subjects,
@@ -252,7 +256,7 @@ class InTotoStatement {
       }
     }
 
-    return InTotoStatement(
+    return InTotoStatement._(
       type: type,
       predicateType: predicateType,
       subjects: subjects,
@@ -268,13 +272,13 @@ class InTotoSubject {
   final String name;
   final String sha256;
 
-  InTotoSubject({required this.name, required this.sha256});
+  InTotoSubject._({required this.name, required this.sha256});
 
   factory InTotoSubject.fromJson(Map<String, dynamic> json) {
     final name = json['name'] as String? ?? '';
     final digest = json['digest'] as Map<String, dynamic>? ?? {};
     final sha256 = digest['sha256'] as String? ?? '';
-    return InTotoSubject(name: name, sha256: sha256);
+    return InTotoSubject._(name: name, sha256: sha256);
   }
 }
 
@@ -286,7 +290,7 @@ class SlsaBuildDefinition {
   final String? path;
   final String? resolvedGitCommit;
 
-  SlsaBuildDefinition({
+  SlsaBuildDefinition._({
     this.buildType,
     this.repository,
     this.ref,
@@ -318,7 +322,7 @@ class SlsaBuildDefinition {
       }
     }
 
-    return SlsaBuildDefinition(
+    return SlsaBuildDefinition._(
       buildType: buildType,
       repository: repo,
       ref: ref,

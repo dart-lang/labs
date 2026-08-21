@@ -41,28 +41,29 @@ class AttestationVerifier {
     // 1. Check Archive Content Digest
     final actualDigest = sha256.convert(archiveBytes).toString().toLowerCase();
 
-    final InTotoSubject matchingSubject;
+    final InTotoSubject? matchingSubject;
     if (bundle.dsseEnvelope case final dsse?) {
       if (archiveBytes.isNotEmpty) {
-        matchingSubject = dsse.statement.subjects.firstWhere(
+        final matches = dsse.statement.subjects.where(
           (s) => s.sha256.toLowerCase() == actualDigest,
-          orElse: () => InTotoSubject(name: '', sha256: ''),
         );
-
-        if (matchingSubject.sha256.isEmpty) {
+        if (matches.isEmpty) {
+          matchingSubject = null;
           errors.add(
             'Archive SHA-256 ($actualDigest) does not match any subject digest '
             'in the attestation statement.',
           );
+        } else {
+          matchingSubject = matches.first;
         }
       } else if (dsse.statement.subjects.isNotEmpty) {
         matchingSubject = dsse.statement.subjects.first;
       } else {
-        matchingSubject = InTotoSubject(name: '', sha256: '');
+        matchingSubject = null;
       }
 
       // 2. Check Package Name and Version
-      if (packageName.isNotEmpty) {
+      if (packageName.isNotEmpty && matchingSubject != null) {
         final expectedArchiveName = '$packageName-$packageVersion.tar.gz';
         if (matchingSubject.name.isNotEmpty &&
             matchingSubject.name != expectedArchiveName &&
@@ -83,7 +84,7 @@ class AttestationVerifier {
         errors.add('Failed to compute DSSE Pre-Authentication Encoding (PAE).');
       }
     } else if (bundle.messageSignature case final msgSig?) {
-      matchingSubject = InTotoSubject(name: '', sha256: '');
+      matchingSubject = null;
       if (msgSig.signatureBytes.isEmpty) {
         errors.add('Message signature is empty.');
       }
@@ -102,7 +103,7 @@ class AttestationVerifier {
         }
       }
     } else {
-      matchingSubject = InTotoSubject(name: '', sha256: '');
+      matchingSubject = null;
     }
 
     // 4. Check Certificate & Sigstore Extensions
@@ -157,8 +158,8 @@ class AttestationVerifier {
     final resolvedDigest =
         archiveBytes.isNotEmpty
             ? actualDigest
-            : (matchingSubject.sha256.isNotEmpty
-                ? matchingSubject.sha256
+            : ((matchingSubject?.sha256.isNotEmpty ?? false)
+                ? matchingSubject!.sha256
                 : actualDigest);
 
     final isValid = errors.isEmpty;
