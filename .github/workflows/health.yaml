@@ -9,7 +9,7 @@ on:
 
 jobs:
   health:
-    uses: dart-lang/ecosystem/.github/workflows/health.yaml@467f1e9b190d72f75b906112979fa21483ac43b9
+    uses: dart-lang/ecosystem/.github/workflows/health.yaml@5554bbb7cb382aed6943ce918c859aa17df098e1
     with:
       ignore_coverage: "**.mock.dart,**.g.dart"
       ignore_license: "**.mock.dart,**.g.dart,**.mocks.dart"
