@@ -2,6 +2,7 @@
 
 - Update timezone database to 2026c.
 - Validate header offsets and lengths in tzdb deserializer.
+- Update timezone database to 2026d.
 
 ## 0.11.1
 
