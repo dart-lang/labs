@@ -30,6 +30,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
+        with:
+          sdk: dev
       - run: dart pub get
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
