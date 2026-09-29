@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
 /// NOTE: In order to run these tests, the following datastore indices must
 /// exist:
 /// $ cat index.yaml
@@ -43,7 +42,6 @@
 /// 02:19 PM Host: appengine.google.com
 /// 02:19 PM Uploading index definitions.
 library;
-
 
 import 'dart:async';
 
@@ -322,9 +320,7 @@ runTests(db.DatastoreDB store, String namespace) {
         persons[0].parentKey = users[0].key;
         users[1].parentKey = persons[1].key;
 
-        return testInsertLookupDelete([...users, ...persons]
-          
-          );
+        return testInsertLookupDelete([...users, ...persons]);
       });
 
       test('auto_ids', () {
@@ -468,9 +464,7 @@ runTests(db.DatastoreDB store, String namespace) {
           .where((User u) => u.wife == root.append(User, id: 42 + 3))
           .toList();
 
-      var allInserts = <db.Model>[...users, ...expandoPersons]
-        
-        ;
+      var allInserts = <db.Model>[...users, ...expandoPersons];
       var allKeys = allInserts.map((model) => model.key).toList();
       List<db.Key> userKeys = users.map((model) => model.key).toList();
       List<db.Key> expandoPersonsKeys =

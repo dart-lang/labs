@@ -1,5 +1,6 @@
 name: package:timezone
-permissions: read-all
+permissions:
+  contents: read
 
 on:
   # Run CI on all PRs (against any branch) and on pushes to the main branch.
@@ -29,7 +30,9 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         sdk: [stable, dev]
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: ${{ matrix.sdk }}
@@ -43,7 +46,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
           sdk: dev
@@ -70,10 +75,13 @@ jobs:
         with:
           client-id: ${{ vars.ECOSYSTEM_BOT_CLIENT_ID }}
           private-key: ${{ secrets.ECOSYSTEM_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           token: ${{ steps.generate-token.outputs.token }}
+          persist-credentials: false
       
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
@@ -103,11 +111,13 @@ jobs:
           
       - name: Update changelog
         if: steps.check_changes.outputs.changed == 'true'
-        run: report changelog "Update timezone database to ${{ steps.refresh.outputs.tz_version }}."
+        run: report changelog "Update timezone database to ${STEPS_REFRESH_OUTPUTS_TZ_VERSION}."
+        env:
+          STEPS_REFRESH_OUTPUTS_TZ_VERSION: ${{ steps.refresh.outputs.tz_version }}
 
       - name: Create Pull Request
         if: steps.check_changes.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@6fff569d741c6b8131d2a49663b16573ef90be31
+        uses: peter-evans/create-pull-request@653ba8b281fa5e1ee78ec20dda96cf9a79102c04
         with:
           token: ${{ steps.generate-token.outputs.token }}
           committer: dart-ecosystem-bot <dart-ecosystem-bot@google.com>

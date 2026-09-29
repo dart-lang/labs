@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
 export 'package:fixnum/fixnum.dart' show Int64;
 
 export '../grpc_api/dart/google/api/monitored_resource.pb.dart';

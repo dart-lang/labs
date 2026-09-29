@@ -35,7 +35,8 @@ class LoggingMock extends LoggingBase {
 
   void expectReportError(
       void Function(
-          LogLevel level, Object error, StackTrace stackTrace, DateTime c) func) {
+              LogLevel level, Object error, StackTrace stackTrace, DateTime c)
+          func) {
     _reportErrorFunctionMock = expectAsync4(func);
   }
 

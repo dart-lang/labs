@@ -45,15 +45,44 @@ Iterable<Location> tzdbDeserialize(List<int> rawData) sync* {
 
   var offset = 0;
   while (offset < data.length) {
+    if (data.length - offset < 8) {
+      throw FormatException(
+        'Malformed tzdb: truncated chunk header at offset $offset',
+      );
+    }
     final length = bdata.getUint32(offset);
     // u32 _pad;
-    assert((length % 8) == 0);
+    if (length % 8 != 0) {
+      throw FormatException(
+        'Malformed tzdb: chunk length $length at offset $offset is not '
+        '8-byte aligned',
+      );
+    }
     offset += 8;
+    if (length > data.length - offset) {
+      throw FormatException(
+        'Malformed tzdb: chunk length $length at offset $offset exceeds '
+        'buffer size ${data.length}',
+      );
+    }
 
     yield _deserializeLocation(
       Uint8List.sublistView(data, offset, offset + length),
     );
     offset += length;
+  }
+}
+
+/// Throws [FormatException] if the byte range `[offset, offset + length)` does
+/// not lie entirely within a buffer of size [total]. Used to validate
+/// untrusted offsets/lengths read from a serialized location header before
+/// they are used to index into the buffer.
+void _checkRange(int offset, int length, int total, String name) {
+  if (offset < 0 || offset > total || length < 0 || length > total - offset) {
+    throw FormatException(
+      'Malformed tzdb: $name section [$offset, +$length) is outside '
+      '$total-byte location chunk',
+    );
   }
 }
 
@@ -163,6 +192,12 @@ Location _deserializeLocation(Uint8List data) {
   //       u32 transitionsOffset;
   //       u32 transitionsLength;
   //     } header;
+  final total = data.length;
+  if (total < 32) {
+    throw FormatException(
+      'Malformed tzdb: location chunk is $total bytes, header requires 32',
+    );
+  }
   final nameOffset = bdata.getUint32(0);
   final nameLength = bdata.getUint32(4);
   final abbreviationsOffset = bdata.getUint32(8);
@@ -171,6 +206,11 @@ Location _deserializeLocation(Uint8List data) {
   final zonesLength = bdata.getUint32(20);
   final transitionsOffset = bdata.getUint32(24);
   final transitionsLength = bdata.getUint32(28);
+
+  _checkRange(nameOffset, nameLength, total, 'name');
+  _checkRange(abbreviationsOffset, abbreviationsLength, total, 'abbreviations');
+  _checkRange(zonesOffset, zonesLength * 8, total, 'zones');
+  _checkRange(transitionsOffset, transitionsLength * 9, total, 'transitions');
 
   assert(_allAscii(data, nameOffset, nameOffset + nameLength));
   final name = String.fromCharCodes(data, nameOffset, nameOffset + nameLength);
