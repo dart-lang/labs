@@ -4,6 +4,7 @@
 
 // ignore_for_file: unreachable_from_main
 
+// ignore: deprecated_member_use
 import 'dart:mirrors' show reflectClass;
 
 import 'package:gcloud/datastore.dart' as datastore;

@@ -9,6 +9,7 @@ import 'dart:core';
 // Importing `dart:core` as `core` to allow access to `String` in `IdType`
 //   without conflicts.
 import 'dart:core' as core;
+// ignore: deprecated_member_use
 import 'dart:mirrors' as mirrors;
 
 import 'package:meta/meta.dart';
