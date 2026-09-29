@@ -36,7 +36,7 @@
 ///     object_name
 ///
 /// An absolute name includes the bucket name and uses the `gs://` prefix
-/// also used by the `gsutil` tool. An absolute name looks like this.
+/// also used by the `gcloud` tool. An absolute name looks like this.
 ///
 ///     gs://bucket_name/object_name
 ///
