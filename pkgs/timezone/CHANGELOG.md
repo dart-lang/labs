@@ -1,4 +1,4 @@
-## 0.11.1-wip
+## 0.11.2
 
 - Update timezone database to 2026c.
 - Validate header offsets and lengths in tzdb deserializer.
