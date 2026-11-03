@@ -8,9 +8,11 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  args: ^2.6.0
   crypto: ^3.0.6
   path: ^1.9.1
   pub_semver: ^2.1.5
+  webcrypto: ^0.6.1
 
 dev_dependencies:
   dart_flutter_team_lints: ^3.5.2

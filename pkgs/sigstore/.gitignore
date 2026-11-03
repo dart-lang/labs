@@ -24,3 +24,5 @@ pubspec.lock
 
 # Mac
 .DS_Store
+
+bin/conformance

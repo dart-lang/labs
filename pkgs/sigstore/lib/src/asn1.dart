@@ -102,12 +102,35 @@ class Asn1Reader {
       }
     }
 
-    // Search for SAN URI (e.g. https://github.com/...)
-    final sanMatch = RegExp(
-      r'https://github\.com/[^\x00-\x1F\x7F-\xFF]+',
-    ).firstMatch(utf8.decode(derBytes, allowMalformed: true));
-    if (sanMatch != null) {
-      sanUri = sanMatch.group(0);
+    // Parse Subject Alternative Name (SAN) from GeneralNames
+    // Tag 0x86 = uniformResourceIdentifier [6], Tag 0x81 = rfc822Name [1]
+    for (var i = 0; i < derBytes.length - 2; i++) {
+      final tag = derBytes[i];
+      if (tag == 0x86 || tag == 0x81) {
+        var len = derBytes[i + 1];
+        var contentOffset = i + 2;
+        if ((len & 0x80) != 0) {
+          final numOctets = len & 0x7F;
+          if (numOctets == 1 && i + 2 < derBytes.length) {
+            len = derBytes[i + 2];
+            contentOffset = i + 3;
+          } else {
+            continue;
+          }
+        }
+        if (len > 0 && contentOffset + len <= derBytes.length) {
+          final sanBytes = derBytes.sublist(contentOffset, contentOffset + len);
+          final text = utf8.decode(sanBytes, allowMalformed: true);
+          if (tag == 0x86 &&
+              (text.startsWith('https://') || text.startsWith('http://'))) {
+            sanUri ??= text;
+          } else if (tag == 0x81 &&
+              text.contains('@') &&
+              !text.contains('\x00')) {
+            sanUri ??= text;
+          }
+        }
+      }
     }
 
     return FulcioCertificateInfo(
@@ -139,6 +162,69 @@ class Asn1Reader {
         }
       }
     }
+    return null;
+  }
+
+  /// Extracts the `SubjectPublicKeyInfo` (SPKI) DER bytes from an X.509
+  /// certificate.
+  static Uint8List? extractSubjectPublicKeyInfo(Uint8List derBytes) {
+    try {
+      final reader = Asn1Reader(derBytes);
+      if (reader.readTag() != 0x30) return null;
+      reader.readLength();
+
+      // tbsCertificate
+      if (reader.readTag() != 0x30) return null;
+      final tbsLen = reader.readLength();
+      final tbsEnd = reader.offset + tbsLen;
+
+      // 1. Version [0] (optional)
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0xA0) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 2. Serial Number
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x02) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 3. Signature Algorithm
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 4. Issuer
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 5. Validity
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 6. Subject
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        reader.readTag();
+        final len = reader.readLength();
+        reader.offset += len;
+      }
+      // 7. SubjectPublicKeyInfo
+      if (reader.offset < tbsEnd && reader.bytes[reader.offset] == 0x30) {
+        final spkiStart = reader.offset;
+        reader.readTag();
+        final spkiLen = reader.readLength();
+        final totalSpkiLen = (reader.offset - spkiStart) + spkiLen;
+        if (spkiStart + totalSpkiLen <= derBytes.length) {
+          return derBytes.sublist(spkiStart, spkiStart + totalSpkiLen);
+        }
+      }
+    } catch (_) {}
     return null;
   }
 }
