@@ -1,3 +1,7 @@
+## Unreleased
+
+- Use a UTC year and deterministic sort order when generating time zone data.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
