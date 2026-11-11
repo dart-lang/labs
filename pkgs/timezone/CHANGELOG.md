@@ -1,3 +1,7 @@
+## Unreleased
+
+- Close standalone HTTP clients and report unsuccessful database downloads.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
