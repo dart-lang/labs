@@ -85,15 +85,6 @@ FilteredLocationDatabase filterTimeZoneData(
 
 /// Convert [tzfile.Location] to [Location]
 Location tzfileLocationToNativeLocation(tzfile.Location loc) {
-  // convert to milliseconds
-  final transitionAt = loc.transitionAt
-      .map(
-        (i) => (i < -_maxSecondsSinceEpoch)
-            ? -_maxMillisecondsSinceEpoch
-            : i * 1000,
-      )
-      .toList();
-
   final zones = <TimeZone>[];
 
   for (final z in loc.zones) {
@@ -106,5 +97,33 @@ Location tzfileLocationToNativeLocation(tzfile.Location loc) {
     );
   }
 
-  return Location(loc.name, transitionAt, loc.transitionZone, zones);
+  final transitionAt = <int>[];
+  final transitionZone = <int>[];
+  int? initialZone;
+  for (var i = 0; i < loc.transitionAt.length; i++) {
+    final seconds = loc.transitionAt[i];
+    if (seconds <= -_maxSecondsSinceEpoch) {
+      initialZone = loc.transitionZone[i];
+    } else if (seconds <= _maxSecondsSinceEpoch) {
+      transitionAt.add(seconds * 1000);
+      transitionZone.add(loc.transitionZone[i]);
+    } else {
+      // Later transitions can influence the fallback before the first one.
+      if (initialZone == null) {
+        final source = Location(
+          loc.name,
+          loc.transitionAt,
+          loc.transitionZone,
+          zones,
+        );
+        initialZone = zones.indexOf(source.timeZone(-_maxSecondsSinceEpoch));
+      }
+      break;
+    }
+  }
+  if (initialZone != null) {
+    transitionAt.insert(0, -_maxMillisecondsSinceEpoch);
+    transitionZone.insert(0, initialZone);
+  }
+  return Location(loc.name, transitionAt, transitionZone, zones);
 }
