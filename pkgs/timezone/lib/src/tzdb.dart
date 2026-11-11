@@ -212,7 +212,25 @@ Location _deserializeLocation(Uint8List data) {
   _checkRange(zonesOffset, zonesLength * 8, total, 'zones');
   _checkRange(transitionsOffset, transitionsLength * 9, total, 'transitions');
 
-  assert(_allAscii(data, nameOffset, nameOffset + nameLength));
+  // These offsets are produced by the tzdb writer. Validate them in release
+  // builds as well: malformed input must not reach unchecked indexed reads.
+  if (nameOffset < 32 ||
+      abbreviationsOffset < nameOffset + nameLength ||
+      zonesOffset < abbreviationsOffset + abbreviationsLength ||
+      zonesOffset % 4 != 0 ||
+      transitionsOffset < zonesOffset + zonesLength * 8 ||
+      transitionsOffset % 8 != 0) {
+    throw const FormatException('Malformed tzdb: invalid section layout');
+  }
+  if (!_allAscii(data, nameOffset, nameOffset + nameLength) ||
+      !_allAscii(
+        data,
+        abbreviationsOffset,
+        abbreviationsOffset + abbreviationsLength,
+      )) {
+    throw const FormatException('Malformed tzdb: non-ASCII text');
+  }
+
   final name = String.fromCharCodes(data, nameOffset, nameOffset + nameLength);
   final abbreviations = <String>[];
   final zones = <TimeZone>[];
@@ -226,11 +244,14 @@ Location _deserializeLocation(Uint8List data) {
   final abbreviationsEnd = abbreviationsOffset + abbreviationsLength;
   for (var i = abbreviationsOffset; i < abbreviationsEnd; i++) {
     if (data[i] == 0) {
-      assert(_allAscii(data, offset, i));
       final abbreviation = String.fromCharCodes(data, offset, i);
       abbreviations.add(abbreviation);
       offset = i + 1;
     }
+  }
+
+  if (offset != abbreviationsEnd) {
+    throw const FormatException('Malformed tzdb: unterminated abbreviation');
   }
 
   // TimeZones
@@ -247,6 +268,9 @@ Location _deserializeLocation(Uint8List data) {
     final zoneOffset = Duration(seconds: bdata.getInt32(offset));
     final zoneIsDst = bdata.getUint8(offset + 4);
     final zoneAbbreviationIndex = bdata.getUint8(offset + 5);
+    if (zoneIsDst > 1 || zoneAbbreviationIndex >= abbreviations.length) {
+      throw FormatException('Malformed tzdb: invalid zone entry at index $i');
+    }
     offset += 8;
     zones.add(
       TimeZone(
@@ -264,12 +288,33 @@ Location _deserializeLocation(Uint8List data) {
   offset = transitionsOffset;
   assert((offset % 8) == 0);
   for (var i = 0; i < transitionsLength; i++) {
-    transitionAt.add(bdata.getFloat64(offset).toInt() * 1000); // convert to ms
+    final seconds = bdata.getFloat64(offset);
+    if (!seconds.isFinite ||
+        seconds < -8640000000000 ||
+        seconds > 8640000000000) {
+      throw FormatException('Malformed tzdb: invalid transition at index $i');
+    }
+    // The serialized format uses whole seconds, and Location lookup relies
+    // on nondecreasing transitions for its binary search.
+    final milliseconds = seconds.toInt() * 1000;
+    if (seconds != seconds.truncateToDouble() ||
+        (transitionAt.isNotEmpty && milliseconds < transitionAt.last)) {
+      throw FormatException(
+        'Malformed tzdb: out-of-order or fractional transition at index $i',
+      );
+    }
+    transitionAt.add(milliseconds);
     offset += 8;
   }
 
   for (var i = 0; i < transitionsLength; i++) {
-    transitionZone.add(bdata.getUint8(offset));
+    final zoneIndex = bdata.getUint8(offset);
+    if (zoneIndex >= zones.length) {
+      throw FormatException(
+        'Malformed tzdb: invalid transition zone at index $i',
+      );
+    }
+    transitionZone.add(zoneIndex);
     offset += 1;
   }
 
