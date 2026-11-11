@@ -1,3 +1,7 @@
+## Unreleased
+
+- Correct TZif section parsing and validate truncated or malformed records.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
