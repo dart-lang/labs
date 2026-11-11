@@ -1,3 +1,7 @@
+## Unreleased
+
+- Reject malformed coordinates in IANA zone.tab files.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
