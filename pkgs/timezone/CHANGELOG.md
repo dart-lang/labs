@@ -1,3 +1,7 @@
+## Unreleased
+
+- Preserve the active TZif offset at Dart DateTime limits.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
