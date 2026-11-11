@@ -2,6 +2,7 @@
 
 - Update timezone database to 2026f.
 - Speed up embedded database decoding in AOT builds.
+- Speed up time zone lookups while preserving existing Location behavior.
 
 ## 0.11.2
 
