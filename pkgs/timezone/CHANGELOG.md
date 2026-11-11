@@ -1,3 +1,7 @@
+## Unreleased
+
+- Preserve the active time zone offset at the start of filtered data.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
