@@ -1,6 +1,6 @@
 // This is a generated file. Do not edit.
 // Timezone data version: 2026e
-import 'dart:typed_data';
+import 'dart:convert';
 
 import '../src/env.dart';
 import '../src/exceptions.dart';
@@ -10,7 +10,7 @@ import '../src/exceptions.dart';
 /// Throws [TimeZoneInitException] when something is wrong.
 void initializeTimeZones() {
   try {
-    initializeDatabase(Uint8List.fromList(_embeddedData.codeUnits));
+    initializeDatabase(latin1.encode(_embeddedData));
   }
   // ignore: avoid_catches_without_on_clauses
   catch (e) {
