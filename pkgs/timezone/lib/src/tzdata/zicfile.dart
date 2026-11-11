@@ -59,6 +59,9 @@ class _Header {
 
   factory _Header.fromBytes(List<int> rawData) {
     final data = rawData is Uint8List ? rawData : Uint8List.fromList(rawData);
+    if (data.length < size) {
+      throw InvalidZoneInfoDataException('Truncated TZif count header');
+    }
     final bdata = ByteData.sublistView(data);
 
     final tzh_ttisgmtcnt = bdata.getInt32(0);
@@ -67,6 +70,16 @@ class _Header {
     final tzh_timecnt = bdata.getInt32(12);
     final tzh_typecnt = bdata.getInt32(16);
     final tzh_charcnt = bdata.getInt32(20);
+
+    if (tzh_ttisgmtcnt < 0 ||
+        tzh_ttisstdcnt < 0 ||
+        tzh_leapcnt < 0 ||
+        tzh_timecnt < 0 ||
+        tzh_typecnt <= 0 ||
+        tzh_typecnt > 256 ||
+        tzh_charcnt < 0) {
+      throw InvalidZoneInfoDataException('Invalid TZif section counts');
+    }
 
     return _Header(
       tzh_ttisgmtcnt,
@@ -81,6 +94,9 @@ class _Header {
 
 /// Read NUL-terminated string
 String _readByteString(Uint8List data, int offset) {
+  if (offset < 0 || offset >= data.length) {
+    throw InvalidZoneInfoDataException('Invalid TZif abbreviation offset');
+  }
   var i = offset;
   for (; i < data.length; i++) {
     final byte = data[i];
@@ -88,7 +104,16 @@ String _readByteString(Uint8List data, int offset) {
     if (byte == 0) break;
     throw FormatException('Not ASCII', data, i);
   }
+  if (i == data.length) {
+    throw InvalidZoneInfoDataException('Unterminated TZif abbreviation');
+  }
   return String.fromCharCodes(data, offset, i);
+}
+
+void _requireRange(int offset, int length, int size) {
+  if (offset < 0 || length < 0 || offset > size || length > size - offset) {
+    throw InvalidZoneInfoDataException('Truncated or malformed TZif data');
+  }
 }
 
 /// This exception is thrown when Zone Info data is invalid.
@@ -166,6 +191,8 @@ class Location {
   factory Location.fromBytes(String name, List<int> rawData) {
     final data = rawData is Uint8List ? rawData : Uint8List.fromList(rawData);
 
+    // TZif begins with a 20-byte magic/version prefix and 24-byte header.
+    _requireRange(0, 20 + _Header.size, data.length);
     final bdata = ByteData.sublistView(data);
 
     final magic1 = bdata.getUint32(0);
@@ -179,11 +206,12 @@ class Location {
     switch (version1) {
       case 0:
         final header = _Header.fromBytes(
-          Uint8List.sublistView(bdata, offset, _Header.size),
+          Uint8List.sublistView(bdata, offset, offset + _Header.size),
         );
 
         // calculating data offsets
         final dataOffset = offset + _Header.size;
+        _requireRange(dataOffset, header.dataLength(4), data.length);
         final transitionAtOffset = dataOffset;
         final transitionZoneOffset =
             transitionAtOffset + header.tzh_timecnt * 5;
@@ -205,7 +233,11 @@ class Location {
         }
 
         for (var i = 0; i < header.tzh_timecnt; i++) {
-          transitionZone.add(bdata.getUint8(offset));
+          final zoneIndex = bdata.getUint8(offset);
+          if (zoneIndex >= header.tzh_typecnt) {
+            throw InvalidZoneInfoDataException('Invalid TZif transition zone');
+          }
+          transitionZone.add(zoneIndex);
           offset += 1;
         }
 
@@ -233,8 +265,11 @@ class Location {
 
         for (var i = 0; i < header.tzh_typecnt; i++) {
           final tt_gmtoff = bdata.getInt32(offset);
-          final tt_isdst = bdata.getInt8(offset + 4);
+          final tt_isdst = bdata.getUint8(offset + 4);
           final tt_abbrind = bdata.getUint8(offset + 5);
+          if (tt_isdst > 1) {
+            throw InvalidZoneInfoDataException('Invalid TZif DST flag');
+          }
           offset += 6;
 
           zones.add(
@@ -254,7 +289,7 @@ class Location {
         for (var i = 0; i < header.tzh_leapcnt; i++) {
           leapAt.add(bdata.getInt32(offset));
           leapDiff.add(bdata.getInt32(offset + 4));
-          offset += 5;
+          offset += 8;
         }
 
         // read std flags
@@ -289,11 +324,16 @@ class Location {
 
       case 50:
       case 51:
-        // skip old version header/data
+      case 52:
+        // Skip the legacy 32-bit section (TZif versions 2, 3 and 4).
+        // Validate its bounds before reading the second header.
         final header1 = _Header.fromBytes(
           Uint8List.sublistView(bdata, offset, offset + _Header.size),
         );
-        offset += _Header.size + header1.dataLength(4);
+        offset += _Header.size;
+        _requireRange(offset, header1.dataLength(4), data.length);
+        offset += header1.dataLength(4);
+        _requireRange(offset, 20 + _Header.size, data.length);
 
         final magic2 = bdata.getUint32(offset);
         if (magic2 != _ziMagic) {
@@ -318,6 +358,7 @@ class Location {
 
         // calculating data offsets
         final dataOffset = offset + _Header.size;
+        _requireRange(dataOffset, header2.dataLength(8), data.length);
         final transitionAtOffset = dataOffset;
         final transitionZoneOffset =
             transitionAtOffset + header2.tzh_timecnt * 9;
@@ -339,7 +380,11 @@ class Location {
         }
 
         for (var i = 0; i < header2.tzh_timecnt; i++) {
-          transitionZone.add(bdata.getUint8(offset));
+          final zoneIndex = bdata.getUint8(offset);
+          if (zoneIndex >= header2.tzh_typecnt) {
+            throw InvalidZoneInfoDataException('Invalid TZif transition zone');
+          }
+          transitionZone.add(zoneIndex);
           offset += 1;
         }
 
@@ -367,8 +412,11 @@ class Location {
 
         for (var i = 0; i < header2.tzh_typecnt; i++) {
           final tt_gmtoff = bdata.getInt32(offset);
-          final tt_isdst = bdata.getInt8(offset + 4);
+          final tt_isdst = bdata.getUint8(offset + 4);
           final tt_abbrind = bdata.getUint8(offset + 5);
+          if (tt_isdst > 1) {
+            throw InvalidZoneInfoDataException('Invalid TZif DST flag');
+          }
           offset += 6;
 
           zones.add(
@@ -388,7 +436,7 @@ class Location {
         for (var i = 0; i < header2.tzh_leapcnt; i++) {
           leapAt.add(bdata.getInt64(offset));
           leapDiff.add(bdata.getInt32(offset + 8));
-          offset += 9;
+          offset += 12;
         }
 
         // read std flags
