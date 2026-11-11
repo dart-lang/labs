@@ -2,6 +2,7 @@
 
 - Update timezone database to 2026f.
 - Speed up embedded database decoding in AOT builds.
+- Preserve the active TZif offset at Dart DateTime limits.
 
 ## 0.11.2
 
