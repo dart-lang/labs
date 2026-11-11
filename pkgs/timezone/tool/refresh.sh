@@ -36,7 +36,7 @@ const List<String> commonLocations = [
 EOF
 
 # Extract 'Zone' lines, take the ID (column 2), wrap in quotes, and sort
-awk '/^Zone/ { print "  \x27" $2 "\x27," }' rearguard.zi | sort -u >> "$target_file"
+awk '/^Zone/ { print "  \x27" $2 "\x27," }' rearguard.zi | LC_ALL=C sort -u >> "$target_file"
 
 # Close the Set
 echo "];" >> "$target_file"
