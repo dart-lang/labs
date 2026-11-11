@@ -2,6 +2,7 @@
 
 - Update timezone database to 2026f.
 - Speed up embedded database decoding in AOT builds.
+- Close standalone HTTP clients and report unsuccessful database downloads.
 
 ## 0.11.2
 
