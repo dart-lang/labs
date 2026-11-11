@@ -58,6 +58,12 @@ Future<String> downloadTzData(String version, String dest) async {
 
     final req = await client.getUrl(uri);
     final resp = await req.close();
+    if (resp.statusCode != HttpStatus.ok) {
+      throw HttpException(
+        'IANA tzdb download failed: HTTP ${resp.statusCode}',
+        uri: uri,
+      );
+    }
     final out = File(outPath);
     final sink = out.openWrite();
     try {
@@ -66,7 +72,7 @@ Future<String> downloadTzData(String version, String dest) async {
       await sink.close();
     }
   } finally {
-    client.close();
+    client.close(force: true);
   }
   return outPath;
 }

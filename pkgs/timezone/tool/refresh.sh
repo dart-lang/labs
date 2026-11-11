@@ -1,16 +1,19 @@
 #! /bin/bash
-set -e
+set -euo pipefail
 
-[[ $0 != 'tool/refresh.sh' ]] && echo "Must be run as tool/refresh.sh" && exit
+cd -- "$(dirname -- "$0")/.."
 
 dart pub get
 
 temp=$(mktemp -d -t tzdata-XXXXXXXXXX)
+trap 'rm -rf -- "$temp"' EXIT
 
-pushd $temp > /dev/null
+pushd "$temp" > /dev/null
 
 echo "Fetching latest database..."
-curl https://data.iana.org/time-zones/tzdata-latest.tar.gz | tar -zx
+curl --fail --location --show-error --silent --retry 3 \
+  --output tzdata.tar.gz https://data.iana.org/time-zones/tzdata-latest.tar.gz
+tar -zxf tzdata.tar.gz
 
 tz_version=$(cat version)
 echo "Detected timezone database version: $tz_version"
@@ -50,18 +53,16 @@ popd > /dev/null
 mkdir -p lib/data
 
 # Pass the zoneinfo directory to the encoding script
-dart tool/encode_tzf.dart --zoneinfo $temp/zoneinfo
-
-rm -r $temp
+dart tool/encode_tzf.dart --zoneinfo "$temp/zoneinfo"
 
 # Create the source embeddings
 for scope in latest latest_all latest_10y; do
   echo "Creating embedding: $scope..."
-  dart tool/encode_dart.dart lib/data/$scope.{tzf,dart} $tz_version
+  dart tool/encode_dart.dart "lib/data/$scope.tzf" "lib/data/$scope.dart" "$tz_version"
 done
 
 dart format lib/data
 
-if [[ -n "$GITHUB_OUTPUT" ]]; then
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   echo "tz_version=$tz_version" >> "$GITHUB_OUTPUT"
 fi

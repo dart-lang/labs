@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fail early on download errors and clean up temporary refresh files.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
