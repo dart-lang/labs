@@ -1,3 +1,7 @@
+## Unreleased
+
+- Speed up embedded database decoding in AOT builds.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
