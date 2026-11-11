@@ -1,6 +1,7 @@
 ## 0.11.3-wip
 
 - Update timezone database to 2026f.
+- Speed up embedded database decoding in AOT builds.
 
 ## 0.11.2
 
