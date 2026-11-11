@@ -1,3 +1,7 @@
+## Unreleased
+
+- Validate serialized database entries and replace the active database atomically.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
