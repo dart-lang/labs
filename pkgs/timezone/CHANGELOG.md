@@ -1,3 +1,7 @@
+## Unreleased
+
+- Speed up time zone lookups while preserving existing Location behavior.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
