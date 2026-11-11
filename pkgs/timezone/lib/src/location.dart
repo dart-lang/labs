@@ -50,22 +50,35 @@ class Location {
   late TimeZone _cacheZone;
 
   Location(this.name, this.transitionAt, this.transitionZone, this.zones) {
-    // Fill in the cache with information about right now,
-    // since that will be the most common lookup.
-    for (var i = 0; i < transitionAt.length; i++) {
-      final tAt = transitionAt[i];
+    // Each loaded location can have hundreds of transitions. Find today's
+    // interval by binary search instead of scanning the entire list.
+    if (zones.isNotEmpty &&
+        transitionAt.isNotEmpty &&
+        _cacheNow >= transitionAt.first) {
+      final index = _transitionIndex(_cacheNow);
+      _cacheStart = transitionAt[index];
+      _cacheEnd = index + 1 < transitionAt.length
+          ? transitionAt[index + 1]
+          : maxTime;
+      _cacheZone = zones[transitionZone[index]];
+    }
+  }
 
-      if ((tAt <= _cacheNow) &&
-          ((i + 1 == transitionAt.length) ||
-              (_cacheNow < transitionAt[i + 1]))) {
-        _cacheStart = tAt;
-        _cacheEnd = maxTime;
-        if (i + 1 < transitionAt.length) {
-          _cacheEnd = transitionAt[i + 1];
-        }
-        _cacheZone = zones[transitionZone[i]];
+  // Find the last transition no later than [millisecondsSinceEpoch].
+  // Call only when the transition list is nonempty and the timestamp is
+  // on or after the first transition.
+  int _transitionIndex(int millisecondsSinceEpoch) {
+    var lo = 0;
+    var hi = transitionAt.length;
+    while (hi - lo > 1) {
+      final mid = lo + (hi - lo) ~/ 2;
+      if (millisecondsSinceEpoch < transitionAt[mid]) {
+        hi = mid;
+      } else {
+        lo = mid;
       }
     }
+    return lo;
   }
 
   /// translate instant in time expressed as milliseconds since
@@ -115,37 +128,38 @@ class Location {
       return TzInstant(_cacheZone, _cacheStart, _cacheEnd);
     }
 
-    if (transitionAt.isEmpty || millisecondsSinceEpoch < transitionAt[0]) {
-      final zone = _firstZone();
-      final start = minTime;
-      final end = transitionAt.isEmpty ? maxTime : transitionAt.first;
-      return TzInstant(zone, start, end);
+    if (transitionAt.isEmpty || millisecondsSinceEpoch < transitionAt.first) {
+      return TzInstant(
+        _firstZone(),
+        minTime,
+        transitionAt.isEmpty ? maxTime : transitionAt.first,
+      );
     }
 
-    // Binary search for entry with largest millisecondsSinceEpoch <= sec.
-    var lo = 0;
-    var hi = transitionAt.length;
-    var end = maxTime;
-
-    while (hi - lo > 1) {
-      final m = lo + (hi - lo) ~/ 2;
-      final at = transitionAt[m];
-
-      if (millisecondsSinceEpoch < at) {
-        end = at;
-        hi = m;
-      } else {
-        lo = m;
-      }
-    }
-
-    return TzInstant(zones[transitionZone[lo]], transitionAt[lo], end);
+    final index = _transitionIndex(millisecondsSinceEpoch);
+    final end = index + 1 < transitionAt.length
+        ? transitionAt[index + 1]
+        : maxTime;
+    return TzInstant(zones[transitionZone[index]], transitionAt[index], end);
   }
 
   /// timeZone method returns [TimeZone] in use at an instant in time expressed
   /// as milliseconds since January 1, 1970 00:00:00 UTC.
   TimeZone timeZone(int millisecondsSinceEpoch) {
-    return lookupTimeZone(millisecondsSinceEpoch).timeZone;
+    if (runtimeType != Location) {
+      return lookupTimeZone(millisecondsSinceEpoch).timeZone;
+    }
+    // This is the hot path for TZDateTime.from and repeated calendar
+    // conversions. Avoid allocating a TzInstant just to read its zone.
+    if (zones.isEmpty) return TimeZone.UTC;
+    if (millisecondsSinceEpoch >= _cacheStart &&
+        millisecondsSinceEpoch < _cacheEnd) {
+      return _cacheZone;
+    }
+    if (transitionAt.isEmpty || millisecondsSinceEpoch < transitionAt.first) {
+      return _firstZone();
+    }
+    return zones[transitionZone[_transitionIndex(millisecondsSinceEpoch)]];
   }
 
   /// timeZoneFromLocal method returns [TimeZone] in use at an instant in time
