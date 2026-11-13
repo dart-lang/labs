@@ -3,4 +3,4 @@
 // BSD-style license that can be found in the LICENSE file.
 
 export 'src/vm_windows_file_system.dart'
-    if (dart.library.html) 'src/web_windows_file_system.dart';
+    if (dart.library.js_interop) 'src/web_windows_file_system.dart';
