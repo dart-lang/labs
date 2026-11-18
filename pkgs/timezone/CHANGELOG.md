@@ -1,3 +1,7 @@
+## 0.11.3-wip
+
+- Update timezone database to 2026f.
+
 ## 0.11.2
 
 - Update timezone database to 2026c.
