@@ -1,6 +1,9 @@
 ## 0.11.3-wip
 
 - Update timezone database to 2026f.
+- `TZDateTime.parse` now reads a string without a UTC offset as a date and
+  time in the given location. Before, it read the string in the local time
+  zone of the machine and converted the result to the location.
 
 ## 0.11.2
 
