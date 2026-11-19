@@ -86,46 +86,106 @@ void main() {
       () => tzdata.Location.fromBytes('Test/Zone', [0, 1, 2]),
       throwsA(isA<tzdata.InvalidZoneInfoDataException>()),
     );
-    final truncated = _tzif(50).sublist(0, 53);
-    expect(
-      () => tzdata.Location.fromBytes('Test/Zone', truncated),
-      throwsA(isA<tzdata.InvalidZoneInfoDataException>()),
-    );
   });
 
-  test('invalid transition zone index is rejected', () {
-    final bytes = _tzif(0);
-    bytes[44 + 4] = 255;
-    expect(
-      () => tzdata.Location.fromBytes('Test/Zone', bytes),
-      throwsA(isA<tzdata.InvalidZoneInfoDataException>()),
-    );
+  for (final version in [0, 50]) {
+    final layout = _Layout(version);
+
+    group('TZif version $version', () {
+      test('truncated data block is rejected', () {
+        final bytes = _tzif(version).sublist(0, layout.dataStart + 10);
+        expect(() => _parse(bytes), _throwsInvalid());
+      });
+
+      test('invalid transition zone index is rejected', () {
+        final bytes = _tzif(version);
+        bytes[layout.zoneIndex] = 255;
+        expect(() => _parse(bytes), _throwsInvalid());
+      });
+
+      test('invalid DST flag is rejected', () {
+        final bytes = _tzif(version);
+        bytes[layout.type + 4] = 2;
+        expect(() => _parse(bytes), _throwsInvalid());
+      });
+
+      test('invalid abbreviation offset is rejected', () {
+        final bytes = _tzif(version);
+        bytes[layout.type + 5] = 255;
+        expect(() => _parse(bytes), _throwsInvalid());
+      });
+
+      test('unterminated abbreviation is rejected', () {
+        final bytes = _tzif(version);
+        bytes[layout.type + 6 + 3] = 65;
+        expect(() => _parse(bytes), _throwsInvalid());
+      });
+
+      test('non-ASCII abbreviation is rejected', () {
+        final bytes = _tzif(version);
+        bytes[layout.type + 6] = 0xe9;
+        expect(() => _parse(bytes), _throwsInvalid());
+      });
+
+      for (final (field, offset, value) in [
+        ('tzh_typecnt == 0', 16, 0),
+        ('negative tzh_timecnt', 12, -1),
+        ('negative tzh_leapcnt', 8, -1),
+        ('tzh_charcnt == 0', 20, 0),
+        ('mismatched tzh_ttisstdcnt', 4, 2),
+        ('mismatched tzh_ttisgmtcnt', 0, 2),
+      ]) {
+        test('$field is rejected', () {
+          final bytes = _tzif(version);
+          ByteData.sublistView(bytes).setInt32(layout.counts + offset, value);
+          expect(
+            () => _parse(bytes),
+            _throwsInvalid('Invalid TZif section counts'),
+          );
+        });
+      }
+    });
+  }
+
+  test('truncated second header is rejected', () {
+    final bytes = _tzif(50).sublist(0, _Layout.v1Length + 30);
+    expect(() => _parse(bytes), _throwsInvalid());
   });
 
-  test('invalid abbreviation offset is rejected', () {
+  test('flag sections may be omitted', () {
     final bytes = _tzif(0);
-    bytes[44 + 4 + 1 + 5] = 255;
-    expect(
-      () => tzdata.Location.fromBytes('Test/Zone', bytes),
-      throwsA(isA<tzdata.InvalidZoneInfoDataException>()),
-    );
+    final data = ByteData.sublistView(bytes);
+    data.setInt32(20, 0); // tzh_ttisgmtcnt
+    data.setInt32(24, 0); // tzh_ttisstdcnt
+    final zone = _parse(bytes.sublist(0, bytes.length - 2));
+    expect(zone.isStd, isEmpty);
+    expect(zone.isUtc, isEmpty);
   });
+}
 
-  test('invalid DST flag is rejected', () {
-    final bytes = _tzif(0);
-    bytes[44 + 4 + 1 + 4] = 2;
-    expect(
-      () => tzdata.Location.fromBytes('Test/Zone', bytes),
-      throwsA(isA<tzdata.InvalidZoneInfoDataException>()),
-    );
-  });
+tzdata.Location _parse(List<int> bytes) =>
+    tzdata.Location.fromBytes('Test/Zone', bytes);
 
-  test('unterminated abbreviation is rejected', () {
-    final bytes = _tzif(0);
-    bytes[44 + 4 + 1 + 6 + 3] = 65;
-    expect(
-      () => tzdata.Location.fromBytes('Test/Zone', bytes),
-      throwsA(isA<tzdata.InvalidZoneInfoDataException>()),
-    );
-  });
+Matcher _throwsInvalid([String? message]) {
+  var matcher = isA<tzdata.InvalidZoneInfoDataException>();
+  if (message != null) {
+    matcher = matcher.having((e) => e.msg, 'msg', message);
+  }
+  return throwsA(matcher);
+}
+
+/// Offsets inside the section that [_tzif] makes the parser read.
+class _Layout {
+  static const v1Length = 44 + 4 + 1 + 6 + 4 + 8 * 2 + 2;
+
+  final int dataStart;
+  final int timeSize;
+
+  _Layout(int version)
+    : dataStart = version == 0 ? 44 : v1Length + 44,
+      timeSize = version == 0 ? 4 : 8;
+
+  int get counts => dataStart - 24;
+  int get zoneIndex => dataStart + timeSize;
+  int get type => zoneIndex + 1;
 }

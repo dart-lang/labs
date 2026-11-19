@@ -71,13 +71,13 @@ class _Header {
     final tzh_typecnt = bdata.getInt32(16);
     final tzh_charcnt = bdata.getInt32(20);
 
-    if (tzh_ttisgmtcnt < 0 ||
-        tzh_ttisstdcnt < 0 ||
-        tzh_leapcnt < 0 ||
+    // RFC 9636 section 3.1.
+    if (tzh_leapcnt < 0 ||
         tzh_timecnt < 0 ||
         tzh_typecnt <= 0 ||
-        tzh_typecnt > 256 ||
-        tzh_charcnt < 0) {
+        tzh_charcnt <= 0 ||
+        (tzh_ttisgmtcnt != 0 && tzh_ttisgmtcnt != tzh_typecnt) ||
+        (tzh_ttisstdcnt != 0 && tzh_ttisstdcnt != tzh_typecnt)) {
       throw InvalidZoneInfoDataException('Invalid TZif section counts');
     }
 
@@ -102,7 +102,7 @@ String _readByteString(Uint8List data, int offset) {
     final byte = data[i];
     if (byte >= 1 && byte < 0x80) continue;
     if (byte == 0) break;
-    throw FormatException('Not ASCII', data, i);
+    throw InvalidZoneInfoDataException('Non-ASCII TZif abbreviation');
   }
   if (i == data.length) {
     throw InvalidZoneInfoDataException('Unterminated TZif abbreviation');
