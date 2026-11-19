@@ -63,6 +63,46 @@ Future<void> main() async {
     });
   });
 
+  group('parse', () {
+    // None of these may depend on the local time zone of the machine.
+    test('without UTC offset', () {
+      final t1 = TZDateTime.parse(la, '2010-01-02 03:04:05.006007');
+      expect(t1.toString(), equals('2010-01-02 03:04:05.006007-0800'));
+      final t2 = TZDateTime.parse(newYork, '20100102T030405');
+      expect(t2.toString(), equals('2010-01-02 03:04:05.000-0500'));
+    });
+
+    test('without UTC offset, only date', () {
+      final t = TZDateTime.parse(la, '2010-01-02');
+      expect(t.toString(), equals('2010-01-02 00:00:00.000-0800'));
+    });
+
+    test('without UTC offset, in a DST gap', () {
+      final t = TZDateTime.parse(newYork, '2010-03-14 02:30');
+      expect(
+        t.toString(),
+        equals(TZDateTime(newYork, 2010, 3, 14, 2, 30).toString()),
+      );
+    });
+
+    test('without UTC offset, in a DST gap of another time zone', () {
+      // Clocks in Europe skip this hour, but not in New York.
+      final t = TZDateTime.parse(newYork, '2026-03-29 02:30');
+      expect(t.toString(), equals('2026-03-29 02:30:00.000-0400'));
+    });
+
+    test('with UTC offset', () {
+      final t1 = TZDateTime.parse(la, '2010-01-02T03:04:05Z');
+      expect(t1.toString(), equals('2010-01-01 19:04:05.000-0800'));
+      final t2 = TZDateTime.parse(newYork, '2002-02-27T14:00:00-0500');
+      expect(t2.toString(), equals('2002-02-27 14:00:00.000-0500'));
+    });
+
+    test('invalid', () {
+      expect(() => TZDateTime.parse(la, '2010-01-02X'), throwsFormatException);
+    });
+  });
+
   group('Offsets', () {
     group('UTC to America/Detroit', () {
       group('Simple translations', () {

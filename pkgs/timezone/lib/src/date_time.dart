@@ -281,6 +281,12 @@ class TZDateTime implements DateTime {
   ///
   /// The result is always in the time zone of the provided location.
   ///
+  /// A string with a UTC offset (`Z` or `+hh:mm`) names a moment in time, and
+  /// the result is that moment in [location]. A string without a UTC offset is
+  /// read as a date and time in [location], the same way as the arguments of
+  /// the [TZDateTime.new] constructor. The local time zone of the machine is
+  /// not used.
+  ///
   /// Examples of accepted strings:
   ///
   /// * `"2012-02-27 13:27:00"`
@@ -294,7 +300,21 @@ class TZDateTime implements DateTime {
   /// * `"-123450101 00:00:00 Z"`: in the year -12345.
   /// * `"2002-02-27T14:00:00-0500"`: Same as `"2002-02-27T19:00:00Z"`
   static TZDateTime parse(Location location, String formattedString) {
-    return TZDateTime.from(DateTime.parse(formattedString), location);
+    final dateTime = DateTime.parse(formattedString);
+    if (dateTime.isUtc) {
+      return TZDateTime.from(dateTime, location);
+    }
+    // There is no UTC offset, so [dateTime] is in the local time zone of the
+    // machine, which can shift a time that falls into a DST gap there. Parse
+    // the string again as UTC to get the date and time exactly as written. A
+    // string without a time part needs one before the `Z`.
+    final localDateTime =
+        DateTime.tryParse('${formattedString}Z') ??
+        DateTime.parse('${formattedString}T00Z');
+    return TZDateTime.from(
+      _utcFromLocalDateTime(localDateTime, location),
+      location,
+    );
   }
 
   /// Returns this DateTime value in the UTC time zone.
