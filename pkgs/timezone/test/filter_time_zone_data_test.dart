@@ -49,6 +49,41 @@ void main() {
     expect(location.timeZone(march), summer);
   });
 
+  test('range after the last transition keeps only the final zone', () {
+    final december = DateTime.utc(2026, 12).millisecondsSinceEpoch;
+    final filtered = filterTimeZoneData(
+      db,
+      dateFrom: december,
+      dateTo: december,
+    );
+    final location = filtered.db.get('Asia/Jerusalem');
+    expect(location.transitionAt, [minTime]);
+    expect(location.transitionZone, [0]);
+    expect(location.timeZone(december), winter);
+    expect(filtered.report.newTransitionsCount, 1);
+  });
+
+  test('upper boundary includes a transition exactly at dateTo', () {
+    final may = DateTime.utc(2026, 5).millisecondsSinceEpoch;
+    final atTransition = filterTimeZoneData(
+      db,
+      dateFrom: may,
+      dateTo: october,
+    ).db.get('Asia/Jerusalem');
+    expect(atTransition.transitionAt, [minTime, october]);
+    expect(atTransition.transitionZone, [1, 0]);
+    expect(atTransition.timeZone(october), winter);
+
+    final beforeTransition = filterTimeZoneData(
+      db,
+      dateFrom: may,
+      dateTo: october - 1,
+    ).db.get('Asia/Jerusalem');
+    expect(beforeTransition.transitionAt, [minTime]);
+    expect(beforeTransition.transitionZone, [1]);
+    expect(beforeTransition.timeZone(october - 1), summer);
+  });
+
   test('range before first transition preserves the initial zone', () {
     final future = Location('Test/future', [october], [1], [winter, summer]);
     final source = LocationDatabase()..add(future);
