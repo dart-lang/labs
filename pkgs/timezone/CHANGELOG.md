@@ -2,6 +2,7 @@
 
 - Update timezone database to 2026f.
 - Speed up embedded database decoding in AOT builds.
+- Reject malformed coordinates in IANA zone.tab files.
 
 ## 0.11.2
 
