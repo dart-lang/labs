@@ -7,7 +7,8 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-const sigstoreTufCdn = 'https://tuf-repo-cdn.sigstore.dev';
+const sigstoreTufCdn =
+    'https://raw.githubusercontent.com/sigstore/root-signing/main/targets/trusted_root.json';
 
 /// Attempts to load the Sigstore `trusted_root.json` root of trust.
 /// Returns `null` if the file could not be found.
@@ -17,9 +18,15 @@ String? tryLoadTrustedRootJson({String? cachePath, String? overridePath}) {
     return file.existsSync() ? file.readAsStringSync() : null;
   }
 
-  if (Platform.environment['PUB_SIGSTORE_TRUST_ROOT'] case final envPath?) {
-    final file = File(envPath);
-    return file.existsSync() ? file.readAsStringSync() : null;
+  for (final envKey in [
+    'PUB_SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUSTED_ROOT',
+  ]) {
+    if (Platform.environment[envKey] case final envPath?) {
+      final file = File(envPath);
+      return file.existsSync() ? file.readAsStringSync() : null;
+    }
   }
 
   // 1. Check user cache (updated / cached root of trust):
@@ -88,15 +95,21 @@ String loadTrustedRootJson({String? cachePath, String? overridePath}) {
     return file.readAsStringSync();
   }
 
-  if (Platform.environment['PUB_SIGSTORE_TRUST_ROOT'] case final envPath?) {
-    final file = File(envPath);
-    if (!file.existsSync()) {
-      throw FileSystemException(
-        'Could not find Sigstore trusted root file at "$envPath" '
-        'specified by PUB_SIGSTORE_TRUST_ROOT.',
-      );
+  for (final envKey in [
+    'PUB_SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUST_ROOT',
+    'SIGSTORE_TRUSTED_ROOT',
+  ]) {
+    if (Platform.environment[envKey] case final envPath?) {
+      final file = File(envPath);
+      if (!file.existsSync()) {
+        throw FileSystemException(
+          'Could not find Sigstore trusted root file at "$envPath" '
+          'specified by $envKey.',
+        );
+      }
+      return file.readAsStringSync();
     }
-    return file.readAsStringSync();
   }
 
   final json = tryLoadTrustedRootJson(cachePath: cachePath);
@@ -124,7 +137,7 @@ Future<String> fetchLatestTrustedRootJson({
   String cdnUrl = sigstoreTufCdn,
   HttpClient? customHttpClient,
 }) async {
-  final uri = Uri.parse(cdnUrl).resolve('trusted_root.json');
+  final uri = Uri.parse(cdnUrl);
   final client = customHttpClient ?? HttpClient();
   try {
     final request = await client.getUrl(uri);
