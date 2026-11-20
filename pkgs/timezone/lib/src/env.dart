@@ -47,10 +47,13 @@ void setLocalLocation(Location location) {
 
 /// Initialize Time zone database.
 void initializeDatabase(List<int> rawData) {
+  // Decode and validate every chunk before replacing the live database.
+  // A truncated or corrupt file must not leave the application with a
+  // partially initialized set of locations (or reset its local zone).
+  final locations = tzdbDeserialize(rawData).toList(growable: false);
   _database.clear();
-
-  for (final l in tzdbDeserialize(rawData)) {
-    _database.add(l);
+  for (final location in locations) {
+    _database.add(location);
   }
 
   setLocalLocation(_utc);
