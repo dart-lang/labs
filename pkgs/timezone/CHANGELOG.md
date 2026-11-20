@@ -2,6 +2,7 @@
 
 - Update timezone database to 2026f.
 - Speed up embedded database decoding in AOT builds.
+- Correct TZif section parsing and validate truncated or malformed records.
 
 ## 0.11.2
 
