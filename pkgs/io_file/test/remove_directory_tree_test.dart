@@ -222,10 +222,9 @@ void main() {
           ),
         );
       },
-      skip:
-          io.Platform.isWindows
-              ? 'TODO(brianquinlan): make this work on Windows'
-              : false,
+      skip: io.Platform.isWindows
+          ? 'TODO(brianquinlan): make this work on Windows'
+          : false,
     );
 
     test(
@@ -255,10 +254,9 @@ void main() {
           ),
         );
       },
-      skip:
-          io.Platform.isWindows
-              ? 'TODO(brianquinlan): make this work on Windows'
-              : false,
+      skip: io.Platform.isWindows
+          ? 'TODO(brianquinlan): make this work on Windows'
+          : false,
     );
 
     test('non-existent directory', () {

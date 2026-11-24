@@ -81,9 +81,9 @@ void tests(FileUtils utils, FileSystem fs) {
           fileSystem is WindowsFileSystem
               ? win32.ERROR_ACCESS_DENIED
               : anyOf(
-                errors.eperm, // POSIX
-                errors.eisdir, // Linux
-              ),
+                  errors.eperm, // POSIX
+                  errors.eisdir, // Linux
+                ),
         ),
       ),
     );

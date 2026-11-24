@@ -112,10 +112,9 @@ void main() {
         test('Read small file: $i bytes', () async {
           final data = randomUint8List(i);
 
-          final fifo =
-              (await Fifo.create('$tmp/file'))
-                ..write(data)
-                ..close();
+          final fifo = (await Fifo.create('$tmp/file'))
+            ..write(data)
+            ..close();
 
           expect(fileSystem.readAsBytes(fifo.path), data);
         });
@@ -139,10 +138,9 @@ void main() {
         test('Read close to `blockSize`: $i bytes', () async {
           final data = randomUint8List(i);
 
-          final fifo =
-              (await Fifo.create('$tmp/file'))
-                ..write(data)
-                ..close();
+          final fifo = (await Fifo.create('$tmp/file'))
+            ..write(data)
+            ..close();
 
           expect(fileSystem.readAsBytes(fifo.path), data);
         });
