@@ -258,10 +258,9 @@ void tests(FileUtils utils, FileSystem fs) {
         final data = randomUint8List(i);
         final oldPath = '$tmp/file1';
         final newPath = '$tmp/file2';
-        final fifo =
-            (await Fifo.create(oldPath))
-              ..write(data)
-              ..close();
+        final fifo = (await Fifo.create(oldPath))
+          ..write(data)
+          ..close();
 
         fs.copyFile(fifo.path, newPath);
 
@@ -291,10 +290,9 @@ void tests(FileUtils utils, FileSystem fs) {
         final data = randomUint8List(i);
         final oldPath = '$tmp/file1';
         final newPath = '$tmp/file2';
-        final fifo =
-            (await Fifo.create(oldPath))
-              ..write(data)
-              ..close();
+        final fifo = (await Fifo.create(oldPath))
+          ..write(data)
+          ..close();
 
         fs.copyFile(fifo.path, newPath);
 

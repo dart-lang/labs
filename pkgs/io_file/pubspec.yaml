@@ -5,7 +5,7 @@ repository: https://github.com/dart-lang/labs/tree/main/pkgs/io_file
 publish_to: none
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.14.0
 
 dependencies:
   code_assets: ^0.19.0

@@ -34,10 +34,9 @@ Exception _getError(
   String? path2,
 }) {
   final strError = libc.strerror(errorCode);
-  final message =
-      strError == nullptr
-          ? 'unknown error'
-          : strError.cast<ffi.Utf8>().toDartString();
+  final message = strError == nullptr
+      ? 'unknown error'
+      : strError.cast<ffi.Utf8>().toDartString();
 
   if (errorCode == libc.ENOTEMPTY) {
     return DirectoryNotEmptyException(
@@ -191,10 +190,9 @@ final class PosixMetadata implements Metadata {
       DateTime.fromMicrosecondsSinceEpoch(accessedTimeNanos ~/ 1000);
 
   @override
-  DateTime? get creation =>
-      creationTimeNanos == null
-          ? null
-          : DateTime.fromMicrosecondsSinceEpoch(creationTimeNanos! ~/ 1000);
+  DateTime? get creation => creationTimeNanos == null
+      ? null
+      : DateTime.fromMicrosecondsSinceEpoch(creationTimeNanos! ~/ 1000);
 
   @override
   DateTime get modification =>
@@ -479,10 +477,9 @@ final class PosixFileSystem extends FileSystem {
               final errno = libc.errno;
               throw _getError(errno, systemCall: 'fstatat', path1: childPath);
             }
-            type =
-                stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR
-                    ? libc.DT_DIR
-                    : libc.DT_REG;
+            type = stat.ref.st_mode & libc.S_IFMT == libc.S_IFDIR
+                ? libc.DT_DIR
+                : libc.DT_REG;
           }
           if (type == libc.DT_DIR) {
             _removeDirectoryTree(fd, path, child.cast());

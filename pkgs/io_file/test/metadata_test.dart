@@ -79,11 +79,11 @@ void tests(FileUtils utils, FileSystem fs) {
       },
       skip:
           !(io.Platform.isAndroid |
-                  io.Platform.isIOS |
-                  io.Platform.isLinux |
-                  io.Platform.isIOS)
-              ? 'no /dev/tty'
-              : false,
+              io.Platform.isIOS |
+              io.Platform.isLinux |
+              io.Platform.isIOS)
+          ? 'no /dev/tty'
+          : false,
     );
     test('file', () {
       final path = '$tmp/file1';
@@ -149,10 +149,9 @@ void tests(FileUtils utils, FileSystem fs) {
       final data = fs.metadata(path);
       expect(data.isHidden, isNull);
     },
-    skip:
-        (io.Platform.isIOS || io.Platform.isMacOS || io.Platform.isWindows)
-            ? 'does not support hidden file metadata'
-            : false,
+    skip: (io.Platform.isIOS || io.Platform.isMacOS || io.Platform.isWindows)
+        ? 'does not support hidden file metadata'
+        : false,
   );
   group('size', () {
     test('empty file', () {
@@ -185,10 +184,9 @@ void tests(FileUtils utils, FileSystem fs) {
         );
       });
     },
-    skip:
-        !(io.Platform.isIOS || io.Platform.isMacOS || io.Platform.isWindows)
-            ? 'creation not supported'
-            : false,
+    skip: !(io.Platform.isIOS || io.Platform.isMacOS || io.Platform.isWindows)
+        ? 'creation not supported'
+        : false,
   );
 
   group('modification', () {

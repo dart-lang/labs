@@ -33,7 +33,7 @@ jobs:
           persist-credentials: false
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
-          sdk: dev
+          sdk: stable
       - run: dart pub get
       - run: dart analyze --fatal-infos
       - run: dart format --output=none --set-exit-if-changed .
@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [dev]
+        sdk: [stable]
         os: [ubuntu-latest, ubuntu-24.04-arm, windows-11-arm, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -64,14 +64,14 @@ jobs:
           persist-credentials: false
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
-          sdk: dev
+          sdk: stable
       - run: dart --profiler --profile_period=50 test --reporter=failures-only --test-randomize-ordering-seed=random --platform vm
 
   desktop-vm-benchmark:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [dev]
+        sdk: [stable]
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -99,7 +99,7 @@ jobs:
           persist-credentials: false
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
-          channel: master
+          channel: stable
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -127,7 +127,7 @@ jobs:
           persist-credentials: false
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
-          channel: master
+          channel: stable
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         with:
           os: iOS
@@ -145,5 +145,5 @@ jobs:
           persist-credentials: false
       - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
         with:
-          sdk: dev
+          sdk: stable
       - run: dart test --reporter=failures-only --test-randomize-ordering-seed=random --platform chrome
